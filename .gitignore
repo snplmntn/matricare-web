@@ -1,0 +1,15 @@
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# frontend
+app/node_modules/
+app/.env
+app/dist/
+app/build/
+
+# backend
+server/node_modules
+server/.env
