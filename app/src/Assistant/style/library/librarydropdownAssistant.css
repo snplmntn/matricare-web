@@ -1,0 +1,25 @@
+/* librarydropdown.css */
+
+.library-row {
+  display: flex;
+}
+
+.box {
+  flex: 1;
+  border: 1px solid #ccc;
+  margin: 5px;
+  padding: 10px;
+  position: relative;
+}
+
+.title {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+
+.button {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
