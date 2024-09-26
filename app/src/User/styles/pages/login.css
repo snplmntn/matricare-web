@@ -1,0 +1,151 @@
+.login-back-button {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  color: #fff;
+  font-size: 50px;
+  text-decoration: none;
+  z-index: 10; /* Ensure it appears above other elements */
+}
+
+.container-login{
+  background-color: #ffffff5e;
+  height: 400px;
+  width: 500px;
+  margin-left: 100px;
+  align-items: center;
+  display: flex; /* Use flexbox for layout */
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically */
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(67, 25, 92, 0.8);
+}
+
+.login-welcome-message {
+  font-size: 80px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 50px;
+  margin-top: -80px;
+  margin-left: 100px;
+  line-height: 80px;
+}
+
+.login-sign-up-text {
+  font-size: 20px;
+  color: #042440;
+  text-align: center;
+  margin-top: -20px;
+  margin-left: -930px;
+  margin-bottom: 50px;
+}
+
+
+.login-error-message{
+  color: #E39FA9;
+  margin-left: 100px;
+  margin-bottom: 40px;
+  margin-top: -40px;
+}
+.login-sign-up-text a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 10px;
+}
+
+.login-sign-up-text a:hover {
+  text-decoration: underline;
+  color: #E39FA9;
+}
+
+.login-outer-container {
+  padding: 200px;
+}
+
+.login-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: #7c459cbc !important; /* Adjust the color and opacity as needed */
+  z-index: -1;
+}
+
+.login-background{
+  height: 550px;
+}
+.LI-form-group {
+  position: relative;
+  margin-bottom: 30px;
+  margin-left: 10px;
+  margin-top: 20px;
+}
+
+.LI-form-input {
+  padding: 10px;
+  border: transparent !important;
+  font-size: 16px;
+  margin-top: 5px;
+  background-color: white !important;
+  color: #042440;
+  width: 100%;
+  transition: border-color 0.3s ease;
+  border-radius: 5px !important;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+
+.LI-form-input:focus ~ .LI-form-label,
+.LI-form-input:not(:placeholder-shown) ~ .LI-form-label {
+  top: -20px; /* Move label up when input is focused or has content */
+  font-size: 12px; /* Shrink font size when label moves up */
+  color: #042440; /* Change label color when active */
+}
+
+.LI-form-label {
+  position: absolute;
+  top: 20px; /* Initial position to start above the input */
+  left: 10px;
+  color: #042440;
+  font-size: 16px; /* Start with a smaller font size */
+  transition: top 0.3s ease, font-size 0.3s ease, color 0.3s ease;
+  pointer-events: none;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.forgot-password{
+  margin-left: 300px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  color: #E39FA9 !important;
+}
+
+.LI-button {
+  padding: 15px 190px !important;
+  background-color: #E39FA9;
+  color: #fff;
+  border: none;
+  border-radius: 5px !important;
+  cursor: pointer;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  margin-left: 5px;
+}
+
+.LI-button:hover {
+  background-color: #603830;
+}
+
+.login-close-button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-close-button:hover {
+  background: darkred;
+}

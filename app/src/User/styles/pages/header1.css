@@ -1,0 +1,85 @@
+.header1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px;
+  background-color: #ffffff !important; 
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  height: 80px; /* Adjusted height to accommodate the navbar */
+}
+
+.logo-header {
+  max-width: 50px; 
+  height: 50px;
+  border-radius: 50%;
+  margin-left: 200px;
+  z-index: 1000;
+}
+
+.header-left1 {
+  font-size: 24px;
+  margin-left: 10px;
+  color: #7c459c;
+  font-weight:900;  
+  z-index: 1000;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.nav-links1 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  margin-left: -100px;
+}
+
+.nav-link {
+  margin: 0 30px;
+  text-decoration: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  color: #7c459c;
+}
+
+.nav-link:hover {
+  color: #E39FA9;
+}
+
+.header-right1 {
+  display: flex;
+  margin-left: auto;
+}
+
+.login-button {
+  background-color: #E39FA9; 
+  color: white; 
+  padding: 10px 80px;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  text-decoration: none;
+  margin-right: 150px; 
+}
+
+.login-button:hover {
+  background-color: #7c459c; 
+}
+
+.download-icon {
+  color: #7c459c;
+  font-size: 24px;
+  margin-right: 200px; /* Adjusted spacing between button and icon */
+  cursor: pointer;
+  margin-top: 10px;
+  margin-left: -80px;
+}
+
+.download-icon:hover {
+  color: #E39FA9;
+}

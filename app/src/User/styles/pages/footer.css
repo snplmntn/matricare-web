@@ -1,0 +1,35 @@
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: #ffffff51;
+}
+
+.footer-logo {
+  margin-bottom: 20px;
+  width: 50px; /* Adjust the width as needed */
+  height: auto; /* Maintain aspect ratio */
+}
+.menu-items {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+}
+
+.menu-items li {
+  margin-right: 20px;
+  color: #603830;
+}
+
+.footer-line {
+  width: 100%;
+  border-top: 1px solid #E39FA9;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.copyright {
+  font-size: 12px;
+  color: #603830;
+}

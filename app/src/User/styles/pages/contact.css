@@ -1,0 +1,215 @@
+/* ContactPage Style */
+
+.contact-infos{
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-infos .icn-design {
+  margin-top: 10px; 
+  font-size: 20px;
+}
+
+.contact-infos p {
+  color: #000000; 
+}
+
+.icon-circ {
+  display: inline-block;
+  width: 45px; 
+  height: 45px; 
+  border-radius: 50%;
+  background-color: #E39FA9; 
+  text-align: center;
+  line-height: 50px; 
+  margin-top: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.contact-1{
+  justify-content: center; 
+  align-items: center; 
+  position: relative;
+  padding: 20px;
+  background-color: #f0e0e0b6;
+  height: 1380px;
+  margin-top: 5px;
+  right: 20px;
+  width: 1870px;
+}
+
+.contact-1 p{
+  margin-left: 200px;
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.contact-page1 {
+  justify-content: center; 
+  align-items: center; 
+  position: relative;
+  padding: 20px;
+  background-color: #c98f8f;
+  height: 200px;
+  margin-top: -20px;
+  width: 1870px;
+  right: 20px;
+}
+
+
+.contact-page1 h2{
+  margin-left: 220px;
+  font-size: 80px;
+  margin-top: -590px;
+  color: white;
+  font-style: italic;
+}
+.contact-page1 p {
+  margin-left: 220px; 
+  font-size: 20px;
+  margin-top: 0px;
+  color: #603830;
+}
+
+.contact-image {
+  width: 500px;
+  height: 560px;
+  margin-left: 1100px;
+  margin-top: 70px;
+  border-radius: 50% 50% 0 0;
+  object-fit: cover; /* Ensure the image covers the entire container */
+}
+
+
+
+.contact-page2 {
+  justify-content: center; 
+  align-items: center; 
+  padding: 20px;
+  height: 440px;
+  margin-bottom: 600px;
+  width: 1850px;
+  right: 20px;
+}
+
+.contact-page2 h2{
+  margin-left: 200px;
+  font-size: 25px;
+  margin-top: 40px;
+  color: #603830;
+}
+
+
+.location-info {
+  width: 600px;
+  height:  590px;
+  padding: 20px;
+  position: absolute;
+  left: 1000px;
+  top: 680px; 
+}
+
+.location-info h2{
+  margin-left: 5px;
+  font-size: 30px;
+  margin-top: 50px;
+}
+
+.location-info p{
+  margin-left: 5px;
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.image {
+  width: 100%;
+  height: 350px;
+  margin-top: 20px;
+}
+
+.social-icons h3{
+    margin-left: 5px;
+    font-size: 25px;
+    margin-top: 20px;
+  }
+  
+  .social-icons a{
+    color: #000000;
+  }
+  
+  .social {
+    display: inline-block;
+    width: 45px;
+    height: 45px; 
+    border-radius: 50% 50% 0 0;
+    background-color: #efd1d1; 
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+    margin-bottom: 130px;
+  }
+  
+  .location-info .social-icon {
+    margin-top: 10px;
+    font-size: 30px;
+  }
+
+.get-in-touch-container {
+  width: 600px;
+  height: 550px;
+  padding: 20px;
+  background-color: #efd1d1;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  left: 250px;
+  top: 750px; 
+}
+
+
+.get-in-touch h2 {
+  font-size: 24px;
+  margin-top: 5px;
+  font-size: 30px;
+  margin-left: 20px;
+  color: #603830;
+}
+
+.get-in-touch p {
+  font-size: 18px;
+  margin-left: 20px;
+  color: white;
+  margin-top: 5px;
+}
+
+
+.get-in-touch-container form {
+  flex-direction: column;
+  width: 500px;
+  margin-top: 20px;
+}
+
+.get-in-touch-container input,
+.get-in-touch-container textarea {
+  width: 100%;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  margin-left: 20px;
+}
+
+.get-in-touch-container button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #c98f8f;
+  color: #ffffff;
+  cursor: pointer;
+  margin-left: 200px;
+}
+
+.get-in-touch-container button:hover {
+  background-color: #161111;
+}

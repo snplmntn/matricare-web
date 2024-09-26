@@ -1,0 +1,490 @@
+  .patient-records-container{
+    display: flex;
+    height: 100vh !important;
+    background-color: #9a6cb4 !important;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+
+  .PR-back-button {
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    color: #7c459c;
+    font-size: 40px;
+    text-decoration: none;
+    z-index: 10; /* Ensure it appears above other elements */
+  }
+  
+
+   .patient-records-main-content {
+    flex-grow: 1;
+    padding: 20px;
+    background-color: #ffffffe5;
+  }
+
+    .PR-label {
+    margin-bottom: 20px; /* Space between the label and the top section */
+    margin-top: -50px;
+    margin-left: 100px;
+  }
+
+    .PR-label h2 {
+    font-size: 30px;
+    color: #7c459c; /* Adjust color as needed */
+    text-align: left; /* Center-align the label text */
+  }
+
+  .PR-top-section {
+    width: 70%;
+    margin-left: 40px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column; /* Stack sections vertically */
+    gap: 20px; /* Space between sections */
+}
+
+.PR-patient-info,
+.PR-info-columns {
+    display: flex;
+    align-items: flex-start;
+}
+
+.PR-patient-info {
+    width: 40%; /* Adjust width as needed */
+}
+
+.PR-patient-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-top: -5px;
+    margin-left: 30px;
+}
+
+.PR-patient-details {
+    display: flex;
+    flex-direction: column; /* Align text details vertically */
+    gap: 10px; /* Space between text items */
+    margin-left: 30px;
+    margin-top: -20px;
+}
+
+.PR-patient-details h3{
+    margin-bottom: -5px;
+}
+
+.PR-phone-info {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between the icon and text */
+}
+
+.PR-phone-icon {
+    font-size: 16px;
+    color: #333;
+}
+
+.PR-info-columns {
+    margin-left: 450px;
+    margin-top: -100px;
+    padding: 10px;
+    width: 60%; /* Adjust width as needed */
+    display: flex;
+    flex-direction: row; /* Ensure columns stay in a row */
+    gap: 20px; /* Space between columns */
+    
+}
+
+.PR-info-columns > div {
+    flex: 1; /* Allow columns to grow equally */
+    min-width: 0; /* Prevent columns from shrinking too small */
+    border-left: 2px solid #ccc;
+    padding-left: 20px;
+}
+
+.PR-address-info,
+.PR-email-info,
+.PR-partner-info {
+    display: flex;
+    flex-direction: column; /* Align text vertically */
+    gap: 10px; /* Space between text items */
+}
+
+.PR-address-info h4,
+.PR-email-info h4,
+.PR-partner-info h4 {
+    font-weight: bold;
+    margin: 0;
+    color: #666;
+    font-size: 12px;
+}
+
+.PR-partner-contact {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between the icon and text */
+}
+
+
+.PR-outstanding-tasks {
+    height: 200px;
+    position: relative;
+    margin-top: 20px;
+    margin-left: 40px;
+    width: 70%;
+    grid-column: 1 / span 3;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; 
+  }
+
+  .-webkit-scrollbar {
+    width: 8px; /* Adjust width as needed */
+}
+
+.-webkit-scrollbar {
+    background: transparent; /* Transparent track */
+}
+
+.-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0); /* Semi-transparent thumb */
+    border-radius: 4px; /* Rounded corners for the thumb */
+}
+
+.-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0); /* Darker on hover */
+}
+
+  .PR-outstanding-tasks h4{
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .PR-outstanding-tasks table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .PR-outstanding-tasks th{
+    padding: 10px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .PR-outstanding-tasks td {
+    padding: 10px;
+    text-align: center;
+  }
+
+
+  .add-task-button {
+    background-color: transparent;
+    color: #7c459c;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute; /* Use absolute positioning */
+    top: 30px; /* Adjust top position */
+    right: 20px; /* Adjust right position */
+    font-weight: bold;
+}
+
+.add-task-button:hover {
+    color: #e39fa9; /* Adjust hover color as needed */
+}
+
+.PR-form {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    width: 300px;
+    margin-left: 200px;
+    margin-top: -54px;
+}
+
+.PR-form input {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    flex-grow: 1;
+}
+
+.submit-task-button {
+    background-color: #7c459c;
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-task-button:hover {
+    background-color: #6a3e8a;
+}
+
+
+/* Panels: Encounters, Documents, Problem List */
+.PR-main-content {
+    display: flex;
+    gap: 20px; /* Space between the panels */
+    flex-wrap: wrap; /* Wrap panels if they don't fit in one row */
+    justify-content: center; /* Center panels horizontally */
+    margin-left: -440px;
+    margin-top: 30px;
+}
+
+.PR-panel {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 395px; /* Set a fixed width */
+    height: 300px; /* Set a fixed height to make it square */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribute space evenly */
+}
+
+.PR-Obstetric, .PR-Medical, .PR-Surgical {
+    display: flex;
+    flex-direction: column;
+}
+
+.PR-Obstetric h4, .PR-Medical h4, .PR-Surgical h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+.PR-Obstetric ul, .PR-Medical ul, .PR-Surgical ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto; 
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+.PR-Obstetric li, .PR-Medical li, .PR-Surgical li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border-bottom: 1px solid #cccccca8;
+}
+
+
+.PR-panel li .date {
+    flex: 1; /* Take up space for the date */
+}
+
+.PR-panel li .text {
+    flex: 2; /* Take up more space for the text */
+    margin-left: 150px;
+}
+
+.PR-panel li .diagnosis-info {
+    display: flex; /* Align the diagnosis and status horizontally */
+    justify-content: space-between; /* Space between diagnosis and status */
+}
+
+.PR-panel li .diagnosis {
+    flex: 1; /* Take up space for the diagnosis */
+}
+
+.PR-panel li .diagnosis-duration{
+    font-size: 12px;
+    margin-top: -10px;
+}
+
+.PR-panel li .status {
+    flex: 0; /* Only take necessary space for the status */
+    text-align: right; /* Align status to the right */
+}
+
+.PR-panel li .status.active {
+    color: black; /* Color for active status */
+    background-color: #e39fa9;
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.PR-panel li .status.inactive {
+    color: white; /* Color for inactive status */
+    background-color: #9a6cb4;
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.PR-right-panels {
+    flex: 1; /* Takes up 1/4 of the space */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    margin-left: 1400px;
+    margin-top: -740px;
+    height: 200px;
+  }
+
+  .PR-weeks-count {
+    display: flex;
+    justify-content: space-between; /* Align text to left and circle to right */
+    align-items: center;
+    margin-top: 20px;
+    width: 100%; /* Make the container take full width */
+    
+}
+
+.PR-text-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start; /* Align text to the left */
+    flex-grow: 1; /* Let text take the available space */
+    margin-left: 5px;
+}
+
+.PR-circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 8px solid #e39fa9;
+    margin-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 46px;
+    font-weight: bold;
+    color: #7c459c;
+    margin-left: 20px; /* Add space between the circle and text */
+}
+
+.PR-weeks-count h4 {
+    margin-bottom: 40px;
+    margin-top: -50px;
+}
+
+.PR-patient-docu{
+    height: 440px;
+    background-color: #fff;
+    padding: 20px;
+    margin-left: 1400px;
+    width: 400px;
+    margin-top: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; 
+  }
+
+.PR-documents h4{
+    margin-top: 10px;
+}
+
+.PR-docu-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer; 
+    margin-bottom: 10px;
+}
+
+.PR-docu-item:hover{
+    background-color: #e39fa972;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.docu-icon {
+    margin-right: 10px;
+    color: #7c459c; /* Adjust icon color */
+    font-size: 20px;
+}
+
+.docu-date {
+    font-size: 14px;
+    color: #666;
+    margin-left: auto;
+    text-align: right;
+}
+
+.PR-docu-item:last-child {
+    border-bottom: none; /* Remove border for the last item */
+}
+
+.document-details {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.document-details {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.document-details-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 30%;
+    height: 800px;
+    position: relative;
+}
+
+.document-details-content h4{
+    margin-top: 20px;
+    text-align: left;
+    margin-left: 25px;
+}
+
+.document-details-content img {
+    max-width: 90%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.document-details-content button {
+    position: absolute;
+    top: 20px; /* Adjust as needed */
+    right: 30px; /* Adjust as needed */
+    background-color: transparent;
+    color: black;
+    font-size: 24px;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 10; /* Ensure it's above other content */
+}
+
+
+
+

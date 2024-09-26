@@ -1,0 +1,119 @@
+/* header.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  background-color: #ffffff !important;
+}
+
+.header-center {
+  text-align: center;
+}
+
+.logo {
+  height: 120px;
+  width: auto; /* Maintain aspect ratio */
+  margin: 0 20px; /* Example margin, adjust as needed */
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li {
+  margin-right: 50px; /* Adjusted margin for spacing */
+  position: relative;
+}
+
+.nav-links li:last-child {
+  margin-right: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #67433b;
+  font-weight: bold;
+  margin: 0 15px;
+  transition: color 0.3s;
+}
+
+.nav-links a:hover {
+  color: #000000;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none; /* Hide dropdown initially */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #ffffff !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block; /* Show dropdown on hover */
+}
+
+.dropdown-item {
+  padding: 10px 20px;
+  white-space: nowrap;
+}
+
+.dropdown-item a {
+  text-decoration: none;
+  color: #67433b;
+  transition: color 0.3s;
+}
+
+.dropdown-item a:hover {
+  color: #000000;
+}
+
+.notification-icon {
+  font-size: 20px;
+  margin-left: -50px; /* Adjusted margin for spacing */
+  cursor: pointer;
+}
+
+.log-out-button {
+  padding: 10px 20px;
+  background-color: #E39FA9;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 0; /* Remove negative margin */
+}
+
+.log-out-button:hover {
+  background-color: #422a2a;
+}
+
+.dropdown-link {
+  margin: 0 15px;
+  cursor: pointer;
+  color: #c98f8f;
+  font-weight: bold;
+}
+
+.header-right {
+  margin-left: 20px; /* Adjusted margin for overall alignment */
+}
+
+.header-right .nav-links li {
+  margin-left: -20px; /* Adjusted space between each list item */
+}
