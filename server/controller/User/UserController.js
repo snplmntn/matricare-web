@@ -1,8 +1,8 @@
-const User = require("../../models/User");
+const User = require("../../models/User/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const Post = require("../../models/BellyTalk/Post");
-const PostComment = require("../../models/BellyTalk/PostComment");
+const Post = require("../../models/Content/Post");
+const PostComment = require("../../models/Content/PostComment");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 

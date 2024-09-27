@@ -11,6 +11,8 @@ const globalErrorHandler = require("./controller/ErrorController");
 
 //routes
 const authRoute = require("./routes/auth");
+const userRoute = require("./routes/user");
+const aliveRoute = require("./routes/alive");
 
 // Initialization
 const app = express();
@@ -43,6 +45,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/auth", authRoute);
+app.use("/api/alive", aliveRoute);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
