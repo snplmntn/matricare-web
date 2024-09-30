@@ -3,57 +3,30 @@ const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
-const commentPost = catchAsync(async (req, res, next) => {
-  const {
+const comment_post = catchAsync(async (req, res, next) => {
+  const { profilePicture, userId, fullname, postId, content } = req.body;
+
+  if (!postId) return next(new AppError("Post not found", 404));
+
+  const comment = new PostComment({
     profilePicture,
     userId,
     fullname,
-    username,
     postId,
-    postCommentId,
     content,
-    isAnonymous,
-  } = req.body;
-  let comment;
-
-  if (postId) {
-    comment = new PostComment({
-      profilePicture,
-      userId,
-      username,
-      fullname,
-      postId,
-      content,
-      isAnonymous,
-    });
-  } else if (postCommentId) {
-    comment = new PostComment({
-      profilePicture,
-      userId,
-      username,
-      fullname,
-      postCommentId,
-      content,
-      isAnonymous,
-    });
-  } else {
-    return res.status(204).json({ message: "Comment Unidentified" });
-  }
+  });
 
   await comment.save();
 
-  if (postId) {
-    updatedModel = await Post.findByIdAndUpdate(
-      postId,
-      { $push: { comments: comment._id } },
-      { new: true }
-    );
-  } else if (postCommentId) {
-    updatedModel = await PostComment.findByIdAndUpdate(
-      postCommentId,
-      { $push: { comments: comment._id } },
-      { new: true }
-    );
+  const updatedModel = await Post.findByIdAndUpdate(
+    postId,
+    { $push: { comments: comment._id } },
+    { new: true }
+  );
+
+  if (!updatedModel) {
+    await PostComment.findOneAndDelete(comment);
+    return next(new AppError("Post not found", 404));
   }
 
   return res.status(200).json({
@@ -62,10 +35,10 @@ const commentPost = catchAsync(async (req, res, next) => {
   });
 });
 
-const getPostComments = catchAsync(async (req, res, next) => {
-  const { postId, postCommentId } = req.query;
+const comment_get = catchAsync(async (req, res, next) => {
+  const { postId } = req.query;
 
-  if (!postId && !postCommentId)
+  if (!postId)
     return next(
       new AppError(
         "Bad Request: Could not identify if Post or Post Comment",
@@ -88,20 +61,6 @@ const getPostComments = catchAsync(async (req, res, next) => {
         return comment;
       })
     );
-  } else if (postCommentId) {
-    const postComment = await PostComment.findById(postCommentId);
-
-    if (!postComment)
-      return res.status(200).json({
-        message: "Comment does not have replies",
-      });
-
-    comments = await Promise.all(
-      postComment.comments.map(async (id) => {
-        const comment = await PostComment.findById(id);
-        return comment;
-      })
-    );
   }
 
   return res.status(200).json({
@@ -109,49 +68,17 @@ const getPostComments = catchAsync(async (req, res, next) => {
   });
 });
 
-const getPostCommentCount = catchAsync(async (req, res, next) => {
-  const { postId, postCommentId } = req.query;
-
-  if (!postId && !postCommentId)
-    return next(
-      new AppError(
-        "Bad Request: Could not identify if Post or Post Comment",
-        400
-      )
-    );
-
-  let commentCount;
-
-  if (postId) {
-    const post = await Post.findById(postId);
-    commentCount = post.comments.length;
-  } else if (postCommentId) {
-    const postComment = await PostComment.findById(postCommentId);
-    commentCount = postComment.comments.length;
-  }
-
-  return res.status(200).json({
-    commentCount,
-  });
-});
-
-const deleteComment = catchAsync(async (req, res, next) => {
-  const { postCommentId } = req.query;
+const comment_delete = catchAsync(async (req, res, next) => {
+  const { id } = req.query;
 
   let comment;
-  if (postCommentId) {
-    comment = await PostComment.findById(postCommentId);
+  if (id) {
+    comment = await PostComment.findById(id);
     if (!comment) return next(new AppError("Post Comment not found", 404));
 
     if (comment.postId) {
       await Post.findByIdAndUpdate(
         comment.postId,
-        { $pull: { comments: comment._id } },
-        { new: true }
-      );
-    } else {
-      await PostComment.findByIdAndUpdate(
-        comment.postCommentId,
         { $pull: { comments: comment._id } },
         { new: true }
       );
@@ -169,12 +96,12 @@ const deleteComment = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Comment deleted successfully",
+    comment,
   });
 });
 
 module.exports = {
-  commentPost,
-  getPostComments,
-  getPostCommentCount,
-  deleteComment,
+  comment_post,
+  comment_get,
+  comment_delete,
 };

@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const postController = require("../../controller/Content/PostController");
 const likeController = require("../../controller/Content/PostLikeController");
+const commentController = require("../../controller/Content/PostCommentController");
 
 // Post
 
@@ -21,7 +22,7 @@ router.post("/", postController.post_post);
 router.put("/", postController.post_put);
 
 // Delete Post
-router.put("/", postController.post_delete);
+router.delete("/", postController.post_delete);
 
 // Post Interaction
 
@@ -32,6 +33,15 @@ router.post("/like", likeController.like_post);
 router.get("/like", likeController.like_get);
 
 // Delete Post
-router.put("/like", likeController.like_delete);
+router.delete("/like", likeController.like_delete);
+
+// Create Comment
+router.post("/comment", commentController.comment_post);
+
+// Get Like
+router.get("/comment", commentController.comment_get);
+
+// Delete Post
+router.delete("/comment", commentController.comment_delete);
 
 module.exports = router;
