@@ -32,7 +32,7 @@ const limiter = rateLimit({
 app.use(helmet());
 
 //Protection Against DDOS Attack
-app.use("/api", limiter);
+// app.use("/api", limiter);
 
 // Body Parser
 app.use(
