@@ -1,0 +1,216 @@
+h1, h2, p, button, label {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.DDC-calcu-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: left;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: rgb(167, 114, 114);
+  background-color: white;
+  height: 100vh; /* Full viewport height */
+  margin: 0; /* Remove default margin */
+  padding: 0; /* Remove default padding */
+}
+
+
+.DDC-no-content {
+  text-align: center; /* Center the image horizontally */
+  margin-top: 140px; /* Adjust spacing as needed */
+}
+
+.DDC-placeholder-image {
+  width: 650px;
+  height: auto; /* Maintain aspect ratio */
+  height: 600px;
+  border-radius: 50px;
+  margin-left: 30px;
+}
+
+.DDC-back-button {
+  position: absolute;
+  top: 20px;
+  left: 40px;
+  color: #7c459c;
+  font-size: 30px;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.DDC-back-button:hover {
+  color: #e39fa9;
+}
+
+
+.DDC-middle-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  width: 80%;
+  margin-top: 100px;
+  background-color: rgba(255, 255, 255, 0.879);
+  border-radius: 20px;
+  padding: 20px;
+  height: 700px;
+}
+
+.DDC-vertical-line {
+  border-left: 2px solid #042440; /* Create a vertical line */
+  height: 100%; /* Adjust the height as needed */
+  margin: 0 20px; /* Adjust the spacing as needed */
+  margin-left: 60px;
+
+}
+
+.DDC-left-column {
+  flex: 1;
+  padding: 10px;
+  margin-top: -90px;
+}
+
+.DDC-information {
+  font-size: 16px;
+  line-height: 2;
+  color: #042440;
+  width: 500px;
+}
+
+.DDC-right-column {
+  flex: 1;
+  padding: 20px;
+  font-family: 'Playfair Display', serif;
+}
+
+.DDC-icon{
+  color: #9a6cb4;
+  font-size: 100px;
+  margin-bottom: 10px;
+}
+
+.DDC-calculator-selection {
+  margin-bottom: 20px;
+
+}
+
+.DDC-calculator-select {
+  font-size: 16px;
+  border: 1px solid #e39fa9 !important;
+  box-shadow: 0 5px 1000px #7c459c4a;
+  border-radius: 50px !important;
+  color: #042440;
+  margin-top: 20px;
+  text-align: center;
+  width: 350px !important;
+  
+}
+
+.DDC-article-section {
+  padding: 20px;
+  background-color:transparent;
+  border-radius: 10px;
+  margin-top: 100px;
+  width: 650px;
+  text-align: justify;
+}
+
+.DDC-article-section h2{
+  color: #7c459c;
+}
+
+.DDC-input-container {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.DDC-label{
+  color: #7c459c;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.DDC-calculator-form {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 50px;
+}
+
+.DDC-StartDate{
+  color: #042440;
+  font-size: 16px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  margin-left: -50px;
+
+}
+
+.DDC-input {
+  font-size: 16px;
+  padding: 12px 100px;
+  border: 1px solid #e39fa9 !important;
+  box-shadow: 0 5px 1000px #7c459c4a;
+  border-radius: 50px !important;
+  color: #042440;
+  margin-top: 20px;
+  margin-left: -50px;
+  
+}
+
+.DDC-button {
+  font-size: 16px;
+  padding: 15px 90px; /* Adjust padding to make sure text fits in one line */
+  margin-top: 20px;
+  border: none;
+  border-radius: 50px;
+  background-color: #7c459c;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  text-align: center; 
+  display: inline-block; 
+  margin-left: -50px;
+}
+
+.DDC-button:hover {
+  background-color: #e39fa9;
+}
+
+.DDC-result {
+  font-size: 16px;
+  border: 1px solid #e39fa9 !important;
+  border-radius: 5px;
+  width: 500px; /* Adjust width as needed */
+  height: 100px;
+  margin-top: 50px;
+  margin-left: 90px;
+  text-align: center;
+  background-color: transparent !important;
+}
+
+.DDC-result h2 {
+  font-size: 18px;
+  margin-top: 18px;
+  margin-bottom: 10px;
+  color: #042440;
+}
+
+.DDC-result p {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #042440;
+}
+
+@media (max-width: 768px) {
+  .DDC-middle-container {
+    flex-direction: column;
+  }
+
+  .DDC-right-column {
+    margin-top: 20px;
+  }
+}

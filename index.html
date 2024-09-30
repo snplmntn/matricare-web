@@ -1,45 +1,4 @@
-const User = require("../../models/User/User");
-const nodemailer = require("nodemailer");
-const crypto = require("crypto");
-const AppError = require("../../Utilities/appError");
-const catchAsync = require("../../Utilities/catchAsync");
-
-const createVerificationToken = (length) => {
-  return crypto.randomBytes(length).toString("hex");
-};
-
-const verification_mail = catchAsync(async (req, res, next) => {
-  const { userId } = req.query;
-
-  //Generate Token
-  const verificationToken = createVerificationToken(3);
-
-  const user = await User.findByIdAndUpdate(
-    userId,
-    { token: verificationToken },
-    { new: true }
-  );
-
-  if (!user) return next(new AppError("User not found", 404));
-
-  const transporter = nodemailer.createTransport({
-    host: "smtp.zoho.com",
-    port: 465,
-    secure: true, // true for SSL, false for TLS
-    auth: {
-      user: process.env.ZOHO_USER,
-      pass: process.env.ZOHO_PASS,
-    },
-  });
-
-  const mailOptions = {
-    from: {
-      name: "MatriCare",
-      address: process.env.ZOHO_USER,
-    },
-    to: user.email,
-    subject: "Welcome to MatriCare",
-    html: `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -98,6 +57,9 @@ const verification_mail = catchAsync(async (req, res, next) => {
         background-color: #e39fa9;
         color: #ffffff;
       }
+      .btn:visited {
+        color: #ffffff;
+      }
       .email-footer {
         font-size: 12px;
         color: #999;
@@ -143,34 +105,3 @@ const verification_mail = catchAsync(async (req, res, next) => {
     </div>
   </body>
 </html>
-`,
-  };
-  transporter.sendMail(mailOptions, () => {
-    return res.status(200).json({
-      message: "Email sent successfully",
-      verificationToken: verificationToken,
-    });
-  });
-});
-
-const verify_email = catchAsync(async (req, res, next) => {
-  const { token } = req.query;
-  const user = await User.findOne({ token: token });
-  if (!user) {
-    return next(new AppError("Invalid verification code", 400));
-  }
-
-  if (user.emailValid === true)
-    return res.status(200).json({ message: "Account Email already verified" });
-
-  user.emailValid = true;
-  user.token = "";
-  await user.save();
-
-  return res.status(200).json({ message: "Email Successfully Verified" });
-});
-
-module.exports = {
-  verification_mail,
-  verify_email,
-};

@@ -11,7 +11,8 @@ const verifyToken = async (req, res, next) => {
       .json({ message: "Access denied. No token provided." });
   } else {
     try {
-      jwt.verify(token, JWT_KEY);
+      const decoded = jwt.verify(token, JWT_KEY);
+      req.role = decoded.user.role;
       next();
     } catch (err) {
       if (err.name === "TokenExpiredError")
