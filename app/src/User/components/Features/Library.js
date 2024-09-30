@@ -4,12 +4,13 @@ import { Link } from 'react-router-dom';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { IoSearch } from 'react-icons/io5';
 
 const sliderSettings = {
   dots: true,
   infinite: false,
   speed: 500,
-  slidesToShow: 3, // Number of items to show at once
+  slidesToShow: 3,
   slidesToScroll: 1,
   responsive: [
     {
@@ -32,23 +33,21 @@ const sliderSettings = {
   ]
 };
 
-
 const books = [
-  { id: 1, title: 'Stages of Pregnancy', author: 'Bea Benella Rosal', cover: '/img/topic1.jpg' },
-  { id: 2, title: 'Maternity Style', author: 'Bea Benella Rosal', cover: '/img/topic2.jpg' },
-  { id: 3, title: 'Pregnancy Fitness', author: 'Bea Benella Rosal', cover: '/img/topic3.jpg' },
-  { id: 4, title: 'Preparing for Baby', author: 'Bea Benella Rosal', cover: '/img/topic4.jpg' },
-  { id: 5, title: 'Pregnancy Safety', author: 'Bea Benella Rosal', cover: '/img/topic5.jpg' },
-  { id: 6, title: 'Pregnancy Symptoms', author: 'Bea Benella Rosal', cover: '/img/labor1.jpg' },
-  { id: 7, title: 'Labor and Delivery Options', author: 'Bea Benella Rosal', cover: '/img/bg6.jpg' },
-  { id: 8, title: 'Baby’s First Days at Home', author: 'Bea Benella Rosal', cover: '/img/pic1.jpg' },
-  { id: 9, title: 'Financial Planning for New Parents', author: 'Bea Benella Rosal', cover: '/img/bg5.jpg' },
-  { id: 10, title: 'Preparing for Breastfeeding', author: 'Bea Benella Rosal', cover: '/img/article1.webp' },
-  { id: 11, title: 'Labor Preparation Techniques', author: 'Bea Benella Rosal', cover: '/img/bg2.webp' },
-  { id: 12, title: 'Baby’s First Days at Home', author: 'Bea Benella Rosal', cover: '/img/bg1.webp' },
-  { id: 13, title: 'Weekly Pregnancy', author: 'Bea Benella Rosal', cover: '/img/bg1.webp' },
+  { id: 1, title: 'Stages of Pregnancy', author: 'Bea Benella Rosal', cover: '/img/topic1.jpg', category: 'First Time Moms' },
+  { id: 2, title: 'Maternity Style', author: 'Bea Benella Rosal', cover: '/img/topic2.jpg', category: 'Fashion' },
+  { id: 3, title: 'Pregnancy Fitness', author: 'Bea Benella Rosal', cover: '/img/topic3.jpg', category: 'Health' },
+  { id: 4, title: 'Preparing for Baby', author: 'Bea Benella Rosal', cover: '/img/topic4.jpg', category: 'First Time Moms' },
+  { id: 5, title: 'Pregnancy Safety', author: 'Bea Benella Rosal', cover: '/img/topic5.jpg', category: 'Health' },
+  { id: 6, title: 'Pregnancy Symptoms', author: 'Bea Benella Rosal', cover: '/img/labor1.jpg', category: 'Health' },
+  { id: 7, title: 'Labor and Delivery Options', author: 'Bea Benella Rosal', cover: '/img/bg6.jpg', category: 'Labor' },
+  { id: 8, title: 'Baby’s First Days at Home', author: 'Bea Benella Rosal', cover: '/img/pic1.jpg', category: 'First Time Moms' },
+  { id: 9, title: 'Financial Planning for New Parents', author: 'Bea Benella Rosal', cover: '/img/bg5.jpg', category: 'Finance' },
+  { id: 10, title: 'Preparing for Breastfeeding', author: 'Bea Benella Rosal', cover: '/img/article1.webp', category: 'Health' },
+  { id: 11, title: 'Labor Preparation Techniques', author: 'Bea Benella Rosal', cover: '/img/bg2.webp', category: 'Labor' },
+  { id: 12, title: 'Baby’s First Days at Home', author: 'Bea Benella Rosal', cover: '/img/bg1.webp', category: 'First Time Moms' },
+  { id: 13, title: 'Weekly Pregnancy', author: 'Bea Benella Rosal', cover: '/img/bg1.webp', category: 'First Time Moms' },
 ];
-
 
 // Map book IDs to their routes
 const bookRoutes = {
@@ -70,6 +69,7 @@ const bookRoutes = {
 const Library = () => {
   const [lastRead, setLastRead] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('All'); // State for selected filter
 
   // Load the last read books from local storage on component mount
   useEffect(() => {
@@ -86,9 +86,14 @@ const Library = () => {
     localStorage.setItem('lastRead', JSON.stringify(updatedLastRead));
   };
 
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredBooks = books.filter(book => {
+    const matchesSearchTerm = book.title.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = selectedFilter === 'All' || book.category === selectedFilter; // Filter by category
+    return matchesSearchTerm && matchesCategory;
+  });
+
+  // Define filter options
+  const filterOptions = ['All', 'First Time Moms', 'Health', 'Labor', 'Finance', 'Fashion'];
 
   return (
     <div className="library-layout">
@@ -96,6 +101,7 @@ const Library = () => {
         <header className="library-header">
           <div className="library-title">MatriCare.</div>
           <div className="header-actions">
+          <div className="search-container">
             <input
               type="text"
               className="search-bar-library"
@@ -103,12 +109,23 @@ const Library = () => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
+            <IoSearch className="search-icon" />
+          </div>
+            <select 
+              className="filter-dropdown" 
+              value={selectedFilter} 
+              onChange={(e) => setSelectedFilter(e.target.value)} // Update filter on selection
+            >
+              {filterOptions.map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
           </div>
         </header>
 
         <section id="last-read" className="last-read-section">
           <h2>Books You Last Read</h2>
-                    <Slider {...sliderSettings}>
+          <Slider {...sliderSettings}>
             {lastRead.length > 0 ? (
               lastRead.map((book) => (
                 <div key={book.id} className="last-read-item">
@@ -125,9 +142,7 @@ const Library = () => {
               <p>No books read yet.</p>
             )}
           </Slider>
-
         </section>
-
 
         <section id="library" className="library-section">
           <h2>Library</h2>
@@ -143,8 +158,6 @@ const Library = () => {
             ))}
           </div>
         </section>
-
-
       </div>
     </div>
   );

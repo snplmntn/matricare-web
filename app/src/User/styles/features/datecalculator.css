@@ -11,9 +11,7 @@ h1, h2, p, button, label {
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   color: rgb(167, 114, 114);
-  background-size: cover; /* Ensure the background image covers the container */
-  background-position: center; /* Center the background image */
-  background-repeat: no-repeat; /* Do not repeat the background image */
+  background-color: white;
   height: 100vh; /* Full viewport height */
   margin: 0; /* Remove default margin */
   padding: 0; /* Remove default padding */
@@ -38,7 +36,7 @@ h1, h2, p, button, label {
   top: 20px;
   left: 40px;
   color: #7c459c;
-  font-size: 40px;
+  font-size: 30px;
   text-decoration: none;
   z-index: 10;
 }
@@ -100,13 +98,13 @@ h1, h2, p, button, label {
 
 .DDC-calculator-select {
   font-size: 16px;
-  padding: 12px 100px;
   border: 1px solid #e39fa9 !important;
   box-shadow: 0 5px 1000px #7c459c4a;
   border-radius: 50px !important;
   color: #042440;
   margin-top: 20px;
-  text-align: left;
+  text-align: center;
+  width: 350px !important;
   
 }
 
@@ -114,7 +112,7 @@ h1, h2, p, button, label {
   padding: 20px;
   background-color:transparent;
   border-radius: 10px;
-  margin-top: 50px;
+  margin-top: 100px;
   width: 650px;
   text-align: justify;
 }

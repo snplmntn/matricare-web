@@ -18,7 +18,7 @@ const LibrarySidebar = () => {
           <ul>
             <li><Link to="/library"><FontAwesomeIcon icon={faLongArrowAltLeft} /> Back</Link></li>
             <li><Link to="/app"><FontAwesomeIcon icon={faHome} /> Home</Link></li>
-            <li><Link to="/medicalrecords"><FontAwesomeIcon icon={faBookmark} /> Saved Articles</Link></li>
+            <li><Link to="/savedarticle"><FontAwesomeIcon icon={faBookmark} /> Saved Articles</Link></li>
           </ul>
         </div>
         <div className="library-logout">

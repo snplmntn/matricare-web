@@ -1,20 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/library/library2.css'
 import { IoBookmark, IoShareSocial } from 'react-icons/io5'; 
 
 const Library2 = () => {
+  const [savedArticles, setSavedArticles] = useState([]);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('savedArticles')) || [];
+    setSavedArticles(saved);
+  }, []);
+
+  const handleToggleSave = (article) => {
+    const updatedArticles = savedArticles.filter(a => a.title !== article.title);
+
+    if (updatedArticles.length === savedArticles.length) {
+      // Add more properties when saving the article (date, reviewer)
+      const articleToSave = {
+        title: article.title,
+        image: article.image || '/img/topic2.jpg',  
+        date: article.date || '11/30/2019', 
+        reviewer: article.reviewer || 'Dra. Donna Jill A. Tungol'
+      };
+
+      updatedArticles.push(articleToSave);
+    }
+
+    // Update state and local storage
+    setSavedArticles(updatedArticles);
+    localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
+  };
+
+  const isArticleSaved = (articleTitle) => {
+    return savedArticles.some(article => article.title === articleTitle);
+  };
+
   return (
     <div className="library-content-container">
     <div className="library-content-main-news">
       <div className="library-content-news-title-actions">
         <h1 className="library-content-news-title">Embracing Maternity Style: Fashion Tips for Every Stage of Pregnancy</h1>
         <div className="library-content-news-actions">  
-          <button className="library-content-save-btn"><IoBookmark /> Save to Library </button>
+          <button
+              className="library-content-save-btn"
+              onClick={() => handleToggleSave({
+                title: 'Embracing Maternity Style: Fashion Tips for Every Stage of Pregnancy',
+                image: '/img/topic2.jpg',
+                date: '11/30/2019',
+                reviewer: 'Dra. Donna Jill A. Tungol'
+              })}
+            >
+              <IoBookmark /> 
+              {isArticleSaved('Embracing Maternity Style: Fashion Tips for Every Stage of Pregnancy') 
+                ? 'Saved' 
+                : 'Save to Library'}
+            </button>
           <button className="library-content-share-btn"><IoShareSocial /> Share on media</button>
         </div>
       </div>
       <p className="library-content-news-details">Medically Reviewed by: Dra. Donna Jill A. Tungol </p>
-      <p className="library-content-news-date">11/30/2019 08:33 PM EST</p>
+      <p className="library-content-news-date">11/30/2019</p>
       <div className="library-content-news-description">
       <h2> Comfort</h2>
             <p>Comfort is the primary consideration in maternity fashion. As a woman’s body changes, particularly in the belly, bust, and hips, maternity clothes are designed with features like stretchy fabrics, adjustable waistbands, and looser fits. These features allow clothes to grow with the body throughout the different stages of pregnancy.</p>

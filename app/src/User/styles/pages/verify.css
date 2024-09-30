@@ -1,0 +1,84 @@
+/* Modal Overlay */
+.email-verification-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6); /* Dark transparent background */
+    z-index: 100; /* Ensure it appears above other elements */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden; /* Initially hidden */
+  }
+  
+  /* Modal Container */
+  .email-verification-modal {
+    background-color: white;
+    width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    z-index: 101; /* Ensure modal is on top of the overlay */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  /* Show modal when active */
+  .email-verification-overlay.active {
+    visibility: visible;
+  }
+  
+  .email-verification-modal.active {
+    opacity: 1;
+  }
+  
+  /* Verification Modal Heading */
+  .email-verification-header {
+    font-size: 24px;
+    font-weight: bold;
+    color: #042440;
+    margin-bottom: 10px;
+  }
+  
+  /* Verification Message */
+  .email-verification-message {
+    font-size: 16px;
+    color: #603830;
+    margin-bottom: 30px;
+  }
+  
+  /* Resend Email Button */
+  .email-resend-button {
+    padding: 10px 40px;
+    background-color: #E39FA9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  
+  .email-resend-button:hover {
+    background-color: #603830;
+  }
+  
+  /* Close Modal Button */
+  .email-verification-close {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 18px;
+    background-color: transparent;
+    border: none;
+    color: #E39FA9;
+    cursor: pointer;
+  }
+  
+  .email-verification-close:hover {
+    color: #603830;
+  }
+  

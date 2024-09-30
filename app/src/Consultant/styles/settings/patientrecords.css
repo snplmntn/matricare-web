@@ -23,15 +23,15 @@
   }
 
     .PR-label {
-    margin-bottom: 20px; /* Space between the label and the top section */
-    margin-top: -50px;
+    margin-bottom: 20px; 
+    margin-top: 30px;
     margin-left: 100px;
   }
 
     .PR-label h2 {
     font-size: 30px;
-    color: #7c459c; /* Adjust color as needed */
-    text-align: left; /* Center-align the label text */
+    color: #7c459c; 
+    text-align: left; 
   }
 
   .PR-top-section {

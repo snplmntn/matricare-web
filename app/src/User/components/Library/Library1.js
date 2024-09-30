@@ -1,20 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/library/library1.css';
 import { IoBookmark, IoShareSocial } from 'react-icons/io5'; 
 
 const Library1 = () => {
+  const [savedArticles, setSavedArticles] = useState([]);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('savedArticles')) || [];
+    setSavedArticles(saved);
+  }, []);
+
+  const handleToggleSave = (article) => {
+    const updatedArticles = savedArticles.filter(a => a.title !== article.title);
+
+    if (updatedArticles.length === savedArticles.length) {
+      // Add more properties when saving the article (date, reviewer)
+      const articleToSave = {
+        title: article.title,
+        image: article.image || '/img/topic1.jpg',  
+        date: article.date || '11/30/2019', 
+        reviewer: article.reviewer || 'Dra. Donna Jill A. Tungol'
+      };
+
+      updatedArticles.push(articleToSave);
+    }
+
+    // Update state and local storage
+    setSavedArticles(updatedArticles);
+    localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
+  };
+
+  const isArticleSaved = (articleTitle) => {
+    return savedArticles.some(article => article.title === articleTitle);
+  };
+
   return (
     <div className="library-content-container">
       <div className="library-content-main-news">
           <div className="library-content-news-title-actions">
             <h1 className="library-content-news-title">Stages of Pregnancy: First, Second and Third Trimester</h1>
             <div className="library-content-news-actions">  
-              <button className="library-content-save-btn"><IoBookmark /> Save to Library</button>
+            <button
+              className="library-content-save-btn"
+              onClick={() => handleToggleSave({
+                title: 'Stages of Pregnancy: First, Second and Third Trimester',
+                image: '/img/topic1.jpg',
+                date: '11/30/2019',
+                reviewer: 'Dra. Donna Jill A. Tungol'
+              })}
+            >
+              <IoBookmark /> 
+              {isArticleSaved('Stages of Pregnancy: First, Second and Third Trimester') 
+                ? 'Saved' 
+                : 'Save to Library'}
+            </button>
               <button className="library-content-share-btn"><IoShareSocial /> Share on media</button>
             </div>
           </div>
           <p className="library-content-news-details">Medically Reviewed by: Dra. Donna Jill A. Tungol</p>
-          <p className="library-content-news-date">11/30/2019 08:33 PM EST</p>
+          <p className="library-content-news-date">11/30/2019</p>
           <div className="library-content-news-description">
             <h2>First Trimester (Weeks 1-12)</h2>
             <p>The first trimester marks the beginning of pregnancy and is crucial for the initial development of the fetus. It begins from the first day of the last menstrual period (LMP) and lasts until the end of week 12.</p>

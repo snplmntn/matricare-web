@@ -1,12 +1,22 @@
-const Post = require("../../models/BellyTalk/Post");
+const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
+
+const post_get = catchAsync(async (req, res, next) => {
+  const post = await Post.findOne({
+    _id: req.query.id,
+  });
+
+  if (!post) return next(new AppError("Post not found", 404));
+
+  return res.status(200).json(post);
+});
 
 const post_index = catchAsync(async (req, res, next) => {
   const { postId } = req.query;
   let query = {};
 
-  // If lastPostId exists in query params, construct query to fetch posts before that ID
+  // If lastPostId exists in query, construct query to fetch posts before that ID
   if (postId && postId !== "null") {
     query._id = { $lt: postId };
   }
@@ -15,16 +25,6 @@ const post_index = catchAsync(async (req, res, next) => {
   const posts = await Post.find(query).sort({ _id: -1 }).limit(20).lean();
 
   return res.status(200).json(posts);
-});
-
-const post_get = catchAsync(async (req, res, next) => {
-  const post = await Post.findOne({
-    _id: req.params.id,
-  });
-
-  if (!post) return next(new AppError("Post not found", 404));
-
-  return res.status(200).json(post);
 });
 
 const post_user_get = catchAsync(async (req, res, next) => {
@@ -44,9 +44,9 @@ const post_post = catchAsync(async (req, res, next) => {
     .json({ message: "Post Successfully Created", savedPost });
 });
 
-const post_update = catchAsync(async (req, res, next) => {
+const post_put = catchAsync(async (req, res, next) => {
   const updatedPost = await Post.findByIdAndUpdate(
-    req.params.id, // Update based on the document's ID
+    req.query.id, // Update based on the document's ID
     { $set: req.body }, // New data to set
     { new: true } // Return the updated document
   );
@@ -60,15 +60,15 @@ const post_update = catchAsync(async (req, res, next) => {
 });
 
 const post_delete = catchAsync(async (req, res, next) => {
-  await Post.findByIdAndDelete(req.params.id);
+  await Post.findByIdAndDelete(req.query.id);
   return res.status(200).json("Post Successfully Deleted");
 });
 
 module.exports = {
-  post_index,
   post_get,
+  post_index,
   post_user_get,
   post_post,
-  post_update,
+  post_put,
   post_delete,
 };

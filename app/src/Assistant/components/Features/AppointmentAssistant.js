@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
+import { momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { Link } from 'react-router-dom'; // Import Link
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { FaChartBar, FaCommentDots, FaBell, FaUsers, FaCalendarCheck, FaComment } from "react-icons/fa";
 import '../../style/features/appointmentassistant.css';
+import { IoSearch} from 'react-icons/io5';
 
 const localizer = momentLocalizer(moment);
 
@@ -12,7 +11,6 @@ const AppointmentAssistant = () => {
   const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
-  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     const savedAppointments = [
@@ -38,38 +36,31 @@ const AppointmentAssistant = () => {
       }
     ];
 
-    const initialNotifications = [];
-    setNotifications(initialNotifications);
-
     setAppointments(savedAppointments);
 
     const savedUpcomingAppointments = [
       {
         name: 'John Doe',
         phoneNumber: '123-456-7890',
-        appointmentType: 'Weekly Check up',
-        appointmentMode: 'Onsite',
+        appointmentType: 'Advise by the Doctor',
         appointmentTime: 'Monday, 2:00 PM'
       },
       {
         name: 'Bea Rosal',
         phoneNumber: '987-654-3210',
         appointmentType: 'Monthly Check up',
-        appointmentMode: 'Online',
         appointmentTime: 'Wednesday, 8:00 AM'
       },
       {
         name: 'Johanna Tulalian',
         phoneNumber: '987-654-3210',
-        appointmentType: 'Weekly Check up',
-        appointmentMode: 'Online',
+        appointmentType: 'Advise by the Doctor',
         appointmentTime: 'Friday, 9:00 AM'
       },
       {
         name: 'Nathaniel MAtias',
         phoneNumber: '987-654-3210',
         appointmentType: 'Monthly Check up',
-        appointmentMode: 'Online',
         appointmentTime: 'Saturday, 1:00 PM'
       }
     ];
@@ -112,59 +103,17 @@ const AppointmentAssistant = () => {
 
   return (
     <div className="appointment-assistant-container">
-      <nav className="appointment-assistant-left-nav">
-        <div className="appointment-assistant-logo">MatriCare</div>
-        <ul className="appointment-assistant-menu">
-          <li>
-            <Link to="/">
-              <FaChartBar />
-              <span>Dashboard</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/chat">
-              <FaCommentDots />
-              <span>Chat</span>
-            </Link>
-          </li>
-          <li>
-            <Link to="/assistant-notification"> 
-              <FaBell />
-              <span>Notification</span>
-            </Link>
-          </li>
-        </ul>
-      </nav>
+      <div className="appointment-main-container">
       <div className="appointment-assistant-middle-layout">
         <div className="appointment-assistant-top-search">
+        <IoSearch className="assistant-search-icon" />
           <input
             type="text"
             placeholder="Search..."
             className="appointment-assistant-search-input"
           />
         </div>
-        <div className="appointment-assistant-main-content">
           <div className="appointment-assistant-content-container">
-            <div className="appointment-assistant-content-section">
-              <h2>Statistic</h2>
-              <div className="statistic-container">
-                <div className="statistic-item">
-                  <FaUsers />
-                  <span className="statistic-number">100</span>
-                  <span>Total of Patients</span>
-                </div>
-                <div className="statistic-item">
-                  <FaCalendarCheck />
-                  <span className="statistic-number">50</span>
-                  <span>Appointments</span>
-                </div>
-                <div className="statistic-item">
-                  <FaComment />
-                  <span className="statistic-number">20</span>
-                  <span>Feedbacks</span>
-                </div>
-              </div>
-            </div>
             <div className="appointment-assistant-content-section">
               <h2>Schedule</h2>
               <div className="schedule-container">
@@ -208,7 +157,6 @@ const AppointmentAssistant = () => {
                       <th>Name</th>
                       <th>Phone Number</th>
                       <th>Appointment Type</th>
-                      <th>Appointment Mode</th>
                       <th>Appointment Time</th>
                       <th>Action</th>
                     </tr>
@@ -219,7 +167,6 @@ const AppointmentAssistant = () => {
                         <td>{appointment.name}</td>
                         <td>{appointment.phoneNumber}</td>
                         <td>{appointment.appointmentType}</td>
-                        <td>{appointment.appointmentMode}</td>
                         <td>{appointment.appointmentTime}</td>
                         <td>
                           <button onClick={() => handleDetailsClick(appointment)}>Details &gt;</button>
@@ -231,49 +178,8 @@ const AppointmentAssistant = () => {
               </div>
             </div>
           </div>
-        </div>
       </div>
-
-      <div className="appointment-assistant-right-container">
-        <div className="appointment-assistant-right-calendar">
-          <Calendar
-            localizer={localizer}
-            events={events}
-            startAccessor="start"
-            endAccessor="end"
-            style={{ height: 300, width: 300 }} // Adjust width as needed
-            views={['month']} // Only show the month view
-            toolbar={true} // Enable the toolbar
-          />
-        </div>
-        <div className="last-notification-container">
-          <h2>Last Notification</h2>
-          <div className="notification-container">
-            <div className="notification-item">
-              <Link to="/notification-Assistant"> {/* Link to NotificationAssistant */}
-                <div className="notification-image">
-                  <img src="img/logo2.png" alt="Client" />
-                </div>
-                <div className="notification-details">
-                  <p className="notification-time">Today at 10:00 AM</p>
-                  <p className="notification-message">John Doe has made an appointment for next week.</p>
-                </div>
-              </Link>
-            </div>
-            <div className="notification-item">
-              <Link to="/notification-Assistant"> {/* Link to NotificationAssistant */}
-                <div className="notification-image">
-                  <img src="img/logo2.png" alt="Client" />
-                </div>
-                <div className="notification-details">
-                  <p className="notification-time">Yesterday at 3:00 PM</p>
-                  <p className="notification-message">Jane Smith wants to reschedule her appointment for tomorrow.</p>
-                </div>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
+    </div>
     </div>
   );
 };

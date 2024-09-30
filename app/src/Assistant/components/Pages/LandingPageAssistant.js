@@ -205,29 +205,6 @@ const LandingPageAssistant = () => {
 
   return (
     <div className="landingpage-assistant-container">
-      <aside className="landingpage-assistant-sidebar">
-        <div className="landingpage-assistant-sidebar-logo">
-          <img src="img/logo_consultant.png" alt="Logo" />
-        </div>
-        <div className="landingpage-assistant-sidebar-menu">
-        <Link to="/assistant-landing" className="landingpage-assistant-sidebar-item" title="Home">
-            <IoHome className="landingpage-assistant-icon" />
-          </Link>
-        <Link to="/admin-profile" className="landingpage-assistant-sidebar-item">
-            <IoPerson  className="landingpage-assistant-icon" />
-          </Link>
-          <Link to="/appointment-assistant" className="landingpage-assistant-sidebar-item" title="Appointment">
-            <IoCalendar className="landingpage-assistant-icon" />
-          </Link>
-          <Link to="/library" className="landingpage-assistant-sidebar-item" title="Library">
-            <IoLibrary className="landingpage-assistant-icon" />
-          </Link>
-          <Link to="/belly-talk" className="landingpage-assistant-sidebar-item" title="BellyTalk">
-            <IoChatbubbles className="landingpage-assistant-icon" />
-          </Link>
-        </div>
-      </aside>
-
       <main className="landingpage-assistant-main-content">
         <header className="landingpage-assistant-header">
           <h1>Dashboard</h1>

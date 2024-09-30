@@ -28,7 +28,34 @@ const initialAppointments = [
 
 const AppointmentConsultant = () => {
   const [appointments, setAppointments] = useState(initialAppointments);
-  const [activeTab, setActiveTab] = useState('upcoming'); // Track the active tab
+  const [activeTab, setActiveTab] = useState('upcoming');
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [newAppointment, setNewAppointment] = useState({
+    date: '',
+    time: '',
+    patientName: '',
+    location: '',
+    category: '',
+    status: 'pending'
+  });
+
+  const timeOptions = [
+    '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+    '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM',
+    '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM',
+    '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM'
+  ];
+
+  const locationOptions = [
+    "Mary Chiles, Sampaloc",
+    "Grace Medical Center",
+    "Family Care Tungko"
+  ];
+  
+  const categoryOptions = [
+    "Monthly Check-up",
+    "Advice by the Doctor"
+  ];
 
   const handleStatusChange = (index, newStatus) => {
     const updatedAppointments = appointments.map((appointment, i) => {
@@ -43,14 +70,37 @@ const AppointmentConsultant = () => {
   const upcomingAppointments = appointments.filter(appointment => appointment.status === 'pending');
   const postAppointments = appointments.filter(appointment => appointment.status === 'confirmed');
 
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setNewAppointment({ ...newAppointment, [name]: value });
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const { date, time, patientName, location, category } = newAppointment;
+    if (date && time && patientName && location && category) {
+      const fullDateTime = `${date}, ${time}`;
+      setAppointments([...appointments, { ...newAppointment, date: fullDateTime }]);
+      setNewAppointment({ date: '', time: '', patientName: '', location: '', category: '', status: 'pending' });
+      setIsFormVisible(false);
+    } else {
+      alert("Please fill in all fields");
+    }
+  };
+
+  const handleCancel = () => {
+    setIsFormVisible(false);
+    setNewAppointment({ date: '', time: '', patientName: '', location: '', category: '', status: 'pending' });
+  };
+
   return (
     <div className="appointmentConsultant-dashboard">
       <main className="appointmentConsultant-main">
         <header className="appointmentConsultant-header">
           <div className="appointmentConsultant-notificationIcon">
-          <a href="/consultant-notification">
-        <IoNotifications />
-      </a>
+            <a href="/consultant-notification">
+              <IoNotifications />
+            </a>
           </div>
           <div className="appointmentConsultant-headerUser">
             <h1>Dra. Donna Jill Tungol</h1>
@@ -81,9 +131,72 @@ const AppointmentConsultant = () => {
                 Post Appointments
               </button>
             </div>
-            <button className="appointmentConsultant-addAppointmentBtn">
+            <button className="appointmentConsultant-addAppointmentBtn" onClick={() => setIsFormVisible(true)}>
               <IoAddCircleOutline /> Add Appointment
             </button>
+
+            {/* Appointment Form */}
+            {isFormVisible && ( 
+              <div className="appointmentConsultant-appointmentForm">
+                <h2>Add Appointment</h2>
+                <input
+                  type="text"
+                  name="patientName"
+                  placeholder="Patient Name"
+                  value={newAppointment.patientName}
+                  onChange={handleFormChange}
+                  required
+                />
+                <input
+                  type="date"
+                  name="date"
+                  value={newAppointment.date}
+                  onChange={handleFormChange}
+                  required
+                />
+                <select
+                  className="appointment-select"
+                  name="time"
+                  value={newAppointment.time}
+                  onChange={handleFormChange}
+                  required
+                >
+                  <option value="">Select Time</option>
+                  {timeOptions.map((time, index) => (
+                    <option key={index} value={time}>{time}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="appointment-select"
+                  name="location"
+                  value={newAppointment.location}
+                  onChange={handleFormChange}
+                  required
+                >
+                  <option value="" disabled>Select Location</option>
+                  {locationOptions.map((location, index) => (
+                    <option key={index} value={location}>{location}</option>
+                  ))}
+                </select>
+
+                <select
+                  className="appointment-select"
+                  name="category"
+                  value={newAppointment.category}
+                  onChange={handleFormChange}
+                  required
+                >
+                  <option value="" disabled>Select Category</option>
+                  {categoryOptions.map((category, index) => (
+                    <option key={index} value={category}>{category}</option>
+                  ))}
+                </select>
+
+                <button type="button" className="appointment-add-button" onClick={handleFormSubmit}>Add Appointment</button>
+                <button type="button" className="appointment-cancel-button" onClick={handleCancel}>Cancel</button>
+              </div>
+            )}
 
             {/* Conditionally render based on the active tab */}
             {activeTab === 'upcoming' && (
@@ -123,7 +236,6 @@ const AppointmentConsultant = () => {
                         <option value="confirmed">Confirmed</option>
                         <option value="pending">Pending</option>
                         <option value="cancelled">Cancelled</option>
-                        <option value="rescheduled">Rescheduled</option>
                       </select>
                     </div>
                   </div>

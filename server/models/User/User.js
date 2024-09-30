@@ -53,6 +53,9 @@ const userSchema = new mongoose.Schema(
       enum: ["patient", "assistant", "obgyne"],
       default: "patient",
     },
+    profilePicture: {
+      type: String,
+    },
     articleLastRead: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     likedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],

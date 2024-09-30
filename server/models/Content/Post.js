@@ -17,10 +17,15 @@ const PostSchema = new mongoose.Schema({
     required: true,
     index: "text",
   },
-  category: {
+  category: [
+    {
+      type: String,
+      enum: ["Pregnancy Updates", "Baby Care Tips", "Health & Wellness"],
+      default: "Pregnancy Updates",
+    },
+  ],
+  picture: {
     type: String,
-    enum: ["Pregnancy Updates", "Baby Care Tips", "Health & Wellness"],
-    default: "Pregnancy Updates",
   },
   likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }],
   comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostComment" }],

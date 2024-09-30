@@ -10,8 +10,11 @@ const AppError = require("./Utilities/appError");
 const globalErrorHandler = require("./controller/ErrorController");
 
 //routes
-const authRoute = require("./routes/auth");
-const userRoute = require("./routes/user");
+const authRoute = require("./routes/User/auth");
+const userRoute = require("./routes/User/user");
+const uploadRoute = require("./routes/User/upload");
+const postRoute = require("./routes/Content/post");
+
 const aliveRoute = require("./routes/alive");
 
 // Initialization
@@ -45,6 +48,9 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/auth", authRoute);
+app.use("/api/user", userRoute);
+app.use("/api/upload", uploadRoute);
+app.use("/api/post", postRoute);
 app.use("/api/alive", aliveRoute);
 
 app.all("*", (req, res, next) => {

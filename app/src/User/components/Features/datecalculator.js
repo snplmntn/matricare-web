@@ -74,7 +74,7 @@ const DateCalculator = () => {
   };
 
   return (
-    <div className="DDC-calcu-container" style={{ backgroundImage: 'url(/img/appointmentBG.jpg)' }}>
+    <div className="DDC-calcu-container">
       <Link to="/app" className="DDC-back-button"><IoArrowBackSharp /></Link>
       <div className="DDC-middle-container">
         <div className="DDC-left-column">

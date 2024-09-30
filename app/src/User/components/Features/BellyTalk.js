@@ -1,7 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import '../../styles/features/bellytalk.css';
-import { IoPeople, IoDocumentText, IoMail, IoAttach, IoCamera, IoBookmark, IoHeart, IoNavigateOutline, IoArrowBackSharp,  IoRoseSharp, IoLocationSharp } from 'react-icons/io5';
+import { IoSearch, IoBookmark, IoHeart, IoLocationSharp, IoPencil, IoArrowBack, IoCloudUploadOutline} from 'react-icons/io5';
 
 const BellyTalk = () => {
   const [posts, setPosts] = useState([
@@ -11,6 +10,7 @@ const BellyTalk = () => {
       location: 'San Jose, Bulacan',
       content: "👶 From the first flutter of kicks to the first giggles, being a mom means experiencing a love so deep it's beyond words. Cherishing these tiny milestones that fill my heart with endless joy.",
       comments: [],
+      image: null,
     },
     {
       id: 2,
@@ -18,6 +18,7 @@ const BellyTalk = () => {
       location: 'Sampaloc, Manila',
       content: 'Embracing the chaos and cuddles, because thats what makes motherhood magical. From messy mornings to bedtime stories, every moment with my little ones is a precious memory in the making. 💕',
       comments: [],
+      image: null,
     },
   ]);
   const [newPostText, setNewPostText] = useState('');
@@ -25,22 +26,93 @@ const BellyTalk = () => {
   const [savedPosts, setSavedPosts] = useState([]);
   const [replyingTo, setReplyingTo] = useState(null);
   const [commentText, setCommentText] = useState('');
-  const [showCameraModal, setShowCameraModal] = useState(false);
-  const videoRef = useRef(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [step, setStep] = useState(1); 
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+
+
+  const openModal = () => {
+    setIsModalOpen(true);
+    setNewPostText(''); 
+    setStep(1); 
+    setSelectedImage(null); 
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setNewPostText('');
+    setStep(1);
+    setSelectedImage(null); 
+  };
+
+  const handleNextStep = () => {
+    setStep(2); 
+  };
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategories((prev) => {
+      if (prev.includes(category)) {
+        return prev.filter((cat) => cat !== category); 
+      } else {
+        return [...prev, category]; 
+      }
+    });
+  };
+
+
+  const handlePostSubmit = () => {
+    if (newPostText.trim() === '') {
+      alert('Post content cannot be empty.'); 
+      return;
+    }
+  
+    if (selectedCategories.length === 0) {
+      alert('Please select at least one category.');
+      return;
+    }
+  
+    const newPost = {
+      id: posts.length + 1, 
+      user: 'Your Name', 
+      location: 'Your Location', 
+      content: newPostText,
+      categories: selectedCategories,
+      comments: [], 
+      image: selectedImage, // Include the selected image here
+    };
+  
+    setPosts([newPost, ...posts]); 
+    setNewPostText(''); 
+    setSelectedImage(null);
+    setSuccessMessage('Post Submitted');
+    setIsModalOpen(false); 
+    setSelectedCategories([]); 
+  };
+  
 
   const handlePost = () => {
     if (newPostText.trim() === '') {
-      return; // Prevent posting empty content
+      return; 
     }
     const newPost = {
-      id: posts.length + 1, // Generate a unique ID for the new post
-      user: 'Your Name', // Replace with actual user name or dynamic user data
-      location: 'Your Location', // Replace with actual role or dynamic user data
+      id: posts.length + 1, 
+      user: 'Your Name', 
+      location: 'Your Location', 
       content: newPostText,
       comments: [],
     };
     setPosts([newPost, ...posts]);
-    setNewPostText(''); // Clear the input after posting
+    setNewPostText(''); 
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
   };
 
   const handleLike = (postId) => {
@@ -94,120 +166,157 @@ const BellyTalk = () => {
     }
   };
 
-  const handleCameraClick = () => {
-    setShowCameraModal(true);
-  };
-
-  const closeCameraModal = () => {
-    setShowCameraModal(false);
-    if (videoRef.current) {
-      const stream = videoRef.current.srcObject;
-      if (stream) {
-        const tracks = stream.getTracks();
-        tracks.forEach((track) => track.stop());
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (showCameraModal) {
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then((stream) => {
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream;
-            videoRef.current.play();
-          }
-        })
-        .catch((err) => {
-          console.error("Error accessing the camera: ", err);
-        });
-    }
-  }, [showCameraModal]);
+  const filterPosts = (filterType) => {
+    // Logic to filter posts based on the filterType
+    console.log(`Filtering posts by: ${filterType}`);
+};
 
   return (
-    <div className="bellytalk-container" style={{
-      position: 'relative',
-      zIndex: 0,
-    }}>
-      <div className="background-image" style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundImage: 'url("/img/appointmentBG.jpg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        opacity: 0.3,
-        zIndex: -1, // Ensure the background is behind all other content
-      }} />
-      <aside className="bellytalk-sidebar">
-        <nav className="bellytalk-nav">
-        <Link to="/app" className="back-button-bellytalk"><IoArrowBackSharp /></Link>
-          <ul>
-            <li>
-              <button className="bellytalk-nav-button">
-                <IoPeople className="bellytalk-icon" /> People
-              </button>
-            </li>
-            <li>
-              <button className="bellytalk-nav-button">
-                <IoDocumentText className="bellytalk-icon" /> Posts
-              </button>
-            </li>
-            <li>
-              <button className="bellytalk-nav-button">
-                <IoMail className="bellytalk-icon" /> Inbox
-              </button>
-            </li>
-            <hr className="bellytalk-divider" />
-            <li>
-              <button className="bellytalk-nav-button">
-                <IoBookmark className="bellytalk-icon" /> Saved Post
-              </button>
-            </li>
-            <li>
-              <button className="bellytalk-nav-button">
-                <IoHeart className="bellytalk-icon" /> Liked Post
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </aside>
+    <div className="bellytalk-container">
+       <div className="bellytalk-top-bar">
+          <div className="bellytalk-title-logo">BellyTalk</div>
+          <div className="bellytalk-icons">
+            <button className="bellytalk-icon-button">
+              <IoBookmark className="bellytalk-icon" />
+              <span className="bellytalk-label">Saved</span>
+            </button>
+            <button className="bellytalk-icon-button">
+              <IoHeart className="bellytalk-icon" />
+              <span className="bellytalk-label">Favorites</span>
+            </button>
+          </div>
 
-      <main className="bellytalk-main-content">
-        <div className="bellytalk-top-bar">
-          <input type="text" className="bellytalk-search-icon" placeholder="Search for people, insights and more..." />
+          <div className="bellytalk-search-container">
+            <IoSearch className="bellytalk-search-icon" />
+            <input 
+              type="text" 
+              className="bellytalk-search" 
+              placeholder="Search for people, insights and more..." 
+            />
+          </div>
         </div>
 
-        <div className="bellytalk-share-box">
+      <main className="bellytalk-main-content">
+      <section class="trending-section">
+        <h2>Trending Now</h2>
+        <div class="trending-articles">
+          <article class="trending-article">
+              <div class="article-image">
+                  <img src="img/topic1.jpg" alt="Article Headline 1" />
+                  <div class="headlines">
+                      <h3>Maternal Health Disparities</h3>
+                      <p>Posted by: Bea Benella Rosal</p>
+                  </div>
+              </div>
+          </article>
+          <article class="trending-article">
+              <div class="article-image">
+                  <img src="img/topic2.jpg" alt="Article Headline 2" />
+                  <div class="headlines">
+                      <h3>Home Births and Midwifery</h3>
+                      <p>Posted by: Bea Benella Rosal</p>
+                  </div>
+              </div>
+          </article>
+          <article class="trending-article">
+              <div class="article-image">
+                  <img src="img/topic3.jpg" alt="Article Headline 3" />
+                  <div class="headlines">
+                      <h3>Celebrity Pregnancy Announcements</h3>
+                      <p>Posted by: Bea Benella Rosal</p>
+                  </div>
+              </div>
+          </article>
+          <article class="trending-article">
+              <div class="article-image">
+                  <img src="img/topic4.jpg" alt="Article Headline 4" />
+                  <div class="headlines">
+                      <h3>Rihanna Reveals Due Date for Her Second Baby During a Concert</h3>
+                      <p>Posted by: Bea Benella Rosal</p>
+                  </div>
+              </div>
+          </article>
+      </div>
+    </section>
+
+    <div className="content-container">
+      <div className='sharebox'>
+        <div className="sharebox-container" onClick={openModal}>
+          <IoPencil className="pen-icon" />
           <input
             type="text"
-            placeholder="What's on your mind?"
+            placeholder="What's your experience?"
             value={newPostText}
             onChange={(e) => setNewPostText(e.target.value)}
             className="bellytalk-share-box-input"
           />
-          <div className="bellytalk-icons">
-            <label htmlFor="file-upload" className="bellytalk-icon">
-              <IoAttach />
-            </label>
-            <input id="file-upload" type="file" style={{ display: 'none' }} />
-            <IoCamera className="bellytalk-icon" onClick={handleCameraClick} />
-            <button className="bellytalk-post-button" onClick={handlePost}>Post</button>
+        </div>
+      </div>
+
+      {isModalOpen && (
+        <div className="sharebox-modal-overlay">
+          <div className="sharebox-modal-content">
+            <span onClick={closeModal} className="sharebox-back-button">
+              <IoArrowBack />
+            </span>
+
+            {step === 1 && (
+          <>
+            <h2 className="sharebox-title">Create a New Talk</h2>
+            <textarea
+              placeholder="What's your experience?"
+              value={newPostText}
+              onChange={(e) => setNewPostText(e.target.value)}
+              className="sharebox-textarea"
+            />
+            <div className="upload-button">
+              <label htmlFor="file-upload" className="custom-file-upload">
+                <IoCloudUploadOutline />
+                Upload Photo
+              </label>
+              <input 
+                id="file-upload" 
+                type="file" 
+                onChange={handleFileChange} 
+                style={{ display: 'none' }} // Hide the default file input
+              />
+            </div>
+            {selectedImage && (
+              <div className="image-preview">
+                <img src={selectedImage} alt="Selected" className="preview-image" />
+              </div>
+            )}
+            <button onClick={handleNextStep} className="sharebox-button">Next</button>
+          </>
+        )}
+
+              {step === 2 && (
+                <>
+                  <h2 className="sharebox-title">Select Categories</h2>
+                  <div className="category-options">
+                    {['First Time Moms', 'Breast Feeding', 'Maternity Style', 'Labor', 'Baby Essential'].map((category) => (
+                      <div 
+                        key={category} 
+                        className={`category-option ${selectedCategories.includes(category) ? 'selected' : ''}`}
+                        onClick={() => handleCategoryClick(category)} // Handle click to select/deselect
+                      >
+                        {category}
+                      </div>
+                    ))}
+                  </div>
+                  <button onClick={handlePostSubmit} className="sharebox-button">Post</button>
+                  {successMessage && <p className="success-message">{successMessage}</p>}
+                </>
+              )}
           </div>
         </div>
-
-      <div className="bellytalk-filter-container">
-        <button className="bellytalk-filter-button">  <IoRoseSharp  className="filter-icon" />Pregnancy Updates</button>
-        <button className="bellytalk-filter-button">  <IoRoseSharp  className="filter-icon" />Baby Care Tips</button>
-        <button className="bellytalk-filter-button"> <IoRoseSharp  className="filter-icon" /> Health & Wellness</button>
-      </div>
+      )}
+    </div>
 
         <section className="bellytalk-feed">
           {posts.map((post) => (
             <div className="bellytalk-feed-item" key={post.id}>
-              <img src="img/LOGO.png" alt="Avatar" className="bellytalk-avatar-overlay" />
+              <img src="img/topic1.jpg" alt="Avatar" className="bellytalk-avatar-overlay" />
               <div className="bellytalk-post-content">
                 <h4>{post.user}</h4>
                 <div className="location-with-icon">
@@ -215,6 +324,9 @@ const BellyTalk = () => {
                   <p>{post.location}</p>
                 </div>
                 <p>{post.content}</p>
+                {post.image && (
+                <img src={post.image} alt="Post" className="post-image" />
+              )}
                 <hr className="bellytalk-divider" />
                 <div className="bellytalk-actions">
                   <button className="bellytalk-action-button" onClick={() => handleReply(post.id)}>Reply</button>
@@ -226,105 +338,62 @@ const BellyTalk = () => {
                     className={`bellytalk-action-icon ${savedPosts.includes(post.id) ? 'active' : ''}`}
                     onClick={() => handleSave(post.id)}
                   />
+
                 </div>
-                {replyingTo === post.id && (
-          <div className="bellytalk-reply-container">
-            <input
-              type="text"
-              placeholder="Write a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-              className="bellytalk-reply-input"
-              onKeyPress={(e) => handleKeyPress(e, post.id)} // Handle Enter key press
-            />
-          </div>
-        )}
-        {post.comments.map((comment) => (
-  <div className="bellytalk-comment" key={comment.id}>
-    <div className="comment-user-info">
-      <img src="img/LOGO.png" alt="User Avatar" className="comment-avatar" />
-      <div>
-        <h4>{comment.user}</h4>
-        <p>{comment.text}</p>
-      </div>
-    </div>
-  </div>
-))}
+                        {replyingTo === post.id && (
+                  <div className="bellytalk-reply-container">
+                    <input
+                      type="text"
+                      placeholder="Write a comment..."
+                      value={commentText}
+                      onChange={(e) => setCommentText(e.target.value)}
+                      className="bellytalk-reply-input"
+                      onKeyPress={(e) => handleKeyPress(e, post.id)} // Handle Enter key press
+                    />
+                  </div>
+                )}
+                        {post.comments.map((comment) => (
+                  <div className="bellytalk-comment" key={comment.id}>
+                    <div className="comment-user-info">
+                      <img src="img/LOGO.png" alt="User Avatar" className="comment-avatar" />
+                      <div>
+                        <h4>{comment.user}</h4>
+                        <p>{comment.text}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </section>
+        <div className="filter-section">
+          <h3>Filters</h3>
+          <div className="filter-container">
+            <input type="checkbox" id="all" onChange={() => filterPosts('All')} />
+            <label for="all">All</label>
+
+            <input type="checkbox" id="first-time" onChange={() => filterPosts('first-time')} />
+            <label for="first-time">First-Time Moms</label>
+
+            <input type="checkbox" id="baby-essentials" onChange={() => filterPosts('baby-essentials')} />
+            <label for="baby-essentials">Baby Essentials</label>
+
+            <input type="checkbox" id="maternity-style" onChange={() => filterPosts('maternity-style')} />
+            <label for="maternity-style">Maternity Style</label>
+
+            <input type="checkbox" id="breast-feeding" onChange={() => filterPosts('breast-feeding')} />
+            <label for="breast-feeding">Breast Feeding</label>
+
+            <input type="checkbox" id="gender-reveal" onChange={() => filterPosts('gender-reveal')} />
+            <label for="gender-reveal">Gender Reveal</label>
+
+            <input type="checkbox" id="parenting-tips" onChange={() => filterPosts('parenting-tips')} />
+            <label for="parenting-tips">Parenting Tips</label>
+          </div>
+
+        </div>
       </main>
-
-      <aside className="bellytalk-right-sidebar">
-      <div className="bellytalk-featured">
-      <div className="featured-image">
-    <img src="/img/bg5.jpg" alt="Featured Story" />
-  </div>
-    <div className="featured-description">
-      <h4>Featured Story</h4>
-      <p>A Mother's Full-Time Story</p>
-      <p>Short description of the story goes here...</p>
-    </div>
-  </div>
-
-  <div className="bellytalk-people-you-may-know">
-  <h4>People You May Know</h4>
-  <hr className="divider" />
-  <ul className="people-you-may-know-list">
-    <li className="people-you-may-know-item">
-      <img src="img/LOGO.png" alt="Avatar" className="people-you-may-know-avatar" />
-      <div className="people-you-may-know-details">
-        <p className="name">Jon Pearl</p>
-        <p className="location">Sampaloc, Manila</p>
-      </div>
-      <button className="message-icon">
-        <IoNavigateOutline   className="icon" />
-      </button>
-    </li>
-    <li className="people-you-may-know-item">
-      <img src="img/LOGO.png" alt="Avatar" className="people-you-may-know-avatar" />
-      <div className="people-you-may-know-details">
-        <p className="name">Christie Pizzo</p>
-        <p className="location">San Jose, Bulacan</p>
-      </div>
-      <button className="message-icon">
-        <IoNavigateOutline IoNavigateOutline  className="icon" />
-      </button>
-    </li>
-    <li className="people-you-may-know-item">
-      <img src="img/LOGO.png" alt="Avatar" className="people-you-may-know-avatar" />
-      <div className="people-you-may-know-details">
-        <p className="name">Alex Laprade</p>
-        <p className="location">Sampaloc, Manila</p>
-      </div>
-      <button className="message-icon">
-        <IoNavigateOutline  className="icon" />
-      </button>
-    </li>
-    <li className="people-you-may-know-item">
-      <img src="img/LOGO.png" alt="Avatar" className="people-you-may-know-avatar" />
-      <div className="people-you-may-know-details">
-        <p className="name">Hannah Cochran</p>
-        <p className="location">San Jose, Bulacan</p>
-      </div>
-      <button className="message-icon">
-        <IoNavigateOutline  className="icon" />
-      </button>
-    </li>
-    <li className="people-you-may-know-item">
-      <img src="img/LOGO.png" alt="Avatar" className="people-you-may-know-avatar" />
-      <div className="people-you-may-know-details">
-        <p className="name">Oren Shatken</p>
-        <p className="location">San Jose, Bulacan</p>
-      </div>
-      <button className="message-icon">
-        <IoNavigateOutline  className="icon" />
-      </button>
-    </li>
-  </ul>
-</div>
-      </aside>
     </div>
   );
 };

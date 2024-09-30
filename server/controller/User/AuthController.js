@@ -28,11 +28,9 @@ const user_login = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid credentials", 401));
   }
 
-  const token = jwt.sign(
-    { id: user._id },
-    process.env.JWT_SECRET || "your_jwt_secret",
-    { expiresIn: "30d" }
-  );
+  const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
+    expiresIn: "30d",
+  });
   return res.json({
     user,
     token,
@@ -64,7 +62,7 @@ const user_signup = catchAsync(async (req, res, next) => {
   });
 
   // Generate JWT token
-  const token = jwt.sign({ id: user._id }, "your_jwt_secret", {
+  const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
     expiresIn: "30d",
   });
 

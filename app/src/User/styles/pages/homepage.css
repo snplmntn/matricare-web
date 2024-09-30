@@ -393,12 +393,6 @@
   margin-right: 100px;
 }
 
-.dashboard-appointment-rectangle:hover {
-  background-color: #9a6cb44e; /* Optional: Add a hover effect */
-  transform: scale(1.02); /* Optional: Add a slight zoom effect */
-}
-
-
 .dashboard-icon-wrapper {
   display: flex;
   align-items: center;
@@ -419,7 +413,7 @@
 }
 
 .dashboard-text-wrapper{
-  margin-top: -70px;
+  margin-top: 0px;
 }
 
 .dashboard-text-wrapper h2{

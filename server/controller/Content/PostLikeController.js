@@ -1,10 +1,10 @@
-const PostComment = require("../../models/BellyTalk/PostComment");
-const PostLike = require("../../models/BellyTalk/PostLike");
-const Post = require("../../models/BellyTalk/Post");
+const PostComment = require("../../models/Content/PostComment");
+const PostLike = require("../../models/Content/PostLike");
+const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
-const likePost = catchAsync(async (req, res, next) => {
+const like_post = catchAsync(async (req, res, next) => {
   const { userId, postId, postCommentId } = req.body;
 
   // Determine the likeable item and model based on request parameters
@@ -69,7 +69,8 @@ const likePost = catchAsync(async (req, res, next) => {
   });
 });
 
-const getPostLikeCount = catchAsync(async (req, res, next) => {
+// Get Like Count
+const like_get = catchAsync(async (req, res, next) => {
   const { postId, postCommentId } = req.query;
 
   let postLike,
@@ -113,7 +114,7 @@ const getPostLikeCount = catchAsync(async (req, res, next) => {
   });
 });
 
-const unlikePost = catchAsync(async (req, res, next) => {
+const like_delete = catchAsync(async (req, res, next) => {
   const { userId, postId, postCommentId } = req.query;
 
   let likeableId, likeableModel;
@@ -166,7 +167,7 @@ const unlikePost = catchAsync(async (req, res, next) => {
 });
 
 module.exports = {
-  likePost,
-  getPostLikeCount,
-  unlikePost,
+  like_post,
+  like_get,
+  like_delete,
 };

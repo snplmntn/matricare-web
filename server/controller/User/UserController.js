@@ -35,7 +35,7 @@ const user_delete = catchAsync(async (req, res, next) => {
 });
 
 const user_update = catchAsync(async (req, res, next) => {
-  const KEY = process.env.KEY;
+  const KEY = process.env.JWT_KEY;
   const { userId } = req.query;
 
   const user = await User.findById(userId);
@@ -58,46 +58,18 @@ const user_update = catchAsync(async (req, res, next) => {
     } else return next(new AppError("Incorrect Password", 401));
   }
 
-  if (req.body.firstname && req.body.lastname) {
-    req.body.fullname = req.body.firstname + " " + req.body.lastname;
-    req.body.nameValid = true;
-  } else if (req.body.firstname) {
-    req.body.fullname = req.body.firstname + " " + user.lastname;
-  } else if (req.body.lastname) {
-    req.body.fullname = user.firstname + " " + req.body.lastname;
-  }
+  // ===================== POST =============================
+  // if (req.body.profilePicture) update.profilePicture = req.body.profilePicture;
 
-  if (req.body.username || req.body.fullname || req.body.profilePicture) {
-    const update = {};
-    if (req.body.username) update.username = req.body.username;
-    if (req.body.fullname) update.fullname = req.body.fullname;
-    if (req.body.profilePicture)
-      update.profilePicture = req.body.profilePicture;
+  // //Post
+  // await Post.updateMany({ userId: userId }, { $set: update }, { new: true });
 
-    //Post
-    await Post.updateMany({ userId: userId }, { $set: update }, { new: true });
-
-    //Post Comment
-    await PostComment.updateMany(
-      { userId: userId },
-      { $set: update },
-      { new: true }
-    );
-
-    //Announcement
-    await Announcement.updateMany(
-      { userId: userId },
-      { $set: update },
-      { new: true }
-    );
-
-    //Announcement Comment
-    await AnnouncementComment.updateMany(
-      { userId: userId },
-      { $set: update },
-      { new: true }
-    );
-  }
+  // //Post Comment
+  // await PostComment.updateMany(
+  //   { userId: userId },
+  //   { $set: update },
+  //   { new: true }
+  // );
 
   const updatedUser = await User.findByIdAndUpdate(
     userId,
@@ -111,7 +83,7 @@ const user_update = catchAsync(async (req, res, next) => {
   const payload = { user: JSON.stringify(updatedUser), exp: expiration };
   const token = jwt.sign(payload, KEY);
   const cookieOptions = {
-    expires: new Date(
+    expire: new Date(
       Date.now() + process.env.JWT_TEMP_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
     httpOnly: true,

@@ -18,6 +18,12 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordSettings, setShowPasswordSettings] = useState(false);
   const [error, setError] = useState('');
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notificationPreferences, setNotificationPreferences] = useState({
+    emailNotifications: false,
+    smsNotifications: false,
+    pushNotifications: false,
+  });
 
 
   useEffect(() => {
@@ -49,6 +55,7 @@ const UserProfile = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImageUrl(reader.result);
+        localStorage.setItem('profileImageUrl', reader.result); // Save to localStorage
       };
       reader.readAsDataURL(file);
     }
@@ -124,10 +131,15 @@ const UserProfile = () => {
       setError('');
     }
   };
+
+  const handleNotificationChange = (e) => {
+    const { name, checked } = e.target;
+    setNotificationPreferences((prev) => ({ ...prev, [name]: checked }));
+  };
   
   
   return (
-    <div className="user-profile-container" style={{ backgroundImage: 'url("/img/appointmentBG.jpg")' }}>
+    <div className="user-profile-container">
       <Link to="/app" className="user-profile-back-btn">
         <FaArrowLeft className="user-profile-back-icon" />
       </Link>
@@ -136,41 +148,23 @@ const UserProfile = () => {
         <h2>Settings</h2>
         <p>Customize view</p>
         <div className="settings-button-container">
-          <button
-            className="settings-btn"
-            onClick={() => {
-              setIsEditing(true);
-              setShowPasswordSettings(false);
-            }}
-          >
-            Edit Profile
-          </button>
-          <button
-            className="settings-btn"
-            onClick={() => {
-              setIsEditing(false);
-              setShowPasswordSettings(false);
-            }}
-          >
-            Notifications
-          </button>
-          <button
-            className="settings-btn"
-            onClick={() => {
-              setShowPasswordSettings(true);
-              setIsEditing(false);
-            }}
-          >
-            Password & Security
-          </button>
-        </div>
+        <button className="settings-btn" onClick={() => { setIsEditing(true); setShowPasswordSettings(false); setShowNotifications(false); }}>
+          Edit Profile
+        </button>
+        <button className="settings-btn" onClick={() => { setIsEditing(false); setShowPasswordSettings(false); setShowNotifications(true); }}>
+          Notifications
+        </button>
+        <button className="settings-btn" onClick={() => { setShowPasswordSettings(true); setIsEditing(false); setShowNotifications(false); }}>
+          Password & Security
+        </button>
+      </div>
       </div>
 
       <div className="user-profile-right-container">
         <h2>Personal</h2>
         <p>Patient's Information</p>
 
-        {!isEditing && !showPasswordSettings && (
+        {!isEditing && !showPasswordSettings && !showNotifications && (
           <div className="user-profile-items-wrapper">
             <div className="user-profile-divider-wrapper">
               <span className="UP-divider-text-wrapper">Personal Details</span>
@@ -324,6 +318,72 @@ const UserProfile = () => {
             </div>
           </>
         )}
+
+        {showNotifications && (
+          <>
+            <div className="user-profile-divider">
+              <span className="UP-divider-text">Notification Preferences</span>
+            </div>
+            <div className="notification-settings">
+              <div className="toggle-container">
+                <label className="toggle">
+                  <input
+                    type="checkbox"
+                    name="emailNotifications"
+                    checked={notificationPreferences.emailNotifications}
+                    onChange={handleNotificationChange}
+                  />
+                  <span className="slider"></span>
+                  <span className="toggle-label">Email Notifications</span>
+                </label>
+              </div>
+              <div className="toggle-container">
+                <label className="toggle">
+                  <input
+                    type="checkbox"
+                    name="smsNotifications"
+                    checked={notificationPreferences.smsNotifications}
+                    onChange={handleNotificationChange}
+                  />
+                  <span className="slider"></span>
+                  <span className="toggle-label">SMS Notifications</span>
+                </label>
+              </div>
+              <div className="toggle-container">
+                <label className="toggle">
+                  <input
+                    type="checkbox"
+                    name="pushNotifications"
+                    checked={notificationPreferences.pushNotifications}
+                    onChange={handleNotificationChange}
+                  />
+                  <span className="slider"></span>
+                  <span className="toggle-label">Push Notifications</span>
+                </label>
+              </div>
+            </div>
+            <div className="user-profile-button-group">
+              <button
+                type="button"
+                className="user-profile-save-btn"
+                onClick={() => {
+                  localStorage.setItem('notificationPreferences', JSON.stringify(notificationPreferences));
+                  setShowNotifications(false);
+                }}
+              >
+                Save Preferences
+              </button>
+              <button
+                type="button"
+                className="user-profile-cancel-btn"
+                onClick={() => setShowNotifications(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </>
+        )}
+
 
         <div className="user-profile-left-container">
         <div className="user-profile-image-section">

@@ -11,7 +11,11 @@ const documentSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    userId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    documentLink: {
+      type: String,
+      required: true,
+    },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

@@ -8,7 +8,7 @@ const {
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
-const post_profilepicture = catchAsync(async (req, res, next) => {
+const picture_post = catchAsync(async (req, res, next) => {
   const firebaseConfig = {
     storageBucket: process.env.FIREBASE_STORAGEBUCKET,
   };
@@ -19,7 +19,7 @@ const post_profilepicture = catchAsync(async (req, res, next) => {
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   const storageRef = ref(
     storage,
-    `profilepicture/${req.body.username}/${req.file.originalname}-${uniqueSuffix}`
+    `picture/${req.query.userId}/${req.file.originalname}-${uniqueSuffix}`
   );
 
   const metadata = {
@@ -36,10 +36,43 @@ const post_profilepicture = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({
     message: "Profile Picture Successfully Uploaded!",
-    profilePictureLink: downloadURL,
+    pictureLink: downloadURL,
+  });
+});
+
+const document_post = catchAsync(async (req, res, next) => {
+  const firebaseConfig = {
+    storageBucket: process.env.FIREBASE_STORAGEBUCKET,
+  };
+
+  initializeApp(firebaseConfig);
+  const storage = getStorage();
+
+  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+  const storageRef = ref(
+    storage,
+    `document/${req.query.userId}/${req.file.originalname}-${uniqueSuffix}`
+  );
+
+  const metadata = {
+    contentType: req.file.mimetype,
+  };
+
+  const snapshot = await uploadBytesResumable(
+    storageRef,
+    req.file.buffer,
+    metadata
+  );
+
+  const downloadURL = await getDownloadURL(snapshot.ref);
+
+  return res.status(200).json({
+    message: "Document Successfully Uploaded!",
+    documentLink: downloadURL,
   });
 });
 
 module.exports = {
-  post_profilepicture,
+  picture_post,
+  document_post,
 };

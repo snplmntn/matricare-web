@@ -1,5 +1,5 @@
-const PostComment = require("../../models/BellyTalk/PostComment");
-const Post = require("../../models/BellyTalk/Post");
+const PostComment = require("../../models/Content/PostComment");
+const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 

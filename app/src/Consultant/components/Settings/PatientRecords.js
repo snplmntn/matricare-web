@@ -77,36 +77,36 @@ const PatientRecords = () => {
             <Link to="/consultant-patientsinfo" className="PR-back-button"><IoMdArrowRoundBack /></Link>  
                 <div className="PR-label"><h2>Patients</h2></div>
                 <div className="PR-top-section">
-    <div className="PR-patient-info">
-        <img src="img/topic2.jpg" alt="Patient Photo" />
-        <div className="PR-patient-details">
-            <h3>Alice M. Guo</h3>
-            <p>02/21/1996 (28 yrs old), F</p>
-            <div className="PR-phone-info">
-                <FaMobileAlt className="PR-phone-icon" />
-                <p>+63 905 4562 702</p>
-            </div>
-        </div>
-    </div>
-    <div className="PR-info-columns">
-        <div className="PR-address-info">
-            <h4>Home Address:</h4>
-            <p>123 Gumamela Street, <br />Antipolo, Rizal</p>
-        </div>
-        <div className="PR-email-info">
-            <h4>Email Address:</h4>
-            <p>alice.guo@example.com</p>
-        </div>
-        <div className="PR-partner-info">
-            <h4>Husband/Partner:</h4>
-            <p>John Doe</p>
-            <div className="PR-partner-contact">
-                <FaMobileAlt className="PR-phone-icon" />
-                <p>+63 905 4562 702</p>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div className="PR-patient-info">
+                        <img src="img/topic2.jpg" alt="Patient Photo" />
+                        <div className="PR-patient-details">
+                            <h3>Alice M. Guo</h3>
+                            <p>02/21/1996 (28 yrs old), F</p>
+                            <div className="PR-phone-info">
+                                <FaMobileAlt className="PR-phone-icon" />
+                                <p>+63 905 4562 702</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="PR-info-columns">
+                        <div className="PR-address-info">
+                            <h4>Home Address:</h4>
+                            <p>123 Gumamela Street, <br />Antipolo, Rizal</p>
+                        </div>
+                        <div className="PR-email-info">
+                            <h4>Email Address:</h4>
+                            <p>alice.guo@example.com</p>
+                        </div>
+                        <div className="PR-partner-info">
+                            <h4>Husband/Partner:</h4>
+                            <p>John Doe</p>
+                            <div className="PR-partner-contact">
+                                <FaMobileAlt className="PR-phone-icon" />
+                                <p>+63 905 4562 702</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div className="PR-outstanding-tasks">
                     <div className="PR-header">

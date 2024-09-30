@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../../styles/pages/landingpageconsultant.css';
 import 'react-calendar/dist/Calendar.css';
 import Calendar from 'react-calendar';
-import {IoCalendar, IoNotificationsSharp, IoPeople, IoCall, IoMail, IoPersonCircleOutline } from 'react-icons/io5';
+import {IoCalendar, IoNotificationsSharp, IoPeople, IoMail, IoPersonCircleOutline, IoSearch } from 'react-icons/io5';
 
 
 const LandingPageConsultant = () => {
@@ -13,6 +13,7 @@ const LandingPageConsultant = () => {
       <main className="consultant-main-content">
         <header className="consultant-header">
         <div className="consultant-search-bar">
+        <IoSearch className="consultant-search-icon" />
         <input type="text" className="consultant-search-input" placeholder="Search Appointments..." />
         </div>
           <div className="consultant-header-controls">
@@ -34,22 +35,22 @@ const LandingPageConsultant = () => {
             <div className="consultant-report-card total-patients">
             <div className="consul-icon"><IoPeople /></div>
             <div className="consul-text">Total Patients</div>
-            <div className="consul-number">260</div>
+            <div className="consul-number">54</div>
           </div>
           <div className="consultant-report-card phone-calls">
-            <div className="consul-icon"style={{ color: '#7c459c' }}><IoCall /></div>
-            <div className="consul-text">Phone Calls</div>
-            <div className="consul-number">260</div>
+            <div className="consul-icon"style={{ color: '#7c459c' }}><IoPeople /></div>
+            <div className="consul-text">New Patients</div>
+            <div className="consul-number">2</div>
           </div>
           <div className="consultant-report-card appointments">
             <div className="consul-icon"style={{ color: '#e39fa9' }}><IoCalendar /></div>
             <div className="consul-text">Appointments</div>
-            <div className="consul-number">128</div>
+            <div className="consul-number">8</div>
           </div>
           <div className="consultant-report-card unread-mails">
             <div className="consul-icon"style={{ color: '#9a6cb4' }}><IoMail /></div>
             <div className="consul-text">Unread Mails</div>
-            <div className="consul-number">321</div>
+            <div className="consul-number">10</div>
           </div>
         </section>
 
@@ -72,14 +73,14 @@ const LandingPageConsultant = () => {
               <tr>
                 <td>Ella Cruz</td>
                 <td>Mary Chiles</td>
-                <td>20 Sept 2021</td>
+                <td>30 Sept 2021</td>
                 <td>10:00 AM</td>
                 <td>Pending</td>
               </tr>
               <tr>
                 <td>Mary Andres</td>
-                <td>Grace Medical</td>
-                <td>22 Sept 2021</td>
+                <td>Mary Chiles</td>
+                <td>30 Sept 2021</td>
                 <td>01:00 PM</td>
                 <td>Confirmed</td>
               </tr>
