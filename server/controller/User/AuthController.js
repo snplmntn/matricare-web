@@ -21,8 +21,14 @@ const user_login = catchAsync(async (req, res, next) => {
   if (!isMatch) {
     return next(new AppError("Invalid credentials", 401));
   }
+
+  const token = jwt.sign({ user: user }, process.env.JWT_KEY, {
+    expiresIn: "30d",
+  });
+
   return res.json({
     user,
+    token,
   });
 });
 
@@ -50,14 +56,8 @@ const user_signup = catchAsync(async (req, res, next) => {
     phoneNumber,
   });
 
-  // Generate JWT token
-  const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
-    expiresIn: "30d",
-  });
-
   return res.status(201).json({
     user,
-    token,
   });
 });
 
