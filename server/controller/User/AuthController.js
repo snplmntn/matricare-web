@@ -8,32 +8,21 @@ const AppError = require("../../Utilities/appError");
 const user_login = catchAsync(async (req, res, next) => {
   const { username, password } = req.body;
 
-  console.log(`Attempting login for: ${username}`);
-
   const user = await User.findOne({
     $or: [{ email: username }, { username }],
   });
-  console.log("Found user:", user);
 
   if (!user) {
-    console.log("User not found");
     return next(new AppError("User not found", 404));
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
-  console.log(`Password match result: ${isMatch}`);
 
   if (!isMatch) {
-    console.log("Password does not match");
     return next(new AppError("Invalid credentials", 401));
   }
-
-  const token = jwt.sign({ id: user._id }, process.env.JWT_KEY, {
-    expiresIn: "30d",
-  });
   return res.json({
     user,
-    token,
   });
 });
 
