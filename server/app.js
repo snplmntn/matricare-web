@@ -5,8 +5,9 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 
-//Error handlers
+//Utilities
 const AppError = require("./Utilities/appError");
+const checkAuth = require("./Utilities/checkAuth");
 const globalErrorHandler = require("./controller/ErrorController");
 
 //routes
@@ -15,6 +16,7 @@ const userRoute = require("./routes/User/user");
 const verifyRoute = require("./routes/User/verify");
 const uploadRoute = require("./routes/User/upload");
 const postRoute = require("./routes/Content/post");
+const bellytalk = require("./routes/Content/bellytalk");
 
 const aliveRoute = require("./routes/alive");
 
@@ -49,10 +51,11 @@ app.use(express.urlencoded({ extended: false }));
 
 // Routes
 app.use("/api/auth", authRoute);
-app.use("/api/user", userRoute);
 app.use("/api/verify", verifyRoute);
-app.use("/api/upload", uploadRoute);
-app.use("/api/post", postRoute);
+app.use("/api/user", checkAuth, userRoute);
+app.use("/api/upload", checkAuth, uploadRoute);
+app.use("/api/post", checkAuth, postRoute);
+app.use("/api/bellytalk", bellytalk); //public belly talk route
 app.use("/api/alive", aliveRoute);
 
 app.all("*", (req, res, next) => {
