@@ -44,7 +44,7 @@ const BellyTalk = ({ user }) => {
   const [step, setStep] = useState(2);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
-  const selectedImage = useRef();
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const openModal = () => {
     if (!token) {
@@ -53,22 +53,21 @@ const BellyTalk = ({ user }) => {
     setIsModalOpen(true);
     setNewPostText("");
     setStep(1);
-    selectedImage.current = null;
+    setSelectedImage(null);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setNewPostText("");
     setStep(1);
-    selectedImage.current = null;
+    setSelectedImage(null);
   };
 
   const handleNextStep = async () => {
     console.log(selectedImage);
-    if ((selectedImage.current = null)) {
-      const imgFile = selectedImage.current.files[0];
+    if (selectedImage) {
       const img = {
-        picture: imgFile,
+        picture: selectedImage,
       };
       try {
         console.log(img);
@@ -144,13 +143,13 @@ const BellyTalk = ({ user }) => {
     setSelectedCategories([]);
   };
 
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setSelectedImage(imageUrl);
-  //   }
-  // };
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setSelectedImage(imageUrl);
+    }
+  };
 
   const filterPosts = (filterType) => {
     // Logic to filter posts based on the filterType
@@ -289,11 +288,11 @@ const BellyTalk = ({ user }) => {
                       <input
                         id="file-upload"
                         type="file"
-                        ref={selectedImage}
+                        onChange={handleFileChange}
                         style={{ display: "none" }} // Hide the default file input
                       />
                     </div>
-                    {/* {selectedImage && (
+                    {selectedImage && (
                       <div className="image-preview">
                         <img
                           src={selectedImage}
@@ -301,7 +300,7 @@ const BellyTalk = ({ user }) => {
                           className="preview-image"
                         />
                       </div>
-                    )} */}
+                    )}
                     <button
                       onClick={handleNextStep}
                       className="sharebox-button"
@@ -353,7 +352,7 @@ const BellyTalk = ({ user }) => {
 
         <section className="bellytalk-feed">
           {posts ? (
-            posts.map((post) => <BellyTalkPost post={post} />)
+            posts.map((post) => <BellyTalkPost key={post._id} post={post} />)
           ) : (
             <p>NO POSTS</p>
           )}

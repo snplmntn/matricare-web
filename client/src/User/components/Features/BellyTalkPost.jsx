@@ -89,8 +89,8 @@ const BellyTalkPost = ({ post }) => {
           <p>{post.address}</p>
         </div>
         <p>{post.content}</p>
-        {post.image && (
-          <img src={post.image} alt="Post" className="post-image" />
+        {post.picture && (
+          <img src={post.picture} alt="Post" className="post-image" />
         )}
         <hr className="bellytalk-divider" />
         <div className="bellytalk-actions">
