@@ -1,11 +1,10 @@
 .bellytalk-container {
   display: flex;
-  background-color: #dfd6d6;
+  background-color: #f2eeee !important;
   height: 100vh;
   flex-direction: column;
   justify-content: space-between;
 }
-
 
 .bellytalk-divider {
   border: 0;
@@ -21,7 +20,7 @@
 }
 
 .bellytalk-main-content::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
 
 .bellytalk-top-bar {
@@ -36,137 +35,139 @@
 
 .bellytalk-title-logo {
   font-size: 30px;
-  font-weight: bold; 
-  color: #7c459c; 
-  margin-left: 200px; 
+  font-weight: bold;
+  color: #7c459c;
+  margin-left: 200px;
+}
+
+.bellytalk-icons {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 500px;
 }
 
 .bellytalk-icon-button {
   display: flex;
   align-items: center;
-  background: none; 
-  border: none; 
-  cursor: pointer; 
+  background: none;
+  border: none;
+  cursor: pointer;
   padding: 0;
-  margin-right: -750px; 
-  margin-top: -950px;
-  padding-left: 800px;
+  margin-right: 30px;
 }
 
 .bellytalk-icon {
-  font-size: 24px; 
+  font-size: 24px;
   margin-right: 10px !important;
-  cursor: pointer; 
-  color: #603830; 
+  cursor: pointer;
+  color: #e39fa9 !important;
 }
 
 .bellytalk-label {
-  font-size: 16px; 
+  font-size: 16px;
   color: #603830;
-  margin-right: 15px; 
+  margin-right: 15px;
 }
-
 
 .bellytalk-search-container {
   position: relative;
   display: flex;
   align-items: center;
-  width: 30%; 
+  width: 30%;
   border-radius: 20px;
   margin-right: 200px;
 }
 
 .bellytalk-search {
-border-radius: 20px;
-border: none; 
-outline: none;
-text-indent: 25px;
-z-index: 1;
+  border-radius: 20px;
+  border: 1px solid #042440;
+  outline: none;
+  text-indent: 40px;
+  z-index: 1;
+  height: 40px;
+  width: 500px;
 }
 
 .bellytalk-search::placeholder {
-color: #042440;
+  color: #042440;
 }
 
 .bellytalk-search-icon {
-position: absolute;
-left: 15px;
-font-size: 16px;
-color: #042440;
+  position: absolute;
+  left: 15px;
+  font-size: 16px;
+  color: #042440 !important;
+  z-index: 1000;
 }
 
 /* trending */
 .trending-section {
-margin-top: 0;
+  margin-top: 0;
 }
 
 .trending-section h2 {
-font-size: 24px;
-margin-bottom: 10px;
-color: #042440;
-margin-left: 230px;
-
+  font-size: 24px;
+  margin-bottom: 10px;
+  color: #042440;
+  margin-left: 230px;
 }
 .trending-articles {
-display: flex;
-justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .trending-articles {
-display: flex;
-justify-content: center;
-margin-left: -5px;
-gap: 15px; 
+  display: flex;
+  justify-content: center;
+  margin-left: -5px;
+  gap: 15px;
 }
 
 .trending-article {
-position: relative;
-width: 18%; 
-height: 300px; 
-margin-right: 0; 
-overflow: hidden; 
-border-radius: 10px;
+  position: relative;
+  width: 18%;
+  height: 300px;
+  margin-right: 0;
+  overflow: hidden;
+  border-radius: 10px;
 }
 
 .trending-article:last-child {
-margin-right: 0;
+  margin-right: 0;
 }
 
 .article-image {
-position: relative;
-height: 100%; 
-width: 100%; 
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .article-image img {
-width: 100%;
-height: 100%; 
-object-fit: cover; 
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .headlines {
-background-color: rgba(0, 0, 0, 0.3); 
-color: white; 
-padding: 10px;
-position: absolute; 
-bottom: 0;
-width: 100%; 
-height: 100%; 
-text-align: left;
-opacity: 1; 
-transition: none;
-display: flex; 
-flex-direction: column; 
-justify-content: flex-end; 
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  padding: 10px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  opacity: 1;
+  transition: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
-.headlines p{
-margin-top: -10px
+.headlines p {
+  margin-top: -10px;
 }
-
-
-
-
 
 /* share-box */
 
@@ -175,7 +176,7 @@ margin-top: -10px
   justify-content: space-between; /* Ensures content is spaced out */
 }
 
-.sharebox{
+.sharebox {
   position: relative;
   margin-top: 30px;
   margin-bottom: 20px;
@@ -207,7 +208,7 @@ margin-top: -10px
   font-size: 14px; /* Placeholder text font size */
 }
 
-.pen-icon{
+.pen-icon {
   color: #ffffff;
   font-size: 14px;
   position: absolute;
@@ -259,12 +260,12 @@ margin-top: -10px
 }
 
 .sharebox-button {
-  position: absolute; 
-  top: 30px; 
+  position: absolute;
+  top: 30px;
   right: 30px;
   padding: 10px;
   border: none;
-  background-color:transparent;
+  background-color: transparent;
   color: #042440;
   cursor: pointer;
   border-radius: 5px;
@@ -272,22 +273,22 @@ margin-top: -10px
 
 .category-options {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   text-align: center;
 }
 
 .category-option {
-  padding: 10px 15px; 
-  border: 1px solid #ccc; 
-  border-radius: 20px; 
-  margin: 5px 0; 
-  cursor: pointer; 
-  transition: background-color 0.3s; 
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  margin: 5px 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 .category-option.selected {
-  background-color: #7c459c; 
-  color: #fff; 
+  background-color: #7c459c;
+  color: #fff;
 }
 
 .sharebox-title {
@@ -296,11 +297,10 @@ margin-top: -10px
   text-align: center;
   margin-bottom: 20px;
   font-weight: bold;
-  line-height: 1.5; 
-  padding: 10px; 
-  border-bottom: 2px solid #7c459c; 
+  line-height: 1.5;
+  padding: 10px;
+  border-bottom: 2px solid #7c459c;
 }
-
 
 .upload-button {
   display: flex;
@@ -347,8 +347,6 @@ margin-top: -10px
   border-radius: 5px;
   width: 800px;
 }
-
-
 
 /* feed */
 
@@ -457,7 +455,7 @@ margin-top: -10px
   margin-bottom: 10px !important;
   box-sizing: border-box !important;
   font-size: 14px !important ;
-  background-color: transparent !important; 
+  background-color: transparent !important;
   z-index: 10;
   margin-top: -40px !important;
   position: absolute;
@@ -490,58 +488,56 @@ margin-top: -10px
   line-height: 1.4;
 }
 
-
 /* filter */
 
 .filter-section {
-  position: absolute;
-  width: 420px; 
+  position: relative;
+  width: 420px;
   left: 1220px;
-  top: 500px; 
+  top: -550px;
 }
 
 .filter-container {
-  background-color: #f9f9f9; 
-  height: 500px;
-  padding: 10px; 
-  border-radius: 5px; 
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  background-color: #f9f9f9;
+  height: 300px;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .filter-container label {
-  display: block; 
+  display: block;
   margin: 5px 0;
-  cursor: pointer; 
+  cursor: pointer;
   margin-bottom: 20px;
   margin-top: 20px;
 }
 
 .filter-container input[type="checkbox"] {
-  display: none; 
+  display: none;
 }
 
 .filter-container input[type="checkbox"] + label {
-  position: relative; 
-  padding-left: 40px; 
-  cursor: pointer; 
+  position: relative;
+  padding-left: 40px;
+  cursor: pointer;
 }
 
 .filter-container input[type="checkbox"] + label::before {
-  content: ''; 
-  position: absolute; 
-  left: 10px; 
-  top: 50%; 
-  transform: translateY(-50%); 
-  width: 10px; 
-  height: 10px; 
-  border: 2px solid #7c459c; 
-  border-radius: 3px; 
-  background-color: white; 
-  transition: background-color 0.2s ease; 
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  border: 2px solid #7c459c;
+  border-radius: 3px;
+  background-color: white;
+  transition: background-color 0.2s ease;
 }
 
 .filter-container input[type="checkbox"]:checked + label::before {
-  background-color: pink; 
-  border-color: pink; 
+  background-color: pink;
+  border-color: pink;
 }
-
