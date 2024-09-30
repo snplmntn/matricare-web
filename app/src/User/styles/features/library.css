@@ -37,7 +37,21 @@
 .header-actions {
   display: flex;
   align-items: center;
-  margin-left: 750px;
+  margin-left: 600px !important;
+  margin-right: 100px;
+}
+
+.search-container{
+  display: flex;
+  align-items: center; 
+  position: relative;
+}
+
+.search-icon {
+  position: absolute; 
+  left: 10px; 
+  color: #040404; 
+  pointer-events: none;
 }
 
 .search-bar-library {
@@ -45,8 +59,25 @@
   margin-right: 50px;
   border: transparent !important;
   border-radius: 5px;
-  width: 500px;
+  width: 300px;
   background-color: #ffffff !important;
+  text-indent: 25px;
+  color: #040404; 
+}
+
+.filter-dropdown {
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  width: 300px;
+}
+
+.filter-dropdown option {
+  padding: 8px;
+  background-color: #f9f9f9;
 }
 
 

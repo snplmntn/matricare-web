@@ -1,15 +1,59 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/library/library4.css'
 import { IoBookmark, IoShareSocial } from 'react-icons/io5'; 
 
 const Library4 = () => {
+  const [savedArticles, setSavedArticles] = useState([]);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('savedArticles')) || [];
+    setSavedArticles(saved);
+  }, []);
+
+  const handleToggleSave = (article) => {
+    const updatedArticles = savedArticles.filter(a => a.title !== article.title);
+
+    if (updatedArticles.length === savedArticles.length) {
+      // Add more properties when saving the article (date, reviewer)
+      const articleToSave = {
+        title: article.title,
+        image: article.image || '/img/topic4.jpg',  
+        date: article.date || '11/30/2019', 
+        reviewer: article.reviewer || 'Dra. Donna Jill A. Tungol'
+      };
+
+      updatedArticles.push(articleToSave);
+    }
+
+    // Update state and local storage
+    setSavedArticles(updatedArticles);
+    localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
+  };
+
+  const isArticleSaved = (articleTitle) => {
+    return savedArticles.some(article => article.title === articleTitle);
+  };
+
   return (
     <div className="library-content-container">
   <div className="library-content-main-news">
       <div className="library-content-news-title-actions">
         <h1 className="library-content-news-title">Preparing Your Home and Life for a Newborn</h1>
         <div className="library-content-news-actions">  
-          <button className="library-content-save-btn"><IoBookmark /> Save to Library </button>
+        <button
+              className="library-content-save-btn"
+              onClick={() => handleToggleSave({
+                title: 'Preparing Your Home and Life for a Newborn',
+                image: '/img/topic4.jpg',
+                date: '11/30/2019',
+                reviewer: 'Dra. Donna Jill A. Tungol'
+              })}
+            >
+              <IoBookmark /> 
+              {isArticleSaved('Preparing Your Home and Life for a Newborn') 
+                ? 'Saved' 
+                : 'Save to Library'}
+            </button>
           <button className="library-content-share-btn"><IoShareSocial /> Share on media</button>
         </div>
       </div>

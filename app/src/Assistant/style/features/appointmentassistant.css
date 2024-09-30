@@ -1,162 +1,63 @@
 /* appointmentassistant.css */
 
 .appointment-assistant-container {
-    display: flex;
-    height: 120vh; /* Set the height to 100% of the viewport height */
+  display: flex;
+  height: 100vh;
+  width: 89%;
+  margin-left: 200px;
+  background-color: #9a6cb4;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
   }
-  
-  .appointment-assistant-left-nav {
-    width: 200px;
-    background-color: #ffffff;
+
+  .appointment-main-container {
+    flex-grow: 1;
     padding: 20px;
-  }
-  
-  .appointment-assistant-logo {
-    font-size: 30px;
-    font-weight: bolder;
-    margin-left: 25px;
-    color: #e39fa9;
-    font-style: italic;
-    margin-top: 20px;
-
-  }
-  
-  .appointment-assistant-menu {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    margin-top: 50px;
-    
-  }
-  
-  .appointment-assistant-menu li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 30px;
-  }
-  
-  .appointment-assistant-menu li a {
-    text-decoration: none;
-    color: #67433b;
-    margin-left: -5px; /* Adjust as needed */
-    padding: 15px 30px; /* Add padding to the buttons */
-    background-color: #ffffff; /* Set the background color for the buttons */
-    transition: background-color 0.3s; /* Add transition for smooth color change */
-    width: 120px;
-    border-radius: 20px;
-
-  }
-  
-  .appointment-assistant-menu li a:hover {
-    background-color: #e39fa978; /* Change background color on hover */
-  }
-
-  .appointment-assistant-menu li a svg {
-    /* Adjust size, color, or any other properties of the icon */
-    width: 20px; /* Set the width of the icon */
-    height: 20px; /* Set the height of the icon */
-    margin-right: 15px; /* Add some spacing between the icon and the text */
+    background-color: #ffffffe5;
+    border-radius: 50px 0 0 50px;
   }
 
   .appointment-assistant-top-search {
-    background-color: #ffffff; /* Background color for the search bar */
-    padding: 10px;
-
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 50%; 
+    border-radius: 20px;
+    margin-left: 10px;
   }
 
   .appointment-assistant-search-input {
-    /* Your existing styles */
-    border: 2px solid #ccc; /* Set the width and color of the border */
-    border-radius: 5px; /* Optionally, add border radius for rounded corners */
-    width: 100%; /* Set the width of the input to fill its container */
+    border: 2px solid #ccc; 
+    border-radius: 5px; 
+    width: 100%; 
+    height: 30px;
+    text-indent: 35px;
+    color: #042440;
+  }
+
+  .assistant-search-icon{
+    position: absolute;
+    left: 5px;
+    font-size: 16px;
+    color: #042440;
   }
 
   .appointment-assistant-top-search input.appointment-assistant-search-input {
-    /* Your existing styles */
-    border: 2px solid #ffffff; /* Set the width and color of the border */
-    border-radius: 20px; /* Optionally, add border radius for rounded corners */
-    width: 98%; /* Set the width of the input to fill its container */
+    border: 2px solid #ffffff; 
+    border-radius: 20px; 
+    width: 98%; 
     margin-left: -10px;
   }
 
-  
-  .appointment-assistant-main-content {
-    flex: 1;
-    padding: 20px;
-    background-color: #e39fa978; /* Background color for the content container */
-    margin-top: 10px;
-    height: 100vh;
-    border-radius: 20px;
-  }
   
   .appointment-assistant-content-container {
     display: flex;
     flex-direction: column;
   }
   
-  .appointment-assistant-content-section {
-    margin-bottom: 20px;
-  }
-
   .appointment-assistant-content-section h2{
-    color: #67433b;
+    color: #040404;
     margin-left: 10px;
-    margin-top: 10px;
-  }
-
-  .statistic-container {
-    display: flex;
-    justify-content: space-between;
-    background-color: white;
-    margin-top: 20px;
-    margin-left: 10px;
-    padding: 30px 100px;
-    border-radius: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.212); /* Add box shadow */
-  }
-  
-  .statistic-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    margin-left: 30px;
-    position: relative; /* Added */
-    margin: 10px;
-    margin-top: 30px;
-  }
-  
-  .statistic-item svg {
-    margin-right: 20px;
-    font-size: 50px;
-    margin-top: -20px;
-    color: #67433b;
-  }
-
-
-  .statistic-number {
-    font-size: 30px;
-    font-weight: bold;
-    position: absolute;
-    left: 100px;
-    transform: translateX(-50%);
-    margin-bottom: 60px;
-    color:#67433b;
-  }
-  
-  .appointment-assistant-right-container {
-    width: 330px;
-    padding: 20px;
-    background-color: #ffffff;
-    margin-right: 10px;
-  }
-
-  .appointment-assistant-right-calendar {
-    width: 300px;
-    padding: 20px;
-    background-color: #e39fa978;
-    border-radius: 20px;
-    margin-top: 40px;
-
+    margin-top: 50px;
   }
   
   .appointment-assistant-middle-layout {
@@ -169,10 +70,10 @@
 .schedule-container {
   margin-top: 20px;
   background-color: #ffffff;
-  border-radius: 20px; /* Apply border-radius to all sides */
+  border-radius: 20px;
   margin-left: 10px;
-  overflow: hidden; /* Ensure border-radius is applied properly */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.212); /* Add box shadow */
+  overflow: hidden; 
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.212);
 }
 
 .schedule-table {
@@ -252,64 +153,6 @@
   color: #ffffff;
 }
 
-
-/* notification */
-
-.last-notification-container {
-  margin-top: 20px;
-  border-radius: 20px;
-  background-color: #ffffff;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1); /* Adding shadow */
-  height: 400px;
-}
-
-.last-notification-container h2 {
-  padding: 10px;
-  margin: 0;
-  margin-left: 10px;
-  margin-top: 25px;
-}
-
-.notification-container {
-  padding: 10px;
-  margin-top: 40px;
-}
-
-.notification-item {
-  display: flex;
-  align-items: center;
-  margin-bottom: 40px;
-  padding-bottom: 20px;
-}
-
-.notification-image {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-right: 10px;
-}
-
-.notification-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.notification-details {
-  flex: 1;
-}
-
-.notification-time {
-  margin: 0 0 5px 0;
-  font-weight: bold;
-  color: #555;
-}
-
-.notification-message {
-  margin: 0;
-  color: #333;
-}
 
 
 

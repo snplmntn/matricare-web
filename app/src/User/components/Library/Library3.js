@@ -1,20 +1,64 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../styles/library/library3.css'
 import { IoBookmark, IoShareSocial } from 'react-icons/io5'; 
 
 const Library3 = () => {
+  const [savedArticles, setSavedArticles] = useState([]);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem('savedArticles')) || [];
+    setSavedArticles(saved);
+  }, []);
+
+  const handleToggleSave = (article) => {
+    const updatedArticles = savedArticles.filter(a => a.title !== article.title);
+
+    if (updatedArticles.length === savedArticles.length) {
+      // Add more properties when saving the article (date, reviewer)
+      const articleToSave = {
+        title: article.title,
+        image: article.image || '/img/topic3.jpg',  
+        date: article.date || '11/30/2019', 
+        reviewer: article.reviewer || 'Dra. Donna Jill A. Tungol'
+      };
+
+      updatedArticles.push(articleToSave);
+    }
+
+    // Update state and local storage
+    setSavedArticles(updatedArticles);
+    localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
+  };
+
+  const isArticleSaved = (articleTitle) => {
+    return savedArticles.some(article => article.title === articleTitle);
+  };
+
   return (
     <div className="library-content-container">
   <div className="library-content-main-news">
       <div className="library-content-news-title-actions">
         <h1 className="library-content-news-title">Staying Active: Fitness Tips for Every Stage of Pregnancy</h1>
         <div className="library-content-news-actions">  
-          <button className="library-content-save-btn"><IoBookmark /> Save to Library </button>
+          <button
+              className="library-content-save-btn"
+              onClick={() => handleToggleSave({
+                title: 'Staying Active: Fitness Tips for Every Stage of Pregnancy',
+                image: '/img/topic3.jpg',
+                date: '11/30/2019',
+                reviewer: 'Dra. Donna Jill A. Tungol'
+              })}
+            >
+              <IoBookmark /> 
+              {isArticleSaved('Staying Active: Fitness Tips for Every Stage of Pregnancy') 
+                ? 'Saved' 
+                : 'Save to Library'}
+            </button>
           <button className="library-content-share-btn"><IoShareSocial /> Share on media</button>
         </div>
       </div>
       <p className="library-content-news-details">Medically Reviewed by: Dra. Donna Jill A. Tungol </p>
-      <p className="library-content-news-date">11/30/2019 08:33 PM EST</p>
+      <p className="library-content-news-date">11/30/2019</p>
       <div className="library-content-news-description">
             <h2>Pregnancy Fitness</h2>
             <p>Staying physically active during pregnancy offers numerous benefits, including improved mood, better sleep, enhanced stamina, and reduced risk of complications. Pregnancy fitness involves adapting exercise routines to accommodate a growing body and prioritize both maternal and fetal well-being.</p>

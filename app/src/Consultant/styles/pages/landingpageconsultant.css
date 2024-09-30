@@ -33,12 +33,22 @@
   margin-left: 50px !important;
   transition: border-color 0.3s ease;
   background-color: #ffffff !important;
+  text-indent: 25px;
 }
 
 .consultant-search-input::placeholder {
   color: #042440;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
+.consultant-search-icon {
+  position: absolute;
+  left: 280px;
+  top: 30px;
+  font-size: 16px;
+  color: #042440;
+  z-index: 1000;
+  }
 
 .consultant-search-input:focus {
   border-color: #017575;
@@ -296,8 +306,9 @@
   padding: 10px;
   border: 1px solid #9a6cb4;
   border-radius: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
   color: #042440;
+  margin-left: -100px;
 }
 
 

@@ -1,7 +1,7 @@
 
   
   .library-sidebar {
-    width: 200px !important; /* Adjust as needed */
+    width: 180px;
     background-color: #9a6cb4;
     padding: 20px;
     position: fixed; 

@@ -170,23 +170,23 @@
   margin-top: 20px;
   margin-left: 20px;
   display: flex;
-  flex-direction: column; /* Stack label above text */
+  flex-direction: column;
 }
 
 .appointmentConsultant-label {
   font-weight: bold;
   color: #444;
   font-size: 14px;
-  margin-bottom: 5px; /* Space between label and text */
+  margin-bottom: 5px; 
 }
 
 .appointmentConsultant-text {
   font-size: 18px;
-  color: #040404; /* Color for the text */
+  color: #040404; 
 }
 
 .appointmentConsultant-action {
-  margin-left: auto; /* Push select to the far right */
+  margin-left: auto; 
 }
 
 .appointmentConsultant-statusSelect {
@@ -201,4 +201,69 @@
   margin-right: 20px;
 }
 
+/* form */
 
+.appointmentConsultant-appointmentForm {
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%); 
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000; 
+  width: 400px;
+  height: 500px;
+}
+
+.appointmentConsultant-appointmentForm h2{
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 20px;
+}
+.appointmentConsultant-appointmentForm input {
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  font-family: 'Lucida Sans', sans-serif;
+  background-color: white !important;
+}
+
+.appointment-select {
+  width: 100%; 
+  padding: 10px; 
+  margin: 8px 0; 
+  border: 1px solid #ccc; 
+  border-radius: 10px;
+  font-family: 'Lucida Sans', sans-serif; 
+  font-size: 16px; 
+  color: #333; 
+}
+
+
+.appointment-add-button {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #9a6cb4;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.appointment-cancel-button {
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #e39fa9;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
