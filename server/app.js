@@ -24,6 +24,8 @@ const bellytalk = require("./routes/Content/bellytalk");
 
 // Initialization
 const app = express();
+// Enable proxy trust to allow express-rate-limit to read X-Forwarded-For header
+app.set("trust proxy", 1); // Trust first proxy
 const limiter = rateLimit({
   max: 1000,
   windowMs: 10 * 60 * 1000, // 10 minutes
