@@ -9,16 +9,18 @@ const hpp = require("hpp");
 const AppError = require("./Utilities/appError");
 const checkAuth = require("./Utilities/checkAuth");
 const globalErrorHandler = require("./controller/ErrorController");
+const aliveRoute = require("./routes/alive");
 
 //routes
+// user
 const authRoute = require("./routes/User/auth");
 const userRoute = require("./routes/User/user");
 const verifyRoute = require("./routes/User/verify");
-const uploadRoute = require("./routes/User/upload");
+const taskRoute = require("./routes/User/Records/task");
+// content
+const uploadRoute = require("./routes/Content/upload");
 const postRoute = require("./routes/Content/post");
 const bellytalk = require("./routes/Content/bellytalk");
-
-const aliveRoute = require("./routes/alive");
 
 // Initialization
 const app = express();
@@ -32,7 +34,7 @@ const limiter = rateLimit({
 app.use(helmet());
 
 //Protection Against DDOS Attack
-// app.use("/api", limiter);
+app.use("/api", limiter);
 
 // Body Parser
 app.use(
@@ -50,9 +52,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
+// user
 app.use("/api/auth", authRoute);
 app.use("/api/verify", verifyRoute);
 app.use("/api/user", checkAuth, userRoute);
+app.use("/api/record/task", checkAuth, taskRoute);
+
+// content
 app.use("/api/upload", checkAuth, uploadRoute);
 app.use("/api/post", checkAuth, postRoute);
 app.use("/api/bellytalk", bellytalk); //public belly talk route

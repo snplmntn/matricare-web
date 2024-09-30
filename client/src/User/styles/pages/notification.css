@@ -1,0 +1,192 @@
+.PatientDashboard {
+  padding: 20px;
+  position: relative;
+  background-color: #ffffff;
+  height: 100vh;
+}
+
+.NotificationsSection {
+  border: none !important;
+  border-radius: 8px;
+}
+
+.section-title {
+  text-align: left;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  margin-left: 120px !important;
+  color: #7c459c !important;
+  margin-top: 20px;
+}
+
+.section-divider {
+  border: none;
+  border-top: 2px solid #00000032;
+  margin: 0 30px 20px 30px;
+}
+
+.notifications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px !important;
+  margin-left: 120px;
+}
+
+.notification-container {
+  background-color: #9a6cb46c;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  position: relative; 
+  width: 90%;
+  margin: 5px !important;
+}
+
+.notification-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Align items at the start */
+}
+
+.notification-time {
+  font-size: 0.9rem;
+  color: #040404;
+  align-self: flex-start;
+}
+
+.notification-text {
+  flex-grow: 1;
+  padding-left: 10px; 
+}
+
+.notification-title {
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.notification-phonenumber {
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 5px; /* Space between title and count */
+}
+
+.notification-message {
+  margin-top: 5px;
+  font-size: 1rem;
+  color: #444;
+}
+
+.notif-back-button {
+  position: absolute;
+  top: 60px !important;
+  left: 70px;
+  color: #7c459c;
+  font-size: 30px !important;
+  text-decoration: none;
+  z-index: 10;
+}
+
+.no-notifications {
+  text-align: center;
+  color: #7c459c !important;
+  font-size: 1.2rem;
+  margin-top: 150px;
+}
+
+.no-notifications h1 {
+  text-align: center;
+  color: #e39fa9 !important;
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.no-notifications p {
+  text-align: center;
+  color: #7c459c !important;
+  font-size: 1.2rem;
+  font-style: italic;
+}
+
+.caught-up-icon {
+  margin-top: 20px;
+  font-size: 7rem;
+  color: #7c459c !important;
+  margin-bottom: 20px;
+}
+
+.sender-photo {
+  width: 40px; 
+  height: 40px; 
+  border-radius: 50%; 
+  margin-right: 10px; 
+  object-fit: cover;
+}
+
+/* notif modal */
+.notif-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+}
+
+.notif-modal-content {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  max-width: 500px; 
+  position: relative;
+  margin-top: 370px;
+  height: 500px;
+  margin-left: 1200px;
+}
+
+.notif-modal-back-button {
+  background-color: transparent;
+  color: #040404;
+  border: none;
+  font-size: 25px; 
+  position: absolute;
+  left: 20px ;
+  top: 20px ;
+  cursor: pointer;
+  font-weight: bold 
+}
+
+.message-bubble {
+  background-color: #9a6cb46c; 
+  border-radius: 15px; 
+  padding: 15px; 
+  margin-top: 20px; 
+  border-radius: 20px 20px 20px 0;
+}
+
+.modal-sender-photo {
+  display: block;
+  margin: 0 auto; 
+  border-radius: 50%; 
+  width: 80px; 
+  height: 80px; 
+  object-fit: cover;
+}
+
+.modal-sender-name {
+  text-align: center; 
+  margin: 10px 0;
+  margin-bottom: 20px;
+}
+
+.modal-notification-time {
+  text-align: center; 
+  margin-bottom: -10px; 
+  font-size: 12px; 
+  color: #555; 
+  margin-top: 30px;
+}
