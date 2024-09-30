@@ -51,12 +51,22 @@ const like_post = catchAsync(async (req, res, next) => {
       { $push: { likes: like._id } }, // Increment the likes field by 1
       { new: true }
     );
+
+    if (!updatedModel) {
+      await PostLike.findOneAndDelete(like);
+      return next(new AppError("Post not found!", 404));
+    }
   } else if (postCommentId) {
     updatedModel = await PostComment.findByIdAndUpdate(
       likeableId,
       { $push: { likes: like._id } }, // Increment the likes field by 1
       { new: true }
     );
+
+    if (!updatedModel) {
+      await PostLike.findOneAndDelete(like);
+      return next(new AppError("Post Comment not found!", 404));
+    }
   }
 
   if (!updatedModel) {
@@ -146,13 +156,13 @@ const like_delete = catchAsync(async (req, res, next) => {
   if (postId) {
     updatedModel = await Post.findByIdAndUpdate(
       likeableId,
-      { $pull: { likes: existingLike._id } },
+      { $pull: { likes: existingLike._id } }, // Decrement the likes field by 1
       { new: true }
     );
   } else if (postCommentId) {
     updatedModel = await PostComment.findByIdAndUpdate(
       likeableId,
-      { $pull: { likes: existingLike._id } },
+      { $pull: { likes: existingLike._id } }, // Decrement the likes field by 1
       { new: true }
     );
   }

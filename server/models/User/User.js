@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    emailValid: {
+      type: Boolean,
+      default: false,
+    },
     username: {
       type: String,
       required: true,
@@ -56,6 +60,7 @@ const userSchema = new mongoose.Schema(
     profilePicture: {
       type: String,
     },
+    token: String,
     articleLastRead: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     likedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],

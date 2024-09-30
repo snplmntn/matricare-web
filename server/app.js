@@ -12,6 +12,7 @@ const globalErrorHandler = require("./controller/ErrorController");
 //routes
 const authRoute = require("./routes/User/auth");
 const userRoute = require("./routes/User/user");
+const verifyRoute = require("./routes/User/verify");
 const uploadRoute = require("./routes/User/upload");
 const postRoute = require("./routes/Content/post");
 
@@ -49,6 +50,7 @@ app.use(express.urlencoded({ extended: false }));
 // Routes
 app.use("/api/auth", authRoute);
 app.use("/api/user", userRoute);
+app.use("/api/verify", verifyRoute);
 app.use("/api/upload", uploadRoute);
 app.use("/api/post", postRoute);
 app.use("/api/alive", aliveRoute);
