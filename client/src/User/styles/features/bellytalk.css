@@ -17,6 +17,7 @@
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  position: relative;
 }
 
 .bellytalk-main-content::-webkit-scrollbar {
@@ -491,10 +492,10 @@
 /* filter */
 
 .filter-section {
-  position: relative;
+  position: absolute;
   width: 420px;
   left: 1220px;
-  top: -550px;
+  top: 370px;
 }
 
 .filter-container {

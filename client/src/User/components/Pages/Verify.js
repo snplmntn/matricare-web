@@ -17,7 +17,7 @@ export default function Verify() {
 
     const verifyEmail = async () => {
       try {
-        let token = getCookie("token");
+        let token = getCookie("verifyToken");
         const response = await axios.get(
           `https://matricare-web.onrender.com/api/verify?token=${token}`
         );
@@ -27,11 +27,11 @@ export default function Verify() {
         setTimeout(() => {
           if (response.status === 200) {
             navigate(
-              role === "patient"
+              role === "Patient"
                 ? "/app"
-                : role === "assistant"
+                : role === "Assistant"
                 ? "/assistant-landing"
-                : role === "obgyne" && "/consultant-landing"
+                : role === "Obgyne" && "/consultant-landing"
             );
           }
         }, 3000);
@@ -45,7 +45,7 @@ export default function Verify() {
     };
 
     verifyEmail();
-  }, [location, navigate]);
+  }, []);
 
   return (
     <div className="verify-container">

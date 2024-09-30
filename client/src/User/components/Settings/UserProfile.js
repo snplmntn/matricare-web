@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { FaCameraRetro, FaArrowLeft } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
-import '../../styles/settings/userprofile.css';
+import React, { useState, useEffect } from "react";
+import { FaCameraRetro, FaArrowLeft } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import axios from "axios";
+import "../../styles/settings/userprofile.css";
 
 const UserProfile = () => {
-  const [userId, setUserId] = useState('1');
-  const [userName, setUserName] = useState('Mary Jane');
-  const [email, setEmail] = useState('maryjane.doe@example.com0');
-  const [phoneNumber, setPhoneNumber] = useState('123-456-7890');
-  const [address, setAddress] = useState('123 Main St');
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [userId, setUserId] = useState("1");
+  const [userName, setUserName] = useState("Mary Jane");
+  const [email, setEmail] = useState("maryjane.doe@example.com0");
+  const [phoneNumber, setPhoneNumber] = useState("123-456-7890");
+  const [address, setAddress] = useState("123 Main St");
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [profileImageUrl, setProfileImageUrl] = useState('');
+  const [profileImageUrl, setProfileImageUrl] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordSettings, setShowPasswordSettings] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [showNotifications, setShowNotifications] = useState(false);
   const [notificationPreferences, setNotificationPreferences] = useState({
     emailNotifications: false,
@@ -25,14 +25,17 @@ const UserProfile = () => {
     pushNotifications: false,
   });
 
-
+  //fetch USER
   useEffect(() => {
     // Load user data from localStorage or API
-    const storedUserName = localStorage.getItem('userName') || '';
-    const storedEmail = localStorage.getItem('email') || '';
-    const storedPhoneNumber = localStorage.getItem('phoneNumber') || '';
-    const storedAddress = localStorage.getItem('address') || '';
-    const storedProfileImageUrl = localStorage.getItem('profileImageUrl') || '';
+    const storedUserName = localStorage.getItem("userName") || "";
+    const storedEmail = localStorage.getItem("email") || "";
+    const storedPhoneNumber = localStorage.getItem("phoneNumber") || "";
+    const storedAddress = localStorage.getItem("address") || "";
+    const storedProfileImageUrl = localStorage.getItem("profileImageUrl") || "";
+
+    // try {
+    // } catch (error) {}
 
     setUserName(storedUserName);
     setEmail(storedEmail);
@@ -55,7 +58,7 @@ const UserProfile = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setProfileImageUrl(reader.result);
-        localStorage.setItem('profileImageUrl', reader.result); // Save to localStorage
+        localStorage.setItem("profileImageUrl", reader.result); // Save to localStorage
       };
       reader.readAsDataURL(file);
     }
@@ -63,72 +66,72 @@ const UserProfile = () => {
 
   const handleProfileUpdate = (e) => {
     e.preventDefault();
-  
+
     // Regular expressions for password validation
     const hasUpperCase = /[A-Z]/;
     const hasNumber = /[0-9]/;
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
-  
+
     if (showPasswordSettings) {
       // Password validation logic
       if (newPassword !== confirmPassword) {
-        setError('New passwords do not match');
+        setError("New passwords do not match");
         return;
       }
-  
+
       if (newPassword.length < 8) {
-        setError('New password must be at least 8 characters long');
+        setError("New password must be at least 8 characters long");
         return;
       }
-  
+
       if (!hasUpperCase.test(newPassword)) {
-        setError('New password must contain at least one uppercase letter');
+        setError("New password must contain at least one uppercase letter");
         return;
       }
-  
+
       if (!hasNumber.test(newPassword)) {
-        setError('New password must contain at least one number');
+        setError("New password must contain at least one number");
         return;
       }
-  
+
       if (!hasSpecialChar.test(newPassword)) {
-        setError('New password must contain at least one special character');
+        setError("New password must contain at least one special character");
         return;
       }
-  
+
       if (newPassword === oldPassword) {
-        setError('New password cannot be the same as the old password');
+        setError("New password cannot be the same as the old password");
         return;
       }
-  
+
       // Mock API call for password update
-      console.log('Updating password...');
+      console.log("Updating password...");
       console.log(`Old Password: ${oldPassword}`);
       console.log(`New Password: ${newPassword}`);
-  
+
       // Clear form fields and error message
-      setOldPassword('');
-      setNewPassword('');
-      setConfirmPassword('');
-      setError('');
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      setError("");
       setShowPasswordSettings(false);
     } else {
       // Validate other fields if needed
       if (!userName || !email || !phoneNumber || !address) {
-        setError('All fields are required');
+        setError("All fields are required");
         return;
       }
-  
+
       // Update profile information locally
-      localStorage.setItem('userName', userName);
-      localStorage.setItem('email', email);
-      localStorage.setItem('phoneNumber', phoneNumber);
-      localStorage.setItem('address', address);
-      localStorage.setItem('profileImageUrl', profileImageUrl);
-  
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("email", email);
+      localStorage.setItem("phoneNumber", phoneNumber);
+      localStorage.setItem("address", address);
+      localStorage.setItem("profileImageUrl", profileImageUrl);
+
       // Exit editing mode
       setIsEditing(false);
-      setError('');
+      setError("");
     }
   };
 
@@ -136,8 +139,7 @@ const UserProfile = () => {
     const { name, checked } = e.target;
     setNotificationPreferences((prev) => ({ ...prev, [name]: checked }));
   };
-  
-  
+
   return (
     <div className="user-profile-container">
       <Link to="/app" className="user-profile-back-btn">
@@ -148,16 +150,37 @@ const UserProfile = () => {
         <h2>Settings</h2>
         <p>Customize view</p>
         <div className="settings-button-container">
-        <button className="settings-btn" onClick={() => { setIsEditing(true); setShowPasswordSettings(false); setShowNotifications(false); }}>
-          Edit Profile
-        </button>
-        <button className="settings-btn" onClick={() => { setIsEditing(false); setShowPasswordSettings(false); setShowNotifications(true); }}>
-          Notifications
-        </button>
-        <button className="settings-btn" onClick={() => { setShowPasswordSettings(true); setIsEditing(false); setShowNotifications(false); }}>
-          Password & Security
-        </button>
-      </div>
+          <button
+            className="settings-btn"
+            onClick={() => {
+              setIsEditing(true);
+              setShowPasswordSettings(false);
+              setShowNotifications(false);
+            }}
+          >
+            Edit Profile
+          </button>
+          <button
+            className="settings-btn"
+            onClick={() => {
+              setIsEditing(false);
+              setShowPasswordSettings(false);
+              setShowNotifications(true);
+            }}
+          >
+            Notifications
+          </button>
+          <button
+            className="settings-btn"
+            onClick={() => {
+              setShowPasswordSettings(true);
+              setIsEditing(false);
+              setShowNotifications(false);
+            }}
+          >
+            Password & Security
+          </button>
+        </div>
       </div>
 
       <div className="user-profile-right-container">
@@ -241,7 +264,9 @@ const UserProfile = () => {
                 </div>
 
                 <div className="user-profile-button-group">
-                  <button type="submit" className="user-profile-save-btn">Save</button>
+                  <button type="submit" className="user-profile-save-btn">
+                    Save
+                  </button>
                   <button
                     type="button"
                     className="user-profile-cancel-btn"
@@ -302,13 +327,15 @@ const UserProfile = () => {
                 {error && <p className="cp-error-message">{error}</p>}
 
                 <div className="user-profile-button-group">
-                  <button type="submit" className="user-profile-save-btn">Update Password</button>
+                  <button type="submit" className="user-profile-save-btn">
+                    Update Password
+                  </button>
                   <button
                     type="button"
                     className="user-profile-cancel-btn"
                     onClick={() => {
                       setShowPasswordSettings(false);
-                      setError('');
+                      setError("");
                     }}
                   >
                     Cancel
@@ -367,7 +394,10 @@ const UserProfile = () => {
                 type="button"
                 className="user-profile-save-btn"
                 onClick={() => {
-                  localStorage.setItem('notificationPreferences', JSON.stringify(notificationPreferences));
+                  localStorage.setItem(
+                    "notificationPreferences",
+                    JSON.stringify(notificationPreferences)
+                  );
                   setShowNotifications(false);
                 }}
               >
@@ -384,13 +414,21 @@ const UserProfile = () => {
           </>
         )}
 
-
         <div className="user-profile-left-container">
-        <div className="user-profile-image-section">
-        <h3 className="user-profile-image-title">My Profile Picture</h3>
-        <p className="user-profile-image-description">Add a photo of you to be easily recognized</p>
-            <img src={profileImageUrl || '/default-avatar.png'} alt="" className="user-profile-image-border" />
-            <label htmlFor="profileImage" className="user-profile-upload-button">
+          <div className="user-profile-image-section">
+            <h3 className="user-profile-image-title">My Profile Picture</h3>
+            <p className="user-profile-image-description">
+              Add a photo of you to be easily recognized
+            </p>
+            <img
+              src={profileImageUrl || "/default-avatar.png"}
+              alt=""
+              className="user-profile-image-border"
+            />
+            <label
+              htmlFor="profileImage"
+              className="user-profile-upload-button"
+            >
               <FaCameraRetro className="user-profile-upload-icon" />
             </label>
             <input

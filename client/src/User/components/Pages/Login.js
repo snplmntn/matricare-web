@@ -58,6 +58,8 @@ export default function Login() {
       );
       console.log(response);
       document.cookie = `userID=${response.data.user._id}`;
+      document.cookie = `token=${response.data.token}`;
+      document.cookie = `verifyToken=${response.data.user.token}`;
       const userDetails = {
         name: response.data.user.fullName,
         role: response.data.user.role,
@@ -88,16 +90,6 @@ export default function Login() {
       setLoading(false); // Stop loading
     }
   };
-
-  //  setTimeout(() => {
-  //    if (response.data.user.role === "patient") {
-  //      navigate("/app");
-  //    } else if (response.data.user.role === "assistant") {
-  //      navigate("/assistant-landing");
-  //    } else if (response.data.user.role === "obgyne") {
-  //      navigate("/consultant-landing");
-  //    }
-  //  }, 2000);
 
   const handleResendEmail = async () => {
     try {

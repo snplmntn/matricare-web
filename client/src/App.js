@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useRef, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -46,6 +47,7 @@ import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNotifications";
 import Verify from "./User/components/Pages/Verify";
+import { getCookie } from "./utils/getCookie";
 // export const URL = import.meta.env.URL;
 
 function AppContent() {
@@ -53,6 +55,16 @@ function AppContent() {
   const showHeader1 = ["/", "/signup", "/login", "/forgot-password"].includes(
     location.pathname
   );
+  const parsedUser = useRef({});
+  const token = useRef({});
+
+  useState(() => {
+    token.current = getCookie("token");
+    if (token) {
+      let userData = localStorage.getItem("userData");
+      parsedUser.current = JSON.parse(userData);
+    }
+  }, []);
 
   return (
     <div className="App">
@@ -64,10 +76,13 @@ function AppContent() {
         <Route path="/verify" element={<Verify />} />
         <Route path="/forgot-password" element={<ForgotPass />} />
         <Route path="/notification" element={<Notifications />} />
-        <Route path="/app" element={<HomePage />} />
-        <Route path="/userprofile" element={<UserProfile />} />
+        <Route path="/app" element={<HomePage user={parsedUser} />} />
+        <Route
+          path="/userprofile"
+          element={<UserProfile user={parsedUser} />}
+        />
         <Route path="/medicalrecords" element={<MedicalRec />} />
-        <Route path="/belly-talk" element={<BellyTalk />} />
+        <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
         <Route
           path="/consultant-landing"
           element={

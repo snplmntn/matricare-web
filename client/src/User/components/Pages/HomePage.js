@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBell,
@@ -20,8 +20,8 @@ import {
 import { Link } from "react-router-dom";
 import "../../styles/pages/homepage.css";
 
-function HomePage() {
-  const username = "Ella Cruz";
+function HomePage({ user }) {
+  const { name, username, role } = user.current;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
   const [activeBellyTalkTab, setActiveBellyTalkTab] = useState("new");
@@ -55,9 +55,9 @@ function HomePage() {
             alt="Logo"
             className="homepage-logo-side"
           />
-          <p class="patient-text">Patient</p>
+          <p class="patient-text">{role}</p>
           <div className="homepage-welcome">
-            <p>Hi, {username}!</p>
+            <p>Hi, {name}!</p>
           </div>
         </div>
         <div className="homepage-nav-links">
@@ -115,7 +115,7 @@ function HomePage() {
                   alt="Profile"
                   className="homepage-profile-picture-small"
                 />
-                <span className="homepage-profile-name">{username}</span>
+                <span className="homepage-profile-name">{name}</span>
                 <FontAwesomeIcon
                   icon={faChevronDown}
                   className="homepage-profile-dropdown-icon"
