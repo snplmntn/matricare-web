@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +15,7 @@ export default function Login() {
   const [successMessage, setSuccessMessage] = useState("");
   const [showVerificationModal, setShowVerificationModal] = useState(false); // For modal
   const [email, setEmail] = useState(""); // Store the user's email
+
   const navigate = useNavigate();
 
   const { username, password } = formData;
@@ -24,17 +26,22 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     setError("");
     setLoading(true);
     setSuccessMessage("");
 
+
     console.log(`Username: ${username.trim()}, Password: ${password.trim()}`);
 
     if (!username.trim() || !password.trim()) {
+
       setError("Please fill in all fields.");
+
       setLoading(false);
       return;
     }
+
 
     // const passwordRegex =
     //   /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -153,12 +160,14 @@ export default function Login() {
               placeholder=" "
               value={username}
               onChange={handleChange}
+
               style={{ padding: "15px", width: "400px" }}
               required
             />
             <label htmlFor="username" className="LI-form-label">
               Username:
             </label>
+
           </div>
           <div className="LI-form-group">
             <input
@@ -168,24 +177,29 @@ export default function Login() {
               placeholder=" "
               value={password}
               onChange={handleChange}
+
               style={{ padding: "15px", width: "400px" }}
               required
             />
             <label htmlFor="password" className="LI-form-label">
               Password:
             </label>
+
           </div>
           <div className="forgot-password">
             <Link to="/forgot-password">Forgot Password?</Link>
           </div>
           <div className="LI-form-group">
+
             <button type="submit" className="LI-button" disabled={loading}>
               {loading ? "Logging in..." : "LOGIN"}
+
             </button>
           </div>
         </form>
 
         {/* Verification Modal */}
+
         <Modal
           isOpen={showVerificationModal}
           onRequestClose={() => setShowVerificationModal(false)}
@@ -204,6 +218,7 @@ export default function Login() {
           <button onClick={handleResendEmail}>Resend Email</button>
           {successMessage && <p>{successMessage}</p>}
         </Modal>
+
       </div>
     </div>
   );

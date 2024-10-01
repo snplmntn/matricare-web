@@ -5,20 +5,27 @@ const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const hpp = require("hpp");
 
-//Error handlers
+//Utilities
 const AppError = require("./Utilities/appError");
+const checkAuth = require("./Utilities/checkAuth");
 const globalErrorHandler = require("./controller/ErrorController");
+const aliveRoute = require("./routes/alive");
 
 //routes
+// user
 const authRoute = require("./routes/User/auth");
 const userRoute = require("./routes/User/user");
-const uploadRoute = require("./routes/User/upload");
+const verifyRoute = require("./routes/User/verify");
+const taskRoute = require("./routes/User/Records/task");
+// content
+const uploadRoute = require("./routes/Content/upload");
 const postRoute = require("./routes/Content/post");
-
-const aliveRoute = require("./routes/alive");
+const bellytalk = require("./routes/Content/bellytalk");
 
 // Initialization
 const app = express();
+// Enable proxy trust to allow express-rate-limit to read X-Forwarded-For header
+app.set("trust proxy", 1); // Trust first proxy
 const limiter = rateLimit({
   max: 1000,
   windowMs: 10 * 60 * 1000, // 10 minutes
@@ -47,10 +54,16 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Routes
+// user
 app.use("/api/auth", authRoute);
-app.use("/api/user", userRoute);
-app.use("/api/upload", uploadRoute);
-app.use("/api/post", postRoute);
+app.use("/api/verify", verifyRoute);
+app.use("/api/user", checkAuth, userRoute);
+app.use("/api/record/task", checkAuth, taskRoute);
+
+// content
+app.use("/api/upload", checkAuth, uploadRoute);
+app.use("/api/post", checkAuth, postRoute);
+app.use("/api/bellytalk", bellytalk); //public belly talk route
 app.use("/api/alive", aliveRoute);
 
 app.all("*", (req, res, next) => {

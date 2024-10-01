@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { FaCameraRetro, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -18,6 +19,7 @@ const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [showPasswordSettings, setShowPasswordSettings] = useState(false);
   const [error, setError] = useState("");
+
   const [showNotifications, setShowNotifications] = useState(false);
   const [notificationPreferences, setNotificationPreferences] = useState({
     emailNotifications: false,
@@ -71,6 +73,7 @@ const UserProfile = () => {
     const hasUpperCase = /[A-Z]/;
     const hasNumber = /[0-9]/;
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
+
 
     if (showPasswordSettings) {
       // Password validation logic

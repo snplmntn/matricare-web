@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useRef, useEffect } from "react";
 import {
@@ -76,6 +77,7 @@ function AppContent() {
         <Route path="/verify" element={<Verify />} />
         <Route path="/forgot-password" element={<ForgotPass />} />
         <Route path="/notification" element={<Notifications />} />
+
         <Route path="/app" element={<HomePage user={parsedUser} />} />
         <Route
           path="/userprofile"
@@ -267,6 +269,7 @@ function AppContent() {
           path="/consultant-notification"
           element={<ConsultantNotifications />}
         />
+
       </Routes>
       <Footer />
     </div>

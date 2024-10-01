@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import "../../styles/features/bellytalk.css";
 import { getCookie } from "../../../utils/getCookie";
@@ -41,7 +42,7 @@ const BellyTalk = ({ user }) => {
   const [newPostText, setNewPostText] = useState("");
   const [imgLink, setImgLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -384,10 +385,12 @@ const BellyTalk = ({ user }) => {
           ) : (
             <p>NO POSTS</p>
           )}
+
         </section>
         <div className="filter-section">
           <h3>Filters</h3>
           <div className="filter-container">
+
             <input
               type="checkbox"
               id="all"
@@ -443,4 +446,6 @@ const BellyTalk = ({ user }) => {
   );
 };
 
+
 export default BellyTalk;
+

@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../style/pages/patientusermanagement.css";
@@ -296,6 +297,7 @@ const PatientUserManagement = () => {
       </div>
     </div>
   );
+
 };
 
 export default PatientUserManagement;
