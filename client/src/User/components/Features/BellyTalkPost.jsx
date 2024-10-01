@@ -1,26 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoBookmark, IoHeart, IoLocationSharp } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const BellyTalkPost = ({ post }) => {
   const token = getCookie("token");
+  const userID = getCookie("userID");
 
   const navigate = useNavigate();
-  const [likedPosts, setLikedPosts] = useState([]);
+  // const [likedPosts, setLikedPosts] = useState([]);
+  const [postLikes, setPostLikes] = useState();
   const [savedPosts, setSavedPosts] = useState([]);
   const [replyingTo, setReplyingTo] = useState(null);
   const [commentText, setCommentText] = useState("");
+  const [isLikedByMe, setIsLikedByMe] = useState(false);
 
-  const handleLike = (postId) => {
+  const handlePostLike = async () => {
     if (!token) {
       navigate("/login");
     }
-    setLikedPosts((prevLikedPosts) =>
-      prevLikedPosts.includes(postId)
-        ? prevLikedPosts.filter((id) => id !== postId)
-        : [...prevLikedPosts, postId]
-    );
+
+    try {
+      const postLike = {
+        userId: userID,
+        postId: post._id,
+      };
+      const response = await axios.post(
+        "https://matricare-web.onrender.com/api/post/like",
+        postLike,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    // setLikedPosts((prevLikedPosts) =>
+    //   prevLikedPosts.includes(postId)
+    //     ? prevLikedPosts.filter((id) => id !== postId)
+    //     : [...prevLikedPosts, postId]
+    // );
   };
 
   const handleSave = (postId) => {
@@ -75,6 +98,30 @@ const BellyTalkPost = ({ post }) => {
     setReplyingTo(null);
   };
 
+  useEffect(() => {
+    async function fetchPostLike() {
+      try {
+        const response = await axios.get(
+          `https://matricare-web.onrender.com/api/post/like?postId=${post._id}`,
+
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        //this will access all of the likers of the post
+        const likedUserIDs = response.data.likes.map((i) => i.userId);
+        //will check if the current user is one of those likes
+        const liked = likedUserIDs.includes(userID);
+        setIsLikedByMe(liked);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchPostLike();
+  }, []);
+
   return (
     <div className="bellytalk-feed-item" key={post.id}>
       <img
@@ -101,10 +148,8 @@ const BellyTalkPost = ({ post }) => {
             Reply
           </button>
           <IoHeart
-            className={`bellytalk-action-icon ${
-              likedPosts.includes(post.id) ? "active" : ""
-            }`}
-            onClick={() => handleLike(post.id)}
+            className={`bellytalk-action-icon ${isLikedByMe ? "active" : ""}`}
+            onClick={() => handlePostLike()}
           />
           <IoBookmark
             className={`bellytalk-action-icon ${

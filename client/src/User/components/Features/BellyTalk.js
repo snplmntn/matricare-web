@@ -39,12 +39,17 @@ const BellyTalk = ({ user }) => {
   //   image: null,
   // },
   const [newPostText, setNewPostText] = useState("");
-
+  const [imgLink, setImgLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(2);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
+
+  //image -> firebase
   const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const [isPosting, setIsPosting] = useState(false);
 
   const openModal = () => {
     if (!token) {
@@ -54,6 +59,8 @@ const BellyTalk = ({ user }) => {
     setNewPostText("");
     setStep(1);
     setSelectedImage(null);
+    setImagePreview(null);
+    setIsPosting("");
   };
 
   const closeModal = () => {
@@ -61,31 +68,35 @@ const BellyTalk = ({ user }) => {
     setNewPostText("");
     setStep(1);
     setSelectedImage(null);
+    setImagePreview(null);
+    setIsPosting("");
   };
 
   const handleNextStep = async () => {
-    console.log(selectedImage);
+    setIsPosting(true);
+    setImgLink("");
     if (selectedImage) {
-      const img = {
-        picture: selectedImage,
-      };
+      const formData = new FormData();
+      formData.append("picture", selectedImage);
       try {
-        console.log(img);
+        console.log(formData);
         const response = await axios.post(
           `https://matricare-web.onrender.com/api/upload/p?userId=${userID}`,
-          img,
+          formData,
           {
             headers: {
               Authorization: token,
+              "Content-Type": "multipart/form-data",
             },
           }
         );
         console.log(response);
-        setStep(2);
+        setImgLink(response.data.pictureLink);
       } catch (error) {
         console.error(error);
       }
     }
+    setIsPosting(false);
     setStep(2);
   };
 
@@ -100,6 +111,7 @@ const BellyTalk = ({ user }) => {
   };
 
   const handlePostSubmit = async () => {
+    setIsPosting(true);
     if (newPostText.trim() === "") {
       alert("Post content cannot be empty.");
       return;
@@ -116,13 +128,11 @@ const BellyTalk = ({ user }) => {
       content: newPostText,
       address: "Manila City",
       category: selectedCategories,
-      picture:
-        "https://firebasestorage.googleapis.com/v0/b/matricare-63671.appspot.com/o/picture%2F66f6fbf00e6758da904b5650%2FMSI_MAG.jpg-1727669742363-258259288?alt=media&token=405eb117-bf2e-474f-9f7b-769d537a756f",
+      picture: imgLink,
     };
 
-    console.log(newPost);
-
     try {
+      setIsPosting("Posting...");
       const response = await axios.post(
         `https://matricare-web.onrender.com/api/post/`,
         newPost,
@@ -132,22 +142,41 @@ const BellyTalk = ({ user }) => {
           },
         }
       );
-      console.log(response);
+
+      setPosts([
+        {
+          userId: userID,
+          fullname: user.current.name,
+          content: newPostText,
+          address: "Manila City",
+          category: selectedCategories,
+          picture: imagePreview,
+        },
+        ...posts,
+      ]);
+      console.log(posts);
     } catch (error) {
       console.error(error);
     }
     setNewPostText("");
-    selectedImage.current = null;
+    setSelectedImage(null);
+    setImagePreview(null);
     setSuccessMessage("Post Submitted");
+    setIsPosting("Next");
     setIsModalOpen(false);
     setSelectedCategories([]);
   };
 
   const handleFileChange = (e) => {
+    //state that will be passed in backend
+
     const file = e.target.files[0];
+    setSelectedImage(file);
+
+    //display image preview
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+      setImagePreview(imageUrl);
     }
   };
 
@@ -167,7 +196,6 @@ const BellyTalk = ({ user }) => {
             },
           }
         );
-        console.log(response.data);
         setPosts(response.data);
       } catch (error) {
         console.error(error);
@@ -202,40 +230,40 @@ const BellyTalk = ({ user }) => {
       </div>
 
       <main className="bellytalk-main-content">
-        <section class="trending-section">
+        <section className="trending-section">
           <h2>Trending Now</h2>
-          <div class="trending-articles">
-            <article class="trending-article">
-              <div class="article-image">
+          <div className="trending-articles">
+            <article className="trending-article">
+              <div className="article-image">
                 <img src="img/topic1.jpg" alt="Article Headline 1" />
-                <div class="headlines">
+                <div className="headlines">
                   <h3>Maternal Health Disparities</h3>
                   <p>Posted by: Bea Benella Rosal</p>
                 </div>
               </div>
             </article>
-            <article class="trending-article">
-              <div class="article-image">
+            <article className="trending-article">
+              <div className="article-image">
                 <img src="img/topic2.jpg" alt="Article Headline 2" />
-                <div class="headlines">
+                <div className="headlines">
                   <h3>Home Births and Midwifery</h3>
                   <p>Posted by: Bea Benella Rosal</p>
                 </div>
               </div>
             </article>
-            <article class="trending-article">
-              <div class="article-image">
+            <article className="trending-article">
+              <div className="article-image">
                 <img src="img/topic3.jpg" alt="Article Headline 3" />
-                <div class="headlines">
+                <div className="headlines">
                   <h3>Celebrity Pregnancy Announcements</h3>
                   <p>Posted by: Bea Benella Rosal</p>
                 </div>
               </div>
             </article>
-            <article class="trending-article">
-              <div class="article-image">
+            <article className="trending-article">
+              <div className="article-image">
                 <img src="img/topic4.jpg" alt="Article Headline 4" />
-                <div class="headlines">
+                <div className="headlines">
                   <h3>
                     Rihanna Reveals Due Date for Her Second Baby During a
                     Concert
@@ -292,10 +320,10 @@ const BellyTalk = ({ user }) => {
                         style={{ display: "none" }} // Hide the default file input
                       />
                     </div>
-                    {selectedImage && (
+                    {imagePreview && (
                       <div className="image-preview">
                         <img
-                          src={selectedImage}
+                          src={imagePreview}
                           alt="Selected"
                           className="preview-image"
                         />
@@ -305,7 +333,7 @@ const BellyTalk = ({ user }) => {
                       onClick={handleNextStep}
                       className="sharebox-button"
                     >
-                      Next
+                      {isPosting ? "..." : "Next"}
                     </button>
                   </>
                 )}
@@ -338,7 +366,7 @@ const BellyTalk = ({ user }) => {
                       onClick={handlePostSubmit}
                       className="sharebox-button"
                     >
-                      Post
+                      {isPosting ? "Posting..." : "Post"}
                     </button>
                     {successMessage && (
                       <p className="success-message">{successMessage}</p>
