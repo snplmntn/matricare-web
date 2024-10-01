@@ -17,6 +17,7 @@
   flex: 1;
   padding: 20px;
   overflow-y: auto;
+  position: relative;
 }
 
 .bellytalk-main-content::-webkit-scrollbar {
@@ -436,7 +437,7 @@
   transition: color 0.3s ease;
 }
 
-.bellytalk-action-icon.active {
+.active {
   color: #e39fa9; /* Change color to pink when active */
 }
 
@@ -491,10 +492,10 @@
 /* filter */
 
 .filter-section {
-  position: relative;
+  position: absolute;
   width: 420px;
   left: 1220px;
-  top: -550px;
+  top: 370px;
 }
 
 .filter-container {
