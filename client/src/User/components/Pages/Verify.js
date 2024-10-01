@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
+import { getCookie } from "../../../utils/getCookie";
+import "../../styles/pages/verify.css";
 import axios from "axios";
+import { parse } from "@fortawesome/fontawesome-svg-core";
+
 
 export default function Verify() {
   const navigate = useNavigate();
@@ -14,12 +19,26 @@ export default function Verify() {
 
     const verifyEmail = async () => {
       try {
+
+        let token = getCookie("verifyToken");
         const response = await axios.get(
-          `http://localhost:5005/users/verify?code=${verificationCode}&email=${email}`
+          `https://matricare-web.onrender.com/api/verify?token=${token}`
         );
-        if (response.status === 200) {
-          navigate("/app");
-        }
+        let userData = localStorage.getItem("userData");
+        let parsedUser = JSON.parse(userData);
+        let role = parsedUser.role;
+        setTimeout(() => {
+          if (response.status === 200) {
+            navigate(
+              role === "Patient"
+                ? "/app"
+                : role === "Assistant"
+                ? "/assistant-landing"
+                : role === "Obgyne" && "/consultant-landing"
+            );
+          }
+        }, 3000);
+
       } catch (err) {
         console.error(
           "Verification failed:",
@@ -30,11 +49,22 @@ export default function Verify() {
     };
 
     verifyEmail();
-  }, [location, navigate]);
+
+  }, []);
 
   return (
     <div className="verify-container">
-      {error ? <p>{error}</p> : <p>Verifying your email...</p>}
+      {error ? (
+        <p>{error}</p>
+      ) : (
+        <>
+          <p>
+            <strong>Verifying your email</strong>
+          </p>
+          <div className="loader"></div>
+        </>
+      )}
+
     </div>
   );
 }
