@@ -41,7 +41,7 @@ const BellyTalk = ({ user }) => {
   const [newPostText, setNewPostText] = useState("");
   const [imgLink, setImgLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -380,7 +380,9 @@ const BellyTalk = ({ user }) => {
 
         <section className="bellytalk-feed">
           {posts ? (
-            posts.map((post) => <BellyTalkPost key={post._id} post={post} />)
+            posts.map((post) => (
+              <BellyTalkPost key={post._id} post={post} user={user} />
+            ))
           ) : (
             <p>NO POSTS</p>
           )}
