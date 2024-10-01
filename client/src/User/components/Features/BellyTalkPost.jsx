@@ -155,7 +155,7 @@ const BellyTalkPost = ({ post, user }) => {
 
   //fetch comments in a post
   useEffect(() => {
-    async function fetchPostLike() {
+    async function fetchComments() {
       try {
         const response = await axios.get(
           `https://matricare-web.onrender.com/api/post/comment?postId=${post._id}`,
@@ -171,7 +171,7 @@ const BellyTalkPost = ({ post, user }) => {
         console.error(error);
       }
     }
-    fetchPostLike();
+    fetchComments();
   }, []);
 
   return (
