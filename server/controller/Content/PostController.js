@@ -29,7 +29,7 @@ const post_index = catchAsync(async (req, res, next) => {
 
 const post_user_get = catchAsync(async (req, res, next) => {
   const posts = await Post.find({
-    username: req.query.username,
+    fullname: req.query.fullname,
   });
   if (!posts) return next(new AppError("Post not found", 404));
   return res.status(200).json(posts);
@@ -46,9 +46,9 @@ const post_post = catchAsync(async (req, res, next) => {
 
 const post_put = catchAsync(async (req, res, next) => {
   const updatedPost = await Post.findByIdAndUpdate(
-    req.query.id, // Update based on the document's ID
-    { $set: req.body }, // New data to set
-    { new: true } // Return the updated document
+    req.query.id,
+    { $set: req.body },
+    { new: true }
   );
 
   if (!updatedPost) {
@@ -60,8 +60,15 @@ const post_put = catchAsync(async (req, res, next) => {
 });
 
 const post_delete = catchAsync(async (req, res, next) => {
-  await Post.findByIdAndDelete(req.query.id);
-  return res.status(200).json("Post Successfully Deleted");
+  if (!req.query.id)
+    return next(new AppError("Post identifier not found", 400));
+
+  const deletedPost = await Post.findByIdAndDelete(req.query.id);
+
+  if (!deletedPost) return next(new AppError("Post not found", 404));
+  return res
+    .status(200)
+    .json({ message: "Post Successfully Deleted", deletedPost });
 });
 
 module.exports = {

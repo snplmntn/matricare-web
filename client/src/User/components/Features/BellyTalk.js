@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from "react";
 import "../../styles/features/bellytalk.css";
 import { getCookie } from "../../../utils/getCookie";
@@ -386,10 +387,12 @@ const BellyTalk = ({ user }) => {
           ) : (
             <p>NO POSTS</p>
           )}
+
         </section>
         <div className="filter-section">
           <h3>Filters</h3>
           <div className="filter-container">
+
             <input
               type="checkbox"
               id="all"
@@ -445,4 +448,6 @@ const BellyTalk = ({ user }) => {
   );
 };
 
+
 export default BellyTalk;
+

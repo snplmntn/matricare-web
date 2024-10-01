@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
 import { getCookie } from "../../../utils/getCookie";
 import "../../styles/pages/verify.css";
 import axios from "axios";
 import { parse } from "@fortawesome/fontawesome-svg-core";
+
 
 export default function Verify() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ export default function Verify() {
 
     const verifyEmail = async () => {
       try {
+
         let token = getCookie("verifyToken");
         const response = await axios.get(
           `https://matricare-web.onrender.com/api/verify?token=${token}`
@@ -35,6 +38,7 @@ export default function Verify() {
             );
           }
         }, 3000);
+
       } catch (err) {
         console.error(
           "Verification failed:",
@@ -45,6 +49,7 @@ export default function Verify() {
     };
 
     verifyEmail();
+
   }, []);
 
   return (
@@ -59,6 +64,7 @@ export default function Verify() {
           <div className="loader"></div>
         </>
       )}
+
     </div>
   );
 }

@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    emailValid: {
+      type: Boolean,
+      default: false,
+    },
     username: {
       type: String,
       required: true,
@@ -34,11 +38,9 @@ const userSchema = new mongoose.Schema(
     },
     birthdate: {
       type: Date,
-      index: "text",
     },
     duedate: {
       type: Date,
-      index: "text",
     },
     age: {
       type: Number,
@@ -50,12 +52,14 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["patient", "assistant", "obgyne"],
-      default: "patient",
+      enum: ["Patient", "Assistant", "Obgyne"],
+      default: "Patient",
     },
     profilePicture: {
       type: String,
     },
+    token: String,
+    assignedTask: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
     articleLastRead: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     likedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
