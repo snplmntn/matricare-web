@@ -10,40 +10,56 @@ const BellyTalkPost = ({ post }) => {
 
   const navigate = useNavigate();
   // const [likedPosts, setLikedPosts] = useState([]);
-  const [postLikes, setPostLikes] = useState();
+  // const [postLikes, setPostLikes] = useState();
   const [savedPosts, setSavedPosts] = useState([]);
   const [replyingTo, setReplyingTo] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [isLikedByMe, setIsLikedByMe] = useState(false);
+  const [test, setTest] = useState(false);
 
   const handlePostLike = async () => {
     if (!token) {
       navigate("/login");
     }
 
-    try {
-      const postLike = {
-        userId: userID,
-        postId: post._id,
-      };
-      const response = await axios.post(
-        "https://matricare-web.onrender.com/api/post/like",
-        postLike,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error(error);
+    // setIsLikedByMe(!isLikedByMe);
+    // console.log(isLikedByMe);
+    if (!isLikedByMe) {
+      //like post
+      try {
+        const postLike = {
+          userId: userID,
+          postId: post._id,
+        };
+        const response = await axios.post(
+          "https://matricare-web.onrender.com/api/post/like",
+          postLike,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      //unlike posts
+      try {
+        const response = await axios.delete(
+          `https://matricare-web.onrender.com/api/post/like?userId=${userID}&postId=${post._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
     }
-    // setLikedPosts((prevLikedPosts) =>
-    //   prevLikedPosts.includes(postId)
-    //     ? prevLikedPosts.filter((id) => id !== postId)
-    //     : [...prevLikedPosts, postId]
-    // );
   };
 
   const handleSave = (postId) => {
@@ -110,17 +126,21 @@ const BellyTalkPost = ({ post }) => {
             },
           }
         );
-        //this will access all of the likers of the post
-        const likedUserIDs = response.data.likes.map((i) => i.userId);
-        //will check if the current user is one of those likes
-        const liked = likedUserIDs.includes(userID);
-        setIsLikedByMe(liked);
+
+        //will change the ui if this post is liked by user
+        if (response.data.likes) {
+          //this will access all of the likers of the post
+          const likedUserIDs = response.data.likes.map((i) => i.userId);
+          //will check if the current user is one of those likes
+          const liked = likedUserIDs.includes(userID);
+          setIsLikedByMe(liked);
+        }
       } catch (error) {
         console.error(error);
       }
     }
     fetchPostLike();
-  }, []);
+  }, [isLikedByMe]);
 
   return (
     <div className="bellytalk-feed-item" key={post.id}>
@@ -148,8 +168,13 @@ const BellyTalkPost = ({ post }) => {
             Reply
           </button>
           <IoHeart
-            className={`bellytalk-action-icon ${isLikedByMe ? "active" : ""}`}
-            onClick={() => handlePostLike()}
+            className={`bellytalk-action-icon  ${test && "active"}`}
+            style={{ color: isLikedByMe ? "#e39fa9" : "#9a6cb4" }}
+            onClick={() => {
+              setIsLikedByMe(!isLikedByMe);
+              console.log(test);
+              handlePostLike();
+            }}
           />
           <IoBookmark
             className={`bellytalk-action-icon ${

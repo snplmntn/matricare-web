@@ -393,49 +393,49 @@ const BellyTalk = ({ user }) => {
               id="all"
               onChange={() => filterPosts("All")}
             />
-            <label for="all">All</label>
+            <label htmlFor="all">All</label>
 
             <input
               type="checkbox"
               id="first-time"
               onChange={() => filterPosts("first-time")}
             />
-            <label for="first-time">First-Time Moms</label>
+            <label htmlFor="first-time">First-Time Moms</label>
 
             <input
               type="checkbox"
               id="baby-essentials"
               onChange={() => filterPosts("baby-essentials")}
             />
-            <label for="baby-essentials">Baby Essentials</label>
+            <label htmlFor="baby-essentials">Baby Essentials</label>
 
             <input
               type="checkbox"
               id="maternity-style"
               onChange={() => filterPosts("maternity-style")}
             />
-            <label for="maternity-style">Maternity Style</label>
+            <label htmlFor="maternity-style">Maternity Style</label>
 
             <input
               type="checkbox"
               id="breast-feeding"
               onChange={() => filterPosts("breast-feeding")}
             />
-            <label for="breast-feeding">Breast Feeding</label>
+            <label htmlFor="breast-feeding">Breast Feeding</label>
 
             <input
               type="checkbox"
               id="gender-reveal"
               onChange={() => filterPosts("gender-reveal")}
             />
-            <label for="gender-reveal">Gender Reveal</label>
+            <label htmlFor="gender-reveal">Gender Reveal</label>
 
             <input
               type="checkbox"
               id="parenting-tips"
               onChange={() => filterPosts("parenting-tips")}
             />
-            <label for="parenting-tips">Parenting Tips</label>
+            <label htmlFor="parenting-tips">Parenting Tips</label>
           </div>
         </div>
       </main>

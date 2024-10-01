@@ -437,7 +437,9 @@
   transition: color 0.3s ease;
 }
 
-.bellytalk-action-icon.active {
+/* .bellytalk-action-icon */
+
+.active {
   color: #e39fa9; /* Change color to pink when active */
 }
 
