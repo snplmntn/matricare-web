@@ -56,7 +56,7 @@ const UserProfile = ({ user }) => {
     }
   };
 
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
 
     // Regular expressions for password validation
@@ -97,9 +97,26 @@ const UserProfile = ({ user }) => {
       }
 
       // Mock API call for password update
-      console.log("Updating password...");
-      console.log(`Old Password: ${oldPassword}`);
-      console.log(`New Password: ${newPassword}`);
+      // console.log("Updating password...");
+      // console.log(`Old Password: ${oldPassword}`);
+      // console.log(`New Password: ${newPassword}`);
+      try {
+        const response = await axios.put(
+          `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+          {
+            password: oldPassword,
+            newPassword: newPassword,
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
 
       // Clear form fields and error message
       setOldPassword("");
@@ -170,6 +187,7 @@ const UserProfile = ({ user }) => {
             },
           }
         );
+        // console.log(response);
         const data = response.data.other;
         setFullname(data.fullName);
         setEmail(data.email);
