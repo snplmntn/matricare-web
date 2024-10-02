@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema(
     },
     husband: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
+      ref: "User",
     },
     role: {
       type: String,
