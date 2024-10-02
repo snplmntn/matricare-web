@@ -4,7 +4,7 @@ const PostCommentSchema = new mongoose.Schema(
   {
     profilePicture: String,
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    fullname: String,
+    fullName: String,
     postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
     content: String,
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }]

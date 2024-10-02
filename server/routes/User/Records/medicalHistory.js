@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const medicalHistoryController = require("../../../controller/User/Records/TaskController");
+const medicalHistoryController = require("../../../controller/User/Records/MedicalHistoryController");
 
 // Get User
 router.get("/", medicalHistoryController.medical_history_get);
