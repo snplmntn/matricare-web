@@ -81,7 +81,10 @@ function AppContent() {
           path="/userprofile"
           element={<UserProfile user={parsedUser} />}
         />
-        <Route path="/medicalrecords" element={<MedicalRec />} />
+        <Route
+          path="/medicalrecords"
+          element={<MedicalRec user={parsedUser} />}
+        />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
         <Route
           path="/consultant-landing"
