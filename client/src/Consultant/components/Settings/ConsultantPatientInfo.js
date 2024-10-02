@@ -14,27 +14,13 @@ const ConsultantPatientInfo = () => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [view, setView] = useState("patients");
   const [editingUserId, setEditingUserId] = useState(null);
-  const [patients, setPatients] = useState([
-    // {
-    //   id: 1,
-    //   PatientID: "1",
-    //   photo: "img/topic1.jpg",
-    //   name: "Alice Guo",
-    //   mobile: "123-456-7890",
-    //   email: "john@example.com",
-    //   status: "active",
-    // },
-    // {
-    //   id: 2,
-    //   PatientID: "2",
-    //   photo: "img/topic1.jpg",
-    //   name: "Jane Smith",
-    //   mobile: "098-765-4321",
-    //   email: "jane@example.com",
-    //   status: "inactive",
-    // },
-    // Add more patients here
-  ]);
+  const [patients, setPatients] = useState([]);
+  const [newPatient, setNewPatient] = useState({
+    assignedId: userID,
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+  });
 
   const [admins, setAdmins] = useState([
     {
@@ -57,13 +43,6 @@ const ConsultantPatientInfo = () => {
   ]);
 
   const [showForm, setShowForm] = useState(false); // State for form visibility
-  const [newPatient, setNewPatient] = useState({
-    id: "",
-    name: "",
-    mobile: "",
-    email: "",
-    status: "active",
-  });
 
   const filteredUsers =
     view === "patients"
@@ -127,25 +106,44 @@ const ConsultantPatientInfo = () => {
   const handleFormChange = (event) => {
     const { name, value } = event.target;
     setNewPatient((prevState) => ({ ...prevState, [name]: value }));
+    console.log(newPatient);
   };
 
-  const handleAddPatientSubmit = (event) => {
+  const handleAddPatientSubmit = async (event) => {
     event.preventDefault();
-    setPatients([
-      ...patients,
-      {
-        ...newPatient,
-        id: patients.length + 1,
-        PatientID: patients.length + 1,
-      },
-    ]); // Add new patient
-    setNewPatient({
-      id: "",
-      name: "",
-      mobile: "",
-      email: "",
-      status: "active",
-    }); // Reset form fields
+    try {
+      console.log(newPatient);
+      const response = await axios.post(
+        `https://api.matricare.site/api/record/patient`,
+        {
+          // assignedId: "66fa3fee2a3372e1dd52615e",
+          // email: "marccastillo621@gmail.com",
+          // fullName: "Marc Castillo",
+          // phoneNumber: "09194254890",
+          //
+          assignedId: userID,
+          email: newPatient.email,
+          fullName: newPatient.fullName,
+          phoneNumber: newPatient.phoneNumber,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+
+    // setNewPatient({
+    //   id: "",
+    //   name: "",
+    //   mobile: "",
+    //   email: "",
+    //   status: "active",
+    // });
     setShowForm(false); // Hide the form
   };
 
@@ -348,8 +346,8 @@ const ConsultantPatientInfo = () => {
                 <input
                   type="text"
                   id="patientName"
-                  name="name"
-                  value={newPatient.name}
+                  name="fullName"
+                  value={newPatient.fullName}
                   onChange={handleFormChange}
                   required
                 />
@@ -359,8 +357,8 @@ const ConsultantPatientInfo = () => {
                 <input
                   type="tel"
                   id="patientMobile"
-                  name="mobile"
-                  value={newPatient.mobile}
+                  name="phoneNumber"
+                  value={newPatient.phoneNumber}
                   onChange={handleFormChange}
                   required
                 />

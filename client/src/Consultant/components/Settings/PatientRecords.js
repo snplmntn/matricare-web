@@ -230,7 +230,7 @@ const PatientRecords = () => {
                       <FaFileAlt />
                     </td>
                     <td>{task.taskName}</td>
-                    <td>{task.prescribedDate}</td>
+                    <td>{task.prescribedDate.split("T")[0]}</td>
                     <td>{task.status ? task.status : status}</td>
                     <td>{task.prescribedBy}</td>
                     <td>{task.orderNumber}</td>

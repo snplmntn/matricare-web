@@ -116,6 +116,17 @@ export default function Login() {
     }
   };
 
+  const censorEmail = (email) => {
+    const [name, domain] = email.split("@");
+    const visibleNamePart = name.slice(0, 3);
+    const censoredNamePart = "*".repeat(Math.max(name.length - 3, 0)); // Ensure the repeat count is not negative
+    const visibleDomainPart = domain.slice(0, 1);
+    const censoredDomainPart = "*".repeat(Math.max(domain.length - 1, 0)); // Ensure the repeat count is not negative
+    const censoredName = visibleNamePart + censoredNamePart;
+    const censoredDomain = visibleDomainPart + censoredDomainPart;
+    return `${censoredName}@${censoredDomain}`;
+  };
+
   return (
     <div
       className="login-outer-container login-background"
@@ -207,8 +218,8 @@ export default function Login() {
           <h2>Verify your Email</h2>
           <p>
             You're almost there! We've sent a verification email to{" "}
-            <strong>{email}</strong>. <br></br>You need to verify your email
-            address to log into MatriCare.
+            <strong>{email && censorEmail(email)}</strong>. <br></br>You need to
+            verify your email address to log into MatriCare.
           </p>
           <button onClick={handleResendEmail}>Resend Email</button>
           {successMessage && <p>{successMessage}</p>}
