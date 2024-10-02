@@ -13,9 +13,13 @@ const task_get = catchAsync(async (req, res, next) => {
 });
 
 const task_user_get = catchAsync(async (req, res, next) => {
+  const { userId } = req.query;
+
   const task = await Task.find({
-    userId: req.query.userId,
+    userId: userId,
   });
+
+  console.log(task);
 
   if (!task) return next(new AppError("Task not found", 404));
 
