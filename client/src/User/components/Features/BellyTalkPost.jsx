@@ -4,7 +4,7 @@ import { getCookie } from "../../../utils/getCookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const BellyTalkPost = ({ post }) => {
+const BellyTalkPost = ({ post, user }) => {
   const token = getCookie("token");
   const userID = getCookie("userID");
 
@@ -12,10 +12,12 @@ const BellyTalkPost = ({ post }) => {
   // const [likedPosts, setLikedPosts] = useState([]);
   // const [postLikes, setPostLikes] = useState();
   const [savedPosts, setSavedPosts] = useState([]);
-  const [replyingTo, setReplyingTo] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [isLikedByMe, setIsLikedByMe] = useState(false);
-  const [test, setTest] = useState(false);
+  const [comments, setComments] = useState([]);
+
+  //will enable user to open the input in reply
+  const [openReply, setOpenReply] = useState(false);
 
   const handlePostLike = async () => {
     if (!token) {
@@ -62,58 +64,67 @@ const BellyTalkPost = ({ post }) => {
     }
   };
 
-  const handleSave = (postId) => {
+  const handleSave = () => {
     if (!token) {
       navigate("/login");
     }
-    setSavedPosts((prevSavedPosts) =>
-      prevSavedPosts.includes(postId)
-        ? prevSavedPosts.filter((id) => id !== postId)
-        : [...prevSavedPosts, postId]
-    );
+    // setSavedPosts((prevSavedPosts) =>
+    //   prevSavedPosts.includes(postId)
+    //     ? prevSavedPosts.filter((id) => id !== postId)
+    //     : [...prevSavedPosts, postId]
+    // );
   };
 
-  const handleReply = (postId) => {
+  //will validate if there is a token, if token, you can reply
+  const handleReply = () => {
     if (!token) {
       navigate("/login");
     }
-    setReplyingTo(replyingTo === postId ? null : postId);
+    setOpenReply(!openReply);
   };
 
-  const handleKeyPress = (event, postId) => {
+  const handleKeyPress = (event) => {
     if (event.key === "Enter") {
-      handleCommentPost(postId);
+      handleCommentPost();
     }
   };
 
-  const handleCommentPost = (postId) => {
+  const handleCommentPost = async () => {
     if (!token) {
       navigate("/login");
     }
+
     if (commentText.trim() === "") {
       return; // Prevent posting empty content
     }
-    // const updatedPosts = posts.map((post) => {
-    //   if (post.id === postId) {
-    //     return {
-    //       ...post,
-    //       comments: [
-    //         ...post.comments,
-    //         {
-    //           id: post.comments.length + 1,
-    //           user: "Your Name", // Replace with actual user name or dynamic user data
-    //           text: commentText,
-    //         },
-    //       ],
-    //     };
-    //   }
-    //   return post;
-    // });
-    // setPosts(updatedPosts);
+
+    try {
+      const commentForm = {
+        profilePicture: "66f6fbf00e6758da904b5650",
+        userId: userID,
+        fullname: user.current.name,
+        postId: post._id,
+        content: commentText,
+      };
+      const response = await axios.post(
+        "https://matricare-web.onrender.com/api/post/comment",
+        commentForm,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setComments([commentForm, ...comments]);
+    } catch (error) {
+      console.error(error);
+    }
     setCommentText("");
-    setReplyingTo(null);
+    setOpenReply(false);
+    // setReplyingTo(null);
   };
 
+  //fetch likes
   useEffect(() => {
     async function fetchPostLike() {
       try {
@@ -142,6 +153,27 @@ const BellyTalkPost = ({ post }) => {
     fetchPostLike();
   }, [isLikedByMe]);
 
+  //fetch comments in a post
+  useEffect(() => {
+    async function fetchComments() {
+      try {
+        const response = await axios.get(
+          `https://matricare-web.onrender.com/api/post/comment?postId=${post._id}`,
+
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setComments(response.data.comments);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchComments();
+  }, []);
+
   return (
     <div className="bellytalk-feed-item" key={post.id}>
       <img
@@ -161,18 +193,14 @@ const BellyTalkPost = ({ post }) => {
         )}
         <hr className="bellytalk-divider" />
         <div className="bellytalk-actions">
-          <button
-            className="bellytalk-action-button"
-            onClick={() => handleReply(post.id)}
-          >
+          <button className="bellytalk-action-button" onClick={handleReply}>
             Reply
           </button>
           <IoHeart
-            className={`bellytalk-action-icon  ${test && "active"}`}
+            className={`bellytalk-action-icon`}
             style={{ color: isLikedByMe ? "#e39fa9" : "#9a6cb4" }}
             onClick={() => {
               setIsLikedByMe(!isLikedByMe);
-              console.log(test);
               handlePostLike();
             }}
           />
@@ -183,7 +211,7 @@ const BellyTalkPost = ({ post }) => {
             onClick={() => handleSave(post.id)}
           />
         </div>
-        {replyingTo === post.id && (
+        {openReply && (
           <div className="bellytalk-reply-container">
             <input
               type="text"
@@ -191,25 +219,29 @@ const BellyTalkPost = ({ post }) => {
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               className="bellytalk-reply-input"
-              onKeyPress={(e) => handleKeyPress(e, post.id)} // Handle Enter key press
+              onKeyPress={(e) => handleKeyPress(e)} // Handle Enter key press
             />
           </div>
         )}
-        {/* {post.comments.map((comment) => (
-                  <div className="bellytalk-comment" key={comment.id}>
-                    <div className="comment-user-info">
-                      <img
-                        src="img/LOGO.png"
-                        alt="User Avatar"
-                        className="comment-avatar"
-                      />
-                      <div>
-                        <h4>{comment.user}</h4>
-                        <p>{comment.text}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))} */}
+        {comments &&
+          comments.map((comment, index) => (
+            <div
+              key={comment._id ? comment._id : index}
+              className="bellytalk-comment"
+            >
+              <div className="comment-user-info">
+                <img
+                  src="img/LOGO.png"
+                  alt="User Avatar"
+                  className="comment-avatar"
+                />
+                <div>
+                  <h4>{comment.fullname}</h4>
+                  <p>{comment.content}</p>
+                </div>
+              </div>
+            </div>
+          ))}
       </div>
     </div>
   );
