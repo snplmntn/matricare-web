@@ -34,7 +34,7 @@ const user_login = catchAsync(async (req, res, next) => {
 
 // Signup route
 const user_signup = catchAsync(async (req, res, next) => {
-  const { fullName, email, username, password, phoneNumber } = req.body;
+  const { fullName, email, username, password, phoneNumber, role } = req.body;
 
   // Check if user already exists
   const userExists = await User.findOne({ email });
@@ -54,6 +54,7 @@ const user_signup = catchAsync(async (req, res, next) => {
     username,
     password: hashedPassword, // Save the hashed password
     phoneNumber,
+    role
   });
 
   return res.status(201).json({

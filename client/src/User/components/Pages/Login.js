@@ -63,7 +63,6 @@ export default function Login() {
       console.log(response);
       document.cookie = `userID=${response.data.user._id}`;
       document.cookie = `token=${response.data.token}`;
-      document.cookie = `verifyToken=${response.data.user.token}`;
       const userDetails = {
         name: response.data.user.fullName,
         role: response.data.user.role,
@@ -99,12 +98,13 @@ export default function Login() {
   const handleResendEmail = async () => {
     try {
       let userID = getCookie("userID");
-      await axios.put(
+      const response = await axios.put(
         `https://matricare-web.onrender.com/api/verify?userId=${userID}`
       );
       resendMessage
         ? setSuccessMessage("Verification email resent successfully!")
         : setSuccessMessage("Verification email sent successfully!");
+      document.cookie = `verifyToken=${response.data.verificationToken}`;
       setResendMessage(true);
     } catch (error) {
       console.error(

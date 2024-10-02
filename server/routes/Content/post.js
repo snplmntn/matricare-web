@@ -26,7 +26,7 @@ router.delete("/", postController.post_delete);
 
 // Post Interaction
 
-// Create Post
+// Create Like
 router.post("/like", likeController.like_post);
 
 // Get Like
