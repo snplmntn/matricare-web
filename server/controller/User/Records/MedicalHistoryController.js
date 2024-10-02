@@ -35,6 +35,9 @@ const medical_history_post = catchAsync(async (req, res, next) => {
 });
 
 const medical_history_put = catchAsync(async (req, res, next) => {
+  if (!req.query.id)
+    return next(new AppError("Medical History identifier not found", 400));
+
   const updatedMedicalHistory = await MedicalHistory.findByIdAndUpdate(
     req.query.id,
     { $set: req.body },

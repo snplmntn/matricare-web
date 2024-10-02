@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,12 +19,16 @@ import {
 } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import "../../styles/pages/homepage.css";
+import axios from "axios";
+import { getCookie } from "../../../utils/getCookie";
 
 function HomePage({ user }) {
   const { name, username, role } = user.current;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
   const [activeBellyTalkTab, setActiveBellyTalkTab] = useState("new");
+  const [newPost, setNewPost] = useState();
+  const token = getCookie("token");
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -45,13 +48,36 @@ function HomePage({ user }) {
     console.log(`Viewing resource: ${resource}`);
   };
 
+  useEffect(() => {
+    const verifyEmail = async () => {
+      try {
+        const response = await axios.get(
+          `https://matricare-web.onrender.com/api/post/i`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        setNewPost(response.data);
+      } catch (err) {
+        console.error(
+          "Something went wrong!",
+          err.response ? err.response.data : err.message
+        );
+      }
+    };
+
+    verifyEmail();
+  }, []);
+
   const notificationCount = 3;
 
   return (
     <div className="homepage-container">
       <div className="homepage-left-container">
         <div className="homepage-profile">
-
           <img
             src="img/logo_consultant.png"
             alt="Logo"
@@ -64,7 +90,6 @@ function HomePage({ user }) {
         </div>
         <div className="homepage-nav-links">
           <ul>
-
             <li>
               <Link to="/medicalrecords">
                 <FontAwesomeIcon icon={faFileMedical} />
@@ -81,7 +106,6 @@ function HomePage({ user }) {
                 <FontAwesomeIcon icon={faMessage} /> BellyTalk
               </Link>
             </li>
-
           </ul>
         </div>
         <div className="homepage-logout">
@@ -95,7 +119,6 @@ function HomePage({ user }) {
         <div className="homepage-right-content">
           <div className="homepage-header-right">
             <div className="homepage-search">
-
               <input
                 type="text"
                 placeholder="Search..."
@@ -111,12 +134,10 @@ function HomePage({ user }) {
               className="homepage-notification"
               title="Notifications"
             >
-
               <FontAwesomeIcon icon={faBell} />
             </Link>
             <div className="homepage-profile-info" onClick={toggleDropdown}>
               <div className="homepage-profile-circle">
-
                 <img
                   src="img/logo3.png"
                   alt="Profile"
@@ -127,7 +148,6 @@ function HomePage({ user }) {
                   icon={faChevronDown}
                   className="homepage-profile-dropdown-icon"
                 />
-
               </div>
               {isDropdownOpen && (
                 <div className="homepage-profile-dropdown-menu">
@@ -141,7 +161,6 @@ function HomePage({ user }) {
             </div>
           </div>
           <div className="homepage-overlay-container">
-
             <div className="homepage-top-container">
               <div className="homepage-content">
                 <div className="dashboard-container">
@@ -183,7 +202,6 @@ function HomePage({ user }) {
                 </div>
 
                 <div
-
                   className="homepage-due-date"
                   style={{
                     backgroundImage: "url('img/bg1.webp')",
@@ -288,22 +306,23 @@ function HomePage({ user }) {
                 {activeBellyTalkTab === "new" ? (
                   <div className="bellytalk-content">
                     <div className="bellytalk-scrollable">
-                      {[...Array(10)].map((_, index) => (
-                        <div key={index} className="bellytalk-item">
-                          <div className="profile-icon">
-                            <img
-                              src="img/logo.png"
-                              alt="Profile"
-                              className="profile-icon-image"
+                      {newPost &&
+                        newPost.map((post) => (
+                          <div key={post._id} className="bellytalk-item">
+                            <div className="profile-icon">
+                              <img
+                                src="img/logo.png"
+                                alt="Profile"
+                                className="profile-icon-image"
+                              />
+                            </div>
+                            <p>{`${post.content}`}</p>
+                            <FontAwesomeIcon
+                              icon={faHeart}
+                              className="bellytalk-like-icon"
                             />
                           </div>
-                          <p>{`Post ${index + 1}`}</p>
-                          <FontAwesomeIcon
-                            icon={faHeart}
-                            className="bellytalk-like-icon"
-                          />
-                        </div>
-                      ))}
+                        ))}
                     </div>
                   </div>
                 ) : (
@@ -314,7 +333,6 @@ function HomePage({ user }) {
                 )}
               </div>
             </div>
-
           </div>
         </div>
       </div>

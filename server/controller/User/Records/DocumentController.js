@@ -32,6 +32,9 @@ const document_post = catchAsync(async (req, res, next) => {
 });
 
 const document_put = catchAsync(async (req, res, next) => {
+  if (!req.query.id)
+    return next(new AppError("Document identifier not found", 400));
+
   const updatedDocument = await Document.findByIdAndUpdate(
     req.query.id,
     { $set: req.body },

@@ -19,8 +19,6 @@ const task_user_get = catchAsync(async (req, res, next) => {
     userId: userId,
   });
 
-  console.log(task);
-
   if (!task) return next(new AppError("Task not found", 404));
 
   return res.status(200).json(task);
@@ -36,6 +34,9 @@ const task_post = catchAsync(async (req, res, next) => {
 });
 
 const task_put = catchAsync(async (req, res, next) => {
+  if (!req.query.id)
+    return next(new AppError("Task identifier not found", 400));
+
   const updatedTask = await Task.findByIdAndUpdate(
     req.query.id,
     { $set: req.body },
