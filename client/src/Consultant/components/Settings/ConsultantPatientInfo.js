@@ -16,7 +16,7 @@ const ConsultantPatientInfo = () => {
   const [editingUserId, setEditingUserId] = useState(null);
   const [patients, setPatients] = useState([]);
   const [newPatient, setNewPatient] = useState({
-    assignedId: "",
+    assignedId: userID,
     fullName: "",
     phoneNumber: "",
     email: "",
@@ -106,26 +106,29 @@ const ConsultantPatientInfo = () => {
   const handleFormChange = (event) => {
     const { name, value } = event.target;
     setNewPatient((prevState) => ({ ...prevState, [name]: value }));
+    console.log(newPatient);
   };
 
   const handleAddPatientSubmit = async (event) => {
     event.preventDefault();
-    // setPatients([
-    //   ...patients,
-    //   {
-    //     ...newPatient,
-    //     id: patients.length + 1,
-    //     PatientID: patients.length + 1,
-    //   },
-    // ]); // Add new patient
     try {
+      console.log(newPatient);
       const response = await axios.post(
         `https://api.matricare.site/api/record/patient`,
-        newPatient,
+        {
+          // assignedId: "66fa3fee2a3372e1dd52615e",
+          // email: "marccastillo621@gmail.com",
+          // fullName: "Marc Castillo",
+          // phoneNumber: "09194254890",
+          //
+          assignedId: userID,
+          email: newPatient.email,
+          fullName: newPatient.fullName,
+          phoneNumber: newPatient.phoneNumber,
+        },
         {
           headers: {
             Authorization: token,
-            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -134,13 +137,13 @@ const ConsultantPatientInfo = () => {
       console.error(error);
     }
 
-    setNewPatient({
-      id: "",
-      name: "",
-      mobile: "",
-      email: "",
-      status: "active",
-    }); // Reset form fields
+    // setNewPatient({
+    //   id: "",
+    //   name: "",
+    //   mobile: "",
+    //   email: "",
+    //   status: "active",
+    // });
     setShowForm(false); // Hide the form
   };
 
