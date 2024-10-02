@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Updated import
 import axios from "axios";
@@ -80,7 +79,7 @@ export default function Signup() {
 
     try {
       const response = await axios.post(
-        `https://matricare-web.onrender.com/api/auth/signup`,
+        `https://api.matricare.site/api/auth/signup`,
         {
           fullName,
           email,
@@ -255,5 +254,4 @@ export default function Signup() {
       </div>
     </div>
   );
-
 }

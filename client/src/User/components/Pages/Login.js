@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -31,17 +30,14 @@ export default function Login() {
     setLoading(true);
     setSuccessMessage("");
 
-
     console.log(`Username: ${username.trim()}, Password: ${password.trim()}`);
 
     if (!username.trim() || !password.trim()) {
-
       setError("Please fill in all fields.");
 
       setLoading(false);
       return;
     }
-
 
     // const passwordRegex =
     //   /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
@@ -57,7 +53,7 @@ export default function Login() {
     try {
       // Perform login
       const response = await axios.post(
-        `https://matricare-web.onrender.com/api/auth/login`,
+        `https://api.matricare.site/api/auth/login`,
         {
           username,
           password,
@@ -101,9 +97,7 @@ export default function Login() {
   const handleResendEmail = async () => {
     try {
       let userID = getCookie("userID");
-      await axios.put(
-        `https://matricare-web.onrender.com/api/verify?userId=${userID}`
-      );
+      await axios.put(`https://api.matricare.site/api/verify?userId=${userID}`);
       setSuccessMessage("Verification email resent successfully!");
     } catch (error) {
       console.error(
@@ -160,14 +154,12 @@ export default function Login() {
               placeholder=" "
               value={username}
               onChange={handleChange}
-
               style={{ padding: "15px", width: "400px" }}
               required
             />
             <label htmlFor="username" className="LI-form-label">
               Username:
             </label>
-
           </div>
           <div className="LI-form-group">
             <input
@@ -177,23 +169,19 @@ export default function Login() {
               placeholder=" "
               value={password}
               onChange={handleChange}
-
               style={{ padding: "15px", width: "400px" }}
               required
             />
             <label htmlFor="password" className="LI-form-label">
               Password:
             </label>
-
           </div>
           <div className="forgot-password">
             <Link to="/forgot-password">Forgot Password?</Link>
           </div>
           <div className="LI-form-group">
-
             <button type="submit" className="LI-button" disabled={loading}>
               {loading ? "Logging in..." : "LOGIN"}
-
             </button>
           </div>
         </form>
@@ -218,7 +206,6 @@ export default function Login() {
           <button onClick={handleResendEmail}>Resend Email</button>
           {successMessage && <p>{successMessage}</p>}
         </Modal>
-
       </div>
     </div>
   );

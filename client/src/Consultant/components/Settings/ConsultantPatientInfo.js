@@ -157,7 +157,7 @@ const ConsultantPatientInfo = () => {
     async function fetchPatients() {
       try {
         const response = await axios.get(
-          `https://matricare-web.onrender.com/api/user/r?role=Patient`,
+          `https://api.matricare.site/api/user/r?role=Patient`,
           {
             headers: {
               Authorization: token,

@@ -31,7 +31,7 @@ export default function Verify() {
           }, 3000);
         } else {
           const response = await axios.get(
-            `https://matricare-web.onrender.com/api/verify?token=${token}`
+            `https://api.matricare.site/api/verify?token=${token}`
           );
           let userData = localStorage.getItem("userData");
           let parsedUser = JSON.parse(userData);
