@@ -4,10 +4,9 @@
   width: 89%;
   margin-left: 200px;
   background-color: #9a6cb4;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
-
-
 
 .consultant-main-content {
   flex-grow: 1;
@@ -38,7 +37,8 @@
 
 .consultant-search-input::placeholder {
   color: #042440;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .consultant-search-icon {
@@ -48,7 +48,7 @@
   font-size: 16px;
   color: #042440;
   z-index: 1000;
-  }
+}
 
 .consultant-search-input:focus {
   border-color: #017575;
@@ -85,15 +85,14 @@
   margin-right: 10px; /* Adds space between icons and the text */
 }
 
-
-.consul-profile-icon{
-  font-size: 30px ;
+.consul-profile-icon {
+  font-size: 30px;
   margin-right: -70px;
   color: #7c459c;
 }
 .consul-notification-icon {
-  font-size: 30px !important; 
-  margin-left: 5px; 
+  font-size: 30px !important;
+  margin-left: 5px;
   color: #7c459c;
 }
 
@@ -110,19 +109,16 @@
 }
 
 .consultant-profile p {
-  margin: 0; 
-  font-size: 14px; 
+  margin: 0;
+  font-size: 14px;
   color: #666;
 }
-
-
 
 .consultant-profile img {
   border-radius: 50%;
   width: 50px;
   height: 50px;
 }
-
 
 .consultant-greeting-section {
   display: flex;
@@ -162,7 +158,7 @@
 }
 
 .consultant-greeting-image {
-  max-width: 100%; 
+  max-width: 100%;
   margin-top: -70px;
   margin-right: 20px;
 }
@@ -172,7 +168,6 @@
   height: auto;
   border-radius: 8px; /* Optional: add a border-radius to the image */
 }
-
 
 .consultant-weekly-reports {
   width: 950px;
@@ -192,7 +187,6 @@
   flex-direction: column;
   align-items: center;
 }
-
 
 .consul-icon {
   font-size: 24px; /* Adjust icon size */
@@ -220,7 +214,7 @@
   padding: 20px;
   border-radius: 10px;
   width: 950px;
-  margin-left:40px;
+  margin-left: 40px;
   margin-top: -20px;
 }
 
@@ -246,18 +240,16 @@
   background-color: #7c459c;
 }
 
-
 .consultant-patients-table table {
   width: 100%;
   border-collapse: separate; /* Change from collapse to separate */
-  border-spacing: 0 10px; 
+  border-spacing: 0 10px;
   margin-left: 20px;
 }
 
-.consultant-patients-table th{
+.consultant-patients-table th {
   text-align: left;
   padding: 10px;
-  
 }
 
 .consultant-patients-table td {
@@ -265,7 +257,6 @@
   padding: 10px;
   background-color: white;
 }
-
 
 .consultant-right-sidebar {
   width: 450px;
@@ -280,11 +271,10 @@
   margin-top: 20px;
 }
 
-.consultant-schedule-calendar h3{
+.consultant-schedule-calendar h3 {
   margin-bottom: 10px;
   color: #042440;
 }
-
 
 .consultant-schedule-calendar .calendar {
   background-color: #f0f0f0;
@@ -311,7 +301,6 @@
   margin-left: -100px;
 }
 
-
 /* Custom styles for the calendar */
 .consul-custom-calendar {
   width: 100%;
@@ -319,7 +308,8 @@
   background-color: none !important;
   margin-left: 50px;
   border: none !important;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 
 .consul-custom-calendar .react-calendar__tile {
@@ -357,4 +347,72 @@
 
 .consul-custom-calendar .react-calendar__month-view__days__day--weekend {
   color: #e39fa9;
+}
+
+/* add patient form */
+.add-patient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.add-patient-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.add-patient h2 {
+  margin-bottom: 1rem;
+}
+
+.add-patient-form {
+  margin-bottom: 1rem;
+}
+
+.add-patient-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.add-patient-form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.add-patient-submit {
+  margin: 10px 0;
+  padding: 10px;
+  width: 150px;
+  background-color: #9a6cb4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 70px;
+}
+
+.add-patient-cancel {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100px;
+  background-color: #e39fa9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 20px;
 }
