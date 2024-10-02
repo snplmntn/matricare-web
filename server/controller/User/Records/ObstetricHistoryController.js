@@ -35,6 +35,9 @@ const obstetric_history_post = catchAsync(async (req, res, next) => {
 });
 
 const obstetric_history_put = catchAsync(async (req, res, next) => {
+  if (!req.query.id)
+    return next(new AppError("Obstetric History identifier not found", 400));
+
   const updatedObstetricHistory = await ObstetricHistory.findByIdAndUpdate(
     req.query.id,
     { $set: req.body },

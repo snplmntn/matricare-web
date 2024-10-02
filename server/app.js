@@ -17,6 +17,7 @@ const authRoute = require("./routes/User/auth");
 const userRoute = require("./routes/User/user");
 const verifyRoute = require("./routes/User/verify");
 //records
+const patientRoute = require("./routes/User/Records/patient");
 const taskRoute = require("./routes/User/Records/task");
 const documentRoute = require("./routes/User/Records/document");
 const medicalHistoryRoute = require("./routes/User/Records/medicalHistory");
@@ -66,6 +67,7 @@ app.use("/api/verify", verifyRoute);
 app.use("/api/user", checkAuth, userRoute);
 
 // records
+app.use("/api/record/patient", checkAuth, patientRoute);
 app.use("/api/record/task", checkAuth, taskRoute);
 app.use("/api/record/document", checkAuth, documentRoute);
 app.use("/api/record/medical", checkAuth, medicalHistoryRoute);
