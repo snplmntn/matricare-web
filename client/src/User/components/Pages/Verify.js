@@ -22,34 +22,41 @@ export default function Verify() {
 
         if (!token) {
           setTimeout(() => {
-            throw "No token found.";
+            setError(
+              "Verification failed. Please try again. Redirecting to login page"
+            );
+            setTimeout(() => {
+              navigate("/login");
+            }, 2000);
+          }, 3000);
+        } else {
+          const response = await axios.get(
+            `https://matricare-web.onrender.com/api/verify?token=${token}`
+          );
+          let userData = localStorage.getItem("userData");
+          let parsedUser = JSON.parse(userData);
+          let role = parsedUser.role;
+          setTimeout(() => {
+            if (response.status === 200) {
+              navigate(
+                role === "Patient"
+                  ? "/app"
+                  : role === "Assistant"
+                  ? "/assistant-landing"
+                  : role === "Obgyne" && "/consultant-landing"
+              );
+            }
           }, 3000);
         }
-
-        const response = await axios.get(
-          `https://matricare-web.onrender.com/api/verify?token=${token}`
-        );
-
-        let userData = localStorage.getItem("userData");
-        let parsedUser = JSON.parse(userData);
-        let role = parsedUser.role;
-        setTimeout(() => {
-          if (response.status === 200) {
-            navigate(
-              role === "Patient"
-                ? "/app"
-                : role === "Assistant"
-                ? "/assistant-landing"
-                : role === "Obgyne" && "/consultant-landing"
-            );
-          }
-        }, 3000);
       } catch (err) {
         console.error(
           "Verification failed:",
           err.response ? err.response.data : err.message
         );
         setError("Verification failed. Please try again.");
+        // setTimeout(() => {
+        //   navigate("/login");
+        // }, 3000);
       }
     };
 

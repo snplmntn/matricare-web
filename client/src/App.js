@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useRef, useEffect } from "react";
 import {
@@ -77,7 +76,6 @@ function AppContent() {
         <Route path="/verify" element={<Verify />} />
         <Route path="/forgot-password" element={<ForgotPass />} />
         <Route path="/notification" element={<Notifications />} />
-
         <Route path="/app" element={<HomePage user={parsedUser} />} />
         <Route
           path="/userprofile"
@@ -90,7 +88,7 @@ function AppContent() {
           element={
             <>
               <ConsultantSidebar />
-              <LandingPageConsultant />
+              <LandingPageConsultant user={parsedUser} />
             </>
           }
         />
@@ -237,7 +235,7 @@ function AppContent() {
           element={
             <>
               <AssistantSidebar />
-              <LandingPageAssistant />
+              <LandingPageAssistant user={parsedUser} />
             </>
           }
         />
@@ -264,12 +262,11 @@ function AppContent() {
             </>
           }
         />
-        <Route path="/patient-records" element={<PatientRecords />} />
+        <Route path="/patient-records/:userId" element={<PatientRecords />} />
         <Route
           path="/consultant-notification"
           element={<ConsultantNotifications />}
         />
-
       </Routes>
       <Footer />
     </div>

@@ -5,9 +5,9 @@
   width: 90%;
   margin-left: 200px;
   background-color: #9a6cb4;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
-
 
 /* Main Section */
 .CPM-main-section {
@@ -19,6 +19,23 @@
   border-radius: 50px 0 0 50px;
 }
 
+.CPM-add-btn {
+  background-color: #9a6cb4;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  margin-right: 350px;
+  margin-top: -40px;
+  margin-left: -200px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1000;
+}
+
+.CPM-add-btn:hover {
+  background-color: #7c459c;
+}
 
 .CPM-header {
   display: flex;
@@ -31,7 +48,7 @@
 
 .CPM-user-profile {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   text-align: right;
   margin-top: 30px;
 }
@@ -43,8 +60,8 @@
 }
 
 .CPM-user-profile p {
-  margin: 0; 
-  font-size: 14px; 
+  margin: 0;
+  font-size: 14px;
   color: #666;
   margin-right: 70px;
 }
@@ -83,7 +100,6 @@
   width: 150px;
 }
 
-
 .CPM-toggle-select {
   display: flex;
   align-items: center;
@@ -118,19 +134,19 @@
   border-collapse: collapse;
   margin-top: 10px;
   margin-left: 40px;
-  
 }
 
 .CPM-user-table thead {
   background-color: #ffffff;
 }
 
-.CPM-user-table th, .CPM-user-table td {
+.CPM-user-table th,
+.CPM-user-table td {
   padding: 8px;
   text-align: left;
   background-color: #ffffff;
 }
-.CPM-user-table th{
+.CPM-user-table th {
   color: #666;
 }
 
@@ -141,24 +157,23 @@
   object-fit: cover; /* Ensures the image covers the area without stretching */
 }
 
-
 /* Operation Buttons */
 .CPM-operation-btn {
   background: none;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-    font-size: 25px; /* Adjust icon size */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 25px; /* Adjust icon size */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .CPM-delete-btn {
   color: #7c459c;
 }
 
-.CPM-operation-btn{
+.CPM-operation-btn {
   color: #7c459c;
 }
 
@@ -186,7 +201,6 @@
   border-bottom: 3px solid #e39fa9; /* Add a line below the button */
   color: #040404; /* Optional: Change the text color to match the line */
 }
-
 
 .CPM-type-button:hover {
   background-color: #7c459c;
@@ -230,7 +244,8 @@
 }
 
 /* Style for table headers and cells */
-.CPM-user-table th, .CPM-user-table td {
+.CPM-user-table th,
+.CPM-user-table td {
   padding: 8px;
   text-align: left;
   background-color: #ffffff;
@@ -248,7 +263,6 @@
 .CPM-user-table td:nth-child(2) {
   text-align: center;
 }
-
 
 /* Modal Overlay */
 .modal-overlay {
@@ -292,7 +306,7 @@
 
 /* General Body and Font Styles */
 body {
-  font-family: 'Lucida Sans', 'Lucida Grande', sans-serif;
+  font-family: "Lucida Sans", "Lucida Grande", sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
@@ -380,7 +394,8 @@ body {
   border-collapse: collapse;
 }
 
-.Pi-outstanding-tasks th, .Pi-outstanding-tasks td {
+.Pi-outstanding-tasks th,
+.Pi-outstanding-tasks td {
   padding: 10px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -399,22 +414,30 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.Pi-past-encounters, .Pi-documents, .Pi-problem-list {
+.Pi-past-encounters,
+.Pi-documents,
+.Pi-problem-list {
   display: flex;
   flex-direction: column;
 }
 
-.Pi-past-encounters h4, .Pi-documents h4, .Pi-problem-list h4 {
+.Pi-past-encounters h4,
+.Pi-documents h4,
+.Pi-problem-list h4 {
   margin-bottom: 10px;
   font-size: 18px;
 }
 
-.Pi-past-encounters ul, .Pi-documents ul, .Pi-problem-list ul {
+.Pi-past-encounters ul,
+.Pi-documents ul,
+.Pi-problem-list ul {
   list-style-type: none;
   padding: 0;
 }
 
-.Pi-past-encounters li, .Pi-documents li, .Pi-problem-list li {
+.Pi-past-encounters li,
+.Pi-documents li,
+.Pi-problem-list li {
   margin-bottom: 10px;
   padding: 10px;
   background-color: #f9f9f9;
@@ -433,21 +456,89 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-.Pi-readmission-risk, .Pi-allergies, .Pi-medication {
+.Pi-readmission-risk,
+.Pi-allergies,
+.Pi-medication {
   background-color: #fafafa;
   padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 5px;
 }
 
-.Pi-risk-level, .Pi-allergy-item, .Pi-med-item {
+.Pi-risk-level,
+.Pi-allergy-item,
+.Pi-med-item {
   padding: 10px;
   border-bottom: 1px solid #ddd;
 }
 
-.Pi-risk-level:last-child, .Pi-allergy-item:last-child, .Pi-med-item:last-child {
+.Pi-risk-level:last-child,
+.Pi-allergy-item:last-child,
+.Pi-med-item:last-child {
   border-bottom: none;
 }
 
+/* add patient form */
 
+.CPM-patient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.CPM-add-patient-form {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 400px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.CPM-add-form {
+  margin-bottom: 1rem;
+}
+
+.CPM-add-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.CPM-add-form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.CPM-add-submit {
+  margin: 10px 0;
+  padding: 10px;
+  width: 150px;
+  background-color: #9a6cb4;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 70px;
+}
+
+.CPM-add-cancel {
+  margin: 10px 0;
+  padding: 10px;
+  width: 100px;
+  background-color: #e39fa9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 20px;
+}

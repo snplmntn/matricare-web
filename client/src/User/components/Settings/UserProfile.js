@@ -1,25 +1,32 @@
-
 import React, { useState, useEffect } from "react";
 import { FaCameraRetro, FaArrowLeft } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { getCookie } from "../../../utils/getCookie";
 import "../../styles/settings/userprofile.css";
 
-const UserProfile = () => {
-  const [userId, setUserId] = useState("1");
-  const [userName, setUserName] = useState("Mary Jane");
-  const [email, setEmail] = useState("maryjane.doe@example.com0");
-  const [phoneNumber, setPhoneNumber] = useState("123-456-7890");
-  const [address, setAddress] = useState("123 Main St");
+const UserProfile = ({ user }) => {
+  // const [userId, setUserId] = useState("1");
+  const token = getCookie("token");
+  const userID = getCookie("userID");
+
+  //user info
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [address, setAddress] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [profileImageUrl, setProfileImageUrl] = useState("");
+
+  //user password
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
-  const [profileImageUrl, setProfileImageUrl] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
+
   const [showPasswordSettings, setShowPasswordSettings] = useState(false);
   const [error, setError] = useState("");
 
+  //notifications
   const [showNotifications, setShowNotifications] = useState(false);
   const [notificationPreferences, setNotificationPreferences] = useState({
     emailNotifications: false,
@@ -27,24 +34,7 @@ const UserProfile = () => {
     pushNotifications: false,
   });
 
-  //fetch USER
-  useEffect(() => {
-    // Load user data from localStorage or API
-    const storedUserName = localStorage.getItem("userName") || "";
-    const storedEmail = localStorage.getItem("email") || "";
-    const storedPhoneNumber = localStorage.getItem("phoneNumber") || "";
-    const storedAddress = localStorage.getItem("address") || "";
-    const storedProfileImageUrl = localStorage.getItem("profileImageUrl") || "";
-
-    // try {
-    // } catch (error) {}
-
-    setUserName(storedUserName);
-    setEmail(storedEmail);
-    setPhoneNumber(storedPhoneNumber);
-    setAddress(storedAddress);
-    setProfileImageUrl(storedProfileImageUrl);
-  }, []);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -66,14 +56,13 @@ const UserProfile = () => {
     }
   };
 
-  const handleProfileUpdate = (e) => {
+  const handleProfileUpdate = async (e) => {
     e.preventDefault();
 
     // Regular expressions for password validation
     const hasUpperCase = /[A-Z]/;
     const hasNumber = /[0-9]/;
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/;
-
 
     if (showPasswordSettings) {
       // Password validation logic
@@ -108,9 +97,26 @@ const UserProfile = () => {
       }
 
       // Mock API call for password update
-      console.log("Updating password...");
-      console.log(`Old Password: ${oldPassword}`);
-      console.log(`New Password: ${newPassword}`);
+      // console.log("Updating password...");
+      // console.log(`Old Password: ${oldPassword}`);
+      // console.log(`New Password: ${newPassword}`);
+      try {
+        const response = await axios.put(
+          `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+          {
+            password: oldPassword,
+            newPassword: newPassword,
+          },
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
 
       // Clear form fields and error message
       setOldPassword("");
@@ -120,13 +126,13 @@ const UserProfile = () => {
       setShowPasswordSettings(false);
     } else {
       // Validate other fields if needed
-      if (!userName || !email || !phoneNumber || !address) {
+      if (!fullname || !email || !phoneNumber || !address) {
         setError("All fields are required");
         return;
       }
 
       // Update profile information locally
-      localStorage.setItem("userName", userName);
+      localStorage.setItem("userName", fullname);
       localStorage.setItem("email", email);
       localStorage.setItem("phoneNumber", phoneNumber);
       localStorage.setItem("address", address);
@@ -142,6 +148,57 @@ const UserProfile = () => {
     const { name, checked } = e.target;
     setNotificationPreferences((prev) => ({ ...prev, [name]: checked }));
   };
+
+  //handle user ifo update
+  const handleUserUpdate = async () => {
+    const updatedUserForm = {
+      fullName: fullname,
+      email: email,
+      phoneNumber: phoneNumber,
+      address: address,
+    };
+
+    try {
+      const response = await axios.put(
+        `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+        updatedUserForm,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
+    // location.reload();
+  };
+
+  //fetch user data
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const response = await axios.get(
+          `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        // console.log(response);
+        const data = response.data.other;
+        setFullname(data.fullName);
+        setEmail(data.email);
+        setPhoneNumber(data.phoneNumber);
+        setAddress(data.address ? data.address : "");
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchUser();
+  }, []);
 
   return (
     <div className="user-profile-container">
@@ -196,8 +253,8 @@ const UserProfile = () => {
               <span className="UP-divider-text-wrapper">Personal Details</span>
             </div>
             <div className="user-profile-item">
-              <label>USERNAME:</label>
-              <p className="user-profile-detail">{userName}</p>
+              <label>FULLNAME:</label>
+              <p className="user-profile-detail">{fullname}</p>
             </div>
             <div className="user-profile-item">
               <label>EMAIL:</label>
@@ -209,7 +266,7 @@ const UserProfile = () => {
             </div>
             <div className="user-profile-item">
               <label>ADDRESS:</label>
-              <p className="user-profile-detail">{address}</p>
+              <p className="user-profile-detail">{address ? address : "N/A"}</p>
             </div>
           </div>
         )}
@@ -222,12 +279,12 @@ const UserProfile = () => {
             <div className="user-profile-details">
               <form onSubmit={handleProfileUpdate}>
                 <div className="user-profile-input-group">
-                  <label htmlFor="userName">USERNAME:</label>
+                  <label htmlFor="userName">FULLNAME:</label>
                   <input
                     type="text"
                     id="userName"
-                    value={userName}
-                    onChange={(e) => setUserName(e.target.value)}
+                    value={fullname}
+                    onChange={(e) => setFullname(e.target.value)}
                     placeholder="UserName"
                     className="user-profile-input"
                   />
@@ -267,7 +324,11 @@ const UserProfile = () => {
                 </div>
 
                 <div className="user-profile-button-group">
-                  <button type="submit" className="user-profile-save-btn">
+                  <button
+                    type="submit"
+                    className="user-profile-save-btn"
+                    onClick={handleUserUpdate}
+                  >
                     Save
                   </button>
                   <button
