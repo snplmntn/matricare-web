@@ -101,10 +101,10 @@ export default function Login() {
       const response = await axios.put(
         `https://matricare-web.onrender.com/api/verify?userId=${userID}`
       );
+      document.cookie = `verifyToken=${response.data.verificationToken}`;
       resendMessage
         ? setSuccessMessage("Verification email resent successfully!")
         : setSuccessMessage("Verification email sent successfully!");
-      document.cookie = `verifyToken=${response.data.verificationToken}`;
       setResendMessage(true);
     } catch (error) {
       console.error(
