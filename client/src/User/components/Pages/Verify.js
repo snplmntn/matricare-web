@@ -6,7 +6,6 @@ import "../../styles/pages/verify.css";
 import axios from "axios";
 import { parse } from "@fortawesome/fontawesome-svg-core";
 
-
 export default function Verify() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,11 +18,18 @@ export default function Verify() {
 
     const verifyEmail = async () => {
       try {
-
         let token = getCookie("verifyToken");
+
+        if (!token) {
+          setTimeout(() => {
+            throw "No token found.";
+          }, 3000);
+        }
+
         const response = await axios.get(
           `https://matricare-web.onrender.com/api/verify?token=${token}`
         );
+
         let userData = localStorage.getItem("userData");
         let parsedUser = JSON.parse(userData);
         let role = parsedUser.role;
@@ -38,7 +44,6 @@ export default function Verify() {
             );
           }
         }, 3000);
-
       } catch (err) {
         console.error(
           "Verification failed:",
@@ -49,7 +54,6 @@ export default function Verify() {
     };
 
     verifyEmail();
-
   }, []);
 
   return (
@@ -64,7 +68,6 @@ export default function Verify() {
           <div className="loader"></div>
         </>
       )}
-
     </div>
   );
 }

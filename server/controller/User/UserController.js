@@ -50,7 +50,6 @@ const user_delete = catchAsync(async (req, res, next) => {
 const user_update = catchAsync(async (req, res, next) => {
   const KEY = process.env.JWT_KEY;
   const { userId } = req.query;
-  console.log(req.body);
 
   const user = await User.findById(userId);
 
