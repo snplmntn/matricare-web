@@ -17,7 +17,7 @@ const medicalHistorySchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    userId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

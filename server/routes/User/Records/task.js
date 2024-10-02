@@ -6,7 +6,7 @@ const taskController = require("../../../controller/User/Records/TaskController"
 router.get("/", taskController.task_get);
 
 // Get Task by UserId
-router.get("/u", taskController.task_get);
+router.get("/u", taskController.task_user_get);
 
 // Index User
 router.post("/", taskController.task_post);
