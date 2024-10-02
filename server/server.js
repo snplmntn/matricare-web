@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 
 process.on("uncaughtException", (err) => {
   console.log("Uncaught Exception!!! 💣 Shutting down...");
-  console.log(err.name, err.message);
+  console.log(err.name, err.message, err);
 
   server.close(() => {
     process.exit(1);
