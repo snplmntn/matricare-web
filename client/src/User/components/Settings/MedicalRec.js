@@ -125,7 +125,7 @@ const MedicalRec = ({ user }) => {
 
   //fetch current user
   useEffect(() => {
-    async function fetchCurrentDoctor() {
+    async function fetchCurrentPatient() {
       try {
         const response = await axios.get(
           `https://api.matricare.site/api/user?userId=${userID}`,
@@ -140,7 +140,7 @@ const MedicalRec = ({ user }) => {
         console.error(error);
       }
     }
-    fetchCurrentDoctor();
+    fetchCurrentPatient();
   }, []);
 
   return (
@@ -153,25 +153,22 @@ const MedicalRec = ({ user }) => {
           <div className="MR-patient-info">
             <img src="img/topic2.jpg" alt="Patient Photo" />
             <div className="MR-patient-details">
-              <h3>Alice M. Guo</h3>
+              <h3>{patient && patient.fullName}</h3>
               <p>02/21/1996 (28 yrs old), F</p>
               <div className="MR-phone-info">
                 <FaMobileAlt className="MR-phone-icon" />
-                <p>+63 905 4562 702</p>
+                <p>{patient && patient.phoneNumber}</p>
               </div>
             </div>
           </div>
           <div className="MR-info-columns">
             <div className="MR-address-info">
               <h4>Home Address:</h4>
-              <p>
-                123 Gumamela Street, <br />
-                Antipolo, Rizal
-              </p>
+              <p>{patient && patient.address}</p>
             </div>
             <div className="MR-email-info">
               <h4>Email Address:</h4>
-              <p>alice.guo@example.com</p>
+              <p>{patient && patient.email}</p>
             </div>
             <div className="MR-partner-info">
               <h4>Husband/Partner:</h4>
@@ -220,7 +217,7 @@ const MedicalRec = ({ user }) => {
                       <option value="Complete">Complete</option>
                     </select>
                   </td>
-                  <td>{task.prescribedBy}</td>
+                  <td>Dr. {task.prescribedBy}</td>
                   <td>{task.orderNumber}</td>
                 </tr>
               ))}
