@@ -130,7 +130,7 @@ const verification_mail = catchAsync(async (req, res, next) => {
       </p>
 
       <a
-        href="https://matricare-web.onrender.com/api/verify?token=${verificationToken}"
+        href="https://matricare.site/verify"
         class="btn"
         >Verify Email</a
       >
