@@ -19,8 +19,21 @@ const user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json({ message: "User Fetched", other });
 });
 
+const role_get = catchAsync(async (req, res, next) => {
+  const { role } = req.query;
+
+  const accounts = await User.find({ role });
+
+  if (!accounts) return next(new AppError("User not found", 404));
+
+  return res.status(200).json(accounts);
+});
+
 const user_index = catchAsync(async (req, res, next) => {
   const accounts = await User.find();
+
+  if (!accounts) return next(new AppError("Users not found", 404));
+
   return res.status(200).json(accounts);
 });
 
@@ -37,6 +50,7 @@ const user_delete = catchAsync(async (req, res, next) => {
 const user_update = catchAsync(async (req, res, next) => {
   const KEY = process.env.JWT_KEY;
   const { userId } = req.query;
+  console.log(req.body);
 
   const user = await User.findById(userId);
 
@@ -59,17 +73,32 @@ const user_update = catchAsync(async (req, res, next) => {
   }
 
   // ===================== POST =============================
-  // if (req.body.profilePicture) update.profilePicture = req.body.profilePicture;
+  let postUpdate = {},
+    commentUpdate = {};
 
-  // //Post
-  // await Post.updateMany({ userId: userId }, { $set: update }, { new: true });
+  if (req.body.profilePicture) {
+    postUpdate.profilePicture = req.body.profilePicture;
+    commentUpdate.profilePicture = req.body.profilePicture;
+  }
+  if (req.body.fullname) {
+    postUpdate.fullName = req.body.fullName;
+    commentUpdate.fullName = req.body.fullname;
+  }
+  if (req.body.cityAddress) postUpdate.address = req.body.cityAddress;
 
-  // //Post Comment
-  // await PostComment.updateMany(
-  //   { userId: userId },
-  //   { $set: update },
-  //   { new: true }
-  // );
+  //Post
+  await Post.updateMany(
+    { userId: userId },
+    { $set: postUpdate },
+    { new: true }
+  );
+
+  //Post Comment
+  await PostComment.updateMany(
+    { userId: userId },
+    { $set: commentUpdate },
+    { new: true }
+  );
 
   const updatedUser = await User.findByIdAndUpdate(
     userId,
@@ -91,7 +120,7 @@ const user_update = catchAsync(async (req, res, next) => {
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
-  res.cookie("tempToken", token, cookieOptions);
+  res.cookie("token", token, cookieOptions);
 
   return res
     .status(200)
@@ -101,6 +130,7 @@ const user_update = catchAsync(async (req, res, next) => {
 module.exports = {
   user_get,
   user_index,
+  role_get,
   user_delete,
   user_update,
 };

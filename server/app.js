@@ -16,7 +16,13 @@ const aliveRoute = require("./routes/alive");
 const authRoute = require("./routes/User/auth");
 const userRoute = require("./routes/User/user");
 const verifyRoute = require("./routes/User/verify");
+//records
 const taskRoute = require("./routes/User/Records/task");
+const documentRoute = require("./routes/User/Records/document");
+const medicalHistoryRoute = require("./routes/User/Records/medicalHistory");
+const obstetricHistoryRoute = require("./routes/User/Records/obstetricHistory");
+const surgicalHistoryRoute = require("./routes/User/Records/surgicalHistory");
+
 // content
 const uploadRoute = require("./routes/Content/upload");
 const postRoute = require("./routes/Content/post");
@@ -58,7 +64,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", authRoute);
 app.use("/api/verify", verifyRoute);
 app.use("/api/user", checkAuth, userRoute);
+
+// records
 app.use("/api/record/task", checkAuth, taskRoute);
+app.use("/api/record/document", checkAuth, documentRoute);
+app.use("/api/record/medical", checkAuth, medicalHistoryRoute);
+app.use("/api/record/obstetric", checkAuth, obstetricHistoryRoute);
+app.use("/api/record/surgical", checkAuth, surgicalHistoryRoute);
 
 // content
 app.use("/api/upload", checkAuth, uploadRoute);

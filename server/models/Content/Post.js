@@ -31,6 +31,7 @@ const PostSchema = new mongoose.Schema(
           "Breast Feeding",
           "Gender Reveal",
           "Parenting Tips",
+          "Labor",
         ],
         default: "Pregnancy Updates",
       },
