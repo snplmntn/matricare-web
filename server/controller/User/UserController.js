@@ -81,8 +81,8 @@ const user_update = catchAsync(async (req, res, next) => {
     commentUpdate.profilePicture = req.body.profilePicture;
   }
   if (req.body.fullname) {
-    postUpdate.fullname = req.body.fullname;
-    commentUpdate.fullname = req.body.fullname;
+    postUpdate.fullName = req.body.fullName;
+    commentUpdate.fullName = req.body.fullname;
   }
   if (req.body.cityAddress) postUpdate.address = req.body.cityAddress;
 
@@ -120,7 +120,7 @@ const user_update = catchAsync(async (req, res, next) => {
 
   if (process.env.NODE_ENV === "production") cookieOptions.secure = true;
 
-  res.cookie("tempToken", token, cookieOptions);
+  res.cookie("token", token, cookieOptions);
 
   return res
     .status(200)
