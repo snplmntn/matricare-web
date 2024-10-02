@@ -51,6 +51,7 @@ const UserProfile = ({ user }) => {
       reader.onloadend = () => {
         setProfileImageUrl(reader.result);
         localStorage.setItem("profileImageUrl", reader.result); // Save to localStorage
+        setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
@@ -193,6 +194,7 @@ const UserProfile = ({ user }) => {
         setEmail(data.email);
         setPhoneNumber(data.phoneNumber);
         setAddress(data.address ? data.address : "");
+        setProfileImage(data.profilePicture ? data.profilePicture : "");
       } catch (error) {
         console.error(error);
       }
@@ -485,10 +487,11 @@ const UserProfile = ({ user }) => {
               Add a photo of you to be easily recognized
             </p>
             <img
-              src={profileImageUrl || "/default-avatar.png"}
+              src={profileImage}
               alt=""
               className="user-profile-image-border"
             />
+
             <label
               htmlFor="profileImage"
               className="user-profile-upload-button"

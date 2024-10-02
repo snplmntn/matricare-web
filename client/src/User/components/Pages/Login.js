@@ -14,6 +14,7 @@ export default function Login() {
   const [successMessage, setSuccessMessage] = useState("");
   const [showVerificationModal, setShowVerificationModal] = useState(false); // For modal
   const [email, setEmail] = useState(""); // Store the user's email
+  const [resendMessage, setResendMessage] = useState(false);
 
   const navigate = useNavigate();
 
@@ -53,7 +54,7 @@ export default function Login() {
     try {
       // Perform login
       const response = await axios.post(
-        `https://api.matricare.site/api/auth/login`,
+        `https://matricare-web.onrender.com/api/auth/login`,
         {
           username,
           password,
@@ -75,6 +76,7 @@ export default function Login() {
       setEmail(userEmail);
       setSuccessMessage("Login successful! Please verify your email.");
       setLoading(false);
+      await handleResendEmail();
       setShowVerificationModal(true);
     } catch (err) {
       // Log the error
@@ -87,7 +89,9 @@ export default function Login() {
           ? err.response.data.message
           : "Login error. Please try again."
       );
-      setSuccessMessage("Invalid Username or Password.");
+
+      // Show verification modal regardless of the error
+      setShowVerificationModal(true); // Show modal
       setLoading(false); // Stop loading
     }
   };
@@ -95,8 +99,13 @@ export default function Login() {
   const handleResendEmail = async () => {
     try {
       let userID = getCookie("userID");
-      await axios.put(`https://api.matricare.site/api/verify?userId=${userID}`);
-      setSuccessMessage("Verification email resent successfully!");
+      await axios.put(
+        `https://matricare-web.onrender.com/api/verify?userId=${userID}`
+      );
+      resendMessage
+        ? setSuccessMessage("Verification email resent successfully!")
+        : setSuccessMessage("Verification email sent successfully!");
+      setResendMessage(true);
     } catch (error) {
       console.error(
         "Resend email error:",
@@ -105,17 +114,6 @@ export default function Login() {
       );
       setError("Failed to resend verification email.");
     }
-  };
-
-  const censorEmail = (email) => {
-    const [name, domain] = email.split("@");
-    const visibleNamePart = name.slice(0, 3);
-    const censoredNamePart = "*".repeat(name.length - 3);
-    const visibleDomainPart = domain.slice(0, 1);
-    const censoredDomainPart = "*".repeat(domain.length - 1);
-    const censoredName = visibleNamePart + censoredNamePart;
-    const censoredDomain = visibleDomainPart + censoredDomainPart;
-    return `${censoredName}@${censoredDomain}`;
   };
 
   return (
@@ -209,8 +207,8 @@ export default function Login() {
           <h2>Verify your Email</h2>
           <p>
             You're almost there! We've sent a verification email to{" "}
-            <strong>{censorEmail(email)}</strong>. <br></br>You need to verify
-            your email address to log into MatriCare.
+            <strong>{email}</strong>. <br></br>You need to verify your email
+            address to log into MatriCare.
           </p>
           <button onClick={handleResendEmail}>Resend Email</button>
           {successMessage && <p>{successMessage}</p>}

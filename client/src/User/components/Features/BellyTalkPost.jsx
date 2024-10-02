@@ -177,7 +177,9 @@ const BellyTalkPost = ({ post, user }) => {
   return (
     <div className="bellytalk-feed-item" key={post.id}>
       <img
-        src="img/topic1.jpg"
+        src={`${
+          post.profilePicture ? `${post.profilePicture}` : "img/topic1.jpg"
+        }`}
         alt="Avatar"
         className="bellytalk-avatar-overlay"
       />
