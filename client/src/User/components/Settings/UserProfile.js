@@ -102,7 +102,7 @@ const UserProfile = ({ user }) => {
       // console.log(`New Password: ${newPassword}`);
       try {
         const response = await axios.put(
-          `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+          `https://api.matricare.site/api/user?userId=${userID}`,
           {
             password: oldPassword,
             newPassword: newPassword,
@@ -160,7 +160,7 @@ const UserProfile = ({ user }) => {
 
     try {
       const response = await axios.put(
-        `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+        `https://api.matricare.site/api/user?userId=${userID}`,
         updatedUserForm,
         {
           headers: {
@@ -180,7 +180,7 @@ const UserProfile = ({ user }) => {
     async function fetchUser() {
       try {
         const response = await axios.get(
-          `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+          `https://api.matricare.site/api/user?userId=${userID}`,
           {
             headers: {
               Authorization: token,

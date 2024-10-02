@@ -34,7 +34,7 @@ const PatientRecords = () => {
       };
       try {
         const response = await axios.post(
-          `https://matricare-web.onrender.com/api/record/task`,
+          `https://api.matricare.site/api/record/task`,
           newTask,
           {
             headers: {
@@ -84,7 +84,7 @@ const PatientRecords = () => {
     async function fetchCurrentPatient() {
       try {
         const response = await axios.get(
-          `https://matricare-web.onrender.com/api/user?userId=${userId}`,
+          `https://api.matricare.site/api/user?userId=${userId}`,
           {
             headers: {
               Authorization: token,
@@ -104,7 +104,7 @@ const PatientRecords = () => {
     async function fetchCurrentDoctor() {
       try {
         const response = await axios.get(
-          `https://matricare-web.onrender.com/api/user?userId=${userID}`,
+          `https://api.matricare.site/api/user?userId=${userID}`,
           {
             headers: {
               Authorization: token,
@@ -126,7 +126,7 @@ const PatientRecords = () => {
 
       try {
         const response = await axios.get(
-          `https://matricare-web.onrender.com/api/record/task/u?userId=${userId}`,
+          `https://api.matricare.site/api/record/task/u?userId=${userId}`,
           {
             headers: {
               Authorization: token,

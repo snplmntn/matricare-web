@@ -1,7 +1,7 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../style/pages/patientusermanagement.css";
+import { useNavigate } from "react-router-dom";
 import {
   IoHome,
   IoCalendar,
@@ -14,6 +14,7 @@ import {
 } from "react-icons/io5";
 
 const PatientUserManagement = () => {
+  const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -58,6 +59,15 @@ const PatientUserManagement = () => {
     },
     // Add more admins here
   ]);
+
+  const [showForm, setShowForm] = useState(false); // State for form visibility
+  const [newPatient, setNewPatient] = useState({
+    id: "",
+    name: "",
+    mobile: "",
+    email: "",
+    status: "active",
+  });
 
   const filteredUsers =
     view === "patients"
@@ -111,6 +121,43 @@ const PatientUserManagement = () => {
     setEditingUserId(null);
   };
 
+  const handleRowClick = (userId) => {
+    navigate("/patient-records");
+  };
+
+  const handleAddPatientClick = () => {
+    setShowForm(true); // Show the form when the button is clicked
+  };
+
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    setNewPatient((prevState) => ({ ...prevState, [name]: value }));
+  };
+
+  const handleAddPatientSubmit = (event) => {
+    event.preventDefault();
+    setPatients([
+      ...patients,
+      {
+        ...newPatient,
+        id: patients.length + 1,
+        PatientID: patients.length + 1,
+      },
+    ]); // Add new patient
+    setNewPatient({
+      id: "",
+      name: "",
+      mobile: "",
+      email: "",
+      status: "active",
+    }); // Reset form fields
+    setShowForm(false); // Hide the form
+  };
+
+  const handleCancelClick = () => {
+    setShowForm(false); // Hide the form
+  };
+
   return (
     <div className="PatientUserManagement-container">
       <nav className="PUM-navbar">
@@ -144,6 +191,9 @@ const PatientUserManagement = () => {
             <h1>Mary Anne B. Santos</h1>
             <p>Assistant</p>
             <img src="img/LOGO.png" alt="Profile" />
+            <button className="PUM-add-btn" onClick={handleAddPatientClick}>
+              + Add Patients
+            </button>
           </div>
         </header>
 
@@ -295,9 +345,59 @@ const PatientUserManagement = () => {
           </tbody>
         </table>
       </div>
+      {showForm && (
+        <div className="PUM-patient">
+          <div className="PUM-add-patient-form">
+            <form onSubmit={handleAddPatientSubmit}>
+              <div className="PUM-add-form">
+                <label htmlFor="patientName">Name:</label>
+                <input
+                  type="text"
+                  id="patientName"
+                  name="name"
+                  value={newPatient.name}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="PUM-add-form">
+                <label htmlFor="patientMobile">Mobile Number:</label>
+                <input
+                  type="tel"
+                  id="patientMobile"
+                  name="mobile"
+                  value={newPatient.mobile}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <div className="PUM-add-form">
+                <label htmlFor="patientEmail">Email:</label>
+                <input
+                  type="email"
+                  id="patientEmail"
+                  name="email"
+                  value={newPatient.email}
+                  onChange={handleFormChange}
+                  required
+                />
+              </div>
+              <button type="submit" className="PUM-add-submit">
+                Add Patient
+              </button>
+              <button
+                type="button"
+                className="PUM-add-cancel"
+                onClick={handleCancelClick}
+              >
+                Cancel
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
-
 };
 
 export default PatientUserManagement;

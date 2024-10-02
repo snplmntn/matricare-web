@@ -34,7 +34,7 @@ const BellyTalkPost = ({ post, user }) => {
           postId: post._id,
         };
         const response = await axios.post(
-          "https://matricare-web.onrender.com/api/post/like",
+          "https://api.matricare.site/api/post/like",
           postLike,
           {
             headers: {
@@ -50,7 +50,7 @@ const BellyTalkPost = ({ post, user }) => {
       //unlike posts
       try {
         const response = await axios.delete(
-          `https://matricare-web.onrender.com/api/post/like?userId=${userID}&postId=${post._id}`,
+          `https://api.matricare.site/api/post/like?userId=${userID}&postId=${post._id}`,
           {
             headers: {
               Authorization: token,
@@ -107,7 +107,7 @@ const BellyTalkPost = ({ post, user }) => {
         content: commentText,
       };
       const response = await axios.post(
-        "https://matricare-web.onrender.com/api/post/comment",
+        "https://api.matricare.site/api/post/comment",
         commentForm,
         {
           headers: {
@@ -129,7 +129,7 @@ const BellyTalkPost = ({ post, user }) => {
     async function fetchPostLike() {
       try {
         const response = await axios.get(
-          `https://matricare-web.onrender.com/api/post/like?postId=${post._id}`,
+          `https://api.matricare.site/api/post/like?postId=${post._id}`,
 
           {
             headers: {
@@ -158,7 +158,7 @@ const BellyTalkPost = ({ post, user }) => {
     async function fetchComments() {
       try {
         const response = await axios.get(
-          `https://matricare-web.onrender.com/api/post/comment?postId=${post._id}`,
+          `https://api.matricare.site/api/post/comment?postId=${post._id}`,
 
           {
             headers: {

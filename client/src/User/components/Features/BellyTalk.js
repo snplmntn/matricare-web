@@ -81,7 +81,7 @@ const BellyTalk = ({ user }) => {
       try {
         console.log(formData);
         const response = await axios.post(
-          `https://matricare-web.onrender.com/api/upload/b?userId=${userID}`,
+          `https://api.matricare.site/api/upload/b?userId=${userID}`,
           formData,
           {
             headers: {
@@ -134,7 +134,7 @@ const BellyTalk = ({ user }) => {
     try {
       setIsPosting("Posting...");
       const response = await axios.post(
-        `https://matricare-web.onrender.com/api/post/`,
+        `https://api.matricare.site/api/post/`,
         newPost,
         {
           headers: {
@@ -189,7 +189,7 @@ const BellyTalk = ({ user }) => {
     async function fetchPosts() {
       try {
         const response = await axios.get(
-          "https://matricare-web.onrender.com/api/post/i",
+          "https://api.matricare.site/api/post/i",
           {
             headers: {
               Authorization: token,
