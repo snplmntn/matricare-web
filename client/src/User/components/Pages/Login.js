@@ -87,9 +87,7 @@ export default function Login() {
           ? err.response.data.message
           : "Login error. Please try again."
       );
-
-      // Show verification modal regardless of the error
-      setShowVerificationModal(true); // Show modal
+      setSuccessMessage("Invalid Username or Password.");
       setLoading(false); // Stop loading
     }
   };
@@ -107,6 +105,17 @@ export default function Login() {
       );
       setError("Failed to resend verification email.");
     }
+  };
+
+  const censorEmail = (email) => {
+    const [name, domain] = email.split("@");
+    const visibleNamePart = name.slice(0, 3);
+    const censoredNamePart = "*".repeat(name.length - 3);
+    const visibleDomainPart = domain.slice(0, 1);
+    const censoredDomainPart = "*".repeat(domain.length - 1);
+    const censoredName = visibleNamePart + censoredNamePart;
+    const censoredDomain = visibleDomainPart + censoredDomainPart;
+    return `${censoredName}@${censoredDomain}`;
   };
 
   return (
@@ -200,8 +209,8 @@ export default function Login() {
           <h2>Verify your Email</h2>
           <p>
             You're almost there! We've sent a verification email to{" "}
-            <strong>{email}</strong>. <br></br>You need to verify your email
-            address to log into MatriCare.
+            <strong>{censorEmail(email)}</strong>. <br></br>You need to verify
+            your email address to log into MatriCare.
           </p>
           <button onClick={handleResendEmail}>Resend Email</button>
           {successMessage && <p>{successMessage}</p>}
