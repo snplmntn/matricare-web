@@ -2,6 +2,7 @@ const Document = require("../../../models/User/Document");
 const AppError = require("../../../Utilities/appError");
 const catchAsync = require("../../../Utilities/catchAsync");
 
+// Get Document by Id
 const document_get = catchAsync(async (req, res, next) => {
   const document = await Document.findOne({
     _id: req.query.id,
@@ -12,6 +13,7 @@ const document_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(document);
 });
 
+// Get Document by UserId
 const document_user_get = catchAsync(async (req, res, next) => {
   const document = await Document.find({
     userId: req.query.userId,
@@ -22,6 +24,7 @@ const document_user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(document);
 });
 
+// Create Document
 const document_post = catchAsync(async (req, res, next) => {
   const newDocument = new Document(req.body);
 
@@ -31,6 +34,7 @@ const document_post = catchAsync(async (req, res, next) => {
     .json({ message: "Document Successfully Created", newDocument });
 });
 
+// Update Document
 const document_put = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Document identifier not found", 400));
@@ -49,6 +53,7 @@ const document_put = catchAsync(async (req, res, next) => {
     .json({ message: "Document Updated Successfully", updatedDocument });
 });
 
+// Delete Document
 const document_delete = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Document identifier not found", 400));

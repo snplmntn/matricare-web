@@ -5,7 +5,7 @@ const verifyController = require("../../controller/User/VerifyController");
 // Send Email
 router.put("/", verifyController.verification_mail);
 
-// Verify Email
+// Verify Token from Email
 router.get("/", verifyController.verify_email);
 
 module.exports = router;

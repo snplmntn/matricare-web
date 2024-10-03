@@ -1,16 +1,19 @@
 const AppError = require("../Utilities/appError");
 
 const handleCastErrorDB = (err) => {
+  // handling cast error in MongoDB
   const message = `Invalid ${err.path}: ${err.value}.`;
   return new AppError(message, 400);
 };
 
 const handleDulipicateFieldDB = (err) => {
+  // Handling duplicate field error in MongoDB
   const duplicateField = Object.keys(err.keyValue)[0];
   const message = `Duplicate field value: ${err.keyValue[duplicateField]} already exists. Please use another ${duplicateField}!`;
   return new AppError(message, 400);
 };
 
+// Handle error if error in development mode
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -20,6 +23,7 @@ const sendErrorDev = (err, res) => {
   });
 };
 
+// Handle error if error in production mode
 const sendErrorProd = (err, res) => {
   //Operational, trusted error: send to client
   if (err.isOperational) {
@@ -42,16 +46,13 @@ const sendErrorProd = (err, res) => {
 };
 
 module.exports = (err, req, res, next) => {
-  // console.log(err.stack);
-
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || "error";
+  err.statusCode = err.statusCode || 500; // if no error code is provided, set it to 500 (Internal Server Error)
+  err.status = err.status || "error"; // if no error status is provided, set it to generic "error" message
 
   if (process.env.NODE_ENV === "development") {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === "production") {
     let error = { ...err };
-
     if (error.name === "CastError") error = handleCastErrorDB(error);
     if (error.code === 11000) error = handleDulipicateFieldDB(error);
     sendErrorProd(error, res);

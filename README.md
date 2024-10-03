@@ -13,6 +13,7 @@ Find nearby healthcare providers easily, and personalize your experience by regi
   <img width="55px" height="60px" src="./assets/nodejsDark.svg" alt="node logo"/>
   <img width="60px" height="60px" src="./assets/express-js.png" alt="express logo"/>
   <img width="60px" height="60px" src="./assets/mongo.png" alt="mongo logo"/>
+  <img width="60px" height="60px" src="./assets/firebase.png" alt="firebase logo"/>
 </div>
 
 ## Content

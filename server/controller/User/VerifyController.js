@@ -5,9 +5,11 @@ const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
 const createVerificationToken = (length) => {
+  // Generate Verification Token
   return crypto.randomBytes(length).toString("hex");
 };
 
+// Send Verification Email
 const verification_mail = catchAsync(async (req, res, next) => {
   const { userId } = req.query;
 
@@ -39,6 +41,7 @@ const verification_mail = catchAsync(async (req, res, next) => {
     },
     to: user.email,
     subject: "Welcome to MatriCare",
+    // html template
     html: `<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -153,6 +156,7 @@ const verification_mail = catchAsync(async (req, res, next) => {
   });
 });
 
+// Verify Email via Token
 const verify_email = catchAsync(async (req, res, next) => {
   const { token } = req.query;
   const user = await User.findOne({ token: token });
@@ -164,7 +168,7 @@ const verify_email = catchAsync(async (req, res, next) => {
     return res.status(200).json({ message: "Account Email already verified" });
 
   user.emailValid = true;
-  user.token = "";
+  user.token = ""; // clears token after verification
   await user.save();
 
   return res.status(200).json({ message: "Email Successfully Verified" });

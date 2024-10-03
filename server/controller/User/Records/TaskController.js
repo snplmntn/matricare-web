@@ -2,6 +2,7 @@ const Task = require("../../../models/User/Task");
 const AppError = require("../../../Utilities/appError");
 const catchAsync = require("../../../Utilities/catchAsync");
 
+// Get Task by Id
 const task_get = catchAsync(async (req, res, next) => {
   const task = await Task.findOne({
     _id: req.query.id,
@@ -12,6 +13,7 @@ const task_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(task);
 });
 
+// Get Task by UserId
 const task_user_get = catchAsync(async (req, res, next) => {
   const { userId } = req.query;
 
@@ -24,6 +26,7 @@ const task_user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(task);
 });
 
+// Create Task
 const task_post = catchAsync(async (req, res, next) => {
   const newTask = new Task(req.body);
 
@@ -33,6 +36,7 @@ const task_post = catchAsync(async (req, res, next) => {
     .json({ message: "Task Successfully Created", newTask });
 });
 
+// Update Task
 const task_put = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Task identifier not found", 400));
@@ -51,6 +55,7 @@ const task_put = catchAsync(async (req, res, next) => {
     .json({ message: "Task Updated Successfully", updatedTask });
 });
 
+// Delete Task
 const task_delete = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Task identifier not found", 400));

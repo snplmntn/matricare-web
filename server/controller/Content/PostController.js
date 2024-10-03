@@ -2,6 +2,7 @@ const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
+// Get Post by Id
 const post_get = catchAsync(async (req, res, next) => {
   const post = await Post.findOne({
     _id: req.query.id,
@@ -12,6 +13,7 @@ const post_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(post);
 });
 
+// Index Post
 const post_index = catchAsync(async (req, res, next) => {
   const { postId } = req.query;
   let query = {};
@@ -27,6 +29,7 @@ const post_index = catchAsync(async (req, res, next) => {
   return res.status(200).json(posts);
 });
 
+// Get Post by UserId
 const post_user_get = catchAsync(async (req, res, next) => {
   const posts = await Post.find({
     fullname: req.query.fullname,
@@ -35,6 +38,7 @@ const post_user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(posts);
 });
 
+// Create Post
 const post_post = catchAsync(async (req, res, next) => {
   const newPost = new Post(req.body);
 
@@ -44,6 +48,7 @@ const post_post = catchAsync(async (req, res, next) => {
     .json({ message: "Post Successfully Created", savedPost });
 });
 
+// Update Post
 const post_put = catchAsync(async (req, res, next) => {
   const updatedPost = await Post.findByIdAndUpdate(
     req.query.id,
@@ -59,6 +64,7 @@ const post_put = catchAsync(async (req, res, next) => {
     .json({ message: "Post Updated Successfully", updatedPost });
 });
 
+// Delete Post
 const post_delete = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Post identifier not found", 400));

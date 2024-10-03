@@ -3,6 +3,7 @@ const User = require("../../../models/User/User");
 const AppError = require("../../../Utilities/appError");
 const catchAsync = require("../../../Utilities/catchAsync");
 
+// Get Patient by Id
 const patient_get = catchAsync(async (req, res, next) => {
   const patient = await Patient.findOne({
     _id: req.query.id,
@@ -13,6 +14,7 @@ const patient_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(patient);
 });
 
+// Get Patient by AssignedId
 const patient_assigned_get = catchAsync(async (req, res, next) => {
   const { assignedId } = req.query;
 
@@ -25,6 +27,7 @@ const patient_assigned_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(patient);
 });
 
+// Create Patient
 const patient_post = catchAsync(async (req, res, next) => {
   const user = await User.findOne({
     email: req.body.email,
@@ -43,6 +46,7 @@ const patient_post = catchAsync(async (req, res, next) => {
     .json({ message: "Patient Successfully Created", newPatient });
 });
 
+// Update Patient
 const patient_put = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Patient identifier not found", 400));
@@ -61,6 +65,7 @@ const patient_put = catchAsync(async (req, res, next) => {
     .json({ message: "Patient Updated Successfully", updatedPatient });
 });
 
+// Delete Patient
 const patient_delete = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Patient identifier not found", 400));

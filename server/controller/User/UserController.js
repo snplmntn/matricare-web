@@ -6,6 +6,7 @@ const PostComment = require("../../models/Content/PostComment");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
+// Get User by Id or Username
 const user_get = catchAsync(async (req, res, next) => {
   const { userId, username } = req.query;
 
@@ -19,6 +20,7 @@ const user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json({ message: "User Fetched", other });
 });
 
+// Get User by Role
 const role_get = catchAsync(async (req, res, next) => {
   const { role } = req.query;
 
@@ -29,6 +31,7 @@ const role_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(accounts);
 });
 
+// Get All Users
 const user_index = catchAsync(async (req, res, next) => {
   const accounts = await User.find();
 
@@ -37,16 +40,18 @@ const user_index = catchAsync(async (req, res, next) => {
   return res.status(200).json(accounts);
 });
 
+// Delete User
 const user_delete = catchAsync(async (req, res, next) => {
-  // if (req.body.userId === req.params.id || req.user.isAdmin) {
-  await User.findByIdAndDelete(req.query.id);
-  return res.status(200).json("Account Successfully Deleted");
-
-  // } else {
-  //   return res.status(403).json("You can only delete your own account");
-  // }
+  const { id } = req.query;
+  if (id !== req.userId) {
+    await User.findByIdAndDelete(id);
+    return res.status(200).json("Account Successfully Deleted");
+  } else {
+    return res.status(403).json("You can only delete your own account");
+  }
 });
 
+// Update User
 const user_update = catchAsync(async (req, res, next) => {
   const KEY = process.env.JWT_KEY;
   const { userId } = req.query;
