@@ -3,6 +3,7 @@ class AppError extends Error {
         super(message);
 
         this.statusCode = statusCode;
+        // if a status code starts with 4, it is a client error, otherwise it is a server error
         this.status = `${statusCode}`.startsWith('4') ? 'fail' : 'error';
         this.isOperational = true;
 

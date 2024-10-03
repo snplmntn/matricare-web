@@ -8,6 +8,7 @@ const {
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
+// Upload Profile Picture
 const picture_post = catchAsync(async (req, res, next) => {
   const firebaseConfig = {
     storageBucket: process.env.FIREBASE_STORAGEBUCKET,
@@ -40,6 +41,7 @@ const picture_post = catchAsync(async (req, res, next) => {
   });
 });
 
+// Upload Belly Talk Picture
 const belly_talk_picture_post = catchAsync(async (req, res, next) => {
   const firebaseConfig = {
     storageBucket: process.env.FIREBASE_STORAGEBUCKET,
@@ -72,6 +74,7 @@ const belly_talk_picture_post = catchAsync(async (req, res, next) => {
   });
 });
 
+// Upload Document
 const document_post = catchAsync(async (req, res, next) => {
   const firebaseConfig = {
     storageBucket: process.env.FIREBASE_STORAGEBUCKET,

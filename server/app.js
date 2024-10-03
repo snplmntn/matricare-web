@@ -1,3 +1,4 @@
+// Libraries
 const express = require("express");
 const cors = require("cors");
 const rateLimit = require("express-rate-limit");
@@ -12,7 +13,7 @@ const checkRole = require("./Utilities/checkRole");
 const globalErrorHandler = require("./controller/ErrorController");
 const aliveRoute = require("./routes/alive");
 
-//routes
+// routes import
 // user
 const authRoute = require("./routes/User/auth");
 const userRoute = require("./routes/User/user");
@@ -30,10 +31,8 @@ const uploadRoute = require("./routes/Content/upload");
 const postRoute = require("./routes/Content/post");
 const bellytalk = require("./routes/Content/bellytalk");
 
-// Initialization
-const app = express();
-// Enable proxy trust to allow express-rate-limit to read X-Forwarded-For header
-app.set("trust proxy", 1); // Trust first proxy
+const app = express(); // Initialization
+app.set("trust proxy", 1); // Enable proxy trust to allow express-rate-limit to read X-Forwarded-For header
 const limiter = rateLimit({
   max: 1000,
   windowMs: 10 * 60 * 1000, // 10 minutes
@@ -42,22 +41,16 @@ const limiter = rateLimit({
 
 // Middleware
 app.use(helmet());
-
-//Protection Against DDOS Attack
-app.use("/api", limiter);
-
-// Body Parser
+app.use("/api", limiter); //Protection Against DDOS Attack
 app.use(
   express.json({
     limit: "10kb",
   })
-);
-
-//Data sanization against NoSQL query injection
+); // Body Parser
 app.use(mongoSanitize());
+//Data sanization against NoSQL query injection
 app.use(hpp()); // prevent paramater pollution
 app.use(cors());
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -79,6 +72,7 @@ app.use("/api/record/surgical", checkAuth, surgicalHistoryRoute);
 app.use("/api/upload", checkAuth, uploadRoute);
 app.use("/api/post", checkAuth, postRoute);
 app.use("/api/bellytalk", bellytalk); //public belly talk route
+// utility
 app.use("/api/alive", aliveRoute);
 
 app.all("*", (req, res, next) => {

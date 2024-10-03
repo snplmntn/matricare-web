@@ -4,7 +4,7 @@ const postController = require("../../controller/Content/PostController");
 const likeController = require("../../controller/Content/PostLikeController");
 const commentController = require("../../controller/Content/PostCommentController");
 
-// Post
+// =============== Post ==================
 
 // Get Post
 router.get("/", postController.post_get);
@@ -24,7 +24,7 @@ router.put("/", postController.post_put);
 // Delete Post
 router.delete("/", postController.post_delete);
 
-// Post Interaction
+// ============ Post Interaction ===============
 
 // Create Like
 router.post("/like", likeController.like_post);

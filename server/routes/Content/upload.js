@@ -5,10 +5,10 @@ const multer = require("multer");
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-// Profile Picture
+// Upload Profile Picture
 router.post("/p", upload.single("picture"), uploadController.picture_post);
 
-// Belly Talk Picture
+// Upload Picture by Belly Talk 
 router.post(
   "/b",
   upload.single("picture"),

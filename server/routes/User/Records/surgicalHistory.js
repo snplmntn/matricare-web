@@ -2,19 +2,19 @@ const express = require("express");
 const router = express.Router();
 const surgicalHistoryController = require("../../../controller/User/Records/SurgicalHistoryController");
 
-// Get User
+// Get Surgical History by Id
 router.get("/", surgicalHistoryController.surgical_history_get);
 
-// Get Task by UserId
+// Get Surgical History by UserId
 router.get("/u", surgicalHistoryController.surgical_history_user_get);
 
-// Index User
+// Create Surgical History
 router.post("/", surgicalHistoryController.surgical_history_post);
 
-// Update User
+// Update Surgical History
 router.put("/", surgicalHistoryController.surgical_history_put);
 
-// Delete User
+// Delete Surgical History
 router.delete("/", surgicalHistoryController.surgical_history_delete);
 
 module.exports = router;

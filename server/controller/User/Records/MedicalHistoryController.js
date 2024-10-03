@@ -2,6 +2,7 @@ const MedicalHistory = require("../../../models/User/MedicalHistory");
 const AppError = require("../../../Utilities/appError");
 const catchAsync = require("../../../Utilities/catchAsync");
 
+// Get Medical History by Id
 const medical_history_get = catchAsync(async (req, res, next) => {
   const medicalHistory = await MedicalHistory.findOne({
     _id: req.query.id,
@@ -13,6 +14,7 @@ const medical_history_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(medicalHistory);
 });
 
+// Get Medical History by UserId
 const medical_history_user_get = catchAsync(async (req, res, next) => {
   const medicalHistory = await MedicalHistory.find({
     userId: req.query.userId,
@@ -24,6 +26,7 @@ const medical_history_user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(medicalHistory);
 });
 
+// Create Medical History
 const medical_history_post = catchAsync(async (req, res, next) => {
   const newMedicalHistory = new MedicalHistory(req.body);
 
@@ -34,6 +37,7 @@ const medical_history_post = catchAsync(async (req, res, next) => {
   });
 });
 
+// Update Medical History
 const medical_history_put = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Medical History identifier not found", 400));
@@ -53,6 +57,7 @@ const medical_history_put = catchAsync(async (req, res, next) => {
   });
 });
 
+// Delete Medical History
 const medical_history_delete = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Medical History identifier not found", 400));

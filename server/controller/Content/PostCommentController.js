@@ -3,6 +3,7 @@ const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
+// Create Comment
 const comment_post = catchAsync(async (req, res, next) => {
   const { profilePicture, userId, fullname, postId, content } = req.body;
 
@@ -35,6 +36,7 @@ const comment_post = catchAsync(async (req, res, next) => {
   });
 });
 
+// Get Comments by PostId
 const comment_get = catchAsync(async (req, res, next) => {
   const { postId } = req.query;
 
@@ -68,6 +70,7 @@ const comment_get = catchAsync(async (req, res, next) => {
   });
 });
 
+// Delete Comment
 const comment_delete = catchAsync(async (req, res, next) => {
   const { id } = req.query;
 

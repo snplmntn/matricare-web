@@ -2,6 +2,7 @@ const ObstetricHistory = require("../../../models/User/ObstetricHistory");
 const AppError = require("../../../Utilities/appError");
 const catchAsync = require("../../../Utilities/catchAsync");
 
+// Get Obstetric History by Id
 const obstetric_history_get = catchAsync(async (req, res, next) => {
   const obstetricHistory = await ObstetricHistory.findOne({
     _id: req.query.id,
@@ -13,6 +14,7 @@ const obstetric_history_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(obstetricHistory);
 });
 
+// Get Obstetric History by UserId
 const obstetric_history_user_get = catchAsync(async (req, res, next) => {
   const obstetricHistory = await ObstetricHistory.find({
     userId: req.query.userId,
@@ -24,6 +26,7 @@ const obstetric_history_user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(obstetricHistory);
 });
 
+// Create Obstetric History
 const obstetric_history_post = catchAsync(async (req, res, next) => {
   const newObstetricHistory = new ObstetricHistory(req.body);
 
@@ -34,6 +37,7 @@ const obstetric_history_post = catchAsync(async (req, res, next) => {
   });
 });
 
+// Update Obstetric History
 const obstetric_history_put = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Obstetric History identifier not found", 400));
@@ -53,6 +57,7 @@ const obstetric_history_put = catchAsync(async (req, res, next) => {
   });
 });
 
+// Delete Obstetric History
 const obstetric_history_delete = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Obstetric History identifier not found", 400));

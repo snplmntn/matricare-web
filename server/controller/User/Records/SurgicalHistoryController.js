@@ -2,6 +2,7 @@ const SurgicalHistory = require("../../../models/User/SurgicalHistory");
 const AppError = require("../../../Utilities/appError");
 const catchAsync = require("../../../Utilities/catchAsync");
 
+// Get Surgical History by Id
 const surgical_history_get = catchAsync(async (req, res, next) => {
   const surgicalHistory = await SurgicalHistory.findOne({
     _id: req.query.id,
@@ -13,6 +14,7 @@ const surgical_history_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(surgicalHistory);
 });
 
+// Get Surgical History by UserId
 const surgical_history_user_get = catchAsync(async (req, res, next) => {
   const surgicalHistory = await SurgicalHistory.find({
     userId: req.query.userId,
@@ -24,6 +26,7 @@ const surgical_history_user_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(surgicalHistory);
 });
 
+// Create Surgical History
 const surgical_history_post = catchAsync(async (req, res, next) => {
   const newSurgicalHistory = new SurgicalHistory(req.body);
 
@@ -34,6 +37,7 @@ const surgical_history_post = catchAsync(async (req, res, next) => {
   });
 });
 
+// Update Surgical History
 const surgical_history_put = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Surgical History identifier not found", 400));
@@ -53,6 +57,7 @@ const surgical_history_put = catchAsync(async (req, res, next) => {
   });
 });
 
+// Delete Surgical History
 const surgical_history_delete = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Surgical History identifier not found", 400));

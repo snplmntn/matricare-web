@@ -4,6 +4,7 @@ const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
+// Like Post
 const like_post = catchAsync(async (req, res, next) => {
   const { userId, postId, postCommentId } = req.body;
 
@@ -124,6 +125,7 @@ const like_get = catchAsync(async (req, res, next) => {
   });
 });
 
+// Delete Like
 const like_delete = catchAsync(async (req, res, next) => {
   const { userId, postId, postCommentId } = req.query;
 
