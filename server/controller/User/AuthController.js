@@ -1,4 +1,5 @@
 const User = require("../../models/User/User");
+const InvalidToken = require("../../models/InvalidToken");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../../Utilities/catchAsync");
@@ -54,7 +55,7 @@ const user_signup = catchAsync(async (req, res, next) => {
     username,
     password: hashedPassword, // Save the hashed password
     phoneNumber,
-    role
+    role,
   });
 
   return res.status(201).json({
@@ -62,7 +63,23 @@ const user_signup = catchAsync(async (req, res, next) => {
   });
 });
 
+// Logout route
+const user_logout = catchAsync(async (req, res, next) => {
+  const token = req.header("Authorization");
+
+  const invalidToken = new InvalidToken({
+    token: token,
+  });
+
+  await invalidToken.save();
+
+  return res
+    .status(200)
+    .json({ message: "Logged Out Successfully", invalidToken });
+});
+
 module.exports = {
   user_login,
   user_signup,
+  user_logout,
 };
