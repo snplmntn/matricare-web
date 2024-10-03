@@ -51,7 +51,7 @@ matricare-web\client> npm start
 build
 
 ```javascript
-matricare-web\client> npm build
+matricare-web\client> npm run build
 ```
 
 backend
