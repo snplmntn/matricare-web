@@ -8,6 +8,7 @@ const hpp = require("hpp");
 //Utilities
 const AppError = require("./Utilities/appError");
 const checkAuth = require("./Utilities/checkAuth");
+const checkRole = require("./Utilities/checkRole");
 const globalErrorHandler = require("./controller/ErrorController");
 const aliveRoute = require("./routes/alive");
 
