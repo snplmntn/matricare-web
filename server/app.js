@@ -18,6 +18,7 @@ const aliveRoute = require("./routes/alive");
 const authRoute = require("./routes/User/auth");
 const userRoute = require("./routes/User/user");
 const verifyRoute = require("./routes/User/verify");
+const appointmentRoute = require("./routes/User/appointment");
 //records
 const patientRoute = require("./routes/User/Records/patient");
 const taskRoute = require("./routes/User/Records/task");
@@ -59,6 +60,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/auth", authRoute);
 app.use("/api/verify", verifyRoute);
 app.use("/api/user", checkAuth, userRoute);
+app.use("/api/appointment", checkAuth, appointmentRoute);
 
 // records
 app.use("/api/record/patient", checkAuth, patientRoute);
