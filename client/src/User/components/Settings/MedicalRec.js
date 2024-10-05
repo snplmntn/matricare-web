@@ -14,6 +14,7 @@ import { getCookie } from "../../../utils/getCookie";
 import { Link } from "react-router-dom";
 
 const MedicalRec = ({ user }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
   const userID = getCookie("userID");
   const [patient, setPatient] = useState();
@@ -107,7 +108,7 @@ const MedicalRec = ({ user }) => {
     async function fetchTasks() {
       try {
         const response = await axios.get(
-          `https://api.matricare.site/api/record/task/u?userId=${userID}`,
+          `${API_URL}/record/task/u?userId=${userID}`,
           {
             headers: {
               Authorization: token,
@@ -127,14 +128,11 @@ const MedicalRec = ({ user }) => {
   useEffect(() => {
     async function fetchCurrentPatient() {
       try {
-        const response = await axios.get(
-          `https://api.matricare.site/api/user?userId=${userID}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setPatient(response.data.other);
       } catch (error) {
         console.error(error);

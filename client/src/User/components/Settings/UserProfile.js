@@ -6,6 +6,7 @@ import { getCookie } from "../../../utils/getCookie";
 import "../../styles/settings/userprofile.css";
 
 const UserProfile = ({ user }) => {
+  const API_URL = process.env.REACT_APP_API_URL;
   // const [userId, setUserId] = useState("1");
   const token = getCookie("token");
   const userID = getCookie("userID");
@@ -15,6 +16,8 @@ const UserProfile = ({ user }) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [partner, setPartner] = useState("");
+  const [number, setNumber] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [profileImageUrl, setProfileImageUrl] = useState("");
 
@@ -103,7 +106,7 @@ const UserProfile = ({ user }) => {
       // console.log(`New Password: ${newPassword}`);
       try {
         const response = await axios.put(
-          `https://api.matricare.site/api/user?userId=${userID}`,
+          `${API_URL}/user?userId=${userID}`,
           {
             password: oldPassword,
             newPassword: newPassword,
@@ -138,6 +141,8 @@ const UserProfile = ({ user }) => {
       localStorage.setItem("phoneNumber", phoneNumber);
       localStorage.setItem("address", address);
       localStorage.setItem("profileImageUrl", profileImageUrl);
+      localStorage.setItem("partner", partner);
+      localStorage.setItem("number", Number);
 
       // Exit editing mode
       setIsEditing(false);
@@ -157,11 +162,13 @@ const UserProfile = ({ user }) => {
       email: email,
       phoneNumber: phoneNumber,
       address: address,
+      partner: partner,
+      number: number,
     };
 
     try {
       const response = await axios.put(
-        `https://api.matricare.site/api/user?userId=${userID}`,
+        `${API_URL}/user?userId=${userID}`,
         updatedUserForm,
         {
           headers: {
@@ -180,19 +187,18 @@ const UserProfile = ({ user }) => {
   useEffect(() => {
     async function fetchUser() {
       try {
-        const response = await axios.get(
-          `https://api.matricare.site/api/user?userId=${userID}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         // console.log(response);
         const data = response.data.other;
         setFullname(data.fullName);
         setEmail(data.email);
         setPhoneNumber(data.phoneNumber);
+        setPartner(data.partner);
+        setNumber(data.number);
         setAddress(data.address ? data.address : "");
         setProfileImage(data.profilePicture ? data.profilePicture : "");
       } catch (error) {
@@ -270,6 +276,14 @@ const UserProfile = ({ user }) => {
               <label>ADDRESS:</label>
               <p className="user-profile-detail">{address ? address : "N/A"}</p>
             </div>
+            <div className="user-profile-item">
+              <label>HUSBAND / PARTNER :</label>
+              <p className="user-profile-detail">{partner ? partner : "N/A"}</p>
+            </div>
+            <div className="user-profile-item">
+              <label>PHONE NUMBER:</label>
+              <p className="user-profile-detail">{number ? number : "N/A"}</p>
+            </div>
           </div>
         )}
 
@@ -321,6 +335,28 @@ const UserProfile = ({ user }) => {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Address"
+                    className="user-profile-input"
+                  />
+                </div>
+                <div className="user-profile-input-group">
+                  <label htmlFor="address">HUSBAND / PARTNER:</label>
+                  <input
+                    type="text"
+                    id="partner"
+                    value={partner}
+                    onChange={(e) => setPartner(e.target.value)}
+                    placeholder="Partner"
+                    className="user-profile-input"
+                  />
+                </div>
+                <div className="user-profile-input-group">
+                  <label htmlFor="phoneNumber">PHONE NUMBER:</label>
+                  <input
+                    type="text"
+                    id="number"
+                    value={phoneNumber}
+                    onChange={(e) => setNumber(e.target.value)}
+                    placeholder="Number"
                     className="user-profile-input"
                   />
                 </div>

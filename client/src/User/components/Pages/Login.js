@@ -5,7 +5,6 @@ import "../../styles/pages/login.css";
 import Modal from "react-modal";
 import { MdMarkEmailRead } from "react-icons/md";
 import { getCookie } from "../../../utils/getCookie";
-import { URL } from "../../../App";
 
 export default function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -15,6 +14,7 @@ export default function Login() {
   const [showVerificationModal, setShowVerificationModal] = useState(false); // For modal
   const [email, setEmail] = useState(""); // Store the user's email
   const [resendMessage, setResendMessage] = useState(false);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const navigate = useNavigate();
 
@@ -40,8 +40,8 @@ export default function Login() {
       return;
     }
 
-    // const passwordRegex =
-    //   /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
     // if (!passwordRegex.test(password)) {
     //   setError(
@@ -53,23 +53,19 @@ export default function Login() {
 
     try {
       // Perform login
-      const response = await axios.post(
-        `https://matricare-web.onrender.com/api/auth/login`,
-        {
-          username,
-          password,
-        }
-      );
-      console.log(response);
-      document.cookie = `userID=${response.data.user._id}`;
-      document.cookie = `token=${response.data.token}`;
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        username,
+        password,
+      });
       const userDetails = {
         name: response.data.user.fullName,
         role: response.data.user.role,
         username: response.data.user.username,
       };
+
       localStorage.setItem("userData", JSON.stringify(userDetails));
       const userEmail = response.data.user.email; // Assume the email is returned from the backend
+      document.cookie = `userID=${response.data.user._id}`;
 
       // After successful login, show the verification modal
       setEmail(userEmail);
@@ -88,9 +84,6 @@ export default function Login() {
           ? err.response.data.message
           : "Login error. Please try again."
       );
-
-      // Show verification modal regardless of the error
-      setShowVerificationModal(true); // Show modal
       setLoading(false); // Stop loading
     }
   };
@@ -98,13 +91,11 @@ export default function Login() {
   const handleResendEmail = async () => {
     try {
       let userID = getCookie("userID");
-      const response = await axios.put(
-        `https://matricare-web.onrender.com/api/verify?userId=${userID}`
-      );
-      document.cookie = `verifyToken=${response.data.verificationToken}`;
+      const response = await axios.put(`${API_URL}/verify?userId=${userID}`);
       resendMessage
         ? setSuccessMessage("Verification email resent successfully!")
         : setSuccessMessage("Verification email sent successfully!");
+      document.cookie = `verifyToken=${response.data.verificationToken}`;
       setResendMessage(true);
     } catch (error) {
       console.error(
@@ -215,11 +206,12 @@ export default function Login() {
           <div className="email-icon">
             <MdMarkEmailRead />
           </div>
-          <h2>Verify your Email</h2>
+          <h2>Authenticate your Account</h2>
           <p>
             You're almost there! We've sent a verification email to{" "}
-            <strong>{email && censorEmail(email)}</strong>. <br></br>You need to
-            verify your email address to log into MatriCare.
+            <strong>{email && censorEmail(email)}</strong>. <br></br>To ensure
+            your authentication and access to MatriCare, please check your email
+            and complete the verification process.
           </p>
           <button onClick={handleResendEmail}>Resend Email</button>
           {successMessage && <p>{successMessage}</p>}

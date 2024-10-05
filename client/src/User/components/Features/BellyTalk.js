@@ -6,7 +6,6 @@ import BellyTalkPost from "./BellyTalkPost";
 import {
   IoSearch,
   IoBookmark,
-  IoHeart,
   IoPencil,
   IoArrowBack,
   IoCloudUploadOutline,
@@ -20,6 +19,7 @@ const BellyTalk = ({ user }) => {
   const token = getCookie("token");
   const userID = getCookie("userID");
   const [posts, setPosts] = useState();
+  const API_URL = process.env.REACT_APP_API_URL;
   // {
   //   id: 1,
   //   user: "Karyll Cruz",
@@ -81,7 +81,7 @@ const BellyTalk = ({ user }) => {
       try {
         console.log(formData);
         const response = await axios.post(
-          `https://api.matricare.site/api/upload/b?userId=${userID}`,
+          `${API_URL}/upload/b?userId=${userID}`,
           formData,
           {
             headers: {
@@ -133,15 +133,11 @@ const BellyTalk = ({ user }) => {
 
     try {
       setIsPosting("Posting...");
-      const response = await axios.post(
-        `https://api.matricare.site/api/post/`,
-        newPost,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}/post/`, newPost, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
       setPosts([
         {
@@ -188,14 +184,11 @@ const BellyTalk = ({ user }) => {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await axios.get(
-          "https://api.matricare.site/api/post/i",
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/post/i`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setPosts(response.data);
       } catch (error) {
         console.error(error);
@@ -212,10 +205,6 @@ const BellyTalk = ({ user }) => {
           <button className="bellytalk-icon-button">
             <IoBookmark className="bellytalk-icon" />
             <span className="bellytalk-label">Saved</span>
-          </button>
-          <button className="bellytalk-icon-button">
-            <IoHeart className="bellytalk-icon" />
-            <span className="bellytalk-label">Favorites</span>
           </button>
         </div>
 

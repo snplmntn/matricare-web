@@ -5,60 +5,59 @@ import { getCookie } from "../../../utils/getCookie";
 import "../../styles/pages/verify.css";
 import axios from "axios";
 import { parse } from "@fortawesome/fontawesome-svg-core";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 export default function Verify() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [error, setError] = useState("");
+  const API_URL = process.env.REACT_APP_API_URL;
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const request = localStorage.getItem("request");
 
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const verificationCode = queryParams.get("code");
-    const email = queryParams.get("email");
-
     const verifyEmail = async () => {
+      console.log(request);
+      if (request === "true") return;
+      localStorage.setItem("request", "true");
       try {
         let token = getCookie("verifyToken");
 
-        if (!token) {
-          setTimeout(() => {
-            setError(
-              "Verification failed. Please try again. Redirecting to login page"
+        const response = await axios.get(`${API_URL}/verify?token=${token}`);
+        setError("Verification successful. Redirecting...");
+        console.log(response);
+        let userData = localStorage.getItem("userData");
+        let parsedUser = JSON.parse(userData);
+        let role = parsedUser.role;
+
+        setTimeout(() => {
+          if (response.status === 200) {
+            // Check if the component is still mounted
+            document.cookie = `role=${response.data.user.role}`;
+            document.cookie = `token=${response.data.jwtToken}`;
+            removeCookie("verifyToken");
+            localStorage.removeItem("request");
+            navigate(
+              role === "Patient"
+                ? "/app"
+                : role === "Assistant"
+                ? "/assistant-landing"
+                : role === "Obgyne" && "/consultant-landing"
             );
-            setTimeout(() => {
-              navigate("/login");
-            }, 2000);
-          }, 3000);
-        } else {
-          const response = await axios.get(
-            `https://api.matricare.site/api/verify?token=${token}`
-          );
-          let userData = localStorage.getItem("userData");
-          let parsedUser = JSON.parse(userData);
-          let role = parsedUser.role;
-          setTimeout(() => {
-            if (response.status === 200) {
-              navigate(
-                role === "Patient"
-                  ? "/app"
-                  : role === "Assistant"
-                  ? "/assistant-landing"
-                  : role === "Obgyne" && "/consultant-landing"
-              );
-            }
-          }, 3000);
-        }
+          }
+        }, 1000);
       } catch (err) {
         console.error(
           "Verification failed:",
           err.response ? err.response.data : err.message
         );
         setError("Verification failed. Please try again.");
-        // setTimeout(() => {
-        //   navigate("/login");
-        // }, 3000);
       }
     };
+
+    // Ensure verifyEmail is only called once
+    if (!localStorage.getItem("request")) {
+      verifyEmail();
+    }
 
     verifyEmail();
   }, []);

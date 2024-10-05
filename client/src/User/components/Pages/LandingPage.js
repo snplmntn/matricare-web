@@ -57,7 +57,6 @@ export default function LandingPage() {
       <section id="about-us" className="about-us"> 
       <div className="about-content">
       <div className="about-text">
-        <hr className='about-text hr'></hr>
         <h2>M A T R I C A R E</h2>
         <h1>guiding mothers, nurturing futures.</h1>
         <p>

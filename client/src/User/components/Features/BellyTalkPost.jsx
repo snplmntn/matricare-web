@@ -1,20 +1,26 @@
 import { useEffect, useState } from "react";
-import { IoBookmark, IoHeart, IoLocationSharp } from "react-icons/io5";
+import {
+  IoBookmark,
+  IoHeart,
+  IoLocationSharp,
+  IoEllipsisVertical,
+} from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const BellyTalkPost = ({ post, user }) => {
+const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const token = getCookie("token");
   const userID = getCookie("userID");
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [newCaption, setNewCaption] = useState(post.content);
   const navigate = useNavigate();
-  // const [likedPosts, setLikedPosts] = useState([]);
-  // const [postLikes, setPostLikes] = useState();
   const [savedPosts, setSavedPosts] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [isLikedByMe, setIsLikedByMe] = useState(false);
   const [comments, setComments] = useState([]);
+  const API_URL = process.env.REACT_APP_API_URL;
 
   //will enable user to open the input in reply
   const [openReply, setOpenReply] = useState(false);
@@ -33,15 +39,11 @@ const BellyTalkPost = ({ post, user }) => {
           userId: userID,
           postId: post._id,
         };
-        const response = await axios.post(
-          "https://api.matricare.site/api/post/like",
-          postLike,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.post(`${API_URL}/post/like`, postLike, {
+          headers: {
+            Authorization: token,
+          },
+        });
         console.log(response);
       } catch (error) {
         console.error(error);
@@ -50,7 +52,7 @@ const BellyTalkPost = ({ post, user }) => {
       //unlike posts
       try {
         const response = await axios.delete(
-          `https://api.matricare.site/api/post/like?userId=${userID}&postId=${post._id}`,
+          `${API_URL}/post/like?userId=${userID}&postId=${post._id}`,
           {
             headers: {
               Authorization: token,
@@ -68,11 +70,6 @@ const BellyTalkPost = ({ post, user }) => {
     if (!token) {
       navigate("/login");
     }
-    // setSavedPosts((prevSavedPosts) =>
-    //   prevSavedPosts.includes(postId)
-    //     ? prevSavedPosts.filter((id) => id !== postId)
-    //     : [...prevSavedPosts, postId]
-    // );
   };
 
   //will validate if there is a token, if token, you can reply
@@ -107,7 +104,7 @@ const BellyTalkPost = ({ post, user }) => {
         content: commentText,
       };
       const response = await axios.post(
-        "https://api.matricare.site/api/post/comment",
+        `${API_URL}/post/comment`,
         commentForm,
         {
           headers: {
@@ -129,7 +126,7 @@ const BellyTalkPost = ({ post, user }) => {
     async function fetchPostLike() {
       try {
         const response = await axios.get(
-          `https://api.matricare.site/api/post/like?postId=${post._id}`,
+          `${API_URL}/post/like?postId=${post._id}`,
 
           {
             headers: {
@@ -158,7 +155,7 @@ const BellyTalkPost = ({ post, user }) => {
     async function fetchComments() {
       try {
         const response = await axios.get(
-          `https://api.matricare.site/api/post/comment?postId=${post._id}`,
+          `${API_URL}/post/comment?postId=${post._id}`,
 
           {
             headers: {
@@ -174,6 +171,48 @@ const BellyTalkPost = ({ post, user }) => {
     fetchComments();
   }, []);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleEditPost = async () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      const updatedPost = {
+        postId: post._id,
+        content: newCaption,
+      };
+      await axios.put(`${API_URL}/post`, updatedPost, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeletePost = async () => {
+    if (!token) {
+      navigate("/login");
+    }
+
+    try {
+      await axios.delete(`${API_URL}/post/${post._id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      onDeletePost(post._id); // Call the onDeletePost function to remove the post from the UI
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="bellytalk-feed-item" key={post.id}>
       <img
@@ -184,7 +223,20 @@ const BellyTalkPost = ({ post, user }) => {
         className="bellytalk-avatar-overlay"
       />
       <div className="bellytalk-post-content">
-        <h4>{post.fullname}</h4>
+        <div className="bellytalk-post-header">
+          <h4>{post.fullname}</h4>
+          <IoEllipsisVertical
+            className="bellytalk-menu-icon"
+            onClick={toggleMenu} // Toggle menu on click
+          />
+          {isMenuOpen && (
+            <ul className="bellytalk-meatball-menu">
+              <li onClick={handleEditPost}>Edit Post</li>
+              <li onClick={handleDeletePost}>Delete Post</li>
+            </ul>
+          )}
+        </div>
+
         <div className="location-with-icon">
           <IoLocationSharp />
           <p>{post.address}</p>

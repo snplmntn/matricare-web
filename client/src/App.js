@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { useRef, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
+  useNavigate,
   useLocation,
 } from "react-router-dom";
 import "./App.css";
@@ -48,38 +49,127 @@ import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPa
 import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNotifications";
 import Verify from "./User/components/Pages/Verify";
 import { getCookie } from "./utils/getCookie";
-// export const URL = import.meta.env.URL;
+import { CookiesProvider, useCookies } from "react-cookie";
+import { createHashHistory } from "history";
 
 function AppContent() {
+  const history = createHashHistory();
+  const navigate = useNavigate();
   const location = useLocation();
-  const showHeader1 = ["/", "/signup", "/login", "/forgot-password"].includes(
-    location.pathname
-  );
+  const [cookies, setCookie, removeCookie] = useCookies();
   const parsedUser = useRef({});
-  const token = useRef({});
+  const token = cookies.token;
+  const role = cookies.role;
 
-  useState(() => {
-    token.current = getCookie("token");
+  useEffect(() => {
     if (token) {
-      let userData = localStorage.getItem("userData");
-      parsedUser.current = JSON.parse(userData);
+      const userData = localStorage.getItem("userData");
+      if (userData) {
+        const parsedData = JSON.parse(userData);
+        parsedData.name = parsedData.name.split(" ")[0];
+        parsedUser.current = parsedData;
+      }
     }
   }, []);
 
+  const getPage = (Component) => {
+    if (role) {
+      switch (role) {
+        case "Assistant":
+          return <LandingPageAssistant user={parsedUser} />;
+        case "Obgyne":
+          return (
+            <Fragment>
+              <ConsultantSidebar />
+              <LandingPageConsultant user={parsedUser} />
+            </Fragment>
+          );
+        default:
+          return <HomePage user={parsedUser} />;
+      }
+    } else {
+      return Component;
+    }
+  };
+
   return (
     <div className="App">
-      {showHeader1 && <Header1 />}
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+        <Route
+          path="/"
+          element={getPage(
+            <>
+              <Header1 />
+              <LandingPage />
+            </>
+          )}
+        />
+        <Route
+          path="/signup"
+          element={
+            !token ? (
+              <>
+                <Header1 />
+                <Signup />
+              </>
+            ) : (
+              <HomePage user={parsedUser} />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            !token ? (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            ) : (
+              <HomePage user={parsedUser} />
+            )
+          }
+        />
         <Route path="/verify" element={<Verify />} />
-        <Route path="/forgot-password" element={<ForgotPass />} />
+        <Route
+          path="/forgot-password"
+          element={
+            token ? (
+              <HomePage user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <ForgotPass />
+              </>
+            )
+          }
+        />
         <Route path="/notification" element={<Notifications />} />
-        <Route path="/app" element={<HomePage user={parsedUser} />} />
+        <Route
+          path="/app"
+          element={
+            token ? (
+              <HomePage user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
         <Route
           path="/userprofile"
-          element={<UserProfile user={parsedUser} />}
+          element={
+            token ? (
+              <UserProfile user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
         />
         <Route
           path="/medicalrecords"
@@ -232,7 +322,7 @@ function AppContent() {
             </>
           }
         />
-        ?{/* ASSISTANT */}
+        {/* ASSISTANT */}
         <Route
           path="/assistant-landing"
           element={

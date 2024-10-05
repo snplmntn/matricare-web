@@ -4,12 +4,10 @@ import {
   faBell,
   faSignOutAlt,
   faFileMedical,
-  faVideoCamera,
   faBook,
   faMessage,
   faChevronDown,
   faSearch,
-  faExclamationTriangle,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -21,14 +19,18 @@ import { Link } from "react-router-dom";
 import "../../styles/pages/homepage.css";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 function HomePage({ user }) {
-  const { name, username, role } = user.current;
+  let { name, username, role } = user.current;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
   const [activeBellyTalkTab, setActiveBellyTalkTab] = useState("new");
   const [newPost, setNewPost] = useState();
-  const token = getCookie("token");
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const token = cookies.token;
+
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -49,16 +51,15 @@ function HomePage({ user }) {
   };
 
   useEffect(() => {
-    const verifyEmail = async () => {
+    if (!user) window.location.href = "/";
+
+    const fetchPost = async () => {
       try {
-        const response = await axios.get(
-          `https://matricare-web.onrender.com/api/post/i`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/post/i`, {
+          headers: {
+            Authorization: token,
+          },
+        });
 
         setNewPost(response.data);
       } catch (err) {
@@ -69,8 +70,38 @@ function HomePage({ user }) {
       }
     };
 
-    verifyEmail();
+    fetchPost();
   }, []);
+
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/auth/logout`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      removeCookie("token");
+      removeCookie("userID");
+      removeCookie("verifyToken");
+      removeCookie("role");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("address");
+      localStorage.removeItem("email");
+      localStorage.removeItem("events");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("phoneNumber");
+      localStorage.removeItem("profileImageUrl");
+      localStorage.removeItem("savedArticles");
+      localStorage.removeItem("userName");
+      window.location.href = "/";
+    } catch (err) {
+      console.error(
+        "Something went wrong!",
+        err.response ? err.response.data : err.message
+      );
+    }
+  };
 
   const notificationCount = 3;
 
@@ -108,8 +139,8 @@ function HomePage({ user }) {
             </li>
           </ul>
         </div>
-        <div className="homepage-logout">
-          <Link to="/">
+        <div className="homepage-logout" onClick={handleLogout}>
+          <Link>
             <FontAwesomeIcon icon={faSignOutAlt} />
             Logout
           </Link>
@@ -236,8 +267,8 @@ function HomePage({ user }) {
                       alt="Library Resource 1"
                       className="library-image"
                     />
-                    <h2>First Trimester</h2>
-                    <p>Description</p>
+                    <h2>Stages of Pregnancy</h2>
+                    <p>First, Second, and Third Trimester</p>
                     <Link to="/library-item1">
                       <button
                         className="view-button"
@@ -254,7 +285,7 @@ function HomePage({ user }) {
                       className="library-image"
                     />
                     <h2>Weekly Pregnancy</h2>
-                    <p>Description</p>
+                    <p>Week 1 - Week 42</p>
                     <Link to="/library-item4">
                       <button
                         className="view-button"

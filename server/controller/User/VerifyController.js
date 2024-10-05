@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
+const jwt = require("jsonwebtoken");
 
 const createVerificationToken = (length) => {
   // Generate Verification Token
@@ -160,18 +161,22 @@ const verification_mail = catchAsync(async (req, res, next) => {
 const verify_email = catchAsync(async (req, res, next) => {
   const { token } = req.query;
   const user = await User.findOne({ token: token });
+
+  console.log(token, user);
   if (!user) {
     return next(new AppError("Invalid verification code", 400));
   }
 
-  if (user.emailValid === true)
-    return res.status(200).json({ message: "Account Email already verified" });
-
-  user.emailValid = true;
   user.token = ""; // clears token after verification
   await user.save();
 
-  return res.status(200).json({ message: "Email Successfully Verified" });
+  const jwtToken = jwt.sign({ user: user }, process.env.JWT_KEY, {
+    expiresIn: "30d",
+  });
+
+  return res
+    .status(200)
+    .json({ message: "Email Successfully Verified", user, jwtToken });
 });
 
 module.exports = {

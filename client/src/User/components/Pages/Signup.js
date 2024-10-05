@@ -17,6 +17,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [success, setSuccess] = useState("");
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const { fullName, email, username, password, confirmPassword, phoneNumber } =
     formData;
@@ -78,16 +79,13 @@ export default function Signup() {
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `https://api.matricare.site/api/auth/signup`,
-        {
-          fullName,
-          email,
-          username,
-          password,
-          phoneNumber,
-        }
-      );
+      const response = await axios.post(`${API_URL}/auth/signup`, {
+        fullName,
+        email,
+        username,
+        password,
+        phoneNumber,
+      });
 
       console.log("Signup response:", response.data);
 
