@@ -6,6 +6,7 @@ import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
 
 const ConsultantPatientInfo = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const token = getCookie("token");
   const userID = getCookie("userID");
@@ -114,7 +115,7 @@ const ConsultantPatientInfo = () => {
     try {
       console.log(newPatient);
       const response = await axios.post(
-        `https://api.matricare.site/api/record/patient`,
+        `${API_URL}/record/patient`,
         {
           // assignedId: "66fa3fee2a3372e1dd52615e",
           // email: "marccastillo621@gmail.com",
@@ -154,15 +155,12 @@ const ConsultantPatientInfo = () => {
   useEffect(() => {
     async function fetchPatients() {
       try {
-        const response = await axios.get(
-          `https://api.matricare.site/api/user/r?role=Patient`,
-          {
-            headers: {
-              Authorization: token,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/user/r?role=Patient`, {
+          headers: {
+            Authorization: token,
+            "Content-Type": "multipart/form-data",
+          },
+        });
         setPatients(response.data);
         console.log(patients);
       } catch (error) {

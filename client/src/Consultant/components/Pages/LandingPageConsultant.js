@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/pages/landingpageconsultant.css";
 import "react-calendar/dist/Calendar.css";
 import Calendar from "react-calendar";
@@ -11,11 +11,12 @@ import {
   IoSearch,
 } from "react-icons/io5";
 
-const LandingPageConsultant = ({ user }) => {
+const LandingPageConsultant = ({}) => {
   const [date, setDate] = useState(new Date());
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [newPatients, setNewPatients] = useState(2);
   const [totalPatients, setTotalPatients] = useState(54);
+  const [user, setUser] = useState({});
 
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
@@ -30,6 +31,11 @@ const LandingPageConsultant = ({ user }) => {
     console.log("Patient added");
     toggleForm();
   };
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) setUser(JSON.parse(userData));
+  }, []);
 
   return (
     <div className="consultant-dashboard-container">
@@ -53,7 +59,7 @@ const LandingPageConsultant = ({ user }) => {
         <section className="consultant-greeting-section">
           <div className="consultant-greeting-text">
             <h2>Good Morning,</h2>
-            <h3>{`Doctor ${user.current.name}`}</h3>
+            <h3>{`Doctor ${user.name?.split(" ")[0]}`}</h3>
             <p>Have a nice day at work</p>
           </div>
           <div className="consultant-greeting-image">
@@ -191,8 +197,8 @@ const LandingPageConsultant = ({ user }) => {
             <IoNotificationsSharp />
           </a>
           <div className="consultant-profile-text">
-            <h1>{`Doctor ${user.current.name}`}</h1>
-            <p>{`${user.current.role}`}</p>
+            <h1>{`Doctor ${user.name?.split(" ")[0]}`}</h1>
+            <p>{`${user.role}`}</p>
           </div>
           <img src="img/LOGO.png" alt="Profile" />
         </div>

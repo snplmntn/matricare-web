@@ -9,6 +9,7 @@ import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
 
 const PatientRecords = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const { userId } = useParams();
   const token = getCookie("token");
   const userID = getCookie("userID");
@@ -33,15 +34,11 @@ const PatientRecords = () => {
         userId: userId,
       };
       try {
-        const response = await axios.post(
-          `https://api.matricare.site/api/record/task`,
-          newTask,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.post(`${API_URL}/record/task`, newTask, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setStatus("On Progress");
         console.log(response);
       } catch (e) {
@@ -83,14 +80,11 @@ const PatientRecords = () => {
   useEffect(() => {
     async function fetchCurrentPatient() {
       try {
-        const response = await axios.get(
-          `https://api.matricare.site/api/user?userId=${userId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/user?userId=${userId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setPatientInfo(response.data.other);
       } catch (error) {
         console.error(error);
@@ -103,14 +97,11 @@ const PatientRecords = () => {
   useEffect(() => {
     async function fetchCurrentDoctor() {
       try {
-        const response = await axios.get(
-          `https://api.matricare.site/api/user?userId=${userID}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setPrescribedBy(response.data.other.fullName);
       } catch (error) {
         console.error(error);
@@ -126,7 +117,7 @@ const PatientRecords = () => {
 
       try {
         const response = await axios.get(
-          `https://api.matricare.site/api/record/task/u?userId=${userId}`,
+          `${API_URL}/record/task/u?userId=${userId}`,
           {
             headers: {
               Authorization: token,

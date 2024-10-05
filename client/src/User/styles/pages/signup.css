@@ -59,6 +59,13 @@
   margin-top: -40px;
 }
 
+.signup-success-message{
+  color: #E39FA9;
+  margin-left: 100px;
+  margin-bottom: 40px;
+  margin-top: -40px;
+}
+
 .signup-container {
   background-color: #ffffff5e;
   width: 460px;

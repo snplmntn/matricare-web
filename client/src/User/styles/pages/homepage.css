@@ -16,7 +16,6 @@
 .homepage-left-container {
   width: 10%; 
   background-color: transparent;
-  overflow-y: auto; 
   display: flex;
   flex-direction: column;
   padding: 20px; 
@@ -59,6 +58,7 @@
   margin-top: 20px;
   font-size: 20px;
   color: #ffffff;
+  text-align: center;
 }
 
 .homepage-nav-links {
@@ -228,6 +228,7 @@
 .homepage-profile-name {
   color: #042440;
   margin-left: 10px;
+  text-align: center;
 }
 
 .homepage-profile-dropdown-icon {
@@ -672,7 +673,7 @@
 }
 
 .bellytalk-tab:hover {
-   background-color: rgba(227, 159, 169, 0.3);
+  color: #7c459c;
 }
 
 .bellytalk-tab.active {

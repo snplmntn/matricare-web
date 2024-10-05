@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IoHome,
   IoCalendar,
@@ -35,7 +35,18 @@ ChartJS.register(
   PointElement
 );
 
-const LandingPageAssistant = ({ user }) => {
+const LandingPageAssistant = ({}) => {
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      parsedUser.name = parsedUser.name.split(" ")[0];
+      setUser(parsedUser);
+    }
+  }, []);
+
   const lineData = {
     labels: Array.from({ length: 30 }, (_, i) => (i + 1).toString()), // Labels from 1 to 30
     datasets: [
@@ -239,8 +250,8 @@ const LandingPageAssistant = ({ user }) => {
             <IoNotificationsSharp />
           </a>
           <div className="landingpage-assistant-user-profile">
-            <h1>{user.current.name}</h1>
-            <p>{user.current.role}</p>
+            <h1>{user.name}</h1>
+            <p>{user.role}</p>
             <img src="img/LOGO.png" alt="Profile" />
           </div>
         </header>
