@@ -5,7 +5,6 @@ const AppError = require("../Utilities/appError");
 const verifyToken = async (req, res, next) => {
   const JWT_KEY = process.env.JWT_KEY;
   const token = req.header("Authorization"); // get token from header
-
   if (!token) {
     // send back user if no token is provided
     return res
