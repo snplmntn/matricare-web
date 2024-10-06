@@ -354,7 +354,7 @@ const UserProfile = ({ user }) => {
                   <input
                     type="text"
                     id="number"
-                    value={phoneNumber}
+                    value={number}
                     onChange={(e) => setNumber(e.target.value)}
                     placeholder="Number"
                     className="user-profile-input"

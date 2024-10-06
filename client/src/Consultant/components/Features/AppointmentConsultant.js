@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import '../../styles/features/appointmentconsultant.css';
-import { IoAddCircleOutline, IoNotifications } from 'react-icons/io5';
+import React, { useState, useEffect } from "react";
+import "../../styles/features/appointmentconsultant.css";
+import { IoAddCircleOutline, IoNotifications } from "react-icons/io5";
 
 const initialAppointments = [
   {
@@ -8,54 +8,74 @@ const initialAppointments = [
     patientName: "Ella Cruz",
     location: "Mary Chiles",
     category: "Advice by the Doctor",
-    status: "pending"
+    status: "pending",
   },
   {
     date: "Sept 22, 1 pm",
     patientName: "Mary Andres",
     location: "Grace Medical Center",
     category: "Monthly Check-up",
-    status: "pending"
+    status: "pending",
   },
   {
     date: "Sept 24, 3 pm",
     patientName: "Sarah Smith",
     location: "Family Care Tungko",
     category: "Monthly Check-up",
-    status: "confirmed"
+    status: "confirmed",
   },
 ];
 
 const AppointmentConsultant = () => {
   const [appointments, setAppointments] = useState(initialAppointments);
-  const [activeTab, setActiveTab] = useState('upcoming');
+  const [activeTab, setActiveTab] = useState("upcoming");
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [newAppointment, setNewAppointment] = useState({
-    date: '',
-    time: '',
-    patientName: '',
-    location: '',
-    category: '',
-    status: 'pending'
+    date: "",
+    time: "",
+    patientName: "",
+    location: "",
+    category: "",
+    status: "pending",
   });
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+      parsedUserData.name = parsedUserData.name.split(" ")[0];
+      setUser(parsedUserData);
+    }
+  }, []);
 
   const timeOptions = [
-    '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
-    '12:00 PM', '12:30 PM', '1:00 PM', '1:30 PM',
-    '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM',
-    '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM'
+    "10:00 AM",
+    "10:30 AM",
+    "11:00 AM",
+    "11:30 AM",
+    "12:00 PM",
+    "12:30 PM",
+    "1:00 PM",
+    "1:30 PM",
+    "2:00 PM",
+    "2:30 PM",
+    "3:00 PM",
+    "3:30 PM",
+    "4:00 PM",
+    "4:30 PM",
+    "5:00 PM",
+    "5:30 PM",
   ];
 
   const locationOptions = [
     "Mary Chiles, Sampaloc",
     "Grace Medical Center",
-    "Family Care Tungko"
+    "Family Care Tungko",
   ];
-  
-  const categoryOptions = [
-    "Monthly Check-up",
-    "Advice by the Doctor"
-  ];
+
+  const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
 
   const handleStatusChange = (index, newStatus) => {
     const updatedAppointments = appointments.map((appointment, i) => {
@@ -67,8 +87,12 @@ const AppointmentConsultant = () => {
     setAppointments(updatedAppointments);
   };
 
-  const upcomingAppointments = appointments.filter(appointment => appointment.status === 'pending');
-  const postAppointments = appointments.filter(appointment => appointment.status === 'confirmed');
+  const upcomingAppointments = appointments.filter(
+    (appointment) => appointment.status === "pending"
+  );
+  const postAppointments = appointments.filter(
+    (appointment) => appointment.status === "confirmed"
+  );
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
@@ -80,8 +104,18 @@ const AppointmentConsultant = () => {
     const { date, time, patientName, location, category } = newAppointment;
     if (date && time && patientName && location && category) {
       const fullDateTime = `${date}, ${time}`;
-      setAppointments([...appointments, { ...newAppointment, date: fullDateTime }]);
-      setNewAppointment({ date: '', time: '', patientName: '', location: '', category: '', status: 'pending' });
+      setAppointments([
+        ...appointments,
+        { ...newAppointment, date: fullDateTime },
+      ]);
+      setNewAppointment({
+        date: "",
+        time: "",
+        patientName: "",
+        location: "",
+        category: "",
+        status: "pending",
+      });
       setIsFormVisible(false);
     } else {
       alert("Please fill in all fields");
@@ -90,7 +124,14 @@ const AppointmentConsultant = () => {
 
   const handleCancel = () => {
     setIsFormVisible(false);
-    setNewAppointment({ date: '', time: '', patientName: '', location: '', category: '', status: 'pending' });
+    setNewAppointment({
+      date: "",
+      time: "",
+      patientName: "",
+      location: "",
+      category: "",
+      status: "pending",
+    });
   };
 
   return (
@@ -103,7 +144,7 @@ const AppointmentConsultant = () => {
             </a>
           </div>
           <div className="appointmentConsultant-headerUser">
-            <h1>Dra. Donna Jill Tungol</h1>
+            <h1>{`Dr. ${user.name}`}</h1>
             <p>Obstetrician-gynecologist</p>
           </div>
           <div className="appointmentConsultant-headerImage">
@@ -112,31 +153,41 @@ const AppointmentConsultant = () => {
         </header>
 
         <div className="appointmentConsultant-breadcrumb">
-          <a href="#doctor">Doctor</a> <span>&gt;</span> <a href="#appointments" className="breadcrumb-active">Appointments</a>
+          <a href="#doctor">Doctor</a> <span>&gt;</span>{" "}
+          <a href="#appointments" className="breadcrumb-active">
+            Appointments
+          </a>
         </div>
 
         <div className="appointmentConsultant-content">
           <section className="appointmentConsultant-appointments">
             <div className="appointmentConsultant-tabs">
               <button
-                className={`appointmentConsultant-tab ${activeTab === 'upcoming' ? 'active' : ''}`}
-                onClick={() => setActiveTab('upcoming')}
+                className={`appointmentConsultant-tab ${
+                  activeTab === "upcoming" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("upcoming")}
               >
                 Upcoming Appointments
               </button>
               <button
-                className={`appointmentConsultant-tab ${activeTab === 'post' ? 'active' : ''}`}
-                onClick={() => setActiveTab('post')}
+                className={`appointmentConsultant-tab ${
+                  activeTab === "post" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("post")}
               >
                 Post Appointments
               </button>
             </div>
-            <button className="appointmentConsultant-addAppointmentBtn" onClick={() => setIsFormVisible(true)}>
+            <button
+              className="appointmentConsultant-addAppointmentBtn"
+              onClick={() => setIsFormVisible(true)}
+            >
               <IoAddCircleOutline /> Add Appointment
             </button>
 
             {/* Appointment Form */}
-            {isFormVisible && ( 
+            {isFormVisible && (
               <div className="appointmentConsultant-appointmentForm">
                 <h2>Add Appointment</h2>
                 <input
@@ -163,7 +214,9 @@ const AppointmentConsultant = () => {
                 >
                   <option value="">Select Time</option>
                   {timeOptions.map((time, index) => (
-                    <option key={index} value={time}>{time}</option>
+                    <option key={index} value={time}>
+                      {time}
+                    </option>
                   ))}
                 </select>
 
@@ -174,9 +227,13 @@ const AppointmentConsultant = () => {
                   onChange={handleFormChange}
                   required
                 >
-                  <option value="" disabled>Select Location</option>
+                  <option value="" disabled>
+                    Select Location
+                  </option>
                   {locationOptions.map((location, index) => (
-                    <option key={index} value={location}>{location}</option>
+                    <option key={index} value={location}>
+                      {location}
+                    </option>
                   ))}
                 </select>
 
@@ -187,51 +244,88 @@ const AppointmentConsultant = () => {
                   onChange={handleFormChange}
                   required
                 >
-                  <option value="" disabled>Select Category</option>
+                  <option value="" disabled>
+                    Select Category
+                  </option>
                   {categoryOptions.map((category, index) => (
-                    <option key={index} value={category}>{category}</option>
+                    <option key={index} value={category}>
+                      {category}
+                    </option>
                   ))}
                 </select>
 
-                <button type="button" className="appointment-add-button" onClick={handleFormSubmit}>Add Appointment</button>
-                <button type="button" className="appointment-cancel-button" onClick={handleCancel}>Cancel</button>
+                <button
+                  type="button"
+                  className="appointment-add-button"
+                  onClick={handleFormSubmit}
+                >
+                  Add Appointment
+                </button>
+                <button
+                  type="button"
+                  className="appointment-cancel-button"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
               </div>
             )}
 
             {/* Conditionally render based on the active tab */}
-            {activeTab === 'upcoming' && (
+            {activeTab === "upcoming" && (
               <div className="appointmentConsultant-appointmentList">
                 {upcomingAppointments.map((appointment, index) => (
-                  <div key={index} className="appointmentConsultant-appointmentItem">
+                  <div
+                    key={index}
+                    className="appointmentConsultant-appointmentItem"
+                  >
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Date:</span>
-                        <span className="appointmentConsultant-text">{appointment.date}</span>
+                        <span className="appointmentConsultant-label">
+                          Date:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.date}
+                        </span>
                       </div>
                     </div>
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Patient Name:</span>
-                        <span className="appointmentConsultant-text">{appointment.patientName}</span>
+                        <span className="appointmentConsultant-label">
+                          Patient Name:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.patientName}
+                        </span>
                       </div>
                     </div>
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Location:</span>
-                        <span className="appointmentConsultant-text">{appointment.location}</span>
+                        <span className="appointmentConsultant-label">
+                          Location:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.location}
+                        </span>
                       </div>
                     </div>
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Category:</span>
-                        <span className="appointmentConsultant-text">{appointment.category}</span>
+                        <span className="appointmentConsultant-label">
+                          Category:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.category}
+                        </span>
                       </div>
                     </div>
                     <div className="appointmentConsultant-action">
                       <select
                         className="appointmentConsultant-statusSelect"
                         value={appointment.status}
-                        onChange={(e) => handleStatusChange(index, e.target.value)}
+                        onChange={(e) =>
+                          handleStatusChange(index, e.target.value)
+                        }
                       >
                         <option value="confirmed">Confirmed</option>
                         <option value="pending">Pending</option>
@@ -243,32 +337,51 @@ const AppointmentConsultant = () => {
               </div>
             )}
 
-            {activeTab === 'post' && (
+            {activeTab === "post" && (
               <div className="appointmentConsultant-appointmentList">
                 {postAppointments.map((appointment, index) => (
-                  <div key={index} className="appointmentConsultant-appointmentItem">
+                  <div
+                    key={index}
+                    className="appointmentConsultant-appointmentItem"
+                  >
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Date:</span>
-                        <span className="appointmentConsultant-text">{appointment.date}</span>
+                        <span className="appointmentConsultant-label">
+                          Date:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.date}
+                        </span>
                       </div>
                     </div>
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Patient Name:</span>
-                        <span className="appointmentConsultant-text">{appointment.patientName}</span>
+                        <span className="appointmentConsultant-label">
+                          Patient Name:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.patientName}
+                        </span>
                       </div>
                     </div>
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Location:</span>
-                        <span className="appointmentConsultant-text">{appointment.location}</span>
+                        <span className="appointmentConsultant-label">
+                          Location:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.location}
+                        </span>
                       </div>
                     </div>
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">Category:</span>
-                        <span className="appointmentConsultant-text">{appointment.category}</span>
+                        <span className="appointmentConsultant-label">
+                          Category:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {appointment.category}
+                        </span>
                       </div>
                     </div>
                   </div>
