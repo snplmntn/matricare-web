@@ -34,11 +34,14 @@ const patient_post = catchAsync(async (req, res, next) => {
   if (!user)
     return next(new AppError("Patient is not a registered user!", 404));
 
+  const userCount = await Patient.find().countDocuments();
+  req.body.seq = userCount + 1;
   req.body.userId = user._id;
 
   const newPatient = new Patient(req.body);
 
   await newPatient.save();
+
   return res
     .status(200)
     .json({ message: "Patient Successfully Created", newPatient });

@@ -162,8 +162,8 @@ const UserProfile = ({ user }) => {
       email: email,
       phoneNumber: phoneNumber,
       address: address,
-      partner: partner,
-      number: number,
+      husband: partner,
+      husbandNumber: number,
     };
 
     try {
@@ -197,8 +197,8 @@ const UserProfile = ({ user }) => {
         setFullname(data.fullName);
         setEmail(data.email);
         setPhoneNumber(data.phoneNumber);
-        setPartner(data.partner);
-        setNumber(data.number);
+        setPartner(data.husband);
+        setNumber(data.husbandNumber);
         setAddress(data.address ? data.address : "");
         setProfileImage(data.profilePicture ? data.profilePicture : "");
       } catch (error) {

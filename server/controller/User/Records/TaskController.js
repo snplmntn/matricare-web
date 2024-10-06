@@ -28,6 +28,12 @@ const task_user_get = catchAsync(async (req, res, next) => {
 
 // Create Task
 const task_post = catchAsync(async (req, res, next) => {
+  const taskCount = await Task.find().countDocuments();
+  const yearToday = new Date().getFullYear();
+  req.body.orderNumber = `${yearToday} - ${taskCount + 1}`;
+
+  console.log(req.body.orderNumber);
+
   const newTask = new Task(req.body);
 
   await newTask.save();

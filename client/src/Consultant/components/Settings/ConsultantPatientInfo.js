@@ -272,7 +272,7 @@ const ConsultantPatientInfo = () => {
                     />
                   </td>
                 )}
-                <td>{index + 1}</td>
+                <td>{user.seq}</td>
                 <td>
                   <img
                     src={user.photo ? user.photo : "img//topic1.jpg"}

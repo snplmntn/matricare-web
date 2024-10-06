@@ -141,11 +141,26 @@ const MedicalRec = ({ user }) => {
     setSelectedDocument(null);
   };
 
-  const handleStatusChange = (index, newStatus) => {
-    const updatedTasks = tasks.map((task, i) =>
-      i === index ? { ...task, status: newStatus } : task
-    );
-    setTasks(updatedTasks);
+  const handleStatusChange = async (id, status) => {
+    try {
+      await axios.put(
+        `${API_URL}/record/task?id=${id}`,
+        {
+          status: status,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      const updatedTasks = tasks.map((task) =>
+        task._id === id ? { ...task, status: status } : task
+      );
+      setTasks(updatedTasks);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -160,7 +175,6 @@ const MedicalRec = ({ user }) => {
           }
         );
         setTasks(response.data);
-        console.log(response);
       } catch (error) {
         console.error(error);
       }
@@ -215,10 +229,10 @@ const MedicalRec = ({ user }) => {
               </div>
               <div className="MR-partner-info">
                 <h4>Husband/Partner:</h4>
-                <p>John Doe</p>
+                <p>{patient && patient.husband}</p>
                 <div className="MR-partner-contact">
                   <FaMobileAlt className="MR-phone-icon" />
-                  <p>+63 905 4562 702</p>
+                  <p>{patient && patient.husbandNumber}</p>
                 </div>
               </div>
             </div>
@@ -252,9 +266,9 @@ const MedicalRec = ({ user }) => {
                       <select
                         className="MR-select-status"
                         value={task.status}
-                        onChange={(e) =>
-                          handleStatusChange(index, e.target.value)
-                        }
+                        onChange={(e) => {
+                          handleStatusChange(task._id, e.target.value, index);
+                        }}
                       >
                         <option value="On Progress">On Progress</option>
                         <option value="Complete">Complete</option>
