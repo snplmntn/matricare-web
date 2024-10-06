@@ -47,16 +47,11 @@ const UserProfile = ({ user }) => {
     };
   }, [profileImageUrl]);
 
-  const handleProfileImageChange = (event) => {
-    const file = event.target.files[0];
+  const handleProfileImageChange = (e) => {
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileImageUrl(reader.result);
-        localStorage.setItem("profileImageUrl", reader.result); // Save to localStorage
-        setProfileImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      const imageUrl = URL.createObjectURL(file);
+      setProfileImage(imageUrl);
     }
   };
 
@@ -528,19 +523,23 @@ const UserProfile = ({ user }) => {
               className="user-profile-image-border"
             />
 
-            <label
-              htmlFor="profileImage"
-              className="user-profile-upload-button"
-            >
-              <FaCameraRetro className="user-profile-upload-icon" />
-            </label>
-            <input
-              type="file"
-              id="profileImage"
-              className="user-profile-image-input"
-              accept="image/*"
-              onChange={handleProfileImageChange}
-            />
+            {isEditing && (
+              <>
+                <label
+                  htmlFor="profileImage"
+                  className="user-profile-upload-button"
+                >
+                  <FaCameraRetro className="user-profile-upload-icon" />
+                </label>
+                <input
+                  type="file"
+                  id="profileImage"
+                  className="user-profile-image-input"
+                  accept="image/*"
+                  onChange={handleProfileImageChange}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>
