@@ -4,6 +4,7 @@ import axios from "axios";
 import "../../styles/pages/login.css";
 import Modal from "react-modal";
 import { MdMarkEmailRead } from "react-icons/md";
+import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 
 export default function Login() {
@@ -14,14 +15,18 @@ export default function Login() {
   const [showVerificationModal, setShowVerificationModal] = useState(false); // For modal
   const [email, setEmail] = useState(""); // Store the user's email
   const [resendMessage, setResendMessage] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL;
-
   const navigate = useNavigate();
 
   const { username, password } = formData;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleLogin = async (e) => {
@@ -98,11 +103,7 @@ export default function Login() {
       document.cookie = `verifyToken=${response.data.verificationToken}`;
       setResendMessage(true);
     } catch (error) {
-      console.error(
-        "Resend email error:",
-        error
-        // error.response ? error.response.data : error.message
-      );
+      console.error("Resend email error:", error);
       setError("Failed to resend verification email.");
     }
   };
@@ -113,36 +114,17 @@ export default function Login() {
     const censoredNamePart = "*".repeat(Math.max(name.length - 3, 0)); // Ensure the repeat count is not negative
     const visibleDomainPart = domain.slice(0, 1);
     const censoredDomainPart = "*".repeat(Math.max(domain.length - 1, 0)); // Ensure the repeat count is not negative
-    const censoredName = visibleNamePart + censoredNamePart;
-    const censoredDomain = visibleDomainPart + censoredDomainPart;
-    return `${censoredName}@${censoredDomain}`;
+    return `${visibleNamePart}${censoredNamePart}@${visibleDomainPart}${censoredDomainPart}`;
   };
 
   return (
-    <div
-      className="login-outer-container login-background"
-      style={{
-        position: "relative",
-        zIndex: 0,
-      }}
-    >
+    <div className="login-outer-container login-background">
       <div
         className="background-image"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100vh",
-          backgroundImage: 'url("/img/login.jpg")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.9,
-          zIndex: -1,
-        }}
-      />
+        style={{ backgroundImage: `url(/img/login.jpg)` }}
+      ></div>
       <div className="login-overlay"></div>
-      <h2 className="login-welcome-message">Log in to MatriCare!</h2>
+      <h2 className="login-welcome-message">Login!</h2>
       <p className="login-sign-up-text">
         Don't have an account? <Link to="/signup">Sign Up here!</Link>
       </p>
@@ -170,10 +152,11 @@ export default function Login() {
               Username:
             </label>
           </div>
-          <div className="LI-form-group">
+
+          <div className="LI-form-group password-toggle-container">
             <input
               className="LI-form-input"
-              type="password"
+              type={showPassword ? "text" : "password"} // Toggle between text and password
               id="password"
               placeholder=" "
               value={password}
@@ -184,10 +167,18 @@ export default function Login() {
             <label htmlFor="password" className="LI-form-label">
               Password:
             </label>
+            <span
+              className="password-toggle-icon"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+            </span>
           </div>
+
           <div className="forgot-password">
             <Link to="/forgot-password">Forgot Password?</Link>
           </div>
+
           <div className="LI-form-group">
             <button type="submit" className="LI-button" disabled={loading}>
               {loading ? "Logging in..." : "LOGIN"}
@@ -208,10 +199,9 @@ export default function Login() {
           </div>
           <h2>Authenticate your Account</h2>
           <p>
-            You're almost there! We've sent a verification email to{" "}
-            <strong>{email && censorEmail(email)}</strong>. <br></br>To ensure
-            your authentication and access to MatriCare, please check your email
-            and complete the verification process.
+            We've sent a verification email to{" "}
+            <strong>{email && censorEmail(email)}</strong>. Please verify your
+            email.
           </p>
           <button onClick={handleResendEmail}>Resend Email</button>
           {successMessage && <p>{successMessage}</p>}
