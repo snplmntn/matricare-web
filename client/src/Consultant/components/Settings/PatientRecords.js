@@ -147,7 +147,10 @@ const PatientRecords = () => {
         </div>
         <div className="PR-top-section">
           <div className="PR-patient-info">
-            <img src="img/topic2.jpg" alt="Patient Photo" />
+            <img
+              src={patientInfo ? patientInfo.profilePicture : "img/topic2.jpg"}
+              alt="Patient Photo"
+            />
             <div className="PR-patient-details">
               <h3>{patientInfo && patientInfo.fullName}</h3>
               <p>02/21/1996 (28 yrs old), F</p>

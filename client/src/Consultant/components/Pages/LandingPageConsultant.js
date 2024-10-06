@@ -10,26 +10,62 @@ import {
   IoPersonCircleOutline,
   IoSearch,
 } from "react-icons/io5";
+import { getCookie } from "../../../utils/getCookie";
+import axios from "axios";
 
 const LandingPageConsultant = ({}) => {
+  const userID = getCookie("userID");
   const [date, setDate] = useState(new Date());
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [newPatients, setNewPatients] = useState(2);
   const [totalPatients, setTotalPatients] = useState(54);
   const [user, setUser] = useState({});
+  const [newPatient, setNewPatient] = useState({
+    assignedId: userID,
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+  });
+
+  const token = getCookie("token");
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const toggleForm = () => {
     setIsFormOpen(!isFormOpen);
   };
 
-  const handleAddPatient = (e) => {
+  const handleCancelClick = () => {
+    setNewPatients(false);
+  };
+
+  const handleAddPatient = async (e) => {
     e.preventDefault();
-
-    setNewPatients(newPatients + 1);
-    setTotalPatients(totalPatients + 1);
-
-    console.log("Patient added");
+    try {
+      console.log(newPatient);
+      const response = await axios.post(
+        `${API_URL}/record/patient`,
+        {
+          assignedId: userID,
+          email: newPatient.email,
+          fullName: newPatient.fullName,
+          phoneNumber: newPatient.phoneNumber,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error(error);
+    }
     toggleForm();
+  };
+
+  const handleFormChange = (event) => {
+    const { name, value } = event.target;
+    setNewPatient((prevState) => ({ ...prevState, [name]: value }));
   };
 
   useEffect(() => {
@@ -137,40 +173,46 @@ const LandingPageConsultant = ({}) => {
             <div className="add-patient-content">
               <h2>Add New Patient</h2>
               <form onSubmit={handleAddPatient}>
-                <div className="add-patient-form">
+                <div className="CPM-add-form">
                   <label htmlFor="patientName">Name:</label>
                   <input
                     type="text"
                     id="patientName"
-                    name="patientName"
+                    name="fullName"
+                    value={newPatient.fullName}
+                    onChange={handleFormChange}
                     required
                   />
                 </div>
-                <div className="add-patient-form">
+                <div className="CPM-add-form">
                   <label htmlFor="patientMobile">Mobile Number:</label>
                   <input
                     type="tel"
                     id="patientMobile"
-                    name="patientMobile"
+                    name="phoneNumber"
+                    value={newPatient.phoneNumber}
+                    onChange={handleFormChange}
                     required
                   />
                 </div>
-                <div className="add-patient-form">
+                <div className="CPM-add-form">
                   <label htmlFor="patientEmail">Email:</label>
                   <input
                     type="email"
                     id="patientEmail"
-                    name="patientEmail"
+                    name="email"
+                    value={newPatient.email}
+                    onChange={handleFormChange}
                     required
                   />
                 </div>
-                <button type="submit" className="add-patient-submit">
+                <button type="submit" className="CPM-add-submit">
                   Add Patient
                 </button>
                 <button
                   type="button"
-                  className="add-patient-cancel"
-                  onClick={toggleForm}
+                  className="CPM-add-cancel"
+                  onClick={handleCancelClick}
                 >
                   Cancel
                 </button>
