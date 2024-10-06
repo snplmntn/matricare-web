@@ -9,7 +9,6 @@ const patientSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
     },
     phoneNumber: {
       type: String,
@@ -25,6 +24,7 @@ const patientSchema = new mongoose.Schema(
       enum: ["Active", "Inactive"],
       default: "Active",
     },
+    profilePicture: String,
     seq: Number,
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     assignedId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

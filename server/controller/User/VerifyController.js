@@ -162,13 +162,9 @@ const verify_email = catchAsync(async (req, res, next) => {
   const { token } = req.query;
   const user = await User.findOne({ token: token });
 
-  console.log(token, user);
   if (!user) {
     return next(new AppError("Invalid verification code", 400));
   }
-
-  user.token = ""; // clears token after verification
-  await user.save();
 
   const jwtToken = jwt.sign({ user: user }, process.env.JWT_KEY, {
     expiresIn: "30d",

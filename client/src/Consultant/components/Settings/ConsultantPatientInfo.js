@@ -123,22 +123,22 @@ const ConsultantPatientInfo = () => {
   const handleAddPatientSubmit = async (event) => {
     event.preventDefault();
     try {
-      console.log(newPatient);
+      const patientForm = {
+        assignedId: userID,
+        email: newPatient.email,
+        fullName: newPatient.fullName,
+        phoneNumber: newPatient.phoneNumber,
+      };
       const response = await axios.post(
         `${API_URL}/record/patient`,
-        {
-          assignedId: userID,
-          email: newPatient.email,
-          fullName: newPatient.fullName,
-          phoneNumber: newPatient.phoneNumber,
-        },
+        patientForm,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      console.log(response);
+      setPatients([...patients, patientForm]);
     } catch (error) {
       console.error(error);
     }
@@ -267,7 +267,11 @@ const ConsultantPatientInfo = () => {
                 <td>{user.seq}</td>
                 <td>
                   <img
-                    src={user.photo ? user.photo : "img//topic1.jpg"}
+                    src={
+                      user.profilePicture
+                        ? user.profilePicture
+                        : "img//topic1.jpg"
+                    }
                     // alt={user.name}
                     className="CPM-user-photo"
                   />

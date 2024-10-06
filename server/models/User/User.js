@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema(
     birthdate: {
       type: Date,
     },
+    pregnancyStartDate: {
+      type: Date,
+    },
     duedate: {
       type: Date,
     },
@@ -45,10 +48,19 @@ const userSchema = new mongoose.Schema(
     husbandNumber: {
       type: String,
     },
+    babyName: {
+      type: String,
+    },
     profilePicture: {
       type: String,
     },
     token: String,
+    role: {
+      type: String,
+      required: true,
+      enum: ["Patient", "Assistant", "Obgyne"],
+      default: "Patient",
+    },
     assignedTask: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
     articleLastRead: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],

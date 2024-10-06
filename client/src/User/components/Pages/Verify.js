@@ -36,13 +36,20 @@ export default function Verify() {
             document.cookie = `token=${response.data.jwtToken}`;
             removeCookie("verifyToken");
             localStorage.removeItem("request");
-            navigate(
-              role === "Patient"
-                ? "/app"
-                : role === "Assistant"
-                ? "/assistant-landing"
-                : role === "Obgyne" && "/consultant-landing"
-            );
+            switch (role) {
+              case "Patient":
+                navigate("/app");
+                break;
+              case "Assistant":
+                navigate("/assistant-landing");
+                break;
+              case "Obgyne":
+                navigate("/consultant-landing");
+                break;
+              default:
+                navigate("/app");
+                break;
+            }
           }
         }, 1000);
       } catch (err) {

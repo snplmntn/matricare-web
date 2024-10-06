@@ -37,6 +37,7 @@ const patient_post = catchAsync(async (req, res, next) => {
   const userCount = await Patient.find().countDocuments();
   req.body.seq = userCount + 1;
   req.body.userId = user._id;
+  req.body.profilePicture = user.profilePicture;
 
   const newPatient = new Patient(req.body);
 
