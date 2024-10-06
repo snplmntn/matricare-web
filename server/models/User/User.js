@@ -45,11 +45,8 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
-    role: {
+    husbandNumber: {
       type: String,
-      required: true,
-      enum: ["Patient", "Assistant", "Obgyne"],
-      default: "Patient",
     },
     profilePicture: {
       type: String,

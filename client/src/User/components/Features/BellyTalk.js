@@ -19,6 +19,7 @@ const BellyTalk = ({ user }) => {
   const token = getCookie("token");
   const userID = getCookie("userID");
   const [posts, setPosts] = useState();
+  const [allPost, setAllPost] = useState();
   const API_URL = process.env.REACT_APP_API_URL;
   // {
   //   id: 1,
@@ -50,6 +51,8 @@ const BellyTalk = ({ user }) => {
   const [imagePreview, setImagePreview] = useState(null);
 
   const [isPosting, setIsPosting] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [changeFilter, setChangeFilter] = useState("");
 
   const openModal = () => {
     if (!token) {
@@ -176,11 +179,6 @@ const BellyTalk = ({ user }) => {
     }
   };
 
-  const filterPosts = (filterType) => {
-    // Logic to filter posts based on the filterType
-    console.log(`Filtering posts by: ${filterType}`);
-  };
-
   useEffect(() => {
     async function fetchPosts() {
       try {
@@ -190,12 +188,47 @@ const BellyTalk = ({ user }) => {
           },
         });
         setPosts(response.data);
+        setAllPost(response.data);
       } catch (error) {
         console.error(error);
       }
     }
     fetchPosts();
-  }, []);
+  }, [isFetching]);
+
+  const filterPosts = (filterType) => {
+    setPosts(allPost);
+    if (filterType !== "All") {
+      // Filter posts based on selected categories
+      const filteredPosts = posts.filter((post) =>
+        post.category.includes(filterType)
+      );
+      setPosts(filteredPosts);
+    }
+  };
+
+  const [activeFilters, setActiveFilters] = useState([]);
+
+  const handleFilterChange = (filterType) => {
+    setActiveFilters((prevFilters) => {
+      if (prevFilters.includes(filterType)) {
+        return prevFilters.filter((filter) => filter !== filterType);
+      } else {
+        return [...prevFilters, filterType];
+      }
+    });
+  };
+
+  useEffect(() => {
+    if (activeFilters.length === 0 || activeFilters.includes("All")) {
+      setPosts(allPost);
+    } else {
+      const filteredPosts = allPost.filter((post) =>
+        activeFilters.some((filter) => post.category.includes(filter))
+      );
+      setPosts(filteredPosts);
+    }
+  }, [activeFilters, allPost]);
 
   return (
     <div className="bellytalk-container">
@@ -382,51 +415,58 @@ const BellyTalk = ({ user }) => {
             <input
               type="checkbox"
               id="all"
-              onChange={() => filterPosts("All")}
+              onChange={() => handleFilterChange("All")}
             />
             <label htmlFor="all">All</label>
 
             <input
               type="checkbox"
               id="first-time"
-              onChange={() => filterPosts("first-time")}
+              onChange={() => handleFilterChange("First-Time Moms")}
             />
             <label htmlFor="first-time">First-Time Moms</label>
 
             <input
               type="checkbox"
               id="baby-essentials"
-              onChange={() => filterPosts("baby-essentials")}
+              onChange={() => handleFilterChange("Baby Essentials")}
             />
             <label htmlFor="baby-essentials">Baby Essentials</label>
 
             <input
               type="checkbox"
               id="maternity-style"
-              onChange={() => filterPosts("maternity-style")}
+              onChange={() => handleFilterChange("Maternity Style")}
             />
             <label htmlFor="maternity-style">Maternity Style</label>
 
             <input
               type="checkbox"
               id="breast-feeding"
-              onChange={() => filterPosts("breast-feeding")}
+              onChange={() => handleFilterChange("Breast Feeding")}
             />
             <label htmlFor="breast-feeding">Breast Feeding</label>
 
             <input
               type="checkbox"
               id="gender-reveal"
-              onChange={() => filterPosts("gender-reveal")}
+              onChange={() => handleFilterChange("Gender Reveal")}
             />
             <label htmlFor="gender-reveal">Gender Reveal</label>
 
             <input
               type="checkbox"
               id="parenting-tips"
-              onChange={() => filterPosts("parenting-tips")}
+              onChange={() => handleFilterChange("Parenting Tips")}
             />
             <label htmlFor="parenting-tips">Parenting Tips</label>
+
+            <input
+              type="checkbox"
+              id="labor"
+              onChange={() => handleFilterChange("Labor")}
+            />
+            <label htmlFor="labor">Labor</label>
           </div>
         </div>
       </main>

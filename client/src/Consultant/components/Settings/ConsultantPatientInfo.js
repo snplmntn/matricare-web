@@ -22,6 +22,17 @@ const ConsultantPatientInfo = () => {
     phoneNumber: "",
     email: "",
   });
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+      parsedUserData.name = parsedUserData.name.split(" ")[0];
+      setUser(parsedUserData);
+    }
+  }, []);
 
   const [admins, setAdmins] = useState([
     {
@@ -107,7 +118,6 @@ const ConsultantPatientInfo = () => {
   const handleFormChange = (event) => {
     const { name, value } = event.target;
     setNewPatient((prevState) => ({ ...prevState, [name]: value }));
-    console.log(newPatient);
   };
 
   const handleAddPatientSubmit = async (event) => {
@@ -117,11 +127,6 @@ const ConsultantPatientInfo = () => {
       const response = await axios.post(
         `${API_URL}/record/patient`,
         {
-          // assignedId: "66fa3fee2a3372e1dd52615e",
-          // email: "marccastillo621@gmail.com",
-          // fullName: "Marc Castillo",
-          // phoneNumber: "09194254890",
-          //
           assignedId: userID,
           email: newPatient.email,
           fullName: newPatient.fullName,
@@ -155,14 +160,13 @@ const ConsultantPatientInfo = () => {
   useEffect(() => {
     async function fetchPatients() {
       try {
-        const response = await axios.get(`${API_URL}/user/r?role=Patient`, {
+        const response = await axios.get(`${API_URL}/record/patient`, {
           headers: {
             Authorization: token,
             "Content-Type": "multipart/form-data",
           },
         });
         setPatients(response.data);
-        console.log(patients);
       } catch (error) {
         console.error();
       }
@@ -175,7 +179,7 @@ const ConsultantPatientInfo = () => {
       <div className="CPM-main-section">
         <header className="CPM-header">
           <div className="CPM-user-profile">
-            <h1>Dra. Donna Jill A. Tungol</h1>
+            <h1>{`Dr. ${user.name}`}</h1>
             <p>Obstetrician-gynecologist</p>
             <img src="img/LOGO.png" alt="Profile" />
             <button className="CPM-add-btn" onClick={handleAddPatientClick}>
