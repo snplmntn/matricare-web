@@ -142,14 +142,6 @@ const ConsultantPatientInfo = () => {
     } catch (error) {
       console.error(error);
     }
-
-    // setNewPatient({
-    //   id: "",
-    //   name: "",
-    //   mobile: "",
-    //   email: "",
-    //   status: "active",
-    // });
     setShowForm(false); // Hide the form
   };
 
