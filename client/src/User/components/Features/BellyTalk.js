@@ -196,17 +196,6 @@ const BellyTalk = ({ user }) => {
     fetchPosts();
   }, [isFetching]);
 
-  const filterPosts = (filterType) => {
-    setPosts(allPost);
-    if (filterType !== "All") {
-      // Filter posts based on selected categories
-      const filteredPosts = posts.filter((post) =>
-        post.category.includes(filterType)
-      );
-      setPosts(filteredPosts);
-    }
-  };
-
   const [activeFilters, setActiveFilters] = useState([]);
 
   const handleFilterChange = (filterType) => {

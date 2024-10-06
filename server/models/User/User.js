@@ -26,11 +26,9 @@ const userSchema = new mongoose.Schema(
     },
     cityAddress: {
       type: String,
-      index: "text",
     },
     address: {
       type: String,
-      index: "text",
     },
     birthdate: {
       type: Date,
@@ -42,8 +40,7 @@ const userSchema = new mongoose.Schema(
       type: Number,
     },
     husband: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
     },
     husbandNumber: {
       type: String,

@@ -25,6 +25,7 @@ const patientSchema = new mongoose.Schema(
       enum: ["Active", "Inactive"],
       default: "Active",
     },
+    seq: Number,
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     assignedId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
