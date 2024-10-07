@@ -82,7 +82,7 @@ const BellyTalk = ({ user }) => {
       const formData = new FormData();
       formData.append("picture", selectedImage);
       try {
-        console.log(formData);
+        console.log(selectedImage);
         const response = await axios.post(
           `${API_URL}/upload/b?userId=${userID}`,
           formData,

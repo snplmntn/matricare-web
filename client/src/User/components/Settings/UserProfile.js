@@ -19,7 +19,7 @@ const UserProfile = ({ user }) => {
   const [partner, setPartner] = useState("");
   const [number, setNumber] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [profileImageUrl, setProfileImageUrl] = useState("");
+  const [selectedImage, setSelectedImage] = useState(null);
 
   //user password
   const [oldPassword, setOldPassword] = useState("");
@@ -39,19 +39,36 @@ const UserProfile = ({ user }) => {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    return () => {
-      if (profileImageUrl) {
-        URL.revokeObjectURL(profileImageUrl);
-      }
-    };
-  }, [profileImageUrl]);
-
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
+    setSelectedImage(file);
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setProfileImage(imageUrl);
+    }
+  };
+
+  const handleUploadProfilePicture = async () => {
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append("picture", selectedImage);
+
+      try {
+        const response = await axios.post(
+          `${API_URL}/upload/p?userId=${userID}`,
+          formData,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(response);
+        setProfileImage(response.data.pictureLink);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -135,7 +152,6 @@ const UserProfile = ({ user }) => {
       localStorage.setItem("email", email);
       localStorage.setItem("phoneNumber", phoneNumber);
       localStorage.setItem("address", address);
-      localStorage.setItem("profileImageUrl", profileImageUrl);
       localStorage.setItem("partner", partner);
       localStorage.setItem("number", Number);
 
@@ -152,6 +168,8 @@ const UserProfile = ({ user }) => {
 
   //handle user ifo update
   const handleUserUpdate = async () => {
+    if (selectedImage) await handleUploadProfilePicture();
+
     const updatedUserForm = {
       fullName: fullname,
       email: email,
@@ -160,6 +178,8 @@ const UserProfile = ({ user }) => {
       husband: partner,
       husbandNumber: number,
     };
+
+    if (selectedImage) updatedUserForm.profilePicture = profileImage;
 
     try {
       const response = await axios.put(
@@ -196,6 +216,7 @@ const UserProfile = ({ user }) => {
         setNumber(data.husbandNumber);
         setAddress(data.address ? data.address : "");
         setProfileImage(data.profilePicture ? data.profilePicture : "");
+        console.log(data);
       } catch (error) {
         console.error(error);
       }
