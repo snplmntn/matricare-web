@@ -20,6 +20,7 @@ const UserProfile = ({ user }) => {
   const [number, setNumber] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(null);
 
   //user password
   const [oldPassword, setOldPassword] = useState("");
@@ -64,8 +65,7 @@ const UserProfile = ({ user }) => {
             },
           }
         );
-        console.log(response);
-        setProfileImage(response.data.pictureLink);
+        setProfilePicture(response.data.pictureLink);
       } catch (err) {
         console.error(err);
       }
@@ -179,7 +179,7 @@ const UserProfile = ({ user }) => {
       husbandNumber: number,
     };
 
-    if (selectedImage) updatedUserForm.profilePicture = profileImage;
+    if (profilePicture) updatedUserForm.profilePicture = profilePicture;
 
     try {
       const response = await axios.put(
@@ -207,7 +207,6 @@ const UserProfile = ({ user }) => {
             Authorization: token,
           },
         });
-        // console.log(response);
         const data = response.data.other;
         setFullname(data.fullName);
         setEmail(data.email);
