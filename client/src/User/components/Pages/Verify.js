@@ -35,24 +35,18 @@ export default function Verify() {
             document.cookie = `role=${response.data.user.role}`;
             document.cookie = `token=${response.data.jwtToken}`;
             removeCookie("verifyToken");
-            localStorage.removeItem("request");
-            switch (role) {
-              case "Patient":
-                navigate("/app");
-                break;
-              case "Assistant":
-                navigate("/assistant-landing");
-                break;
-              case "Obgyne":
-                navigate("/consultant-landing");
-                break;
-              default:
-                navigate("/app");
-                break;
-            }
+            navigate(
+              role === "Patient"
+                ? "/app"
+                : role === "Assistant"
+                ? "/assistant-landing"
+                : role === "Obgyne" && "/consultant-landing"
+            );
           }
         }, 1000);
+        localStorage.removeItem("request");
       } catch (err) {
+        localStorage.removeItem("request");
         console.error(
           "Verification failed:",
           err.response ? err.response.data : err.message

@@ -23,8 +23,13 @@ const user_login = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid credentials", 401));
   }
 
+  const token = jwt.sign({ user: user }, process.env.JWT_KEY, {
+    expiresIn: "30d",
+  });
+
   return res.json({
     user,
+    token,
   });
 });
 

@@ -6,6 +6,7 @@ import Modal from "react-modal";
 import { MdMarkEmailRead } from "react-icons/md";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 export default function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -18,6 +19,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
+  const [cookies, setCookie, removeCookie] = useCookies();
 
   const { username, password } = formData;
 
@@ -71,6 +73,7 @@ export default function Login() {
       localStorage.setItem("userData", JSON.stringify(userDetails));
       const userEmail = response.data.user.email; // Assume the email is returned from the backend
       document.cookie = `userID=${response.data.user._id}`;
+      let role = userDetails.role;
 
       // After successful login, show the verification modal
       setEmail(userEmail);
@@ -78,6 +81,23 @@ export default function Login() {
       setLoading(false);
       await handleResendEmail();
       setShowVerificationModal(true);
+
+      setTimeout(() => {
+        if (response.status === 200) {
+          console.log(response.data);
+          // Check if the component is still mounted
+          document.cookie = `role=${response.data.user.role}`;
+          document.cookie = `token=${response.data.token}`;
+          removeCookie("verifyToken");
+          navigate(
+            role === "Patient"
+              ? "/app"
+              : role === "Assistant"
+              ? "/assistant-landing"
+              : role === "Obgyne" && "/consultant-landing"
+          );
+        }
+      }, 1000);
     } catch (err) {
       // Log the error
       console.error(
