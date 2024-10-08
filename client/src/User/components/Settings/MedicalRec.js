@@ -25,6 +25,9 @@ const MedicalRec = ({ user }) => {
   const prescribedBy = "Dra. Donna Jill A. Tungol";
   const [isEditing, setIsEditing] = useState(false);
   const [tasks, setTasks] = useState([]);
+  const [newDocName, setNewDocName] = useState("");
+  const [newDocDate, setNewDocDate] = useState("");
+  const [isAddingDocument, setIsAddingDocument] = useState(false);
 
   //STATE FOR STORING DATAS
   const [documents, setDocuments] = useState([
@@ -56,84 +59,25 @@ const MedicalRec = ({ user }) => {
   const currentDate = moment();
   const weeksPassed = currentDate.diff(conceptionDate, "weeks");
 
-  //STATES FOR ADDING
-
-  //state for opening modals
-  const [openAddObstreticModal, setOpenAddObstreticModal] = useState(false);
-  const [openAddSurgicalModal, setOpenAddSurgicalModal] = useState(false);
-  const [openAddMedicalModal, setOpenAddMedicalModal] = useState(false);
-  const [openAddDocumentModal, setOpenAddDocumentModal] = useState(false);
-
-  //state for add obstetric inputs
-  const [obstetricTitle, setObstetricTitle] = useState("");
-  const [obstetricDate, setObstetricDate] = useState("");
-
-  //state for add surgical inputs
-  const [surgicalTitle, setSurgicalTitle] = useState("");
-  const [surgicalDate, setSurgicalDate] = useState("");
-
-  //state for add medical inputs
-  const [medicalTitle, setMedicalTitle] = useState("");
-  const [addStatus, setAddStatus] = useState("");
-  const [medicalDate2, setMedicalDate2] = useState("");
-
-  const handleObstetricTitleChange = (e) => setObstetricTitle(e.target.value);
-  const handleObstetricDateChange = (e) => setObstetricDate(e.target.value);
-
-  const handleSurgicalTitleChange = (e) => setSurgicalTitle(e.target.value);
-  const handleSurgicalDateChange = (e) => setSurgicalDate(e.target.value);
-
-  const handleMedicalTitleChange = (e) => setMedicalTitle(e.target.value);
-  const handleStatus = (e) => setAddStatus(e.target.value);
-  const handleMedicalDate2Change = (e) => setMedicalDate2(e.target.value);
-
-  // const handleTitleChange = (e) => {
-  //   setTitle(e.target.value);
-  // };
-
-  // const handleDateChange = (e) => {
-  //   setDate(e.target.value);
-  // };
-
-  //
+  const handleAddDocument = () => {
+    if (newDocName && newDocDate) {
+      setDocuments([...documents, { name: newDocName, date: newDocDate }]);
+      setNewDocName("");
+      setNewDocDate("");
+      setIsAddingDocument(false); // Hide input fields after adding the document
+    }
+  };
 
   const toggleEditMode = () => {
     setIsEditing(!isEditing);
   };
 
-  //FOR EDITS
-
-  // Handle input change for Obstetric History
-  const handleObstetricChange = (index, key, value) => {
-    const updatedObstetric = [...obstetricHistory];
-    updatedObstetric[index][key] = value;
-    setObstetricHistory(updatedObstetric);
-  };
-
-  // Handle input change for Medical History
-  const handleMedicalChange = (index, key, value) => {
-    const updatedMedical = [...medicalHistory];
-    updatedMedical[index][key] = value;
-    setMedicalHistory(updatedMedical);
-  };
-
-  // Handle input change for Surgical History
-  const handleSurgicalChange = (index, key, value) => {
-    const updatedSurgical = [...surgicalHistory];
-    updatedSurgical[index][key] = value;
-    setSurgicalHistory(updatedSurgical);
-  };
 
   // Handle document name and date changes
   const handleDocumentChange = (index, field, value) => {
     const updatedDocs = [...documents];
     updatedDocs[index][field] = value;
     setDocuments(updatedDocs);
-  };
-
-  // Handle document click (to view or interact with document)
-  const handleDocumentClick = (docName) => {
-    console.log(`Viewing document: ${docName}`);
   };
 
   const handleCloseDetails = () => {
@@ -285,18 +229,6 @@ const MedicalRec = ({ user }) => {
           <div className="MR-main-content">
             <div className="MR-panel MR-Obstetric">
               <h4>Obstetric History</h4>
-              <button
-                className="MR-edit-button"
-                onClick={() => {
-                  toggleEditMode();
-                  setOpenAddObstreticModal(!openAddObstreticModal);
-                  setOpenAddSurgicalModal(false);
-                  setOpenAddMedicalModal(false);
-                }}
-              >
-                {" "}
-                {isEditing ? <FaSave /> : <FaEdit />} {isEditing ? "" : ""}{" "}
-              </button>
               <ul>
                 {obstetricHistory.map((item, index) => (
                   <li key={index}>
@@ -306,17 +238,11 @@ const MedicalRec = ({ user }) => {
                           type="date"
                           className="MR-input"
                           value={item.date}
-                          onChange={(e) =>
-                            handleObstetricChange(index, "date", e.target.value)
-                          }
                         />
                         <input
                           type="text"
                           className="MR-input"
                           value={item.text}
-                          onChange={(e) =>
-                            handleObstetricChange(index, "text", e.target.value)
-                          }
                         />
                       </>
                     ) : (
@@ -331,19 +257,6 @@ const MedicalRec = ({ user }) => {
             </div>
             <div className="MR-panel MR-Medical">
               <h4>Medical History</h4>
-              <button
-                className="MR-edit-button"
-                onClick={() => {
-                  toggleEditMode();
-                  setOpenAddMedicalModal(!openAddMedicalModal);
-
-                  setOpenAddObstreticModal(false);
-                  setOpenAddSurgicalModal(false);
-                }}
-              >
-                {" "}
-                {isEditing ? <FaSave /> : <FaEdit />} {isEditing ? "" : ""}{" "}
-              </button>
               <ul>
                 {medicalHistory.map((item, index) => (
                   <li key={index}>
@@ -354,25 +267,11 @@ const MedicalRec = ({ user }) => {
                             type="text"
                             className="MR-input"
                             value={item.diagnosis}
-                            onChange={(e) =>
-                              handleMedicalChange(
-                                index,
-                                "diagnosis",
-                                e.target.value
-                              )
-                            }
                           />
                           <input
                             type="text"
                             className="MR-input"
                             value={item.status}
-                            onChange={(e) =>
-                              handleMedicalChange(
-                                index,
-                                "status",
-                                e.target.value
-                              )
-                            }
                           />
                         </>
                       ) : (
@@ -393,9 +292,6 @@ const MedicalRec = ({ user }) => {
                         type="text"
                         className="MR-input"
                         value={item.duration}
-                        onChange={(e) =>
-                          handleMedicalChange(index, "duration", e.target.value)
-                        }
                       />
                     ) : (
                       <div className="diagnosis-duration">{item.duration}</div>
@@ -407,19 +303,6 @@ const MedicalRec = ({ user }) => {
 
             <div className="MR-panel MR-Surgical">
               <h4>Surgical History</h4>
-              <button
-                className="MR-edit-button"
-                onClick={() => {
-                  toggleEditMode();
-                  setOpenAddSurgicalModal(!openAddSurgicalModal);
-
-                  setOpenAddObstreticModal(false);
-                  setOpenAddMedicalModal(false);
-                }}
-              >
-                {" "}
-                {isEditing ? <FaSave /> : <FaEdit />} {isEditing ? "" : ""}{" "}
-              </button>
               <ul>
                 {surgicalHistory.map((item, index) => (
                   <li key={index}>
@@ -429,17 +312,11 @@ const MedicalRec = ({ user }) => {
                           type="date"
                           className="MR-input"
                           value={item.date}
-                          onChange={(e) =>
-                            handleSurgicalChange(index, "date", e.target.value)
-                          }
                         />
                         <input
                           type="text"
                           className="MR-input"
                           value={item.text}
-                          onChange={(e) =>
-                            handleSurgicalChange(index, "text", e.target.value)
-                          }
                         />
                       </>
                     ) : (
@@ -472,6 +349,16 @@ const MedicalRec = ({ user }) => {
             <div className="MR-documents">
               <h4>Documents</h4>
 
+              {!isAddingDocument && (
+                <button
+                  className="MR-add-docu-button"
+                  onClick={() => setIsAddingDocument(true)} 
+                >
+                  +
+                </button>
+              )}
+
+
               {documents.map((doc, index) => (
                 <div key={index} className="MR-docu-item">
                   {isEditing ? (
@@ -495,117 +382,47 @@ const MedicalRec = ({ user }) => {
                     </>
                   ) : (
                     <>
-                      <span className="MR-docu-icon">
-                        <FaFilePdf />
-                      </span>
-                      <span onClick={() => handleDocumentClick(doc.name)}>
-                        {doc.name}
-                      </span>
-                      <span className="MR-docu-date">{doc.date}</span>
+                      <span className="MR-doc-name">{doc.name}</span>
+                      <span className="MR-doc-date">{doc.date}</span>
                     </>
                   )}
-                  <button
-                    className="MR-docu-edit-button"
-                    onClick={() => toggleEditMode(index)}
-                  >
-                    {isEditing ? <FaSave /> : <FaEdit />}
-                  </button>
                 </div>
               ))}
+            
+              {isAddingDocument && (
+                 <div className="modal-overlay">
+                 <div className="modal-content">
+                   <h3>Add Document</h3>
+                <div className="MR-add-docu-form">
+                  <input
+                    type="text"
+                    placeholder="Document Name"
+                    value={newDocName}
+                    className="MR-input"
+                    onChange={(e) => setNewDocName(e.target.value)}
+                  />
+                  <input
+                    type="date"
+                    placeholder="Document Date"
+                    value={newDocDate}
+                    className="MR-input"
+                    onChange={(e) => setNewDocDate(e.target.value)}
+                  />
+                  <button
+                    className="MR-save-docu-button"
+                    onClick={handleAddDocument}
+                  >
+                    Save Document
+                  </button>
+                </div>
+                </div>
+                </div>
+              )}
             </div>
           </div>
-
-          {detailsVisible && selectedDocument && (
-            <div className="MR-document-details">
-              <div className="MR-document-details-content">
-                <button
-                  className="MR-close-details"
-                  onClick={handleCloseDetails}
-                >
-                  Close
-                </button>
-                <h3>{selectedDocument}</h3>
-                {documentImage && (
-                  <img src={documentImage} alt={selectedDocument} />
-                )}
-              </div>
-            </div>
-          )}
+        
         </main>
       </div>
-      {openAddObstreticModal && (
-        <>
-          <div className="add-history-modal">
-            <input
-              type="text"
-              className="MR-input"
-              placeholder="Title"
-              value={obstetricTitle}
-              onChange={handleObstetricTitleChange}
-            />
-            <input
-              type="date"
-              className="MR-input"
-              value={obstetricDate}
-              onChange={handleObstetricDateChange}
-            />
-            <button className="add-btn">Add</button>
-          </div>
-          <div className="overlay"></div>
-        </>
-      )}
-
-      {openAddSurgicalModal && (
-        <>
-          <div className="add-history-modal">
-            <input
-              type="date"
-              className="MR-input"
-              value={surgicalDate}
-              onChange={handleSurgicalDateChange}
-            />
-            <input
-              type="text"
-              className="MR-input"
-              placeholder="Title"
-              value={surgicalTitle}
-              onChange={handleSurgicalTitleChange}
-            />
-            <button className="add-btn">Add</button>
-          </div>
-          <div className="overlay"></div>
-        </>
-      )}
-
-      {openAddMedicalModal && (
-        <>
-          <div className="add-history-modal">
-            <input
-              type="text"
-              className="MR-input"
-              placeholder="Title"
-              value={medicalTitle}
-              onChange={handleMedicalTitleChange}
-            />
-            <input
-              type="text"
-              className="MR-input"
-              placeholder="Status"
-              value={addStatus}
-              onChange={handleStatus}
-            />
-            <input
-              type="text"
-              className="MR-input"
-              placeholder="From last ? months/year"
-              value={medicalDate2}
-              onChange={handleMedicalDate2Change}
-            />
-            <button className="add-btn">Add</button>
-          </div>
-          <div className="overlay"></div>
-        </>
-      )}
     </>
   );
 };

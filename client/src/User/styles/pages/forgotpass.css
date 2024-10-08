@@ -31,16 +31,24 @@
 
 .FP-outer-container {
   padding: 200px;
+  position: relative;
+  z-index: 0;  
 }
 
 .FP-background{
   height: 550px;
 }
 
-.forgot-password-background {
+.FP-outer-container .background-image{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
+  opacity: 0.9;
+  z-index: -1;
 }
 
 .forgot-pass-text {
@@ -64,7 +72,7 @@
 .FP-button {
   padding: 10px 180px !important;
   background-color: #E39FA9;
-  color: #fff;
+  color: #040404;
   border: none;
   border-radius: 5px !important;
   cursor: pointer;
@@ -73,7 +81,8 @@
 }
 
 .FP-button:hover {
-  background-color: #7c459c;
+  background-color: #7c459cbc;
+  color: #ffffff;
 }
 
 .FP-error-message {

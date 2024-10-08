@@ -4,7 +4,6 @@ import "../../styles/pages/footer.css";
 const Footer = () => {
     return (
         <footer className="footer-container">
-            <img className="footer-logo" src="img/logo3.png" alt="Logo" />
             <div className="footer-menu">
                 <ul className="menu-items">
                     <li>Home</li>

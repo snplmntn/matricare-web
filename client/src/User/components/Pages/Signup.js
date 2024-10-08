@@ -111,27 +111,11 @@ export default function Signup() {
 
   return (
     <div
-      className="signup-outer-container signup-background"
-      style={{
-        position: "relative",
-        zIndex: 0,
-      }}
-    >
+      className="signup-outer-container signup-background">
       <div
         className="background-image"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100vh",
-          backgroundImage: 'url("/img/login.jpg")',
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          opacity: 0.9,
-          zIndex: -1,
-        }}
-      />
+        style={{ backgroundImage: `url(/img/login.jpg)` }}
+      ></div>
       <div className="signup-overlay"></div>
       <h2 className="signup-welcome-message">Create New Account!</h2>
       <p className="sign-up-text">

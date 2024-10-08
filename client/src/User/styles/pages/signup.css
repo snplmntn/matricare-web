@@ -1,10 +1,25 @@
 .signup-outer-container {
   padding: 200px;
+  position: relative;
+  z-index: 0;   
 }
 
 .signup-background{
   height: 550px;
 }
+
+.signup-outer-container .background-image{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.9;
+  z-index: -1;
+}
+
 .SU-back-button {
   position: absolute;
   top: 20px;
@@ -122,7 +137,7 @@ select {
   padding: 15px 190px;
   width: auto; /* Adjusts to content width */
   background-color: #E39FA9;
-  color: #fff;
+  color: #040404;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -132,5 +147,6 @@ select {
 
 
 .SU-button:hover {
-  background-color: #603830;
+  background-color: #7c459cbc;
+  color: #ffffff;
 }

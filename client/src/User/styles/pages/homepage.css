@@ -664,7 +664,8 @@
 .bellytalk-tab {
   font-size: 20px;
   color: #042440;
-  margin-top: 100px !important;
+  display: inline-block; /* Ensure the element can accept vertical margins */
+  margin-top: 20px !important;
   line-height: 3;
   font-weight: bold;
   margin-right: 20px;

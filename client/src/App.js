@@ -1,12 +1,6 @@
 import React, { useState, Fragment } from "react";
 import { useRef, useEffect } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation,} from "react-router-dom";
 import "./App.css";
 import Footer from "./User/components/Pages/Footer";
 import Signup from "./User/components/Pages/Signup";
@@ -48,6 +42,7 @@ import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNotifications";
 import Verify from "./User/components/Pages/Verify";
+import SavedPosts from "./User/components/Features/SavedPosts";
 import { getCookie } from "./utils/getCookie";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { createHashHistory } from "history";
@@ -175,6 +170,7 @@ function AppContent() {
           path="/medicalrecords"
           element={<MedicalRec user={parsedUser} />}
         />
+        <Route path="/saved-posts" element={<SavedPosts />} />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
         <Route
           path="/consultant-landing"

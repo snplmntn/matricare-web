@@ -46,23 +46,11 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="FP-outer-container FP-background" style={{
-      position: 'relative',
-      zIndex: 0,
-    }}>
-      <div className="background-image" style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100vh',
-        backgroundImage: 'url("/img/login.jpg")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        opacity: 0.9,
-        zIndex: -1, 
-      }}/>
-
+    <div className="FP-outer-container FP-background">
+      <div
+        className="background-image"
+        style={{ backgroundImage: `url(/img/login.jpg)` }}
+      ></div>
       <div className="FP-overlay"></div>
       <h2 className="FP-welcome-message">Create New <br></br>Password!</h2>
       <p className="forgot-pass-text">New Password</p>

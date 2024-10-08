@@ -243,7 +243,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         </div>
         <p>{post.content}</p>
         {post.picture && (
-          <img src={post.picture} alt="Post" className="post-image" />
+          <img src={post.picture} alt="Post" className="bt-post-image" />
         )}
         <hr className="bellytalk-divider" />
         <div className="bellytalk-actions">
