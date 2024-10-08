@@ -65,6 +65,7 @@
   color: #e39fa9 !important;
 }
 
+
 .bellytalk-label {
   font-size: 16px;
   color: #603830;
@@ -342,7 +343,7 @@
   margin-top: 20px;
 }
 
-.post-image {
+.bt-post-image {
   max-width: 100%;
   height: auto;
   border-radius: 5px;
@@ -539,7 +540,7 @@
 
 .filter-container {
   background-color: #f9f9f9;
-  height: 300px;
+  height: 400px;
   padding: 10px;
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -580,4 +581,22 @@
 .filter-container input[type="checkbox"]:checked + label::before {
   background-color: pink;
   border-color: pink;
+}
+
+.filter-container input[type="checkbox"] + label::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 43%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 5px;
+  height: 10px;
+  border: solid #042440;
+  border-width: 0 2px 2px 0;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.filter-container input[type="checkbox"]:checked + label::after {
+  opacity: 1;
 }

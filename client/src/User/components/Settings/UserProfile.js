@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaCameraRetro, FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
+import { FcLock, FcSettings , FcAdvertising, FcOldTimeCamera, FcDecision } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
@@ -16,6 +17,7 @@ const UserProfile = ({ user }) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [partner, setPartner] = useState("");
   const [number, setNumber] = useState("");
   const [profileImage, setProfileImage] = useState(null);
@@ -39,6 +41,9 @@ const UserProfile = ({ user }) => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [showBabyDetails, setShowBabyDetails] = useState(false);
+  const [babyName, setBabyName] = useState(""); 
+  const [lastMenstrualPeriod, setLastMenstrualPeriod] = useState("");
 
   const handleProfileImageChange = (e) => {
     const file = e.target.files[0];
@@ -225,11 +230,10 @@ const UserProfile = ({ user }) => {
 
   return (
     <div className="user-profile-container">
+      <div className="left-section">
       <Link to="/app" className="user-profile-back-btn">
         <FaArrowLeft className="user-profile-back-icon" />
       </Link>
-
-      <div className="left-section">
         <h2>Settings</h2>
         <p>Customize view</p>
         <div className="settings-button-container">
@@ -239,8 +243,10 @@ const UserProfile = ({ user }) => {
               setIsEditing(true);
               setShowPasswordSettings(false);
               setShowNotifications(false);
+              setShowBabyDetails(false);
             }}
           >
+            <FcSettings  className="UP-icon" />
             Edit Profile
           </button>
           <button
@@ -249,8 +255,10 @@ const UserProfile = ({ user }) => {
               setIsEditing(false);
               setShowPasswordSettings(false);
               setShowNotifications(true);
+              setShowBabyDetails(false);
             }}
           >
+            <FcAdvertising  className="UP-icon" />
             Notifications
           </button>
           <button
@@ -259,9 +267,23 @@ const UserProfile = ({ user }) => {
               setShowPasswordSettings(true);
               setIsEditing(false);
               setShowNotifications(false);
+              setShowBabyDetails(false);
             }}
           >
+            <FcLock  className="UP-icon" />
             Password & Security
+          </button>
+          <button
+            className="settings-btn"
+            onClick={() => {
+              setShowBabyDetails(true); 
+              setIsEditing(false);
+              setShowPasswordSettings(false);
+              setShowNotifications(false);
+            }}
+          >
+            <FcDecision  className="UP-icon" /> 
+            Set Baby's Details
           </button>
         </div>
       </div>
@@ -270,33 +292,33 @@ const UserProfile = ({ user }) => {
         <h2>Personal</h2>
         <p>Patient's Information</p>
 
-        {!isEditing && !showPasswordSettings && !showNotifications && (
+        {!isEditing && !showPasswordSettings && !showNotifications && !showBabyDetails && (
           <div className="user-profile-items-wrapper">
             <div className="user-profile-divider-wrapper">
               <span className="UP-divider-text-wrapper">Personal Details</span>
             </div>
             <div className="user-profile-item">
-              <label>FULLNAME:</label>
+              <label>Full Name:</label>
               <p className="user-profile-detail">{fullname}</p>
             </div>
             <div className="user-profile-item">
-              <label>EMAIL:</label>
+              <label>Email:</label>
               <p className="user-profile-detail">{email}</p>
             </div>
             <div className="user-profile-item">
-              <label>PHONE NUMBER:</label>
+              <label>Phone Number:</label>
               <p className="user-profile-detail">{phoneNumber}</p>
             </div>
             <div className="user-profile-item">
-              <label>ADDRESS:</label>
+              <label>Address:</label>
               <p className="user-profile-detail">{address ? address : "N/A"}</p>
             </div>
             <div className="user-profile-item">
-              <label>HUSBAND / PARTNER :</label>
+              <label>Husband / Partner :</label>
               <p className="user-profile-detail">{partner ? partner : "N/A"}</p>
             </div>
             <div className="user-profile-item">
-              <label>PHONE NUMBER:</label>
+              <label>Phone Number:</label>
               <p className="user-profile-detail">{number ? number : "N/A"}</p>
             </div>
           </div>
@@ -310,7 +332,7 @@ const UserProfile = ({ user }) => {
             <div className="user-profile-details">
               <form onSubmit={handleProfileUpdate}>
                 <div className="user-profile-input-group">
-                  <label htmlFor="userName">FULLNAME:</label>
+                  <label htmlFor="userName">Full Name:</label>
                   <input
                     type="text"
                     id="userName"
@@ -321,7 +343,7 @@ const UserProfile = ({ user }) => {
                   />
                 </div>
                 <div className="user-profile-input-group">
-                  <label htmlFor="email">EMAIL:</label>
+                  <label htmlFor="email">Email:</label>
                   <input
                     type="email"
                     id="email"
@@ -332,7 +354,7 @@ const UserProfile = ({ user }) => {
                   />
                 </div>
                 <div className="user-profile-input-group">
-                  <label htmlFor="phoneNumber">PHONE NUMBER:</label>
+                  <label htmlFor="phoneNumber">Phone Number:</label>
                   <input
                     type="text"
                     id="phoneNumber"
@@ -343,7 +365,18 @@ const UserProfile = ({ user }) => {
                   />
                 </div>
                 <div className="user-profile-input-group">
-                  <label htmlFor="address">ADDRESS:</label>
+                <label htmlFor="birthday">Birthday:</label>
+                <input
+                  type="date"
+                  id="birthday"
+                  value={birthday}
+                  onChange={(e) => setBirthday(e.target.value)}
+                  placeholder="Select your birthday"
+                  className="user-profile-input"
+                />
+              </div>
+                <div className="user-profile-input-group">
+                  <label htmlFor="address">Address:</label>
                   <input
                     type="text"
                     id="address"
@@ -354,7 +387,7 @@ const UserProfile = ({ user }) => {
                   />
                 </div>
                 <div className="user-profile-input-group">
-                  <label htmlFor="address">HUSBAND / PARTNER:</label>
+                  <label htmlFor="address">Husband / Partner:</label>
                   <input
                     type="text"
                     id="partner"
@@ -365,7 +398,7 @@ const UserProfile = ({ user }) => {
                   />
                 </div>
                 <div className="user-profile-input-group">
-                  <label htmlFor="phoneNumber">PHONE NUMBER:</label>
+                  <label htmlFor="phoneNumber">Phone Number:</label>
                   <input
                     type="text"
                     id="number"
@@ -440,12 +473,9 @@ const UserProfile = ({ user }) => {
                     className="user-profile-input"
                   />
                 </div>
-
-                {error && <p className="cp-error-message">{error}</p>}
-
                 <div className="user-profile-button-group">
                   <button type="submit" className="user-profile-save-btn">
-                    Update Password
+                    Save
                   </button>
                   <button
                     type="button"
@@ -518,7 +548,7 @@ const UserProfile = ({ user }) => {
                   setShowNotifications(false);
                 }}
               >
-                Save Preferences
+                Save
               </button>
               <button
                 type="button"
@@ -530,6 +560,59 @@ const UserProfile = ({ user }) => {
             </div>
           </>
         )}
+
+        {showBabyDetails && (
+          <>
+            <div className="user-profile-divider">
+              <span className="UP-divider-text">Baby's Details</span>
+            </div>
+            <div className="user-profile-details">
+              <form onSubmit={handleProfileUpdate}>
+                <div className="user-profile-input-group">
+                  <label htmlFor="babyName">Baby's Name:</label>
+                  <input
+                    type="text"
+                    id="babyName"
+                    value={babyName} 
+                    onChange={(e) => setBabyName(e.target.value)} 
+                    placeholder="Enter Baby's Name"
+                    className="user-profile-input"
+                  />
+                </div>
+                <div className="user-profile-input-group">
+                  <label htmlFor="lastMenstrualPeriod">Date of Last Menstrual Period:</label>
+                  <input
+                    type="date"
+                    id="lastMenstrualPeriod"
+                    value={lastMenstrualPeriod} 
+                    onChange={(e) => setLastMenstrualPeriod(e.target.value)} 
+                    className="user-profile-input"
+                  />
+                </div>
+
+                <div className="user-profile-button-group">
+                  <button
+                    type="submit"
+                    className="user-profile-save-btn"
+                    onClick={handleUserUpdate} 
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="user-profile-cancel-btn"
+                    onClick={() => {
+                      setShowBabyDetails(false); 
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </>
+        )}
+
 
         <div className="user-profile-left-container">
           <div className="user-profile-image-section">
@@ -549,7 +632,7 @@ const UserProfile = ({ user }) => {
                   htmlFor="profileImage"
                   className="user-profile-upload-button"
                 >
-                  <FaCameraRetro className="user-profile-upload-icon" />
+                  <FcOldTimeCamera  className="user-profile-upload-icon" />
                 </label>
                 <input
                   type="file"

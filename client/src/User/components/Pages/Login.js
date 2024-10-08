@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/pages/login.css";
 import Modal from "react-modal";
-import { MdMarkEmailRead } from "react-icons/md";
+import { BsPatchCheckFill } from "react-icons/bs";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import { CookiesProvider, useCookies } from "react-cookie";
@@ -17,6 +17,11 @@ export default function Login() {
   const [email, setEmail] = useState(""); // Store the user's email
   const [resendMessage, setResendMessage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [authMessage, setAuthMessage] = useState("");
+  const [loginToken, setLoginToken] = useState("");
+  const [verifyToken, setVerifyToken] = useState("");
+
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -27,18 +32,41 @@ export default function Login() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
+  const handleCodeSubmission = () => {
+    setAuthMessage("");
+    const role = cookies.role;
+
+    if (verifyToken === verificationCode.toUpperCase()) {
+      setAuthMessage("Verification Successful!");
+
+      setTimeout(() => {
+        document.cookie = `token=${loginToken}`;
+        navigate(
+          role === "Patient"
+            ? "/app"
+            : role === "Assistant"
+            ? "/assistant-landing"
+            : role === "Obgyne" && "/consultant-landing"
+        );
+      }, 3000);
+    } else {
+      setAuthMessage("Invalid verification code. Please try again.");
+    }
+
+    setTimeout(() => {
+      setAuthMessage("");
+    }, 3000);
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     setError("");
     setLoading(true);
     setSuccessMessage("");
-
-    console.log(`Username: ${username.trim()}, Password: ${password.trim()}`);
 
     if (!username.trim() || !password.trim()) {
       setError("Please fill in all fields.");
@@ -46,17 +74,6 @@ export default function Login() {
       setLoading(false);
       return;
     }
-
-    const passwordRegex =
-      /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
-    // if (!passwordRegex.test(password)) {
-    //   setError(
-    //     "Password must contain at least 8 characters, an uppercase letter, a number, and a special character."
-    //   );
-    //   setLoading(false);
-    //   return;
-    // }
 
     try {
       // Perform login
@@ -73,31 +90,15 @@ export default function Login() {
       localStorage.setItem("userData", JSON.stringify(userDetails));
       const userEmail = response.data.user.email; // Assume the email is returned from the backend
       document.cookie = `userID=${response.data.user._id}`;
-      let role = userDetails.role;
+      document.cookie = `role=${response.data.user.role}`;
+      setLoginToken(response.data.token);
 
       // After successful login, show the verification modal
       setEmail(userEmail);
-      setSuccessMessage("Login successful! Please verify your email.");
+      setSuccessMessage("Login successful! Please verify your account.");
+      setShowVerificationModal(true);
       setLoading(false);
       await handleResendEmail();
-      setShowVerificationModal(true);
-
-      setTimeout(() => {
-        if (response.status === 200) {
-          console.log(response.data);
-          // Check if the component is still mounted
-          document.cookie = `role=${response.data.user.role}`;
-          document.cookie = `token=${response.data.token}`;
-          removeCookie("verifyToken");
-          navigate(
-            role === "Patient"
-              ? "/app"
-              : role === "Assistant"
-              ? "/assistant-landing"
-              : role === "Obgyne" && "/consultant-landing"
-          );
-        }
-      }, 1000);
     } catch (err) {
       // Log the error
       console.error(
@@ -118,13 +119,13 @@ export default function Login() {
       let userID = getCookie("userID");
       const response = await axios.put(`${API_URL}/verify?userId=${userID}`);
       resendMessage
-        ? setSuccessMessage("Verification email resent successfully!")
-        : setSuccessMessage("Verification email sent successfully!");
-      document.cookie = `verifyToken=${response.data.verificationToken}`;
+        ? setSuccessMessage("Verification code resent successfully!")
+        : setSuccessMessage("Verification code sent successfully!");
+      setVerifyToken(response.data.verificationToken);
       setResendMessage(true);
     } catch (error) {
       console.error("Resend email error:", error);
-      setError("Failed to resend verification email.");
+      setError("Failed to resend verification code.");
     }
   };
 
@@ -211,20 +212,47 @@ export default function Login() {
         <Modal
           isOpen={showVerificationModal}
           onRequestClose={() => setShowVerificationModal(false)}
-          className="ReactModal__Content"
-          overlayClassName="ReactModal__Overlay"
+          className="Authentication__Content"
+          overlayClassName="Authentication__Overlay"
         >
-          <div className="email-icon">
-            <MdMarkEmailRead />
+          <div className="Authentication__Icon">
+            <BsPatchCheckFill />
           </div>
-          <h2>Authenticate your Account</h2>
-          <p>
-            We've sent a verification email to{" "}
-            <strong>{email && censorEmail(email)}</strong>. Please verify your
-            email.
+          <h2 className="Authentication__Title">Authenticate Your Account</h2>
+          <p className="Authentication__Subtitle">
+            {authMessage ? (
+              authMessage
+            ) : (
+              <>
+                Please type the verification code sent to{" "}
+                <strong>{email && censorEmail(email)}</strong>.
+              </>
+            )}
           </p>
-          <button onClick={handleResendEmail}>Resend Email</button>
-          {successMessage && <p>{successMessage}</p>}
+
+          <div className="Authentication__CodeWrapper">
+            {[...Array(6)].map((_, index) => (
+              <input
+                key={index}
+                type="text"
+                className="Authentication__CodeInput"
+                maxLength={1}
+                value={verificationCode[index] || ""}
+                onChange={(e) => {
+                  const newCode = (verificationCode || "").toString().split("");
+                  newCode[index] = e.target.value; // Allow any character input
+                  setVerificationCode(newCode.join(""));
+                }}
+              />
+            ))}
+          </div>
+
+          <button
+            className="Authentication__Button Authentication__SubmitButton"
+            onClick={handleCodeSubmission}
+          >
+            Submit
+          </button>
         </Modal>
       </div>
     </div>

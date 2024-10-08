@@ -2,15 +2,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  padding: 30px;
   background-color: #ffffff;
 }
 
-.footer-logo {
-  margin-bottom: 20px;
-  width: 50px; /* Adjust the width as needed */
-  height: auto; /* Maintain aspect ratio */
-}
 .menu-items {
   list-style-type: none;
   padding: 0;

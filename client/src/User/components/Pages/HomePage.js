@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { FcOpenedFolder } from "react-icons/fc";
 import {
   faBell,
   faSignOutAlt,
@@ -317,21 +318,6 @@ function HomePage({ user }) {
                     }}
                   >
                     New Posts
-                  </span>
-                  <span
-                    className={`bellytalk-tab ${
-                      activeBellyTalkTab === "featured" ? "active" : ""
-                    }`}
-                    onClick={() => handleBellyTalkTabClick("featured")}
-                    style={{
-                      color: activeBellyTalkTab === "featured" ? "blue" : "",
-                      textDecoration:
-                        activeBellyTalkTab === "featured"
-                          ? "none"
-                          : "underline",
-                    }}
-                  >
-                    Featured
                   </span>
                 </div>
                 {activeBellyTalkTab === "new" ? (

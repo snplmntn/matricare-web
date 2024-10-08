@@ -21,24 +21,6 @@ const BellyTalk = ({ user }) => {
   const [posts, setPosts] = useState();
   const [allPost, setAllPost] = useState();
   const API_URL = process.env.REACT_APP_API_URL;
-  // {
-  //   id: 1,
-  //   user: "Karyll Cruz",
-  //   location: "San Jose, Bulacan",
-  //   content:
-  //     "👶 From the first flutter of kicks to the first giggles, being a mom means experiencing a love so deep it's beyond words. Cherishing these tiny milestones that fill my heart with endless joy.",
-  //   comments: [],
-  //   image: null,
-  // },
-  // {
-  //   id: 2,
-  //   user: "Theresa Neilson",
-  //   location: "Sampaloc, Manila",
-  //   content:
-  //     "Embracing the chaos and cuddles, because thats what makes motherhood magical. From messy mornings to bedtime stories, every moment with my little ones is a precious memory in the making. 💕",
-  //   comments: [],
-  //   image: null,
-  // },
   const [newPostText, setNewPostText] = useState("");
   const [imgLink, setImgLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -208,6 +190,10 @@ const BellyTalk = ({ user }) => {
     });
   };
 
+  const handleSavedButtonClick = () => {
+    navigate("/saved-posts"); 
+  };
+
   useEffect(() => {
     if (activeFilters.length === 0 || activeFilters.includes("All")) {
       setPosts(allPost);
@@ -224,7 +210,7 @@ const BellyTalk = ({ user }) => {
       <div className="bellytalk-top-bar">
         <div className="bellytalk-title-logo">BellyTalk</div>
         <div className="bellytalk-icons">
-          <button className="bellytalk-icon-button">
+          <button className="bellytalk-icon-button" onClick={handleSavedButtonClick}>
             <IoBookmark className="bellytalk-icon" />
             <span className="bellytalk-label">Saved</span>
           </button>

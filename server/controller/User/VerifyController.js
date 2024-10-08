@@ -15,7 +15,7 @@ const verification_mail = catchAsync(async (req, res, next) => {
   const { userId } = req.query;
 
   //Generate Token
-  const verificationToken = createVerificationToken(3);
+  const verificationToken = createVerificationToken(3).toUpperCase();
 
   const user = await User.findByIdAndUpdate(
     userId,
@@ -69,7 +69,8 @@ const verification_mail = catchAsync(async (req, res, next) => {
         font-size: 26px;
         color: #333;
       }
-      .email-header span {
+      .email-header span,
+      .verification-token {
         font-weight: bold;
         color: #e07e7b;
       }
@@ -129,15 +130,10 @@ const verification_mail = catchAsync(async (req, res, next) => {
         Hi <span>${user.fullName}</span>,<br /><br />
         We're excited to have you as part of the MatriCare family, a community
         that supports you throughout your pregnancy journey.<br /><br />
-        Please verify your email address to complete your registration and get
-        started with your personalized care experience.
+        Please enter the following code for verification:
       </p>
 
-      <a
-        href="https://matricare.site/verify"
-        class="btn"
-        >Verify Email</a
-      >
+      <h1><span class="verification-token">${verificationToken}</span></h1>
 
       <p class="email-footer">
         If you didn’t create a MatriCare account, you can safely ignore this
@@ -146,8 +142,7 @@ const verification_mail = catchAsync(async (req, res, next) => {
       </p>
     </div>
   </body>
-</html>
-`,
+</html>`,
   };
   transporter.sendMail(mailOptions, () => {
     return res.status(200).json({

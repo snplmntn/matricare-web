@@ -6,6 +6,13 @@ import '../../styles/pages/notification.css'; // Import the CSS file
 
 const sampleNotifications  = [
   {
+    sender: "MatriCare",
+    message: "New Article has been uploaded. Check It Out!",
+    timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
+    type: "info",
+    photo: "img/LOGO.png" 
+  },
+  {
     sender: "Dra. Donna",
     phonenumber: "+63 901 2345 678",
     message: "You have new test results available.",
@@ -14,20 +21,11 @@ const sampleNotifications  = [
     photo: "img/topic1.jpg" 
   },
   {
-    sender: "Assistant Kelly",
-    phonenumber: "+63 901 2345 678",
-    message: "Your rescheduled appointment is confirmed for tomorrow.",
-    timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-    type: "info",
-    photo: "img/topic1.jpg" 
-  },
-  {
-    sender: "Laboratory",
-    phonenumber: "+63 901 2345 678",
+    sender: "MatriCare",
     message: "Your laboratory result is ready for pick up.",
     timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
     type: "info",
-    photo: "img/topic1.jpg" 
+    photo: "img/LOGO.png" 
   }
 ];
 
