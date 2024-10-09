@@ -2,8 +2,11 @@ const mongoose = require("mongoose");
 
 const ArticleSchema = new mongoose.Schema(
   {
-    userId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    fullname: {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    reviewedBy: {
+      String,
+    },
+    author: {
       type: String,
       required: true,
       index: "text",
@@ -13,15 +16,35 @@ const ArticleSchema = new mongoose.Schema(
       required: true,
       index: "text",
     },
+    fullTitle: {
+      type: String,
+      required: true,
+      index: "text",
+    },
     content: {
       type: String,
       required: true,
       index: "text",
     },
-    subject: {
-      type: Number,
-      enum: [0, 1, 2],
-      default: 0,
+    category: {
+      type: String,
+      enum: [
+        "First Time Moms",
+        "Health",
+        "Labor",
+        "Finance",
+        "Fashion",
+        "Pregnancy",
+      ],
+      default: "First Time Moms",
+    },
+    status: {
+      type: String,
+      enum: ["Draft", "Approved", "Archived"],
+      default: "Draft",
+    },
+    picture: {
+      type: String,
     },
   },
   {

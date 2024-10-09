@@ -22,6 +22,4 @@ const obstetricHistorySchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("ObstetricHistory", obstetricHistorySchema);
-
-module.exports = User;
+module.exports = mongoose.model("ObstetricHistory", obstetricHistorySchema);
