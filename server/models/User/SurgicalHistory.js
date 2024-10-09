@@ -18,6 +18,4 @@ const surgicalHistorySchema = new mongoose.Schema(
   }
 );
 
-const User = mongoose.model("SurgicalHistory", surgicalHistorySchema);
-
-module.exports = User;
+module.exports = mongoose.model("SurgicalHistory", surgicalHistorySchema);

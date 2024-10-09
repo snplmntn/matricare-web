@@ -28,8 +28,9 @@ const obstetricHistoryRoute = require("./routes/User/Records/obstetricHistory");
 const surgicalHistoryRoute = require("./routes/User/Records/surgicalHistory");
 
 // content
-const uploadRoute = require("./routes/Content/upload");
 const postRoute = require("./routes/Content/post");
+const articleRoute = require("./routes/Content/article");
+const uploadRoute = require("./routes/Content/upload");
 const bellytalk = require("./routes/Content/bellytalk");
 
 const app = express(); // Initialization
@@ -71,8 +72,9 @@ app.use("/api/record/obstetric", checkAuth, obstetricHistoryRoute);
 app.use("/api/record/surgical", checkAuth, surgicalHistoryRoute);
 
 // content
-app.use("/api/upload", checkAuth, uploadRoute);
 app.use("/api/post", checkAuth, postRoute);
+app.use("/api/article", articleRoute);
+app.use("/api/upload", checkAuth, uploadRoute);
 app.use("/api/bellytalk", bellytalk); //public belly talk route
 // utility
 app.use("/api/alive", aliveRoute);

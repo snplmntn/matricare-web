@@ -22,7 +22,7 @@ const notificationSchema = new mongoose.Schema(
       enum: ["Article", "Appointment"],
       default: "Appointment",
     },
-    recipientUserId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    recipientUserId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

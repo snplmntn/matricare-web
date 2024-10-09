@@ -73,6 +73,7 @@ const appointment_put = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(updatedAppointment.assignedId);
 
+  // Send Notification by Appointment Status
   if (updatedAppointment.status === "Confirmed") {
     const newNotification = new Notification({
       senderName: `${user.fullName}`,
