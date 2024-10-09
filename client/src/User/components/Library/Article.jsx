@@ -4,34 +4,13 @@ import { IoBookmark, IoShareSocial } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 
-const Library1 = (article) => {
+const Library1 = ({ article }) => {
   const [savedArticles, setSavedArticles] = useState([]);
   // const [article, setArticles] = useState();
   // const [articleContent, setArticleContent] = useState();
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
-
-  // useEffect(() => {
-  //   const saved = JSON.parse(localStorage.getItem("savedArticles")) || [];
-  //   setSavedArticles(saved);
-
-  //   async function fetchPosts() {
-  //     try {
-  //       const response = await axios.get(`${API_URL}/article`, {
-  //         headers: {
-  //           Authorization: token,
-  //         },
-  //       });
-  //       setArticles(response.data[0]);
-  //       setArticleContent(response.data[0].content.replace(/\n/g, "<br>"));
-  //       console.log(article);
-  //     } catch (error) {
-  //       console.error(error);
-  //     }
-  //   }
-  //   fetchPosts();
-  // }, []);
 
   const handleToggleSave = (article) => {
     const updatedArticles = savedArticles.filter(
@@ -72,7 +51,7 @@ const Library1 = (article) => {
       <div className="library-content-main-news">
         <div className="library-content-news-title-actions">
           <h1 className="library-content-news-title">
-            {article && article.title}
+            {article && article.fullTitle}
           </h1>
           <div className="library-content-news-actions">
             <button
