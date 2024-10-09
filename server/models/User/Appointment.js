@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const AppointmentSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    assignedId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     patientName: {
       type: String,
       required: true,
@@ -10,20 +11,24 @@ const AppointmentSchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      required: true,
-      index: "text",
+      enum: [
+        "Mary Chiles, Sampaloc",
+        "Grace Medical Center",
+        "Family Care Tungko",
+      ],
+      default: "Mary Chiles, Sampaloc",
     },
     category: {
       type: String,
-      required: true,
-      index: "text",
+      enum: ["Monthly Check-up", "Advice by the Doctor"],
+      default: "Monthly Check-up",
     },
     status: {
       type: String,
       enum: ["Confirmed", "Pending", "Cancelled", "Rescheduled"],
       default: "Pending",
     },
-    prescribedDate: {
+    date: {
       type: Date,
       required: true,
     },
