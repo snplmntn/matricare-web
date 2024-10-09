@@ -96,6 +96,7 @@ const BellyTalk = ({ user }) => {
   };
 
   const handlePostSubmit = async () => {
+    console.log(user.current);
     setIsPosting(true);
     if (newPostText.trim() === "") {
       alert("Post content cannot be empty.");
@@ -114,7 +115,10 @@ const BellyTalk = ({ user }) => {
       address: "Manila City",
       category: selectedCategories,
       picture: imgLink,
+      profilePicture: user.current.profilePicture,
     };
+
+    console.log(newPost);
 
     try {
       setIsPosting("Posting...");
@@ -132,10 +136,10 @@ const BellyTalk = ({ user }) => {
           address: "Manila City",
           category: selectedCategories,
           picture: imagePreview,
+          profilePicture: user.current.profilePicture,
         },
         ...posts,
       ]);
-      console.log(posts);
     } catch (error) {
       console.error(error);
     }
@@ -191,7 +195,7 @@ const BellyTalk = ({ user }) => {
   };
 
   const handleSavedButtonClick = () => {
-    navigate("/saved-posts"); 
+    navigate("/saved-posts");
   };
 
   useEffect(() => {
@@ -210,7 +214,10 @@ const BellyTalk = ({ user }) => {
       <div className="bellytalk-top-bar">
         <div className="bellytalk-title-logo">BellyTalk</div>
         <div className="bellytalk-icons">
-          <button className="bellytalk-icon-button" onClick={handleSavedButtonClick}>
+          <button
+            className="bellytalk-icon-button"
+            onClick={handleSavedButtonClick}
+          >
             <IoBookmark className="bellytalk-icon" />
             <span className="bellytalk-label">Saved</span>
           </button>

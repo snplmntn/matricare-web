@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../styles/features/librarysidebar.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,12 +10,19 @@ import {
 import { Link } from "react-router-dom";
 
 const LibrarySidebar = () => {
+  const [user, setUser] = useState({});
+
   const handleReload = (e) => {
     if (window.location.pathname === "/library") {
       e.preventDefault();
       window.location.reload();
     }
   };
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) setUser(JSON.parse(userData));
+  }, []);
 
   return (
     <nav className="library-sidebar">
@@ -30,7 +37,9 @@ const LibrarySidebar = () => {
             Welcome <br />
             Back,
           </p>
-          <p className="library-user-name">Elizabeth</p>
+          <p className="library-user-name">
+            {user && user.name?.split(" ")[0] }
+          </p>
         </div>
       </div>
       <div className="library-nav-links">

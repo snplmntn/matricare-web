@@ -97,7 +97,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
 
     try {
       const commentForm = {
-        profilePicture: "66f6fbf00e6758da904b5650",
+        profilePicture: user.current.profilePicture,
         userId: userID,
         fullname: user.current.name,
         postId: post._id,
@@ -285,7 +285,11 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             >
               <div className="comment-user-info">
                 <img
-                  src="img/LOGO.png"
+                  src={
+                    comment.profilePicture
+                      ? comment.profilePicture
+                      : "img/LOGO.png"
+                  }
                   alt="User Avatar"
                   className="comment-avatar"
                 />

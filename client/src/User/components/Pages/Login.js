@@ -85,6 +85,7 @@ export default function Login() {
         name: response.data.user.fullName,
         role: response.data.user.role,
         username: response.data.user.username,
+        profilePicture: response.data.user.profilePicture,
       };
 
       localStorage.setItem("userData", JSON.stringify(userDetails));
