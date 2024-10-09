@@ -152,7 +152,8 @@ const Library = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All"); // State for selected filter
   const [article, setArticles] = useState();
-  const [articleContent, setArticleContent] = useState();
+  const [articleNum, setArticleNum] = useState();
+  const [showArticle, setShowArticle] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
@@ -160,7 +161,6 @@ const Library = () => {
   // Load the last read books from local storage on component mount
   useEffect(() => {
     const savedLastRead = JSON.parse(localStorage.getItem("lastRead")) || [];
-    console.log(savedLastRead); // Ensure this logs the expected array of books
     setLastRead(savedLastRead);
 
     async function fetchPosts() {
@@ -179,7 +179,10 @@ const Library = () => {
   }, []);
 
   const handleBookClick = (book) => {
-    const updatedLastRead = [book, ...lastRead.filter((b) => b.id !== book.id)];
+    const updatedLastRead = [
+      book,
+      ...lastRead.filter((b) => b._id !== book._id),
+    ];
     setLastRead(updatedLastRead);
 
     // Save the updated last read list to local storage
@@ -206,86 +209,103 @@ const Library = () => {
   ];
 
   return (
-    <div className="library-layout">
-      <div className="main-content">
-        <header className="library-header">
-          <div className="library-title">MatriCare.</div>
-          <div className="header-actions">
-            <div className="search-container">
-              <input
-                type="text"
-                className="search-bar-library"
-                placeholder="Search..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <IoSearch className="search-icon" />
-            </div>
-            <select
-              className="filter-dropdown"
-              value={selectedFilter}
-              onChange={(e) => setSelectedFilter(e.target.value)} // Update filter on selection
-            >
-              {filterOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-          </div>
-        </header>
-
-        <section id="last-read" className="last-read-section">
-          <h2>Books You Last Read</h2>
-          <Slider {...sliderSettings}>
-            {lastRead.length > 0 ? (
-              lastRead.map((book) => (
-                <div key={book.id} className="last-read-item">
-                  <div className="book-background">
-                    <img
-                      src={book.cover}
-                      alt={book.title}
-                      className="book-cover"
-                    />
-                    <div className="book-details">
-                      <h3 className="book-title">{book.title}</h3>
-                      <p className="book-author">Author: {book.author}</p>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <p>No books read yet.</p>
-            )}
-          </Slider>
-        </section>
-
-        <section id="library" className="library-section">
-          <h2>Library</h2>
-          <div className="book-list-container">
-            {filteredBooks &&
-              filteredBooks.map((book) => (
-                <Link
-                  // to={bookRoutes[book.id]}
-                  key={book._id}
-                  className="library-item"
-                  onClick={() => handleBookClick(book)}
-                >
-                  <img
-                    src={book.picture}
-                    alt={book.title}
-                    className="book-cover"
+    <>
+      {!showArticle ? (
+        <div className="library-layout">
+          <div className="main-content">
+            <header className="library-header">
+              <div className="library-title">MatriCare.</div>
+              <div className="header-actions">
+                <div className="search-container">
+                  <input
+                    type="text"
+                    className="search-bar-library"
+                    placeholder="Search..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                   />
-                  <div className="book-details">
-                    <h3 className="book-title">{book.title}</h3>
-                    <p className="book-author">Author: {book.author}</p>
-                  </div>
-                </Link>
-              ))}
+                  <IoSearch className="search-icon" />
+                </div>
+                <select
+                  className="filter-dropdown"
+                  value={selectedFilter}
+                  onChange={(e) => setSelectedFilter(e.target.value)} // Update filter on selection
+                >
+                  {filterOptions.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </header>
+
+            <section id="last-read" className="last-read-section">
+              <h2>Books You Last Read</h2>
+              <Slider {...sliderSettings}>
+                {lastRead.length > 0 ? (
+                  lastRead.map((book, index) => (
+                    <div
+                      key={book.id}
+                      className="last-read-item"
+                      onClick={() => {
+                        setArticleNum(index);
+                        handleBookClick(book);
+                        setShowArticle(true);
+                      }}
+                    >
+                      <div className="book-background">
+                        <img
+                          src={book.picture}
+                          alt={book.title}
+                          className="book-cover"
+                        />
+                        <div className="book-details">
+                          <h3 className="book-title">{book.title}</h3>
+                          <p className="book-author">Author: {book.author}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>No books read yet.</p>
+                )}
+              </Slider>
+            </section>
+
+            <section id="library" className="library-section">
+              <h2>Library</h2>
+              <div className="book-list-container">
+                {filteredBooks &&
+                  filteredBooks.map((book, index) => (
+                    <div
+                      key={book._id}
+                      className="library-item"
+                      onClick={() => {
+                        setArticleNum(index);
+                        handleBookClick(book);
+                        setShowArticle(true);
+                      }}
+                    >
+                      <img
+                        src={book.picture}
+                        alt={book.title}
+                        className="book-cover"
+                      />
+                      <div className="book-details">
+                        <h3 className="book-title">{book.title}</h3>
+                        <p className="book-author">Author: {book.author}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </section>
           </div>
-        </section>
-      </div>
-    </div>
+        </div>
+      ) : (
+        <Article article={article[articleNum]} />
+      )}
+    </>
   );
 };
 

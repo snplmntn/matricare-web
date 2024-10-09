@@ -1,6 +1,12 @@
 import React, { useState, Fragment } from "react";
 import { useRef, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation,} from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import "./App.css";
 import Footer from "./User/components/Pages/Footer";
 import Signup from "./User/components/Pages/Signup";
@@ -46,6 +52,7 @@ import SavedPosts from "./User/components/Features/SavedPosts";
 import { getCookie } from "./utils/getCookie";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { createHashHistory } from "history";
+import Article from "./User/components/Library/Article";
 
 function AppContent() {
   const history = createHashHistory();
@@ -219,6 +226,15 @@ function AppContent() {
           }
         />
         <Route path="/duedate-calculator" element={<DateCalculator />} />
+        <Route
+          path="/book"
+          element={
+            <>
+              <LibrarySidebar />
+              <Article />
+            </>
+          }
+        />
         <Route
           path="/library-item1"
           element={
