@@ -1,6 +1,15 @@
 const Appointment = require("../../models/User/Appointment");
+const Notification = require("../../models/User/Notification");
+const User = require("../../models/User/User");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
+
+const formatAppointmentDate = (date) => {
+  return new Date(date).toLocaleString("en-PH", {
+    dateStyle: "short",
+    timeStyle: "short",
+  });
+};
 
 // Get Appointment by Id
 const appointment_get = catchAsync(async (req, res, next) => {
@@ -15,11 +24,11 @@ const appointment_get = catchAsync(async (req, res, next) => {
 
 // Get Appointment by UserId
 const appointment_user_get = catchAsync(async (req, res, next) => {
-  const { userId } = req.query;
+  const { userId, assignedId } = req.query;
 
-  const appointment = await Appointment.find({
-    userId: userId,
-  });
+  const appointment = await Appointment.find(
+    userId ? { userId: userId } : { assignedId: assignedId }
+  );
 
   if (!appointment) return next(new AppError("Appointment not found", 404));
 
@@ -31,6 +40,17 @@ const appointment_post = catchAsync(async (req, res, next) => {
   const newAppointment = new Appointment(req.body);
 
   await newAppointment.save();
+
+  const newNotification = new Notification({
+    senderName: "MatriCare",
+    message: `You have a new appointment with ${
+      req.body.patientName
+    } on ${formatAppointmentDate(req.body.date)}`,
+    recipientUserId: req.body.assignedId,
+  });
+
+  await newNotification.save();
+
   return res
     .status(200)
     .json({ message: "Appointment Successfully Created", newAppointment });
@@ -49,6 +69,43 @@ const appointment_put = catchAsync(async (req, res, next) => {
 
   if (!updatedAppointment) {
     return next(new AppError("Appointment not found", 404));
+  }
+
+  const user = await User.findById(updatedAppointment.assignedId);
+
+  if (updatedAppointment.status === "Confirmed") {
+    const newNotification = new Notification({
+      senderName: `${user.fullName}`,
+      senderPhoneNumber: `${user.phoneNumber}`,
+      message: `Your appointment scheduled on ${formatAppointmentDate(
+        updatedAppointment.date
+      )} has been confirmed!`,
+      recipientUserId: updatedAppointment.userId,
+    });
+
+    await newNotification.save();
+  } else if (updatedAppointment.status === "Cancelled") {
+    const newNotification = new Notification({
+      senderName: `${user.fullName}`,
+      senderPhoneNumber: `${user.phoneNumber}`,
+      message: `Your appointment scheduled on ${formatAppointmentDate(
+        updatedAppointment.date
+      )} has been cancelled.`,
+      recipientUserId: updatedAppointment.userId,
+    });
+
+    await newNotification.save();
+  } else if (updatedAppointment.status === "Rescheduled") {
+    const newNotification = new Notification({
+      senderName: `${user.fullName}`,
+      senderPhoneNumber: `${user.phoneNumber}`,
+      message: `Your appointment has been rescheduled to ${formatAppointmentDate(
+        req.body.date
+      )}.`,
+      recipientUserId: updatedAppointment.userId,
+    });
+
+    await newNotification.save();
   }
   return res
     .status(200)
