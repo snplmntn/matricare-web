@@ -19,18 +19,21 @@ const patientSchema = new mongoose.Schema(
       enum: ["Patient", "Admin"],
       default: "Patient",
     },
-    category: {
+    status: {
       type: String,
-      enum: ["Article", "Appointment"],
-      default: "Appointment",
+      enum: ["Active", "Inactive"],
+      default: "Active",
     },
     profilePicture: String,
     seq: Number,
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    assignedId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Patient", patientSchema);
+const User = mongoose.model("Patient", patientSchema);
+
+module.exports = User;
