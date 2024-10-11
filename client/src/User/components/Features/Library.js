@@ -36,117 +36,6 @@ const sliderSettings = {
   ],
 };
 
-const books = [
-  {
-    id: 1,
-    title: "Stages of Pregnancy",
-    author: "Bea Benella Rosal",
-    cover: "/img/topic1.jpg",
-    category: "First Time Moms",
-  },
-  {
-    id: 2,
-    title: "Maternity Style",
-    author: "Bea Benella Rosal",
-    cover: "/img/topic2.jpg",
-    category: "Fashion",
-  },
-  {
-    id: 3,
-    title: "Pregnancy Fitness",
-    author: "Bea Benella Rosal",
-    cover: "/img/topic3.jpg",
-    category: "Health",
-  },
-  {
-    id: 4,
-    title: "Preparing for Baby",
-    author: "Bea Benella Rosal",
-    cover: "/img/topic4.jpg",
-    category: "First Time Moms",
-  },
-  {
-    id: 5,
-    title: "Pregnancy Safety",
-    author: "Bea Benella Rosal",
-    cover: "/img/topic5.jpg",
-    category: "Health",
-  },
-  {
-    id: 6,
-    title: "Pregnancy Symptoms",
-    author: "Bea Benella Rosal",
-    cover: "/img/labor1.jpg",
-    category: "Health",
-  },
-  {
-    id: 7,
-    title: "Labor and Delivery Options",
-    author: "Bea Benella Rosal",
-    cover: "/img/bg6.jpg",
-    category: "Labor",
-  },
-  {
-    id: 8,
-    title: "Baby’s First Days at Home",
-    author: "Bea Benella Rosal",
-    cover: "/img/pic1.jpg",
-    category: "First Time Moms",
-  },
-  {
-    id: 9,
-    title: "Financial Planning for New Parents",
-    author: "Bea Benella Rosal",
-    cover: "/img/bg5.jpg",
-    category: "Finance",
-  },
-  {
-    id: 10,
-    title: "Preparing for Breastfeeding",
-    author: "Bea Benella Rosal",
-    cover: "/img/article1.webp",
-    category: "Health",
-  },
-  {
-    id: 11,
-    title: "Weekly Pregnancy",
-    author: "Bea Benella Rosal",
-    cover: "/img/bg2.webp",
-    category: "Labor",
-  },
-  {
-    id: 12,
-    title: "Baby’s First Days at Home",
-    author: "Bea Benella Rosal",
-    cover: "/img/bg1.webp",
-    category: "First Time Moms",
-  },
-  {
-    id: 13,
-    title: "Labor Preparation Techniques",
-    author: "Bea Benella Rosal",
-    cover: "/img/bg1.webp",
-    category: "First Time Moms",
-  },
-];
-
-// Map book IDs to their routes
-const bookRoutes = {
-  1: "/library-item1",
-  2: "/library-item2",
-  3: "/library-item3",
-  4: "/library-item4",
-  5: "/library-item5",
-  6: "/library-item6",
-  7: "/library-item7",
-  8: "/library-item8",
-  9: "/library-item9",
-  10: "/library-item10",
-  11: "/library-item11",
-  12: "/library-item12",
-  13: "/library-item13",
-};
-
 const Library = () => {
   const [lastRead, setLastRead] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -163,9 +52,9 @@ const Library = () => {
     const savedLastRead = JSON.parse(localStorage.getItem("lastRead")) || [];
     setLastRead(savedLastRead);
 
-    async function fetchPosts() {
+    async function fetchBooks() {
       try {
-        const response = await axios.get(`${API_URL}/article`, {
+        const response = await axios.get(`${API_URL}/article?status=Approved`, {
           headers: {
             Authorization: token,
           },
@@ -175,7 +64,7 @@ const Library = () => {
         console.error(error);
       }
     }
-    fetchPosts();
+    fetchBooks();
   }, []);
 
   const handleBookClick = (book) => {
