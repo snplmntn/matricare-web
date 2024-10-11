@@ -7,7 +7,7 @@ const medicalHistorySchema = new mongoose.Schema(
       required: true,
       index: "text",
     },
-    content: {
+    status: {
       type: String,
       enum: ["Active", "Inactive"],
       default: "Active",

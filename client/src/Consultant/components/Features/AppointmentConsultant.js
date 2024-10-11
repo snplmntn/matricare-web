@@ -199,6 +199,14 @@ const AppointmentConsultant = () => {
                   required
                 />
                 <input
+                  type="text"
+                  name="patientName"
+                  placeholder="Patient Name"
+                  value={newAppointment.patientName}
+                  onChange={handleFormChange}
+                  required
+                />
+                <input
                   type="date"
                   name="date"
                   value={newAppointment.date}
