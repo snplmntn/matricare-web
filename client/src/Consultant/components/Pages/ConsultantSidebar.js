@@ -31,7 +31,7 @@ const ConsultantSidebar = () => {
           <IoCalendar />
         </Link>
         <Link
-          to="/library"
+          to="/library-consultant"
           className="consultant-sidebar-item library"
           title="Library"
         >
