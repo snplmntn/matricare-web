@@ -3,49 +3,98 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Handle Newlines in Article</title>
+    <title>MatriCare Email Verification</title>
     <style>
       body {
-        font-family: Arial, sans-serif;
+        font-family: Lucida Sans, sans-serif;
+        background-color: #f9f9fb;
+        margin: 0;
+        padding: 0;
       }
-      #article {
-        white-space: pre-wrap; /* Optional: Allows newlines and spaces to be preserved */
-        padding: 10px;
-        border: 1px solid #ddd;
-        background-color: #f9f9f9;
-        width: 60%;
-        margin: 20px auto;
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        padding: 40px;
+        text-align: center;
+      }
+      .email-header {
+        font-size: 26px;
+        color: #333;
+      }
+      .email-header span,
+      .verification-token {
+        font-weight: bold;
+        color: #e07e7b;
+      }
+      .email-icon {
+        margin: 20px 0;
+      }
+      .email-icon img {
+        width: 80px;
+      }
+      .verification-message {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 20px;
+      }
+      .verification-message span {
+        color: #e07e7b;
+        font-weight: bold;
+      }
+      .btn {
+        display: inline-block;
+        padding: 15px 30px;
+        background-color: #9a6cb4;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 30px;
+        font-size: 16px;
+      }
+      .btn:hover {
+        background-color: #e39fa9;
+        color: #ffffff;
+      }
+      .email-footer {
+        font-size: 12px;
+        color: #999;
+        margin-top: 20px;
+      }
+      .email-footer a {
+        color: #e07e7b;
+        text-decoration: none;
+      }
+      .matricare-logo {
+        width: 100px;
       }
     </style>
   </head>
   <body>
-    <h1>Article Viewer</h1>
-    <div id="article"></div>
+    <div class="email-container">
+      <img
+        src="https://firebasestorage.googleapis.com/v0/b/matricare-63671.appspot.com/o/LOGO.png?alt=media&token=56beaa9e-c329-4ab2-a135-447b8016d278"
+        alt="MatriCare Logo"
+        class="matricare-logo"
+      />
+      <h1 class="email-header">Welcome to <span>MatriCare</span>,</h1>
 
-    <script>
-      // Fetch article content from a file or API
-    fetch('http://localhost:8000/api/article')
-        .then(response => response.json())
-        .then(data => {
-            const articleContent = data[0].content;
-          // Replace newline characters (\n) with <br> tags
-          const formattedContent = articleContent.replace(/\n/g, "<br>");
+      <p class="verification-message">
+        Hi <span>${user.fullName}</span>,<br /><br />
+        We're excited to have you as part of the MatriCare family, a community
+        that supports you throughout your pregnancy journey.<br /><br />
+        Please enter the following code for verification:
+      </p>
 
-          // Insert the formatted content into the article div
-          document.getElementById("article").innerHTML = formattedContent;
-        })
-        .catch(error => {
-          console.error('Error fetching the article:', error);
-        });
-    </script>
-      // Example article content with newline characters
-      const articleContent = `First Trimester (Weeks 1-12)\n\nThe first trimester marks the beginning of pregnancy and is crucial for the initial development of the fetus. It begins from the first day of the last menstrual period (LMP) and lasts until the end of week 12.\nKey Developments:\nWeeks 1-4: Conception occurs around two weeks after the LMP. The fertilized egg implants into the uterine lining, and early cell division begins. The embryo starts forming essential structures, and the placenta begins developing.\nWeeks 5-8: Major organs and systems begin forming, including the heart, brain, spinal cord, and digestive system. Limb buds appear, and facial features start to develop. The embryo is now called a fetus.\nWeeks 9-12: The fetus’s organs continue to mature. The arms and legs become more defined, and the fetus can move, although it’s too small for the mother to feel. By the end of this trimester, the fetus has distinct human features and is about 2-3 inches long.\nCommon Symptoms:\nNausea and vomiting (morning sickness)\nFatigue\nFrequent urination\nTender and swollen breasts\nMood swings\nFood aversions or cravings\nSecond Trimester (Weeks 13-26)\nThe second trimester is often considered the most comfortable phase of pregnancy for many women. It covers weeks 13 through 26 and is marked by continued fetal development and maternal changes.\nKey Developments:\nWeeks 13-16: The fetus grows rapidly, developing more recognizable features such as eyebrows, eyelashes, and nails. The gender may be detectable via ultrasound. The mother might start feeling the baby’s movements (quickening).\nWeeks 17-20: The fetus’s movements become more pronounced, and organs such as the liver and kidneys start functioning. The fetus develops a layer of fine hair called lanugo, and its skin becomes covered with a protective coating called vernix.\nWeeks 21-26: The fetus continues to grow and develop, gaining weight and length. The lungs mature, and the fetus begins practicing breathing movements. By the end of this trimester, the fetus is about 14 inches long and weighs around 2 pounds.\nCommon Symptoms:\nReduced nausea and fatigue\nNoticeable weight gain\nGrowing belly and breasts\nStretch marks\nBackaches and leg cramps\nNasal congestion and bleeding gums\nThird Trimester (Weeks 27-40)\nThe third trimester is the final phase of pregnancy, lasting from week 27 until birth. It is characterized by significant fetal growth and preparation for birth.\nKey Developments:\nWeeks 27-32: The fetus’s organs mature further, and it begins to store fat, which helps with temperature regulation after birth. The fetus’s movements become more pronounced, and the baby’s brain and lungs continue to develop.\nWeeks 33-36: The fetus’s bones harden, although the skull remains soft to facilitate delivery. The baby’s position may shift into the head-down position in preparation for birth. The mother may experience increased discomfort and pressure.\nWeeks 37-40: The fetus is considered full-term by 37 weeks. It continues to gain weight and prepare for life outside the womb. The baby’s lungs are fully developed, and it begins to drop lower into the pelvis (lightening) in preparation for labor.\nCommon Symptoms:\nIncreased abdominal size and pressure\nFrequent urination and difficulty sleeping\nBraxton Hicks contractions (false labor)\nBack pain and pelvic discomfort\nSwelling of feet and ankles\nColostrum production (early milk)`;
+      <h1><span class="verification-token">${verificationToken}</span></h1>
 
-      // Replace newline characters (\n) with <br> tags
-      const formattedContent = articleContent.replace(/\n/g, "<br>");
-
-      // Insert the formatted content into the article div
-      document.getElementById("article").innerHTML = formattedContent;
-    </script>
+      <p class="email-footer">
+        If you didn’t create a MatriCare account, you can safely ignore this
+        email. For any questions, visit our
+        <a href="[Support Link]">Support Center</a>.
+      </p>
+    </div>
   </body>
 </html>

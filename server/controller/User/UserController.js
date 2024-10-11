@@ -62,7 +62,7 @@ const user_update = catchAsync(async (req, res, next) => {
     return next(new AppError("User not Found.", 404));
   }
 
-  if (req.body.newPassword) {
+  if (req.body.newPassword && req.body.password) {
     const salt = await bcrypt.genSalt(10);
 
     const isPasswordValid = await bcrypt.compare(

@@ -12,4 +12,10 @@ router.post("/login", authController.user_login);
 // LOGOUT
 router.get("/logout", checkAuth, authController.user_logout);
 
+// FIND USER
+router.get("/find", authController.user_find);
+
+// RECOVER USER
+router.put("/recover", authController.user_recover);
+
 module.exports = router;
