@@ -276,3 +276,20 @@
   margin-top: 20px;
 }
 
+.Authentication__RememberDevice {
+  display: flex;         
+  align-items: center;   
+  margin-top: 10px;    
+}
+
+.Authentication__Checkbox {
+  margin-right: 8px;   
+  margin-top: -5px;  
+}
+
+.Authentication__CheckboxLabel {
+  font-size: 14px;     
+  color: #333; 
+}
+
+
