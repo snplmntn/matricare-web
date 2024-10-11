@@ -3,9 +3,7 @@ const mongoose = require("mongoose");
 const ArticleSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    reviewedBy: {
-      String,
-    },
+    reviewedBy: String,
     author: {
       type: String,
       required: true,

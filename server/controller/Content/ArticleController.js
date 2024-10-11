@@ -24,12 +24,6 @@ const article_get = catchAsync(async (req, res, next) => {
 
 // Create Article
 const article_post = catchAsync(async (req, res, next) => {
-  const articleCount = await Article.find().countDocuments();
-  const yearToday = new Date().getFullYear();
-  req.body.orderNumber = `${yearToday} - ${articleCount + 1}`;
-
-  console.log(req.body.orderNumber);
-
   const newArticle = new Article(req.body);
 
   await newArticle.save();

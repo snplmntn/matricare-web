@@ -86,7 +86,9 @@ const Library1 = ({ article }) => {
         </p>
         <div className="library-content-news-description">
           {article && (
-            <div dangerouslySetInnerHTML={{ __html: article.content }} />
+            <div
+              dangerouslySetInnerHTML={{ __html: JSON.parse(article.content) }}
+            />
           )}
         </div>
       </div>
