@@ -35,26 +35,16 @@ import AppointmentAssistant from "./Assistant/components/Features/AppointmentAss
 import LandingPageConsultant from "./Consultant/components/Pages/LandingPageConsultant";
 import ConsultantSidebar from "./Consultant/components/Pages/ConsultantSidebar";
 import AppointmentConsultant from "./Consultant/components/Features/AppointmentConsultant";
+import LibraryConsultant from "./Consultant/components/Features/LibraryConsultant";
 import ConsultantRecord from "./Consultant/components/Settings/ConsultantRecord";
 import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNotifications";
 
-// Library Components
-import Library1 from "./User/components/Library/Library1";
-import Library2 from "./User/components/Library/Library2";
-import Library3 from "./User/components/Library/Library3";
-import Library4 from "./User/components/Library/Library4";
-import Library5 from "./User/components/Library/Library5";
-import Library6 from "./User/components/Library/Library6";
-import Library7 from "./User/components/Library/Library7";
-import Library8 from "./User/components/Library/Library8";
-import Library9 from "./User/components/Library/Library9";
-import Library10 from "./User/components/Library/Library10";
-import Library11 from "./User/components/Library/Library11";
 
 // Verify
 import Verify from "./User/components/Pages/Verify";
+
 
 function AppContent() {
   const history = createHashHistory();
@@ -133,6 +123,7 @@ function AppContent() {
         <Route path="/consultant-appointment" element={<> <ConsultantSidebar /> <AppointmentConsultant /> </>} />
         <Route path="/consultant-notification" element={<ConsultantNotifications />} />
         <Route path="/patient-records/:userId" element={<PatientRecords />} />
+        <Route path="/library-consultant" element={<> <ConsultantSidebar /> <LibraryConsultant/> </>} />
         
        
         {/* ASSISTANT */}
