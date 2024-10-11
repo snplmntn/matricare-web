@@ -64,17 +64,16 @@ const DateCalculator = () => {
           </p>
         </div>
       );
-    } else {
-      return ( 
-      <div className="DDC-no-content">
-      <img src="img/bg2.jpg" alt="Placeholder" className="DDC-placeholder-image" />
-    </div>
-    );
     }
   };
 
   return (
-    <div className="DDC-calcu-container">
+    <div
+      className="DDC-calcu-container"
+      style={{
+        backgroundImage: `url(${process.env.PUBLIC_URL}/img/duedate.svg)`
+      }}
+    >
       <Link to="/app" className="DDC-back-button"><IoArrowBackSharp /></Link>
       <div className="DDC-middle-container">
         <div className="DDC-left-column">
@@ -82,7 +81,6 @@ const DateCalculator = () => {
             {renderCalculatorContent()}
           </div>
         </div>
-        <div className="DDC-vertical-line"></div>
         <div className="DDC-right-column">
           <div className="DDC-input-container">
           <IoCalculatorOutline className="DDC-icon" />

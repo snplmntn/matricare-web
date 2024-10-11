@@ -85,15 +85,6 @@ const BellyTalk = ({ user }) => {
     setStep(2);
   };
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategories((prev) => {
-      if (prev.includes(category)) {
-        return prev.filter((cat) => cat !== category);
-      } else {
-        return [...prev, category];
-      }
-    });
-  };
 
   const handlePostSubmit = async () => {
     console.log(user.current);
@@ -103,17 +94,12 @@ const BellyTalk = ({ user }) => {
       return;
     }
 
-    if (selectedCategories.length === 0) {
-      alert("Please select at least one category.");
-      return;
-    }
 
     const newPost = {
       userId: userID,
       fullname: user.current.name,
       content: newPostText,
       address: "Manila City",
-      category: selectedCategories,
       picture: imgLink,
       profilePicture: user.current.profilePicture,
     };
@@ -134,7 +120,6 @@ const BellyTalk = ({ user }) => {
           fullname: user.current.name,
           content: newPostText,
           address: "Manila City",
-          category: selectedCategories,
           picture: imagePreview,
           profilePicture: user.current.profilePicture,
         },
@@ -334,39 +319,6 @@ const BellyTalk = ({ user }) => {
                       </div>
                     )}
                     <button
-                      onClick={handleNextStep}
-                      className="sharebox-button"
-                    >
-                      {isPosting ? "..." : "Next"}
-                    </button>
-                  </>
-                )}
-
-                {step === 2 && (
-                  <>
-                    <h2 className="sharebox-title">Select Categories</h2>
-                    <div className="category-options">
-                      {[
-                        "First-Time Moms",
-                        "Breast Feeding",
-                        "Maternity Style",
-                        "Labor",
-                        "Baby Essentials",
-                      ].map((category) => (
-                        <div
-                          key={category}
-                          className={`category-option ${
-                            selectedCategories.includes(category)
-                              ? "selected"
-                              : ""
-                          }`}
-                          onClick={() => handleCategoryClick(category)} // Handle click to select/deselect
-                        >
-                          {category}
-                        </div>
-                      ))}
-                    </div>
-                    <button
                       onClick={handlePostSubmit}
                       className="sharebox-button"
                     >
@@ -377,6 +329,7 @@ const BellyTalk = ({ user }) => {
                     )}
                   </>
                 )}
+
               </div>
             </div>
           )}

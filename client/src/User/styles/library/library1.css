@@ -4,6 +4,24 @@
   background-color: #9a6cb4;
 }
 
+.library-back-button {
+  position: absolute;
+  top: 30px;
+  left: 270px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  display: block;
+  align-items: center;
+  z-index: 1000;
+}
+
+.library-back-button svg {
+  margin-right: 5px;
+}
+
+
 .library-content-main-news {
   display: flex;
   flex-direction: column;
@@ -31,6 +49,8 @@
   justify-content: space-between;
   align-items: center;
   margin-left: 70px;
+  margin-bottom: 30px;
+  margin-top: 20px;
 }
 
 .library-content-news-title {
@@ -49,7 +69,7 @@
   margin-right: 70px;
 }
 
-.library-content-save-btn, .library-content-share-btn {
+.library-content-save-btn {
   padding: 15px;
   border-radius: 50px;
   cursor: pointer;
@@ -60,13 +80,7 @@
   border: 1px solid #7c459c;
 }
 
-.library-content-share-btn {
-  background-color: #9a6cb4b2;
-  border: none;
-  color: white;
-}
-
-.library-content-save-btn svg, .library-content-share-btn svg {
+.library-content-save-btn svg {
   font-size: 16px;
 }
 
@@ -74,7 +88,7 @@
   color: #333;
   font-size: 16px;
   margin-left: 70px;
-  margin-top: -30px;
+  margin-top: 50px;
 }
 
 .library-content-news-date {

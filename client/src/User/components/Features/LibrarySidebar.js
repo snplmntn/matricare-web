@@ -5,7 +5,6 @@ import {
   faSignOutAlt,
   faHome,
   faBookmark,
-  faLongArrowAltLeft,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
@@ -44,11 +43,6 @@ const LibrarySidebar = () => {
       </div>
       <div className="library-nav-links">
         <ul>
-          <li>
-            <Link to="/library" onClick={handleReload}>
-              <FontAwesomeIcon icon={faLongArrowAltLeft} /> Back
-            </Link>
-          </li>
           <li>
             <Link to="/app">
               <FontAwesomeIcon icon={faHome} /> Home

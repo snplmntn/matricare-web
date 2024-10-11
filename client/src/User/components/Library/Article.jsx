@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/library/library1.css";
-import { IoBookmark, IoShareSocial } from "react-icons/io5";
+import { IoBookmark, IoArrowBack } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 
 const Library1 = ({ article }) => {
   const [savedArticles, setSavedArticles] = useState([]);
-  // const [article, setArticles] = useState();
-  // const [articleContent, setArticleContent] = useState();
+
+  const handleReload = (e) => {
+    if (window.location.pathname === "/library") {
+      e.preventDefault();
+      window.location.reload();
+    }
+  };
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
@@ -48,6 +53,10 @@ const Library1 = ({ article }) => {
 
   return (
     <div className="library-content-container">
+      <button  onClick={handleReload} className="library-back-button">
+        <IoArrowBack />
+      </button>
+
       <div className="library-content-main-news">
         <div className="library-content-news-title-actions">
           <h1 className="library-content-news-title">
@@ -72,9 +81,6 @@ const Library1 = ({ article }) => {
               )
                 ? "Saved"
                 : "Save to Library"}
-            </button>
-            <button className="library-content-share-btn">
-              <IoShareSocial /> Share on media
             </button>
           </div>
         </div>

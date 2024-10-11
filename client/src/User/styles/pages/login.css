@@ -152,7 +152,7 @@
 }
 
 .LI-button {
-  padding: 15px 215px !important;
+  padding: 10px 215px !important;
   width: 250px;
   background-color: #e39fa9;
   color: #040400;
@@ -168,6 +168,7 @@
   box-sizing: border-box;
   text-align: center;
   white-space: nowrap;
+  font-size: 16px;
 }
 
 .LI-button:hover {
@@ -264,6 +265,7 @@
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-left: 170px;
 }
 
 .Authentication__Button:hover {

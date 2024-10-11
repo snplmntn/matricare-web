@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/library/library1.css";
-import { IoBookmark, IoShareSocial } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import { IoBookmark } from "react-icons/io5";
 
 const Library1 = () => {
   const [savedArticles, setSavedArticles] = useState([]);
@@ -62,9 +63,6 @@ const Library1 = () => {
               )
                 ? "Saved"
                 : "Save to Library"}
-            </button>
-            <button className="library-content-share-btn">
-              <IoShareSocial /> Share on media
             </button>
           </div>
         </div>

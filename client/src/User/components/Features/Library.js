@@ -109,7 +109,7 @@ const books = [
   },
   {
     id: 11,
-    title: "Labor Preparation Techniques",
+    title: "Weekly Pregnancy",
     author: "Bea Benella Rosal",
     cover: "/img/bg2.webp",
     category: "Labor",
@@ -123,7 +123,7 @@ const books = [
   },
   {
     id: 13,
-    title: "Weekly Pregnancy",
+    title: "Labor Preparation Techniques",
     author: "Bea Benella Rosal",
     cover: "/img/bg1.webp",
     category: "First Time Moms",

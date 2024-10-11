@@ -1,26 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/settings/medicalrec.css";
-import {
-  FaMobileAlt,
-  FaFileAlt,
-  FaFilePdf,
-  FaEdit,
-  FaSave,
-} from "react-icons/fa";
 import moment from "moment";
-import { IoMdArrowRoundBack } from "react-icons/io";
+import { IoArrowBackSharp , IoCalendarOutline, IoDocumentAttachOutline, IoFolderOpenOutline, IoFileTrayStackedOutline, IoPhonePortraitOutline  } from "react-icons/io5";
+import { FcPrint, FcDownload  } from "react-icons/fc";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 import { Link } from "react-router-dom";
+
 
 const MedicalRec = ({ user }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
   const userID = getCookie("userID");
   const [patient, setPatient] = useState();
-  const [selectedDocument, setSelectedDocument] = useState(null);
-  const [documentImage, setDocumentImage] = useState(null);
-  const [detailsVisible, setDetailsVisible] = useState(false);
   const [status] = useState("In-Process");
   const prescribedBy = "Dra. Donna Jill A. Tungol";
   const [isEditing, setIsEditing] = useState(false);
@@ -28,11 +20,15 @@ const MedicalRec = ({ user }) => {
   const [newDocName, setNewDocName] = useState("");
   const [newDocDate, setNewDocDate] = useState("");
   const [isAddingDocument, setIsAddingDocument] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [newDocFile, setNewDocFile] = useState(null);
+
+
 
   //STATE FOR STORING DATAS
   const [documents, setDocuments] = useState([
-    { name: "ECG Test Report", date: "2024-02-25" },
-    { name: "Medical History", date: "2024-03-15" },
+    { name: "ECG Test Report", date: "2024-02-25", file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf" },
+    { name: "Medical History", date: "2024-03-15", file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf" },
   ]);
 
   const [obstetricHistory, setObstetricHistory] = useState([
@@ -59,17 +55,40 @@ const MedicalRec = ({ user }) => {
   const currentDate = moment();
   const weeksPassed = currentDate.diff(conceptionDate, "weeks");
 
+  const handleClose = () => {
+    setIsAddingDocument(false); 
+    setNewDocName('');
+    setNewDocDate('');
+    setNewDocFile(null);
+    setSelectedDocument(null);
+  };
+
   const handleAddDocument = () => {
     if (newDocName && newDocDate) {
-      setDocuments([...documents, { name: newDocName, date: newDocDate }]);
+      const newDocument = { name: newDocName, date: newDocDate };
+      setDocuments([...documents, newDocument]);
       setNewDocName("");
       setNewDocDate("");
-      setIsAddingDocument(false); // Hide input fields after adding the document
+      setIsAddingDocument(false); 
     }
   };
 
-  const toggleEditMode = () => {
-    setIsEditing(!isEditing);
+  const handleDocumentClick = (doc) => {
+    setSelectedDocument(doc);
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement('a');
+    link.href = selectedDocument.file; // Use the file URL from selectedDocument
+    link.download = selectedDocument.name; // Set the download filename
+    link.click(); // Simulate click to trigger download
+  };
+
+  const handlePrint = () => {
+    const printWindow = window.open(selectedDocument.file, '_blank');
+    printWindow.onload = () => {
+      printWindow.print(); // Trigger print when the document is loaded
+    };
   };
 
 
@@ -77,13 +96,9 @@ const MedicalRec = ({ user }) => {
   const handleDocumentChange = (index, field, value) => {
     const updatedDocs = [...documents];
     updatedDocs[index][field] = value;
-    setDocuments(updatedDocs);
+    setDocuments(updatedDocs); 
   };
 
-  const handleCloseDetails = () => {
-    setDetailsVisible(false);
-    setSelectedDocument(null);
-  };
 
   const handleStatusChange = async (id, status) => {
     try {
@@ -148,7 +163,7 @@ const MedicalRec = ({ user }) => {
       <div className="MR-patient-records-container">
         <main className="MR-patient-records-main-content">
           <Link to="/app" className="MR-back-button">
-            <IoMdArrowRoundBack />
+            <IoArrowBackSharp  />
           </Link>
           <div className="MR-top-section">
             <div className="MR-patient-info">
@@ -157,7 +172,7 @@ const MedicalRec = ({ user }) => {
                 <h3>{patient && patient.fullName}</h3>
                 <p>02/21/1996 (28 yrs old), F</p>
                 <div className="MR-phone-info">
-                  <FaMobileAlt className="MR-phone-icon" />
+                  <IoPhonePortraitOutline  className="MR-phone-icon" />
                   <p>{patient && patient.phoneNumber}</p>
                 </div>
               </div>
@@ -175,7 +190,7 @@ const MedicalRec = ({ user }) => {
                 <h4>Husband/Partner:</h4>
                 <p>{patient && patient.husband}</p>
                 <div className="MR-partner-contact">
-                  <FaMobileAlt className="MR-phone-icon" />
+                  <IoPhonePortraitOutline  className="MR-phone-icon" />
                   <p>{patient && patient.husbandNumber}</p>
                 </div>
               </div>
@@ -202,7 +217,7 @@ const MedicalRec = ({ user }) => {
                 {tasks.map((task, index) => (
                   <tr key={index}>
                     <td>
-                      <FaFileAlt />
+                      <IoFileTrayStackedOutline  />
                     </td>
                     <td>{task.taskName}</td>
                     <td>{task.prescribedDate.split("T")[0]}</td>
@@ -360,7 +375,7 @@ const MedicalRec = ({ user }) => {
 
 
               {documents.map((doc, index) => (
-                <div key={index} className="MR-docu-item">
+                <div key={index} className="MR-docu-item" onClick={() => handleDocumentClick(doc)}>
                   {isEditing ? (
                     <>
                       <input
@@ -389,35 +404,72 @@ const MedicalRec = ({ user }) => {
                 </div>
               ))}
             
-              {isAddingDocument && (
-                 <div className="modal-overlay">
-                 <div className="modal-content">
-                   <h3>Add Document</h3>
-                <div className="MR-add-docu-form">
-                  <input
-                    type="text"
-                    placeholder="Document Name"
-                    value={newDocName}
-                    className="MR-input"
-                    onChange={(e) => setNewDocName(e.target.value)}
-                  />
-                  <input
-                    type="date"
-                    placeholder="Document Date"
-                    value={newDocDate}
-                    className="MR-input"
-                    onChange={(e) => setNewDocDate(e.target.value)}
-                  />
-                  <button
-                    className="MR-save-docu-button"
-                    onClick={handleAddDocument}
-                  >
-                    Save Document
+            {isAddingDocument && (
+              <div className="modal-overlay">
+                <div className="add-modal-content">
+                  <h3>Add Document</h3>
+                  <button className="add-docu-close" onClick={handleClose}>x</button>
+                  <hr className="add-hr" />
+                  <div className="MR-add-docu-form">
+                    <div className="input-icon-wrapper">
+                      <IoFolderOpenOutline className="input-icon" />
+                      <input
+                        type="text"
+                        placeholder="Document Name"
+                        value={newDocName}
+                        className="MR-input"
+                        onChange={(e) => setNewDocName(e.target.value)}
+                      />
+                    </div>
+                    <div className="input-icon-wrapper">
+                      <IoCalendarOutline className="input-icon" />
+                      <input
+                        type="date"
+                        placeholder="Document Date"
+                        value={newDocDate}
+                        className="MR-input"
+                        onChange={(e) => setNewDocDate(e.target.value)}
+                      />
+                    </div>
+                    <div className="input-icon-wrapper">
+                      <IoDocumentAttachOutline className="input-icon" />
+                      <input
+                        type="file"
+                        className="MR-input"
+                        onChange={(e) => setNewDocFile(e.target.files[0])}
+                      />
+                    </div>
+                    <button
+                      className="MR-save-docu-button"
+                      onClick={handleAddDocument}
+                    >
+                      Save Document
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {selectedDocument ? (
+            <div className="modal-overlay">
+              <div className="selected-docu">
+              <button className="selected-docu-close" onClick={handleClose} aria-label="Close Modal">
+                &times;
+              </button>
+              <div className="document-info">
+              <p>{selectedDocument.date}</p>
+                <p>{selectedDocument.name}</p>
+                <div className="docu-button">
+                  <button onClick={handleDownload} aria-label="Download Document" className="docu-icon">
+                    <FcDownload />
+                  </button>
+                  <button onClick={handlePrint} aria-label="Print Document" className="docu-icon">
+                    <FcPrint />
                   </button>
                 </div>
-                </div>
-                </div>
-              )}
+              </div>
+              </div>
+            </div>
+            ) : null}
             </div>
           </div>
         
