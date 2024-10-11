@@ -131,23 +131,32 @@
 /* User Table */
 .CPM-user-table {
   width: 95%;
-  border-collapse: collapse;
+  border-collapse: separate;
   margin-top: 10px;
   margin-left: 40px;
+  border-radius: 8px;
+  border-spacing: 0 15px;
 }
 
 .CPM-user-table thead {
   background-color: #ffffff;
 }
 
-.CPM-user-table th,
-.CPM-user-table td {
-  padding: 8px;
-  text-align: left;
-  background-color: #ffffff;
-}
+
 .CPM-user-table th {
-  color: #666;
+  background-color: #9a6cb4 !important;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.CPM-user-table td {
+  padding: 12px 15px;
+  color: #333;
+  text-align: left;
+  background-color: #fff; 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
 .CPM-user-photo {
@@ -249,7 +258,6 @@
   padding: 8px;
   text-align: left;
   background-color: #ffffff;
-  width: 250px;
 }
 
 /* Set column widths */
