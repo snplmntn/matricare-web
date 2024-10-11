@@ -86,8 +86,9 @@ const AppointmentConsultant = () => {
   const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
 
   const handleStatusChange = async (index, newStatus) => {
+    console.log(1);
     try {
-      await axios.put(
+      const response = await axios.put(
         `${API_URL}/appointment?id=${appointments[index]._id}`,
         {
           status: newStatus,
@@ -102,6 +103,7 @@ const AppointmentConsultant = () => {
         if (i === index) {
           return { ...appointment, status: newStatus };
         }
+        console.log(i, index);
         return appointment;
       });
       setAppointments(updatedAppointments);
