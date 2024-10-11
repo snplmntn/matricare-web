@@ -37,6 +37,10 @@ const appointment_user_get = catchAsync(async (req, res, next) => {
 
 // Create Appointment
 const appointment_post = catchAsync(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
+
+  if (!user) return next(new AppError("User not found", 404));
+  req.body.userId = user._id;
   const newAppointment = new Appointment(req.body);
 
   await newAppointment.save();
