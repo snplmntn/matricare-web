@@ -30,7 +30,7 @@ const ArticleSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["Draft", "Approved", "Archived"],
+      enum: ["Draft", "Approved", "Revision", "Archived"],
       default: "Draft",
     },
     picture: {
