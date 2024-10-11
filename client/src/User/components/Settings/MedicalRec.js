@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/settings/medicalrec.css";
 import moment from "moment";
-import { IoArrowBackSharp , IoCalendarOutline, IoDocumentAttachOutline, IoFolderOpenOutline, IoFileTrayStackedOutline, IoPhonePortraitOutline  } from "react-icons/io5";
-import { FcPrint, FcDownload  } from "react-icons/fc";
+import {
+  IoArrowBackSharp,
+  IoCalendarOutline,
+  IoDocumentAttachOutline,
+  IoFolderOpenOutline,
+  IoFileTrayStackedOutline,
+  IoPhonePortraitOutline,
+} from "react-icons/io5";
+import { FcPrint, FcDownload } from "react-icons/fc";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 import { Link } from "react-router-dom";
-
 
 const MedicalRec = ({ user }) => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -23,12 +29,18 @@ const MedicalRec = ({ user }) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [newDocFile, setNewDocFile] = useState(null);
 
-
-
   //STATE FOR STORING DATAS
   const [documents, setDocuments] = useState([
-    { name: "ECG Test Report", date: "2024-02-25", file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf" },
-    { name: "Medical History", date: "2024-03-15", file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf" },
+    {
+      name: "ECG Test Report",
+      date: "2024-02-25",
+      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
+    },
+    {
+      name: "Medical History",
+      date: "2024-03-15",
+      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
+    },
   ]);
 
   const [obstetricHistory, setObstetricHistory] = useState([
@@ -49,56 +61,95 @@ const MedicalRec = ({ user }) => {
     { date: "2024-02-25", text: "Appendicitis" },
     { date: "2024-02-25", text: "Tuberculosis" },
   ]);
-
-  const conceptionDate = moment("2024-02-14");
+  const conceptionDate =
+    patient && patient.pregnancyStartDate
+      ? moment(patient.pregnancyStartDate)
+      : moment.invalid();
   const dueDate = conceptionDate.clone().add(40, "weeks");
   const currentDate = moment();
   const weeksPassed = currentDate.diff(conceptionDate, "weeks");
 
   const handleClose = () => {
-    setIsAddingDocument(false); 
-    setNewDocName('');
-    setNewDocDate('');
+    setIsAddingDocument(false);
+    setNewDocName("");
+    setNewDocDate("");
     setNewDocFile(null);
     setSelectedDocument(null);
   };
 
-  const handleAddDocument = () => {
+  const handleAddDocument = async () => {
+    const newDocument = { name: newDocName, date: newDocDate, userId: userID };
+
+    const formData = new FormData();
+    formData.append("document", newDocFile);
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/upload/d?userId=${userID}`,
+        formData,
+        {
+          headers: {
+            Authorization: token,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      newDocument.documentLink = response.data.documentLink;
+    } catch (err) {
+      console.error(err);
+    }
+
+    try {
+      const response = await axios.post(
+        `${API_URL}/record/document`,
+        newDocument,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      console.log(response);
+    } catch (err) {
+      console.error(err);
+    }
+
     if (newDocName && newDocDate) {
-      const newDocument = { name: newDocName, date: newDocDate };
       setDocuments([...documents, newDocument]);
       setNewDocName("");
       setNewDocDate("");
-      setIsAddingDocument(false); 
+      setIsAddingDocument(false);
     }
   };
 
   const handleDocumentClick = (doc) => {
+    console.log(doc);
     setSelectedDocument(doc);
   };
 
   const handleDownload = () => {
-    const link = document.createElement('a');
-    link.href = selectedDocument.file; // Use the file URL from selectedDocument
-    link.download = selectedDocument.name; // Set the download filename
+    const link = document.createElement("a");
+    link.href = selectedDocument.documentLink; // Use the file URL from selectedDocument
+    link.setAttribute("download", selectedDocument.name); // Set the download attribute with the filename
+    link.setAttribute("target", "_blank"); // Open in a new tab
+    document.body.appendChild(link); // Append the link to the body
     link.click(); // Simulate click to trigger download
+    document.body.removeChild(link); // Remove the link from the document
   };
 
   const handlePrint = () => {
-    const printWindow = window.open(selectedDocument.file, '_blank');
+    const printWindow = window.open(selectedDocument.documentLink, "_blank");
     printWindow.onload = () => {
       printWindow.print(); // Trigger print when the document is loaded
     };
   };
 
-
   // Handle document name and date changes
   const handleDocumentChange = (index, field, value) => {
     const updatedDocs = [...documents];
     updatedDocs[index][field] = value;
-    setDocuments(updatedDocs); 
+    setDocuments(updatedDocs);
   };
-
 
   const handleStatusChange = async (id, status) => {
     try {
@@ -121,6 +172,25 @@ const MedicalRec = ({ user }) => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    async function fetchRecords() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/record/document/u?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setDocuments(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchRecords();
+  }, []);
 
   useEffect(() => {
     async function fetchTasks() {
@@ -151,6 +221,7 @@ const MedicalRec = ({ user }) => {
           },
         });
         setPatient(response.data.other);
+        console.log(response.data.other);
       } catch (error) {
         console.error(error);
       }
@@ -158,21 +229,51 @@ const MedicalRec = ({ user }) => {
     fetchCurrentPatient();
   }, []);
 
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("en-PH", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
+  };
+
+  const calculateAge = (birthdate) => {
+    const birthDate = new Date(birthdate);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
+
   return (
     <>
       <div className="MR-patient-records-container">
         <main className="MR-patient-records-main-content">
           <Link to="/app" className="MR-back-button">
-            <IoArrowBackSharp  />
+            <IoArrowBackSharp />
           </Link>
           <div className="MR-top-section">
             <div className="MR-patient-info">
               <img src="img/topic2.jpg" alt="Patient Photo" />
               <div className="MR-patient-details">
                 <h3>{patient && patient.fullName}</h3>
-                <p>02/21/1996 (28 yrs old), F</p>
+                <p>
+                  {patient && patient.birthdate
+                    ? `${formatDate(patient.birthdate)} : ${calculateAge(
+                        patient.birthdate
+                      )} yrs old`
+                    : "Birthdate not set"}
+                </p>
                 <div className="MR-phone-info">
-                  <IoPhonePortraitOutline  className="MR-phone-icon" />
+                  <IoPhonePortraitOutline className="MR-phone-icon" />
                   <p>{patient && patient.phoneNumber}</p>
                 </div>
               </div>
@@ -190,7 +291,7 @@ const MedicalRec = ({ user }) => {
                 <h4>Husband/Partner:</h4>
                 <p>{patient && patient.husband}</p>
                 <div className="MR-partner-contact">
-                  <IoPhonePortraitOutline  className="MR-phone-icon" />
+                  <IoPhonePortraitOutline className="MR-phone-icon" />
                   <p>{patient && patient.husbandNumber}</p>
                 </div>
               </div>
@@ -217,7 +318,7 @@ const MedicalRec = ({ user }) => {
                 {tasks.map((task, index) => (
                   <tr key={index}>
                     <td>
-                      <IoFileTrayStackedOutline  />
+                      <IoFileTrayStackedOutline />
                     </td>
                     <td>{task.taskName}</td>
                     <td>{task.prescribedDate.split("T")[0]}</td>
@@ -353,10 +454,14 @@ const MedicalRec = ({ user }) => {
                 <p className="MR-due-date">
                   Estimated Pregnancy <br />
                   Due Date: <br />
-                  <strong>{dueDate.format("MMMM D, YYYY")}</strong>
+                  <strong>
+                    {dueDate.isValid() ? dueDate.format("MMMM D, YYYY") : "N/A"}
+                  </strong>
                 </p>
               </div>
-              <div className="MR-circle">{weeksPassed}</div>
+              <div className="MR-circle">
+                {dueDate.isValid() ? weeksPassed : "N/A"}
+              </div>
             </div>
           </div>
 
@@ -367,15 +472,18 @@ const MedicalRec = ({ user }) => {
               {!isAddingDocument && (
                 <button
                   className="MR-add-docu-button"
-                  onClick={() => setIsAddingDocument(true)} 
+                  onClick={() => setIsAddingDocument(true)}
                 >
                   +
                 </button>
               )}
 
-
               {documents.map((doc, index) => (
-                <div key={index} className="MR-docu-item" onClick={() => handleDocumentClick(doc)}>
+                <div
+                  key={index}
+                  className="MR-docu-item"
+                  onClick={() => handleDocumentClick(doc)}
+                >
                   {isEditing ? (
                     <>
                       <input
@@ -398,81 +506,102 @@ const MedicalRec = ({ user }) => {
                   ) : (
                     <>
                       <span className="MR-doc-name">{doc.name}</span>
-                      <span className="MR-doc-date">{doc.date}</span>
+                      <span className="MR-doc-date">
+                        {formatDate(doc.date)}
+                      </span>
                     </>
                   )}
                 </div>
               ))}
-            
-            {isAddingDocument && (
-              <div className="modal-overlay">
-                <div className="add-modal-content">
-                  <h3>Add Document</h3>
-                  <button className="add-docu-close" onClick={handleClose}>x</button>
-                  <hr className="add-hr" />
-                  <div className="MR-add-docu-form">
-                    <div className="input-icon-wrapper">
-                      <IoFolderOpenOutline className="input-icon" />
-                      <input
-                        type="text"
-                        placeholder="Document Name"
-                        value={newDocName}
-                        className="MR-input"
-                        onChange={(e) => setNewDocName(e.target.value)}
-                      />
-                    </div>
-                    <div className="input-icon-wrapper">
-                      <IoCalendarOutline className="input-icon" />
-                      <input
-                        type="date"
-                        placeholder="Document Date"
-                        value={newDocDate}
-                        className="MR-input"
-                        onChange={(e) => setNewDocDate(e.target.value)}
-                      />
-                    </div>
-                    <div className="input-icon-wrapper">
-                      <IoDocumentAttachOutline className="input-icon" />
-                      <input
-                        type="file"
-                        className="MR-input"
-                        onChange={(e) => setNewDocFile(e.target.files[0])}
-                      />
-                    </div>
-                    <button
-                      className="MR-save-docu-button"
-                      onClick={handleAddDocument}
-                    >
-                      Save Document
+
+              {isAddingDocument && (
+                <div className="modal-overlay">
+                  <div className="add-modal-content">
+                    <h3>Add Document</h3>
+                    <button className="add-docu-close" onClick={handleClose}>
+                      x
                     </button>
+                    <hr className="add-hr" />
+                    <div className="MR-add-docu-form">
+                      <div className="input-icon-wrapper">
+                        <IoFolderOpenOutline className="input-icon" />
+                        <input
+                          type="text"
+                          placeholder="Document Name"
+                          value={newDocName}
+                          className="MR-input"
+                          onChange={(e) => setNewDocName(e.target.value)}
+                        />
+                      </div>
+                      <div className="input-icon-wrapper">
+                        <IoCalendarOutline className="input-icon" />
+                        <input
+                          type="date"
+                          placeholder="Document Date"
+                          value={newDocDate}
+                          className="MR-input"
+                          onChange={(e) => setNewDocDate(e.target.value)}
+                        />
+                      </div>
+                      <div className="input-icon-wrapper">
+                        <IoDocumentAttachOutline className="input-icon" />
+                        <input
+                          type="file"
+                          className="MR-input"
+                          onChange={(e) => setNewDocFile(e.target.files[0])}
+                        />
+                      </div>
+                      <button
+                        className="MR-save-docu-button"
+                        onClick={handleAddDocument}
+                      >
+                        Save Document
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            )}
-            {selectedDocument ? (
-            <div className="modal-overlay">
-              <div className="selected-docu">
-              <button className="selected-docu-close" onClick={handleClose} aria-label="Close Modal">
-                &times;
-              </button>
-              <div className="document-info">
-              <p>{selectedDocument.date}</p>
-                <p>{selectedDocument.name}</p>
-                <div className="docu-button">
-                  <button onClick={handleDownload} aria-label="Download Document" className="docu-icon">
-                    <FcDownload />
-                  </button>
-                  <button onClick={handlePrint} aria-label="Print Document" className="docu-icon">
-                    <FcPrint />
-                  </button>
+              )}
+              {selectedDocument ? (
+                <div className="modal-overlay">
+                  <div className="selected-docu">
+                    <button
+                      className="selected-docu-close"
+                      onClick={handleClose}
+                      aria-label="Close Modal"
+                    >
+                      &times;
+                    </button>
+                    <div className="document-info">
+                      <p>{formatDate(selectedDocument.date)}</p>
+                      <p>{selectedDocument.name}</p>
+                      <div className="docu-button">
+                        <button
+                          onClick={handleDownload}
+                          aria-label="Download Document"
+                          className="docu-icon"
+                        >
+                          <FcDownload />
+                        </button>
+                        <button
+                          onClick={handlePrint}
+                          aria-label="Print Document"
+                          className="docu-icon"
+                        >
+                          <FcPrint />
+                        </button>
+                      </div>
+                    </div>
+                    <embed
+                      src={selectedDocument.documentLink}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                  </div>
                 </div>
-              </div>
-              </div>
-            </div>
-            ) : null}
+              ) : null}
             </div>
           </div>
-        
         </main>
       </div>
     </>
