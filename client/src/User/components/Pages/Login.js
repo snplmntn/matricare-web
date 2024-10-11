@@ -21,6 +21,7 @@ export default function Login() {
   const [authMessage, setAuthMessage] = useState("");
   const [loginToken, setLoginToken] = useState("");
   const [verifyToken, setVerifyToken] = useState("");
+  const [rememberDevice, setRememberDevice] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -247,6 +248,18 @@ export default function Login() {
               />
             ))}
           </div>
+
+          <div className="Authentication__RememberDevice">
+          <input
+            type="checkbox"
+            id="rememberDevice"
+            className="Authentication__Checkbox"
+            onChange={(e) => setRememberDevice(e.target.checked)} // Manage the checkbox state
+          />
+          <label htmlFor="rememberDevice" className="Authentication__CheckboxLabel">
+            Remember this Device
+          </label>
+        </div>
 
           <button
             className="Authentication__Button Authentication__SubmitButton"
