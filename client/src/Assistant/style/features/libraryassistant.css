@@ -1,9 +1,9 @@
 
-.library-layout{
+.LA-library-layout{
     background-color: #9a6cb4;
   }
   
-  .main-content {
+  .LA-main-content {
     margin-left: 250px; /* Leave space for the sidebar */
     padding: 20px;
     width: 87%; /* Adjust width to fit the remaining space */
@@ -12,49 +12,50 @@
     border-radius: 50px 0 0 50px;
   }
   
-  .library-header {
+  .LA-library-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
   }
   
-  .library-title {
+  .LA-library-title {
     margin: 0;
     color: #7c459c;
     font-size: 30px;
     font-weight: bolder !important;
     margin-left: 45px;
+    white-space: nowrap;
   }
   
-  .library-section .book-list-container {
+  .LA-library-section .LA-book-list-container {
     margin-top: 30px;
     display: flex;
     flex-wrap: wrap;
     gap: -100px; /* Adjust this for library section */
   }
   
-  .header-actions {
+  .LA-header-actions {
     display: flex;
     align-items: center;
-    margin-left: 600px !important;
+    margin-left: 400px !important;
     margin-right: 100px;
   }
   
-  .search-container{
+  .LA-search-container{
     display: flex;
     align-items: center; 
     position: relative;
   }
   
-  .search-icon {
+  .LA-search-icon {
     position: absolute; 
     left: 10px; 
     color: #040404; 
     pointer-events: none;
   }
   
-  .search-bar-library {
+  .LA-search-bar-library {
     padding: 10px !important;
     margin-right: 50px;
     border: transparent !important;
@@ -65,7 +66,7 @@
     color: #040404; 
   }
   
-  .filter-dropdown {
+  .LA-filter-dropdown {
     padding: 8px;
     font-size: 14px;
     border: 1px solid #ccc;
@@ -75,23 +76,23 @@
     width: 300px;
   }
   
-  .filter-dropdown option {
+  .LA-filter-dropdown option {
     padding: 8px;
     background-color: #f9f9f9;
   }
   
-  .library-section {
+  .LA-library-section {
     margin-left: 50px;
     margin-bottom: 20px;
     font-size: 15px;
     color: #040404 !important;
   }
   
-  .library-section h2 {
+  .LA-library-section h2 {
     color: #2f2d2d !important;
   }
   
-  .library-item {
+  .LA-library-item {
     display: flex;
     flex-direction: column; /* Stack items vertically */
     align-items: center;
@@ -102,7 +103,7 @@
     cursor: pointer;
   }
   
-  .library-item img {
+  .LA-library-item img {
     width: 160px;
     height: 200px;
     object-fit: cover;
@@ -110,24 +111,177 @@
     border-radius: 10px;
   }
   
-  .library-item .book-details {
+  .LA-library-item .LA-book-details {
     text-align: left; /* Center align the details */
   }
   
-  .library-item .book-title {
+  .LA-library-item .LA-book-title {
     margin: 0;
+    width: 150px;
     font-size: 1.2em;
     color: #333;
   }
   
-  .library-item .book-author {
+  .LA-library-item .LA-book-author {
     margin: 5px 0;
     color: #666;
     font-size: 12px;
   }
   
-  .library-item:hover {
+  .LA-library-item:hover {
     background-color: #ececec;
     background-color: #9a6cb450;
     border-radius: 20px;
   }
+
+  .LA-add-article-button {
+    margin-right: 10px; 
+    padding: 8px 30px;
+    background-color: transparent;  
+    color: #040404; 
+    border: none; 
+    cursor: pointer; 
+    font-size: 1rem;
+  }
+  
+  .LA-add-article-button:hover {
+    color: #7c459c; 
+  }
+
+
+  /* modal */
+  .newarticle-modal {
+    width: 380px; 
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    height: 380px;
+  }
+
+  .newarticle-modal h3 {
+    border-left: solid 15px #9a6cb4;
+    text-align: left;
+    text-indent: 20px;
+  }
+  
+  .newarticle-close-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ffffff;
+  }
+
+  .newarticle-close-button:hover {
+    color: #7c459c; 
+    background-color: transparent;
+  }
+  .LA-article-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+  .LA-add-article-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+    background-color: none;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: none;
+  }
+  
+  .LA-add-article-form input {
+    width: 90%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #7c459c;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: none;
+  }
+  
+  .LA-add-article-form select {
+    position: relative;
+    background-color: none;
+    width: 95%;
+  }
+  
+  .LA-add-article-form button {
+    background-color: #9a6cb4; 
+    color: #ffffff; 
+    border: none;
+    font-size: 16px;
+    border-radius: 10px;
+    padding: 10px;
+    width: 50%;
+    margin-top: 30px;
+    margin-left: 150px;
+    cursor: pointer; 
+    transition: background-color 0.3s ease;
+  }
+  
+  .LA-add-article-form button:hover {
+    background-color: #8a5ca3; /* Darker hover effect */
+  }
+
+  .input-container {
+    position: relative;
+    width: 90%;
+    margin-bottom: 10px;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 10px; /* Space between the icon and input */
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7c459c; /* Icon color */
+    pointer-events: none; /* Prevent clicks on the icon */
+  }
+  
+  .input-with-icon {
+    padding-left: 30px; /* Add padding to avoid overlap with the icon */
+    width: 100%; /* Make sure it takes full width */
+    border: 1px solid #7c459c; /* Input border */
+    border-radius: 5px; /* Optional: add rounded corners */
+  }
+  
+  .LA-add-article-form select {
+    padding-left: 10px; /* Adjust if needed */
+  }
+  
+  .LA-book-cover-container {
+    position: relative; /* Allow positioning of overlay */
+  }
+  
+  .LA-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 160px;
+    height: 200px;
+    object-fit: cover;
+    margin-bottom: 10px; /* Space between image and details */
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    color: white; /* Text color */
+    display: flex;
+    text-align: center;
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    font-size: 16px; /* Font size */
+    font-weight: bold; /* Bold text */
+  }
+  
