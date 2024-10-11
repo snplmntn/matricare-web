@@ -8,10 +8,8 @@ const Library1 = ({ article }) => {
   const [savedArticles, setSavedArticles] = useState([]);
 
   const handleReload = (e) => {
-    if (window.location.pathname === "/library") {
-      e.preventDefault();
-      window.location.reload();
-    }
+    e.preventDefault();
+    window.location.reload();
   };
 
   const API_URL = process.env.REACT_APP_API_URL;
@@ -53,7 +51,7 @@ const Library1 = ({ article }) => {
 
   return (
     <div className="library-content-container">
-      <button  onClick={handleReload} className="library-back-button">
+      <button onClick={handleReload} className="library-back-button">
         <IoArrowBack />
       </button>
 
