@@ -20,8 +20,8 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 50%; 
-    border-radius: 20px;
+    width: 30%; 
+    border-radius: 10px !important;
     margin-left: 10px;
   }
 
@@ -59,100 +59,82 @@
     margin-left: 10px;
     margin-top: 50px;
   }
-  
-  .appointment-assistant-middle-layout {
-    flex: 1;
-    padding: 20px;
+
+  .appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%; /* Ensures the container takes full width */
   }
   
-/* schedule */
-
-.schedule-container {
-  margin-top: 20px;
-  background-color: #ffffff;
-  border-radius: 20px;
-  margin-left: 10px;
-  overflow: hidden; 
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.212);
-}
-
-.schedule-table {
-  width: 1100px;
-  border-collapse: collapse;
-}
-
-.schedule-table th,
-.schedule-table td {
-  padding: 10px;
-  text-align: center;
-}
-
-.schedule-table th {
-  background-color: #ffffff;
-}
-
-.schedule-cell {
-  height: 10px;
-  border-radius: 10px;
-}
-
-.schedule-cell.booked {
-  background-color: #e39fa9;
-  color: #ffffff;
-}
+  .sort-by-container {
+    display: flex;
+    align-items: center;
+    white-space: nowrap; 
+    margin-top: 40px;
+  }
+  
+  .sort-by-container label {
+    margin-right: 8px; /* Adds some space between the label and the dropdown */
+  }
+  
+  .sort-by-container select {
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    width: 210px;
+  }
+  
 
 
 /* upcoming */
 
 .upcoming-appointments-container {
   margin-top: 20px;
-  border-radius: 20px; /* Apply border-radius to all sides */
-  background-color: #ffffff;
-  overflow: hidden; /* Ensure border-radius is applied properly */
+  border-radius: 20px; 
+  background-color: none;
+  overflow: hidden; 
   margin-left: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.212); /* Add box shadow */
+  box-shadow: none; 
 }
 
 .upcoming-appointments-table {
   width: 100%;
-  border-collapse: collapse;
-  border-radius: 20px; /* Apply border-radius to all sides */
-}
-
-.upcoming-appointments-table th,
-.upcoming-appointments-table td {
-  padding: 10px;
-  text-align: center;
+  border-collapse: separate;
+  border-radius: 8px;
+  border-spacing: 0 15px;
 }
 
 .upcoming-appointments-table th {
-  background-color: #ffffff;
-  font-weight: normal;
+  background-color: #9a6cb4;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 12px 15px;
+  text-align: left;
 }
 
 .upcoming-appointments-table td {
-  font-weight: bold;
-  font-size: 15px;
-  color: #67433b;
+  padding: 12px 15px;
+  color: #333;
+  text-align: left;
+  background-color: #fff; 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+}
+
+.upcoming-appointments-table tr:nth-child(even) td {
+  background-color: #f9f9f9; 
 }
 
 .upcoming-appointments-table td button {
-  padding: 5px;
-  background-color: #ffffff;
-  color: #67433b;
+  padding: 5px 10px;
+  background-color: transparent;
+  color: #9a6cb4;
   border: none;
-  border-radius: 3px;
   cursor: pointer;
-  font-weight: bold;
-  font-size: 15px;
-  margin-left: 10px;
 }
 
 .upcoming-appointments-table td button:hover {
-  background-color: #e39fa9;
-  color: #ffffff;
+  text-decoration: underline;
 }
-
-
-
-
