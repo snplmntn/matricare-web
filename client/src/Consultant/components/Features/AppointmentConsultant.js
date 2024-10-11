@@ -10,21 +10,21 @@ const initialAppointments = [
     date: "Sept 4, 10 am",
     patientName: "Ella Cruz",
     location: "Mary Chiles",
-    category: "Advice by the Doctor",
+    type: "Advice by the Doctor",
     status: "pending",
   },
   {
     date: "Sept 22, 1 pm",
     patientName: "Mary Andres",
     location: "Grace Medical Center",
-    category: "Monthly Check-up",
+    type: "Monthly Check-up",
     status: "pending",
   },
   {
     date: "Sept 24, 3 pm",
     patientName: "Sarah Smith",
     location: "Family Care Tungko",
-    category: "Monthly Check-up",
+    type: "Monthly Check-up",
     status: "confirmed",
   },
 ];
@@ -39,7 +39,7 @@ const AppointmentConsultant = () => {
     patientName: "",
     email: "",
     location: "",
-    category: "",
+    type: "",
     status: "Pending",
   });
   const [user, setUser] = useState({});
@@ -83,7 +83,7 @@ const AppointmentConsultant = () => {
     "Family Care Tungko",
   ];
 
-  const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
+  const typeOptions = ["Monthly Check-up", "Advice by the Doctor"];
 
   const handleStatusChange = async (index, newStatus) => {
     try {
@@ -124,9 +124,9 @@ const AppointmentConsultant = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const { date, time, patientName, location, category, email } =
+    const { date, time, patientName, location, type, email } =
       newAppointment;
-    if (date && time && patientName && location && category) {
+    if (date && time && patientName && location && type) {
       const fullDateTime = `${date}, ${time}`;
       setAppointments([
         ...appointments,
@@ -138,7 +138,7 @@ const AppointmentConsultant = () => {
         assignedId: userID,
         patientName: patientName,
         location: location,
-        category: category,
+        type: type,
         date: new Date(fullDateTime),
       };
 
@@ -163,10 +163,10 @@ const AppointmentConsultant = () => {
       //   patientName: "",
       //   email: "",
       //   location: "",
-      //   category: "",
+      //   type: "",
       //   status: "Pending",
       // });
-      // setIsFormVisible(false);
+       setIsFormVisible(false);
     } else {
       alert("Please fill in all fields");
     }
@@ -179,7 +179,7 @@ const AppointmentConsultant = () => {
       time: "",
       patientName: "",
       location: "",
-      category: "",
+      type: "",
       status: "pending",
     });
   };
@@ -325,17 +325,17 @@ const AppointmentConsultant = () => {
 
                 <select
                   className="appointment-select"
-                  name="category"
-                  value={newAppointment.category}
+                  name="type"
+                  value={newAppointment.type}
                   onChange={handleFormChange}
                   required
                 >
                   <option value="" disabled>
-                    Select Category
+                    Select Appoointment Type
                   </option>
-                  {categoryOptions.map((category, index) => (
-                    <option key={index} value={category}>
-                      {category}
+                  {typeOptions.map((type, index) => (
+                    <option key={index} value={type}>
+                      {type}
                     </option>
                   ))}
                 </select>
@@ -368,10 +368,20 @@ const AppointmentConsultant = () => {
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
                         <span className="appointmentConsultant-label">
-                          Date:
+                          Visit Date:
                         </span>
                         <span className="appointmentConsultant-text">
                           {formatDate(appointment.date)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="appointmentConsultant-detail">
+                      <div className="appointmentConsultant-detailContent">
+                        <span className="appointmentConsultant-label">
+                          Visit Time:
+                        </span>
+                        <span className="appointmentConsultant-text">
+                          {new Date(appointment.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                     </div>
@@ -388,7 +398,7 @@ const AppointmentConsultant = () => {
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
                         <span className="appointmentConsultant-label">
-                          Location:
+                          Branch Location:
                         </span>
                         <span className="appointmentConsultant-text">
                           {appointment.location}
@@ -398,10 +408,10 @@ const AppointmentConsultant = () => {
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
                         <span className="appointmentConsultant-label">
-                          Category:
+                          Appointment Type:
                         </span>
                         <span className="appointmentConsultant-text">
-                          {appointment.category}
+                          {appointment.type}
                         </span>
                       </div>
                     </div>
@@ -433,7 +443,7 @@ const AppointmentConsultant = () => {
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
                         <span className="appointmentConsultant-label">
-                          Date:
+                          Visit Date:
                         </span>
                         <span className="appointmentConsultant-text">
                           {formatDate(appointment.date)}
@@ -453,7 +463,7 @@ const AppointmentConsultant = () => {
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
                         <span className="appointmentConsultant-label">
-                          Location:
+                          Branch Location:
                         </span>
                         <span className="appointmentConsultant-text">
                           {appointment.location}
@@ -463,10 +473,10 @@ const AppointmentConsultant = () => {
                     <div className="appointmentConsultant-detail">
                       <div className="appointmentConsultant-detailContent">
                         <span className="appointmentConsultant-label">
-                          Category:
+                          Appointment Type:
                         </span>
                         <span className="appointmentConsultant-text">
-                          {appointment.category}
+                          {appointment.type}
                         </span>
                       </div>
                     </div>
