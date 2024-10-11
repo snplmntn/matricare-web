@@ -85,11 +85,10 @@ const AppointmentConsultant = () => {
 
   const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
 
-  const handleStatusChange = async (index, newStatus) => {
-    console.log(1);
+  const handleStatusChange = async (id, newStatus) => {
     try {
       const response = await axios.put(
-        `${API_URL}/appointment?id=${appointments[index]._id}`,
+        `${API_URL}/appointment?id=${id}`,
         {
           status: newStatus,
         },
@@ -99,12 +98,14 @@ const AppointmentConsultant = () => {
           },
         }
       );
-      const updatedAppointments = appointments.map((appointment, i) => {
-        if (i === index) {
+
+      const updatedAppointments = appointments.map((appointment) => {
+        if (appointment._id === id) {
           return { ...appointment, status: newStatus };
         }
         return appointment;
       });
+      console.log(response.data);
       setAppointments(updatedAppointments);
     } catch (error) {
       console.error(error);
@@ -129,10 +130,6 @@ const AppointmentConsultant = () => {
       newAppointment;
     if (date && time && patientName && location && category) {
       const fullDateTime = `${date}, ${time}`;
-      setAppointments([
-        ...appointments,
-        { ...newAppointment, date: fullDateTime },
-      ]);
 
       const appointmentObj = {
         email: email,
@@ -154,7 +151,10 @@ const AppointmentConsultant = () => {
           }
         );
 
-        console.log(response);
+        setAppointments([
+          ...appointments,
+          { ...newAppointment, date: fullDateTime },
+        ]);
       } catch (error) {
         console.error("Resend email error:", error);
       }
@@ -167,7 +167,7 @@ const AppointmentConsultant = () => {
       //   category: "",
       //   status: "Pending",
       // });
-      // setIsFormVisible(false);
+      setIsFormVisible(false);
     } else {
       alert("Please fill in all fields");
     }
@@ -210,6 +210,8 @@ const AppointmentConsultant = () => {
       year: "numeric",
       month: "numeric",
       day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
     });
   };
 
@@ -361,9 +363,9 @@ const AppointmentConsultant = () => {
             {/* Conditionally render based on the active tab */}
             {activeTab === "upcoming" && (
               <div className="appointmentConsultant-appointmentList">
-                {upcomingAppointments.map((appointment, index) => (
+                {upcomingAppointments.map((appointment) => (
                   <div
-                    key={index}
+                    key={appointment._id}
                     className="appointmentConsultant-appointmentItem"
                   >
                     <div className="appointmentConsultant-detail">
@@ -410,9 +412,9 @@ const AppointmentConsultant = () => {
                       <select
                         className="appointmentConsultant-statusSelect"
                         value={appointment.status}
-                        onChange={(e) =>
-                          handleStatusChange(index, e.target.value)
-                        }
+                        onChange={(e) => {
+                          handleStatusChange(appointment._id, e.target.value);
+                        }}
                       >
                         <option value="Confirmed">Confirmed</option>
                         <option value="Pending">Pending</option>

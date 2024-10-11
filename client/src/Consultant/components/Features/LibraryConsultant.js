@@ -281,6 +281,10 @@ const LibraryConsultant = () => {
                     className="LC-library-item"
                     onMouseEnter={() => setHoveredBookId(book.id)} // Track hovered book
                     onMouseLeave={() => setHoveredBookId(null)} // Clear on leave
+                    onClick={() => {
+                      setArticleNum(index);
+                      setShowArticle(true);
+                    }}
                   >
                     <Link
                       to={bookRoutes[book._id]}
