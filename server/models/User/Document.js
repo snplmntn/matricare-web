@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const documentSchema = new mongoose.Schema(
   {
-    condition: {
+    name: {
       type: String,
       required: true,
       index: "text",

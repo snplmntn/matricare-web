@@ -196,6 +196,12 @@ const UserProfile = ({ user }) => {
       const pregnancyStartDate = new Date(lastMenstrualPeriod);
       updatedUserForm.pregnancyStartDate = pregnancyStartDate;
     }
+    if (birthday !== user.birthdate) {
+      const birthdate = new Date(birthday);
+      updatedUserForm.birthdate = birthdate;
+    }
+
+    console.log(updatedUserForm);
 
     try {
       const response = await axios.put(
@@ -211,7 +217,14 @@ const UserProfile = ({ user }) => {
     } catch (error) {
       console.error(error);
     }
-    // location.reload();
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("en-PH", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
   };
 
   //fetch user data
@@ -224,6 +237,7 @@ const UserProfile = ({ user }) => {
           },
         });
         const data = response.data.other;
+        setBirthday(data.birthdate);
         setFullname(data.fullName);
         setEmail(data.email);
         setPhoneNumber(data.phoneNumber);
@@ -331,6 +345,12 @@ const UserProfile = ({ user }) => {
                 <p className="user-profile-detail">{phoneNumber}</p>
               </div>
               <div className="user-profile-item">
+                <label>Birthdate:</label>
+                <p className="user-profile-detail">
+                  {birthday ? formatDate(birthday) : "N/A"}
+                </p>
+              </div>
+              <div className="user-profile-item">
                 <label>Address:</label>
                 <p className="user-profile-detail">
                   {address ? address : "N/A"}
@@ -394,7 +414,7 @@ const UserProfile = ({ user }) => {
                   <input
                     type="date"
                     id="birthday"
-                    value={birthday}
+                    value={JSON.stringify(formatDate(birthday))}
                     onChange={(e) => setBirthday(e.target.value)}
                     placeholder="Select your birthday"
                     className="user-profile-input"

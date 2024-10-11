@@ -3,9 +3,7 @@ const mongoose = require("mongoose");
 const ArticleSchema = new mongoose.Schema(
   {
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    reviewedBy: {
-      String,
-    },
+    reviewedBy: String,
     author: {
       type: String,
       required: true,
@@ -23,19 +21,11 @@ const ArticleSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
       index: "text",
     },
     category: {
       type: String,
-      enum: [
-        "First Time Moms",
-        "Health",
-        "Labor",
-        "Finance",
-        "Fashion",
-        "Pregnancy",
-      ],
+      enum: ["First Time Moms", "Health", "Labor", "Finance", "Fashion"],
       default: "First Time Moms",
     },
     status: {

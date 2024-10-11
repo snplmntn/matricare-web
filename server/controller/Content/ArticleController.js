@@ -6,12 +6,16 @@ const catchAsync = require("../../Utilities/catchAsync");
 
 // Get Article by Id or Index Articles
 const article_get = catchAsync(async (req, res, next) => {
-  const { id } = req.query;
+  const { id, status } = req.query;
 
   let article;
   if (id) {
     article = await Article.findOne({
       _id: req.query.id,
+    });
+  } else if (status) {
+    article = await Article.find({
+      status: req.query.status,
     });
   } else {
     article = await Article.find();
@@ -24,12 +28,6 @@ const article_get = catchAsync(async (req, res, next) => {
 
 // Create Article
 const article_post = catchAsync(async (req, res, next) => {
-  const articleCount = await Article.find().countDocuments();
-  const yearToday = new Date().getFullYear();
-  req.body.orderNumber = `${yearToday} - ${articleCount + 1}`;
-
-  console.log(req.body.orderNumber);
-
   const newArticle = new Article(req.body);
 
   await newArticle.save();
