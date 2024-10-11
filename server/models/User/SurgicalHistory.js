@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const surgicalHistorySchema = new mongoose.Schema(
   {
-    condition: {
+    content: {
       type: String,
       required: true,
       index: "text",
