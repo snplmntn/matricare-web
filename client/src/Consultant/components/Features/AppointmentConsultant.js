@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/features/appointmentconsultant.css";
 import { IoAddCircleOutline, IoNotifications } from "react-icons/io5";
+import axios from "axios";
+import { getCookie } from "../../../utils/getCookie";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 const initialAppointments = [
   {
@@ -34,11 +37,16 @@ const AppointmentConsultant = () => {
     date: "",
     time: "",
     patientName: "",
+    email: "",
     location: "",
     category: "",
-    status: "pending",
+    status: "Pending",
   });
   const [user, setUser] = useState({});
+
+  const API_URL = process.env.REACT_APP_API_URL;
+  const token = getCookie("token");
+  const userID = getCookie("userID");
 
   useEffect(() => {
     const userData = localStorage.getItem("userData");
@@ -77,21 +85,36 @@ const AppointmentConsultant = () => {
 
   const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
 
-  const handleStatusChange = (index, newStatus) => {
-    const updatedAppointments = appointments.map((appointment, i) => {
-      if (i === index) {
-        return { ...appointment, status: newStatus };
-      }
-      return appointment;
-    });
-    setAppointments(updatedAppointments);
+  const handleStatusChange = async (index, newStatus) => {
+    try {
+      await axios.put(
+        `${API_URL}/appointment?id=${appointments[index]._id}`,
+        {
+          status: newStatus,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      const updatedAppointments = appointments.map((appointment, i) => {
+        if (i === index) {
+          return { ...appointment, status: newStatus };
+        }
+        return appointment;
+      });
+      setAppointments(updatedAppointments);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const upcomingAppointments = appointments.filter(
-    (appointment) => appointment.status === "pending"
+    (appointment) => appointment.status === "Pending"
   );
   const postAppointments = appointments.filter(
-    (appointment) => appointment.status === "confirmed"
+    (appointment) => appointment.status === "Confirmed"
   );
 
   const handleFormChange = (e) => {
@@ -99,24 +122,51 @@ const AppointmentConsultant = () => {
     setNewAppointment({ ...newAppointment, [name]: value });
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const { date, time, patientName, location, category } = newAppointment;
+    const { date, time, patientName, location, category, email } =
+      newAppointment;
     if (date && time && patientName && location && category) {
       const fullDateTime = `${date}, ${time}`;
       setAppointments([
         ...appointments,
         { ...newAppointment, date: fullDateTime },
       ]);
-      setNewAppointment({
-        date: "",
-        time: "",
-        patientName: "",
-        location: "",
-        category: "",
-        status: "pending",
-      });
-      setIsFormVisible(false);
+
+      const appointmentObj = {
+        email: email,
+        assignedId: userID,
+        patientName: patientName,
+        location: location,
+        category: category,
+        date: new Date(fullDateTime),
+      };
+
+      try {
+        const response = await axios.post(
+          `${API_URL}/appointment`,
+          appointmentObj,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        console.log(response);
+      } catch (error) {
+        console.error("Resend email error:", error);
+      }
+      // setNewAppointment({
+      //   date: "",
+      //   time: "",
+      //   patientName: "",
+      //   email: "",
+      //   location: "",
+      //   category: "",
+      //   status: "Pending",
+      // });
+      // setIsFormVisible(false);
     } else {
       alert("Please fill in all fields");
     }
@@ -131,6 +181,34 @@ const AppointmentConsultant = () => {
       location: "",
       category: "",
       status: "pending",
+    });
+  };
+
+  useEffect(() => {
+    async function fetchAppointments() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/appointment/u?assignedId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log(response);
+        setAppointments(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchAppointments();
+  }, []);
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("en-PH", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
     });
   };
 
@@ -200,9 +278,9 @@ const AppointmentConsultant = () => {
                 />
                 <input
                   type="text"
-                  name="patientName"
-                  placeholder="Patient Name"
-                  value={newAppointment.patientName}
+                  name="email"
+                  placeholder="Patient Email"
+                  value={newAppointment.email}
                   onChange={handleFormChange}
                   required
                 />
@@ -293,7 +371,7 @@ const AppointmentConsultant = () => {
                           Date:
                         </span>
                         <span className="appointmentConsultant-text">
-                          {appointment.date}
+                          {formatDate(appointment.date)}
                         </span>
                       </div>
                     </div>
@@ -335,9 +413,9 @@ const AppointmentConsultant = () => {
                           handleStatusChange(index, e.target.value)
                         }
                       >
-                        <option value="confirmed">Confirmed</option>
-                        <option value="pending">Pending</option>
-                        <option value="cancelled">Cancelled</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Cancelled">Cancelled</option>
                       </select>
                     </div>
                   </div>
@@ -358,7 +436,7 @@ const AppointmentConsultant = () => {
                           Date:
                         </span>
                         <span className="appointmentConsultant-text">
-                          {appointment.date}
+                          {formatDate(appointment.date)}
                         </span>
                       </div>
                     </div>
