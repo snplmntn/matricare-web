@@ -86,7 +86,6 @@ const AppointmentConsultant = () => {
   const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
 
   const handleStatusChange = async (index, newStatus) => {
-    console.log(1);
     try {
       const response = await axios.put(
         `${API_URL}/appointment?id=${appointments[index]._id}`,
@@ -99,8 +98,8 @@ const AppointmentConsultant = () => {
           },
         }
       );
-      const updatedAppointments = appointments.map((appointment, i) => {
-        if (i === index) {
+      const updatedAppointments = appointments.map((appointment) => {
+        if (appointment._id === response.data.updatedAppointment_id) {
           return { ...appointment, status: newStatus };
         }
         return appointment;
@@ -167,7 +166,7 @@ const AppointmentConsultant = () => {
       //   category: "",
       //   status: "Pending",
       // });
-      // setIsFormVisible(false);
+      setIsFormVisible(false);
     } else {
       alert("Please fill in all fields");
     }
