@@ -1,87 +1,78 @@
 import React, { useState, useEffect } from 'react';
-import { momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '../../style/features/appointmentassistant.css';
 import { IoSearch} from 'react-icons/io5';
+import moment from 'moment';
 
-const localizer = momentLocalizer(moment);
 
 const AppointmentAssistant = () => {
-  const [appointments, setAppointments] = useState([]);
   const [events, setEvents] = useState([]);
   const [upcomingAppointments, setUpcomingAppointments] = useState([]);
+  const [sortBy, setSortBy] = useState('all');
+  const [branchLocation, setBranchLocation] = useState('');
 
   useEffect(() => {
-    const savedAppointments = [
-      {
-        day: 'Monday',
-        time: '2:00 PM',
-        patientName: 'John Doe'
-      },
-      {
-        day: 'Wednesday',
-        time: '8:00 AM',
-        patientName: 'Bea Rosal'
-      },
-      {
-        day: 'Friday',
-        time: '9:00 AM',
-        patientName: 'Johanna Tulalian'
-      },
-      {
-        day: 'Saturday',
-        time: '1:00 PM',
-        patientName: 'Nathaniel MAtias'
-      }
-    ];
-
-    setAppointments(savedAppointments);
-
     const savedUpcomingAppointments = [
       {
+        appointmentDate: 'October 01, 2024',
+        appointmentTime: '2:00 PM',
         name: 'John Doe',
         phoneNumber: '123-456-7890',
+        branchLocation: 'Mary Chiles, Sampaloc Manila',
         appointmentType: 'Advise by the Doctor',
-        appointmentTime: 'Monday, 2:00 PM'
       },
       {
+        appointmentDate: 'October 11, 2024',
+        appointmentTime: '12:00 PM',
         name: 'Bea Rosal',
         phoneNumber: '987-654-3210',
+        branchLocation: 'Mary Chiles, Sampaloc Manila',
         appointmentType: 'Monthly Check up',
-        appointmentTime: 'Wednesday, 8:00 AM'
       },
       {
+        appointmentDate: 'October 12, 2024',
+        appointmentTime: '5:00 PM',
         name: 'Johanna Tulalian',
         phoneNumber: '987-654-3210',
+        branchLocation: 'Grace Medical Center, Bulacan',
         appointmentType: 'Advise by the Doctor',
-        appointmentTime: 'Friday, 9:00 AM'
       },
       {
+        appointmentDate: 'October 01, 2024',
+        appointmentTime: '10:00 AM',
         name: 'Nathaniel MAtias',
         phoneNumber: '987-654-3210',
+        branchLocation: 'Family Care Tungko, Bulacan',
         appointmentType: 'Monthly Check up',
-        appointmentTime: 'Saturday, 1:00 PM'
       }
     ];
     setUpcomingAppointments(savedUpcomingAppointments);
   }, []);
 
-  const renderTableCell = (day, time) => {
-    const appointment = appointments.find(
-      appt => appt.day === day && appt.time === time
-    );
+ 
+  const handleSortChange = (e) => {
+    setSortBy(e.target.value);
+    setBranchLocation(''); 
+  };
 
-    if (appointment) {
-      return (
-        <td className="schedule-cell booked">
-          {appointment.patientName}
-        </td>
-      );
+ 
+  const handleBranchLocationChange = (e) => {
+    setBranchLocation(e.target.value);
+  };
+
+  
+  const filterAppointments = () => {
+    const today = moment().format('MMMM DD, YYYY');
+
+    if (sortBy === 'today') {
+      return upcomingAppointments.filter(appt => appt.appointmentDate === today);
+    } else if (sortBy === 'branchLocation' && branchLocation) {
+      return upcomingAppointments.filter(appt => appt.branchLocation === branchLocation);
     }
 
-    return <td className="schedule-cell"></td>;
+    // Default: show all appointments
+    return upcomingAppointments;
   };
+
 
   // Load events from localStorage on component mount
   useEffect(() => {
@@ -104,7 +95,6 @@ const AppointmentAssistant = () => {
   return (
     <div className="appointment-assistant-container">
       <div className="appointment-main-container">
-      <div className="appointment-assistant-middle-layout">
         <div className="appointment-assistant-top-search">
         <IoSearch className="assistant-search-icon" />
           <input
@@ -115,71 +105,67 @@ const AppointmentAssistant = () => {
         </div>
           <div className="appointment-assistant-content-container">
             <div className="appointment-assistant-content-section">
-              <h2>Schedule</h2>
-              <div className="schedule-container">
-                <table className="schedule-table">
-                  <thead>
-                    <tr>
-                      <th>Time</th>
-                      <th>Monday</th>
-                      <th>Tuesday</th>
-                      <th>Wednesday</th>
-                      <th>Thursday</th>
-                      <th>Friday</th>
-                      <th>Saturday</th>
-                      <th>Sunday</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {['8:00 AM', '9:00 AM', '10:00 AM', '1:00 PM', '2:00 PM', '3:00 PM'].map((time) => (
-                      <tr key={time}>
-                        <td>{time}</td>
-                        {renderTableCell('Monday', time)}
-                        {renderTableCell('Tuesday', time)}
-                        {renderTableCell('Wednesday', time)}
-                        {renderTableCell('Thursday', time)}
-                        {renderTableCell('Friday', time)}
-                        {renderTableCell('Saturday', time)}
-                        {renderTableCell('Sunday', time)}
-                      </tr>
-                    ))}
-                  </tbody>
-                  </table>
+            <div className="appointment-header">
+              <h2>Appointments</h2>
+              <div className="sort-by-container">
+                <label htmlFor="sortBy">Sort by: </label>
+                <select id="sortBy" value={sortBy} onChange={handleSortChange}>
+                  <option value="all">All</option>
+                  <option value="today">Today's Appointment</option>
+                  <option value="branchLocation">Branch Location</option>
+                </select>
+                {sortBy === 'branchLocation' && (
+                  <select
+                    id="branchLocation"
+                    value={branchLocation}
+                    onChange={handleBranchLocationChange}
+                  >
+                    <option value="">Select Branch</option>
+                    <option value="Mary Chiles, Sampaloc Manila">Mary Chiles, Sampaloc Manila</option>
+                    <option value="Grace Medical Center, Bulacan">Grace Medical Center, Bulacan</option>
+                    <option value="Family Care Tungko, Bulacan">Family Care Tungko, Bulacan</option>
+                  </select>
+                )}
               </div>
             </div>
-
-            <div className="appointment-assistant-content-section">
-              <h2>Upcoming Appointments</h2>
               <div className="upcoming-appointments-container">
                 <table className="upcoming-appointments-table">
                   <thead>
                     <tr>
+                      <th>Visit Date</th>
+                      <th>Visit Time</th>
                       <th>Name</th>
                       <th>Phone Number</th>
+                      <th>Branch Location</th>
                       <th>Appointment Type</th>
-                      <th>Appointment Time</th>
                       <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {upcomingAppointments.map((appointment, index) => (
+                  {filterAppointments().map((appointment, index) => (
                       <tr key={index}>
+                        <td>{appointment.appointmentDate}</td>
+                        <td>{appointment.appointmentTime}</td>
                         <td>{appointment.name}</td>
                         <td>{appointment.phoneNumber}</td>
+                        <td>{appointment.branchLocation}</td>
                         <td>{appointment.appointmentType}</td>
-                        <td>{appointment.appointmentTime}</td>
                         <td>
                           <button onClick={() => handleDetailsClick(appointment)}>Details &gt;</button>
                         </td>
                       </tr>
                     ))}
+                    {filterAppointments().length === 0 && (
+                    <tr>
+                      <td colSpan="7">No appointments found</td>
+                    </tr>
+                  )}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
       </div>
-    </div>
     </div>
   );
 };
