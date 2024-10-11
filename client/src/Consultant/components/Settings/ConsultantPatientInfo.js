@@ -93,15 +93,6 @@ const ConsultantPatientInfo = () => {
     }
   };
 
-  const handleStatusChange = (event, userId) => {
-    const updatedPatients = patients.map((patient) => {
-      if (patient.id === userId) {
-        return { ...patient, status: event.target.value };
-      }
-      return patient;
-    });
-    setPatients(updatedPatients);
-  };
 
   const handleSaveClick = () => {
     setEditingUserId(null);
@@ -235,17 +226,16 @@ const ConsultantPatientInfo = () => {
               <th>Photo</th>
               {view === "patients" && (
                 <>
-                  <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
-                  <th>Status</th>
+                  <th>Patient Name</th>
+                  <th>Phone Number</th>
+                  <th>Email Address</th>
                 </>
               )}
               {view === "admins" && (
                 <>
                   <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
+                  <th>Phone Number</th>
+                  <th>Email Address</th>
                   <th>Role</th>
                 </>
               )}
@@ -281,22 +271,6 @@ const ConsultantPatientInfo = () => {
                     <td>{user.fullName}</td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
-                    <td>
-                      {editingUserId === user.id ? (
-                        <select
-                          value={user.status}
-                          onChange={(event) =>
-                            handleStatusChange(event, user.id)
-                          }
-                          className="CPM-status-select"
-                        >
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                        </select>
-                      ) : (
-                        user.status
-                      )}
-                    </td>
                   </>
                 )}
                 {view === "admins" && (
