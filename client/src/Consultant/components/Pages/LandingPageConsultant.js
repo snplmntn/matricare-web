@@ -26,6 +26,7 @@ const LandingPageConsultant = ({}) => {
     phoneNumber: "",
     email: "",
   });
+  const [notification, setNotification] = useState();
 
   const token = getCookie("token");
   const API_URL = process.env.REACT_APP_API_URL;
@@ -41,7 +42,6 @@ const LandingPageConsultant = ({}) => {
   const handleAddPatient = async (e) => {
     e.preventDefault();
     try {
-      console.log(newPatient);
       const response = await axios.post(
         `${API_URL}/record/patient`,
         {
@@ -71,6 +71,22 @@ const LandingPageConsultant = ({}) => {
   useEffect(() => {
     const userData = localStorage.getItem("userData");
     if (userData) setUser(JSON.parse(userData));
+
+    const fetchNotification = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/n?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        // console.log(response);
+        setNotification(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchNotification();
   }, []);
 
   return (
@@ -257,18 +273,12 @@ const LandingPageConsultant = ({}) => {
         <div className="consultant-notifications">
           <h3>Notifications</h3>
           <div className="notifications-list">
-            <div className="notification-item">
-              New patient appointment: Ella Cruz - 03:00 PM
-            </div>
-            <div className="notification-item">
-              Appointment reminder: Mary - 05:00 PM
-            </div>
-            <div className="notification-item">
-              Follow-up needed: Mikkaella - 08:00 PM
-            </div>
-            <div className="notification-item">
-              New message from Mikkaella Rodriguez - 03:00 PM
-            </div>
+            {notification &&
+              notification.map((notif, index) => (
+                <div key={index} className="notification-item">
+                  {notif.message}
+                </div>
+              ))}
           </div>
         </div>
       </aside>
