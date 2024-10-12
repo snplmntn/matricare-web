@@ -80,7 +80,7 @@ const LandingPageConsultant = ({}) => {
           },
         });
         // console.log(response);
-        setNotification(response.data);
+        setNotification(response.data.reverse());
       } catch (error) {
         console.error(error);
       }

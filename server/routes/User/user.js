@@ -21,4 +21,7 @@ router.put("/", userController.user_update);
 // Get User by Role
 router.get("/n", notificationController.notification_get);
 
+// Update Notification
+router.put("/n", notificationController.notification_put);
+
 module.exports = router;

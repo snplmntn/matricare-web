@@ -23,6 +23,7 @@ import { getCookie } from "../../../utils/getCookie";
 import { CookiesProvider, useCookies } from "react-cookie";
 
 function HomePage({ user }) {
+  const userID = getCookie("userID");
   let { name, username, role } = user.current;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
@@ -32,6 +33,7 @@ function HomePage({ user }) {
   const token = cookies.token;
 
   const API_URL = process.env.REACT_APP_API_URL;
+  const [notification, setNotification] = useState();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -71,6 +73,24 @@ function HomePage({ user }) {
       }
     };
 
+    const fetchNotification = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/n?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        // console.log(response);
+        const unreadNotifications = response.data.filter(
+          (notification) => notification.status === "Unread"
+        );
+        setNotification(unreadNotifications.length);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchNotification();
     fetchPost();
   }, []);
 
@@ -204,9 +224,13 @@ function HomePage({ user }) {
                     >
                       <div className="dashboard-notification-circle">
                         <span className="dashboard-notification-icon">
-                          {notificationCount}
+                          {notification ? notification : 0}
                         </span>
-                        <p>You have {notificationCount} notifications today!</p>
+                        <p>
+                          You have {notification ? notification : "no"}
+                          {" unread "}
+                          notifications today!
+                        </p>
                       </div>
                     </a>
                     <a href="/" className="dashboard-appointment-link">

@@ -24,6 +24,23 @@ const notification_get = catchAsync(async (req, res, next) => {
   return res.status(200).json(notification);
 });
 
+const notification_put = catchAsync(async (req, res, next) => {
+  const updatedNotification = await Notification.findByIdAndUpdate(
+    req.query.id,
+    { $set: req.body },
+    { new: true }
+  );
+
+  if (!updatedNotification) {
+    return next(new AppError("Notification not found", 404));
+  }
+  return res.status(200).json({
+    message: "Notification Updated Successfully",
+    updatedNotification,
+  });
+});
+
 module.exports = {
   notification_get,
+  notification_put,
 };
