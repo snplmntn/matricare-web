@@ -93,7 +93,6 @@ const ConsultantPatientInfo = () => {
     }
   };
 
-
   const handleSaveClick = () => {
     setEditingUserId(null);
   };
@@ -146,7 +145,6 @@ const ConsultantPatientInfo = () => {
         const response = await axios.get(`${API_URL}/record/patient`, {
           headers: {
             Authorization: token,
-            "Content-Type": "multipart/form-data",
           },
         });
         setPatients(response.data);
@@ -154,6 +152,23 @@ const ConsultantPatientInfo = () => {
         console.error();
       }
     }
+
+    async function fetchPatients() {
+      try {
+        const response = await axios.get(`${API_URL}/user/a`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const filteredAdmins = response.data.filter(
+          (admin) => admin.role === "Assistant" || admin.role === "Obgyne"
+        );
+        setAdmins(filteredAdmins);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchPatients();
   }, []);
 
@@ -275,8 +290,8 @@ const ConsultantPatientInfo = () => {
                 )}
                 {view === "admins" && (
                   <>
-                    <td>{user.name}</td>
-                    <td>{user.mobile}</td>
+                    <td>{user.fullName}</td>
+                    <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                   </>
