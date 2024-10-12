@@ -16,9 +16,16 @@ const formatAppointmentDate = (date) => {
 
 // Get Appointment by Id
 const appointment_get = catchAsync(async (req, res, next) => {
-  const appointment = await Appointment.findOne({
-    _id: req.query.id,
-  });
+  const { id } = req.query;
+
+  let appointment;
+  if (id) {
+    appointment = await Appointment.findOne({
+      _id: req.query.id,
+    }).populate("userId");
+  } else {
+    appointment = await Appointment.find().populate("userId");
+  }
 
   if (!appointment) return next(new AppError("Appointment not found", 404));
 
@@ -31,7 +38,7 @@ const appointment_user_get = catchAsync(async (req, res, next) => {
 
   const appointment = await Appointment.find(
     userId ? { userId: userId } : { assignedId: assignedId }
-  );
+  ).populate("userId");
 
   if (!appointment) return next(new AppError("Appointment not found", 404));
 

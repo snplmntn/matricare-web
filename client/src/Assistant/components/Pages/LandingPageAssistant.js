@@ -22,6 +22,8 @@ import {
   LinearScale,
   PointElement,
 } from "chart.js";
+import axios from "axios";
+import { getCookie } from "../../../utils/getCookie";
 
 // Register chart components
 ChartJS.register(
@@ -36,7 +38,15 @@ ChartJS.register(
 );
 
 const LandingPageAssistant = ({}) => {
+  const token = getCookie("token");
+  const API_URL = process.env.REACT_APP_API_URL;
   const [user, setUser] = useState({});
+  const [totalPatients, setTotalPatients] = useState(0);
+  const [patient, setPatients] = useState([]);
+  const [appointment, setAppointment] = useState([]);
+  let dateToday = new Date().toLocaleDateString("en-GB", {
+    day: "2-digit",
+  });
 
   useEffect(() => {
     const userData = localStorage.getItem("userData");
@@ -45,14 +55,53 @@ const LandingPageAssistant = ({}) => {
       parsedUser.name = parsedUser.name.split(" ")[0];
       setUser(parsedUser);
     }
+
+    async function fetchPatients() {
+      try {
+        const response = await axios.get(`${API_URL}/record/patient`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setTotalPatients(response.data.length);
+        setPatients(response.data);
+      } catch (error) {
+        console.error();
+      }
+    }
+
+    const fetchAppointment = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/appointment`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const sortedAppointments = await response.data
+          .filter((appt) => new Date(appt.date) < new Date())
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+        setAppointment(sortedAppointments.reverse());
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchPatients();
+    fetchAppointment();
   }, []);
 
   const lineData = {
-    labels: Array.from({ length: 30 }, (_, i) => (i + 1).toString()), // Labels from 1 to 30
+    labels: Array.from({ length: dateToday }, (_, i) => (i + 1).toString()), // Labels from 1 to 30
     datasets: [
       {
-        label: "Patients Signed Up",
-        data: [2, 1, 4, 1, 0, 0, 4, 10],
+        label: "Appointments",
+        data: Array.from({ length: dateToday }, (_, i) => {
+          const day = (i + 1).toString().padStart(2, "0");
+          const count = appointment.filter(
+            (p) => new Date(p.date).getDate() === parseInt(day)
+          ).length;
+          return count;
+        }),
         fill: false,
         backgroundColor: "#9a6cb4",
         borderColor: "#9a6cb4",
@@ -69,7 +118,7 @@ const LandingPageAssistant = ({}) => {
       },
       tooltip: {
         callbacks: {
-          label: (tooltipItem) => `Patients: ${tooltipItem.raw}`,
+          label: (tooltipItem) => `Appointment: ${tooltipItem.raw}`,
         },
       },
     },
@@ -121,9 +170,6 @@ const LandingPageAssistant = ({}) => {
       },
     },
   };
-
-  // Total number of patients
-  const totalPatients = 13;
 
   // Sample Appointments
   const months = [
@@ -191,14 +237,14 @@ const LandingPageAssistant = ({}) => {
   };
 
   // Group patients by their appointment date
-  const groupedPatients = patients.reduce((acc, patient) => {
-    const formattedDate = formatDate(patient.appointmentDate);
+  const groupedPatients = appointment.reduce((acc, appt) => {
+    const formattedDate = formatDate(appt.date);
 
     if (!acc[formattedDate]) {
       acc[formattedDate] = [];
     }
 
-    acc[formattedDate].push(patient);
+    acc[formattedDate].push(appt);
     return acc;
   }, {});
 
@@ -235,6 +281,15 @@ const LandingPageAssistant = ({}) => {
         },
       },
     ],
+  };
+
+  const formatDateTime = (date) => {
+    const formattedDate = new Date(date);
+    return formattedDate.toLocaleString("en-PH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   return (
@@ -315,20 +370,31 @@ const LandingPageAssistant = ({}) => {
                   <h3 className="appointment-date-label">
                     {date === todayStr ? "Today" : date}
                   </h3>
-                  {groupedPatients[date].map((patient) => (
+                  {groupedPatients[date].map((appointment) => (
                     <div
-                      key={patient.id}
+                      key={appointment.id}
                       className="landingpage-assistant-patient-item"
                     >
                       <div className="patient-picture">
-                        <img src={patient.profilePic} alt={patient.name} />
+                        <img
+                          src={
+                            appointment.userId.profilePicture
+                              ? appointment.userId.profilePicture
+                              : "img/LOGO.png"
+                          }
+                          alt={appointment.patientName}
+                        />
                       </div>
                       <div className="patient-details">
-                        <div className="patient-name">{patient.name}</div>
-                        <div className="branch-location">{patient.branch}</div>
+                        <div className="patient-name">
+                          {appointment.patientName}
+                        </div>
+                        <div className="branch-location">
+                          {appointment.branch}
+                        </div>
                       </div>
                       <div className="appointment-date">
-                        {patient.appointmentDate}
+                        {formatDateTime(appointment.date)}
                       </div>
                     </div>
                   ))}
