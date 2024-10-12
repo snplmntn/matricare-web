@@ -1,50 +1,44 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import "../../style/pages/patientusermanagement.css";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  IoHome,
-  IoCalendar,
-  IoChatbubbles,
-  IoLibrary,
-  IoPerson,
-  IoPencil,
-  IoTrash,
-  IoSave,
-} from "react-icons/io5";
+import "../../style/pages/patientusermanagement.css";
+import { IoPencil, IoTrash, IoSave } from "react-icons/io5";
+import { getCookie } from "../../../utils/getCookie";
+import axios from "axios";
 
-const PatientUserManagement = () => {
+const ConsultantPatientInfo = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
+  const token = getCookie("token");
+  const userID = getCookie("userID");
   const [filter, setFilter] = useState("all");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
-  const [view, setView] = useState("patients"); // Manage view
-  const [editingUserId, setEditingUserId] = useState(null); // Track the editing user
-  const [patients, setPatients] = useState([
-    {
-      id: 1,
-      photo: "img/topic1.jpg",
-      name: "Alice Guo",
-      mobile: "123-456-7890",
-      email: "john@example.com",
-      status: "active",
-    },
-    {
-      id: 2,
-      photo: "img/topic1.jpg",
-      name: "Jane Smith",
-      mobile: "098-765-4321",
-      email: "jane@example.com",
-      status: "inactive",
-    },
-    // Add more patients here
-  ]);
+  const [view, setView] = useState("patients");
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [patients, setPatients] = useState([]);
+  const [newPatient, setNewPatient] = useState({
+    assignedId: userID,
+    fullName: "",
+    phoneNumber: "",
+    email: "",
+  });
+  const [user, setUser] = useState({});
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+      parsedUserData.name = parsedUserData.name.split(" ")[0];
+      setUser(parsedUserData);
+    }
+  }, []);
 
   const [admins, setAdmins] = useState([
     {
       id: 3,
       photo: "img/topic1.jpg",
-      name: "Dr. Emily Clark",
+      name: "Dra. Donna Jill A. Tungol",
       mobile: "123-456-7890",
       email: "john@example.com",
       role: "Doctor",
@@ -61,13 +55,6 @@ const PatientUserManagement = () => {
   ]);
 
   const [showForm, setShowForm] = useState(false); // State for form visibility
-  const [newPatient, setNewPatient] = useState({
-    id: "",
-    name: "",
-    mobile: "",
-    email: "",
-    status: "active",
-  });
 
   const filteredUsers =
     view === "patients"
@@ -96,25 +83,14 @@ const PatientUserManagement = () => {
   };
 
   const handleDeleteClick = (userId) => {
-    if (view === "patients") {
-      const updatedPatients = patients.filter(
-        (patient) => patient.id !== userId
-      );
-      setPatients(updatedPatients);
-    } else if (view === "admins") {
-      const updatedAdmins = admins.filter((admin) => admin.id !== userId);
-      setAdmins(updatedAdmins);
-    }
-  };
-
-  const handleStatusChange = (event, userId) => {
-    const updatedPatients = patients.map((patient) => {
-      if (patient.id === userId) {
-        return { ...patient, status: event.target.value };
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      if (view === "patients") {
+        setPatients(patients.filter((user) => user.id !== userId));
+      } else {
+        setAdmins(admins.filter((user) => user.id !== userId));
       }
-      return patient;
-    });
-    setPatients(updatedPatients);
+      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
+    }
   };
 
   const handleSaveClick = () => {
@@ -122,7 +98,7 @@ const PatientUserManagement = () => {
   };
 
   const handleRowClick = (userId) => {
-    navigate("/patient-records");
+    navigate(`/patient-records/${userId}`);
   };
 
   const handleAddPatientClick = () => {
@@ -134,23 +110,28 @@ const PatientUserManagement = () => {
     setNewPatient((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const handleAddPatientSubmit = (event) => {
+  const handleAddPatientSubmit = async (event) => {
     event.preventDefault();
-    setPatients([
-      ...patients,
-      {
-        ...newPatient,
-        id: patients.length + 1,
-        PatientID: patients.length + 1,
-      },
-    ]); // Add new patient
-    setNewPatient({
-      id: "",
-      name: "",
-      mobile: "",
-      email: "",
-      status: "active",
-    }); // Reset form fields
+    try {
+      const patientForm = {
+        assignedId: userID,
+        email: newPatient.email,
+        fullName: newPatient.fullName,
+        phoneNumber: newPatient.phoneNumber,
+      };
+      const response = await axios.post(
+        `${API_URL}/record/patient`,
+        patientForm,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setPatients([...patients, response.data.newPatient]);
+    } catch (error) {
+      console.error(error);
+    }
     setShowForm(false); // Hide the form
   };
 
@@ -158,67 +139,76 @@ const PatientUserManagement = () => {
     setShowForm(false); // Hide the form
   };
 
-  return (
-    <div className="PatientUserManagement-container">
-      <nav className="PUM-navbar">
-        <div className="PUM-navbar-options">
-          <div className="PUM-sidebar-logo">
-            <img src="img/logo_consultant.png" alt="Logo" />
-          </div>
-          <div className="PUM-sidebar-menu">
-            <Link to="/assistant-profile" className="PUM-sidebar-item">
-              <IoPerson className="PUM-icon" />
-            </Link>
-            <Link to="/assistant-landing" className="PUM-sidebar-item">
-              <IoHome className="PUM-icon" />
-            </Link>
-            <Link to="/appointment-assistant" className="PUM-sidebar-item">
-              <IoCalendar className="PUM-icon" />
-            </Link>
-            <Link to="/library" className="PUM-sidebar-item">
-              <IoLibrary className="PUM-icon" />
-            </Link>
-            <Link to="/belly-talk" className="PUM-sidebar-item">
-              <IoChatbubbles className="PUM-icon" />
-            </Link>
-          </div>
-        </div>
-      </nav>
+  useEffect(() => {
+    async function fetchPatients() {
+      try {
+        const response = await axios.get(`${API_URL}/record/patient`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setPatients(response.data);
+      } catch (error) {
+        console.error();
+      }
+    }
 
-      <div className="PUM-main-section">
-        <header className="PUM-header">
-          <div className="PUM-user-profile">
-            <h1>Mary Anne B. Santos</h1>
+    async function fetchAdmins() {
+      try {
+        const response = await axios.get(`${API_URL}/user/a`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const filteredAdmins = response.data.filter(
+          (admin) => admin.role === "Assistant" || admin.role === "Obgyne"
+        );
+        setAdmins(filteredAdmins);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchPatients();
+    fetchAdmins();
+  }, []);
+
+  return (
+    <div className="CPM-container">
+      <div className="CPM-main-section">
+        <header className="CPM-header">
+          <div className="CPM-user-profile">
+            <h1>{`${user.name}`}</h1>
             <p>Assistant</p>
             <img src="img/LOGO.png" alt="Profile" />
-            <button className="PUM-add-btn" onClick={handleAddPatientClick}>
+            <button className="CPM-add-btn" onClick={handleAddPatientClick}>
               + Add Patients
             </button>
           </div>
         </header>
 
-        <div className="PUM-type-buttons">
+        <div className="CPM-type-buttons">
           <button
-            className={`PUM-type-button ${view === "patients" ? "active" : ""}`}
+            className={`CPM-type-button ${view === "patients" ? "active" : ""}`}
             onClick={() => setView("patients")}
           >
             Patients
           </button>
           <button
-            className={`PUM-type-button ${view === "admins" ? "active" : ""}`}
+            className={`CPM-type-button ${view === "admins" ? "active" : ""}`}
             onClick={() => setView("admins")}
           >
             Admins
           </button>
         </div>
 
-        <div className="PUM-view-label">
+        <div className="CPM-view-label">
           {view === "patients" ? <h2>Patients</h2> : <h2>Admins</h2>}
         </div>
 
-        <div className="PUM-filter-options">
+        <div className="CPM-filter-options">
           {view === "patients" && (
-            <div className="PUM-toggle-select">
+            <div className="CPM-toggle-select">
               <input
                 type="checkbox"
                 id="selectAll"
@@ -226,12 +216,12 @@ const PatientUserManagement = () => {
                 onChange={toggleSelectAll}
               />
               <label htmlFor="selectAll">Select All Users</label>
-              <span className="PUM-total-users">({patients.length} Users)</span>
+              <span className="CPM-total-users">({patients.length} Users)</span>
             </div>
           )}
           {view === "patients" && (
-            <div className="PUM-filter-section">
-              <div className="PUM-filter-container">
+            <div className="CPM-filter-section">
+              <div className="CPM-filter-container">
                 <label htmlFor="filter">Filter:</label>
                 <select id="filter" onChange={handleFilterChange}>
                   <option value="all">All</option>
@@ -243,24 +233,25 @@ const PatientUserManagement = () => {
           )}
         </div>
 
-        <table className="PUM-user-table">
+        <table className="CPM-user-table">
           <thead>
             <tr>
               {view === "patients" && <th>Select</th>}
+
+              <th>Patient ID</th>
               <th>Photo</th>
               {view === "patients" && (
                 <>
-                  <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
-                  <th>Status</th>
+                  <th>Patient Name</th>
+                  <th>Phone Number</th>
+                  <th>Email Address</th>
                 </>
               )}
               {view === "admins" && (
                 <>
                   <th>Name</th>
-                  <th>Mobile</th>
-                  <th>Email</th>
+                  <th>Phone Number</th>
+                  <th>Email Address</th>
                   <th>Role</th>
                 </>
               )}
@@ -268,8 +259,8 @@ const PatientUserManagement = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.map((user) => (
-              <tr key={user.id}>
+            {filteredUsers.map((user, index) => (
+              <tr key={user.id} onClick={() => handleRowClick(user._id)}>
                 {view === "patients" && (
                   <td>
                     <input
@@ -279,40 +270,29 @@ const PatientUserManagement = () => {
                     />
                   </td>
                 )}
+                <td>{user.seq}</td>
                 <td>
                   <img
-                    src={user.photo}
-                    alt={user.name}
-                    className="PUM-user-photo"
+                    src={
+                      user.profilePicture
+                        ? user.profilePicture
+                        : "img//topic1.jpg"
+                    }
+                    // alt={user.name}
+                    className="CPM-user-photo"
                   />
                 </td>
                 {view === "patients" && (
                   <>
-                    <td>{user.name}</td>
-                    <td>{user.mobile}</td>
+                    <td>{user.fullName}</td>
+                    <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
-                    <td>
-                      {editingUserId === user.id ? (
-                        <select
-                          value={user.status}
-                          onChange={(event) =>
-                            handleStatusChange(event, user.id)
-                          }
-                          className="PUM-status-select"
-                        >
-                          <option value="active">Active</option>
-                          <option value="inactive">Inactive</option>
-                        </select>
-                      ) : (
-                        user.status
-                      )}
-                    </td>
                   </>
                 )}
                 {view === "admins" && (
                   <>
-                    <td>{user.name}</td>
-                    <td>{user.mobile}</td>
+                    <td>{user.fullName}</td>
+                    <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                   </>
@@ -320,24 +300,24 @@ const PatientUserManagement = () => {
                 <td>
                   {editingUserId === user.id ? (
                     <button
-                      className="PUM-operation-btn"
+                      className="CPM-operation-btn"
                       onClick={handleSaveClick}
                     >
-                      <IoSave /> {/* Use an appropriate icon for saving */}
+                      <IoSave />
                     </button>
                   ) : (
                     <button
-                      className="PUM-operation-btn"
+                      className="CPM-operation-btn"
                       onClick={() => handleEditClick(user.id)}
                     >
-                      <IoPencil /> {/* Edit icon */}
+                      <IoPencil />
                     </button>
                   )}
                   <button
-                    className="PUM-operation-btn PUM-delete-btn"
+                    className="CPM-operation-btn CPM-delete-btn"
                     onClick={() => handleDeleteClick(user.id)}
                   >
-                    <IoTrash /> {/* Delete icon */}
+                    <IoTrash />
                   </button>
                 </td>
               </tr>
@@ -346,32 +326,32 @@ const PatientUserManagement = () => {
         </table>
       </div>
       {showForm && (
-        <div className="PUM-patient">
-          <div className="PUM-add-patient-form">
+        <div className="CPM-patient">
+          <div className="CPM-add-patient-form">
             <form onSubmit={handleAddPatientSubmit}>
-              <div className="PUM-add-form">
+              <div className="CPM-add-form">
                 <label htmlFor="patientName">Name:</label>
                 <input
                   type="text"
                   id="patientName"
-                  name="name"
-                  value={newPatient.name}
+                  name="fullName"
+                  value={newPatient.fullName}
                   onChange={handleFormChange}
                   required
                 />
               </div>
-              <div className="PUM-add-form">
+              <div className="CPM-add-form">
                 <label htmlFor="patientMobile">Mobile Number:</label>
                 <input
                   type="tel"
                   id="patientMobile"
-                  name="mobile"
-                  value={newPatient.mobile}
+                  name="phoneNumber"
+                  value={newPatient.phoneNumber}
                   onChange={handleFormChange}
                   required
                 />
               </div>
-              <div className="PUM-add-form">
+              <div className="CPM-add-form">
                 <label htmlFor="patientEmail">Email:</label>
                 <input
                   type="email"
@@ -382,12 +362,12 @@ const PatientUserManagement = () => {
                   required
                 />
               </div>
-              <button type="submit" className="PUM-add-submit">
+              <button type="submit" className="CPM-add-submit">
                 Add Patient
               </button>
               <button
                 type="button"
-                className="PUM-add-cancel"
+                className="CPM-add-cancel"
                 onClick={handleCancelClick}
               >
                 Cancel
@@ -400,4 +380,4 @@ const PatientUserManagement = () => {
   );
 };
 
-export default PatientUserManagement;
+export default ConsultantPatientInfo;

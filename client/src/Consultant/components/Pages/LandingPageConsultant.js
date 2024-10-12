@@ -59,6 +59,8 @@ const LandingPageConsultant = ({}) => {
           },
         }
       );
+      setTotalPatients(totalPatients + 1);
+      setNewPatients(newPatients + 1);
     } catch (error) {
       console.error(error);
     }
@@ -131,9 +133,9 @@ const LandingPageConsultant = ({}) => {
       }
     }
 
-    fetchPatients();
     fetchNotification();
     fetchAppointment();
+    fetchPatients();
   }, []);
 
   return (
