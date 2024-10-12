@@ -23,6 +23,7 @@ import { getCookie } from "../../../utils/getCookie";
 import { CookiesProvider, useCookies } from "react-cookie";
 
 function HomePage({ user }) {
+  const userID = getCookie("userID");
   let { name, username, role } = user.current;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
@@ -32,6 +33,8 @@ function HomePage({ user }) {
   const token = cookies.token;
 
   const API_URL = process.env.REACT_APP_API_URL;
+  const [notification, setNotification] = useState();
+  const [upcomingAppointment, setUpcomingAppointment] = useState();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -71,7 +74,59 @@ function HomePage({ user }) {
       }
     };
 
+    const fetchNotification = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/n?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        // console.log(response);
+        const unreadNotifications = response.data.filter(
+          (notification) => notification.status === "Unread"
+        );
+        setNotification(unreadNotifications.length);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchAppointment = async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL}/appointment/u?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        const appointments = response.data;
+        const now = new Date();
+        const upcoming = appointments
+          .filter((appointment) => new Date(appointment.date) > now)
+          .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+        const laterToday = appointments
+          .filter(
+            (appointment) =>
+              new Date(appointment.date) > now &&
+              new Date(appointment.date).toDateString() === now.toDateString()
+          )
+          .sort((a, b) => new Date(a.date) - new Date(b.date))[0];
+        if (upcoming) {
+          setUpcomingAppointment(upcoming);
+        } else if (laterToday) {
+          setUpcomingAppointment(laterToday);
+        } else {
+          setUpcomingAppointment(null);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchPost();
+    fetchNotification();
+    fetchAppointment();
   }, []);
 
   const handleLogout = async () => {
@@ -204,29 +259,54 @@ function HomePage({ user }) {
                     >
                       <div className="dashboard-notification-circle">
                         <span className="dashboard-notification-icon">
-                          {notificationCount}
+                          {notification ? notification : 0}
                         </span>
-                        <p>You have {notificationCount} notifications today!</p>
+                        <p>
+                          You have {notification ? notification : "no"}
+                          {" unread "}
+                          notifications today!
+                        </p>
                       </div>
                     </a>
                     <a href="/" className="dashboard-appointment-link">
                       <div className="dashboard-appointment-rectangle">
                         <div className="dashboard-text-wrapper">
-                          <h2>Upcoming Appointment</h2>
-                          <div className="dashboard-appointment-details">
-                            <p>
-                              <IoCalendarOutline className="dashboard-appointment-icon" />{" "}
-                              Date: Tomorrow
-                            </p>
-                            <p>
-                              <IoTimeOutline className="dashboard-appointment-icon" />{" "}
-                              Time: 10:00 AM
-                            </p>
-                            <p>
-                              <IoLocationOutline className="dashboard-appointment-icon" />{" "}
-                              Place: Medical Center
-                            </p>
-                          </div>
+                          {upcomingAppointment ? (
+                            <>
+                              <h2>Upcoming Appointment</h2>
+                              <div className="dashboard-appointment-details">
+                                <p>
+                                  <IoCalendarOutline className="dashboard-appointment-icon" />{" "}
+                                  Date:{" "}
+                                  {upcomingAppointment &&
+                                    new Date(
+                                      upcomingAppointment.date
+                                    ).toLocaleDateString()}
+                                </p>
+                                <p>
+                                  <IoTimeOutline className="dashboard-appointment-icon" />{" "}
+                                  Time:{" "}
+                                  {upcomingAppointment &&
+                                    new Date(
+                                      upcomingAppointment.date
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                </p>
+                                <p>
+                                  <IoLocationOutline className="dashboard-appointment-icon" />{" "}
+                                  Place:{" "}
+                                  {upcomingAppointment &&
+                                    upcomingAppointment.location}
+                                </p>
+                              </div>{" "}
+                            </>
+                          ) : (
+                            <>
+                              <h2>No Upcoming Appointment</h2>
+                            </>
+                          )}
                         </div>
                       </div>
                     </a>

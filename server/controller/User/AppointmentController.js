@@ -6,8 +6,11 @@ const catchAsync = require("../../Utilities/catchAsync");
 
 const formatAppointmentDate = (date) => {
   return new Date(date).toLocaleString("en-PH", {
-    dateStyle: "short",
-    timeStyle: "short",
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
   });
 };
 

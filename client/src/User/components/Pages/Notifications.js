@@ -1,16 +1,18 @@
-import React, { useState } from 'react';
-import { FaCheckCircle } from 'react-icons/fa';
-import { IoArrowBackSharp, IoArrowBack  } from 'react-icons/io5';
+import React, { useState, useEffect } from "react";
+import { FaCheckCircle } from "react-icons/fa";
+import { IoArrowBackSharp, IoArrowBack } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import '../../styles/pages/notification.css'; // Import the CSS file
+import "../../styles/pages/notification.css"; // Import the CSS file
+import axios from "axios";
+import { getCookie } from "../../../utils/getCookie";
 
-const sampleNotifications  = [
+const sampleNotifications = [
   {
     sender: "MatriCare",
     message: "New Article has been uploaded. Check It Out!",
     timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
     type: "info",
-    photo: "img/LOGO.png" 
+    photo: "img/LOGO.png",
   },
   {
     sender: "Dra. Donna",
@@ -18,24 +20,45 @@ const sampleNotifications  = [
     message: "You have new test results available.",
     timestamp: new Date().toISOString(),
     type: "info",
-    photo: "img/topic1.jpg" 
+    photo: "img/topic1.jpg",
   },
   {
     sender: "MatriCare",
     message: "Your laboratory result is ready for pick up.",
     timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
     type: "info",
-    photo: "img/LOGO.png" 
-  }
+    photo: "img/LOGO.png",
+  },
 ];
 
 function Notifications() {
+  const userID = getCookie("userID");
+  const token = getCookie("token");
+  const API_URL = process.env.REACT_APP_API_URL;
+
+  const [notification, setNotification] = useState();
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleNotificationClick = (notification) => {
+  const handleNotificationClick = async (notification) => {
     setSelectedNotification(notification);
     setIsModalOpen(true);
+
+    try {
+      const response = await axios.put(
+        `${API_URL}/user/n?id=${notification._id}`,
+        {
+          status: "Read",
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const closeModal = () => {
@@ -43,25 +66,88 @@ function Notifications() {
     setSelectedNotification(null);
   };
 
+  useEffect(() => {
+    const fetchNotification = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/n?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        // console.log(response);
+        setNotification(response.data.reverse());
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchNotification();
+  }, []);
+
+  const formatDate = (date) => {
+    const notificationDate = new Date(date);
+    const now = new Date();
+    const isYesterdayOrLater =
+      notificationDate.getDate() >= now.getDate() - 1 &&
+      notificationDate.getMonth() === now.getMonth() &&
+      notificationDate.getFullYear() === now.getFullYear();
+
+    if (isYesterdayOrLater) {
+      return notificationDate.toLocaleString("en-PH", {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    }
+
+    return notificationDate.toLocaleString("en-PH", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
   return (
     <div className="PatientDashboard">
-      <Link to="/app" className="notif-back-button"><IoArrowBackSharp /></Link>
+      <Link to="/app" className="notif-back-button">
+        <IoArrowBackSharp />
+      </Link>
       <div className="NotificationsSection">
         <h2 className="section-title">Notifications</h2>
         <hr className="section-divider" />
-        {sampleNotifications.length > 0 ? (
+        {notification ? (
           <div className="notifications-list">
-            {sampleNotifications.map((notification, index) => (
-              <div key={index} className={`notification-container ${notification.type}`}onClick={() => handleNotificationClick(notification)}>
+            {notification.map((notification, index) => (
+              <div
+                key={index}
+                className={`notification-container info`}
+                onClick={() => handleNotificationClick(notification)}
+              >
                 <div className="notification-content">
-                  <img src={notification.photo} alt={notification.sender} className="sender-photo" />
+                  <img
+                    src={
+                      notification.senderName === "MatriCare"
+                        ? "img/LOGO.png"
+                        : "img/topic1.jpg"
+                    }
+                    alt={notification.senderName}
+                    className="sender-photo"
+                  />
                   <div className="notification-text">
-                    <strong className="notification-title">{notification.sender}</strong>
-                    <span className="notification-phonenumber">({notification.phonenumber})</span>
-                    <p className="notification-message">{notification.message}</p>
+                    <strong className="notification-title">
+                      {notification.senderName}
+                    </strong>
+                    <span className="notification-phonenumber">
+                      {notification.senderPhoneNumber &&
+                        `(${notification.senderPhoneNumber})`}
+                    </span>
+                    <p className="notification-message">
+                      {notification.message}
+                    </p>
                   </div>
                   <div className="notification-time">
-                    {new Date(notification.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {formatDate(notification.createdAt)}
                   </div>
                 </div>
               </div>
@@ -71,7 +157,10 @@ function Notifications() {
           <div className="no-notifications">
             <FaCheckCircle className="caught-up-icon" />
             <h1>You're all caught up</h1>
-            <p>Come back later for Reminders, Appointment Confirmation,<br /> and your Prescription notifications.</p>
+            <p>
+              Come back later for Reminders, Appointment Confirmation,
+              <br /> and your Prescription notifications.
+            </p>
           </div>
         )}
       </div>
@@ -81,13 +170,25 @@ function Notifications() {
             <span onClick={closeModal} className="notif-modal-back-button">
               <IoArrowBack />
             </span>
-            <img src={selectedNotification.photo} alt={selectedNotification.sender} className="modal-sender-photo" />
-            <h2 className="modal-sender-name">{selectedNotification.sender}</h2>
+            <img
+              src={
+                selectedNotification.senderName === "MatriCare"
+                  ? "img/LOGO.png"
+                  : "img/topic1.jpg"
+              }
+              alt={selectedNotification.senderName}
+              className="modal-sender-photo"
+            />
+            <h2 className="modal-sender-name">
+              {selectedNotification.senderName}
+            </h2>
             <div className="modal-notification-time">
-              {new Date(selectedNotification.timestamp).toLocaleString()}
+              {new Date(selectedNotification.createdAt).toLocaleString()}
             </div>
             <div className="message-bubble">
-              <p className="notification-message">{selectedNotification.message}</p>
+              <p className="notification-message">
+                {selectedNotification.message}
+              </p>
             </div>
           </div>
         </div>

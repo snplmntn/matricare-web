@@ -17,8 +17,8 @@ const LandingPageConsultant = ({}) => {
   const userID = getCookie("userID");
   const [date, setDate] = useState(new Date());
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [newPatients, setNewPatients] = useState(2);
-  const [totalPatients, setTotalPatients] = useState(54);
+  const [newPatients, setNewPatients] = useState(0);
+  const [totalPatients, setTotalPatients] = useState(0);
   const [user, setUser] = useState({});
   const [newPatient, setNewPatient] = useState({
     assignedId: userID,
@@ -26,6 +26,10 @@ const LandingPageConsultant = ({}) => {
     phoneNumber: "",
     email: "",
   });
+  const [notification, setNotification] = useState([]);
+  const [unreadNotification, setUnreadNotification] = useState(0);
+  const [appointment, setAppointment] = useState([]);
+  const [appointmentNum, setAppointmentNum] = useState(0);
 
   const token = getCookie("token");
   const API_URL = process.env.REACT_APP_API_URL;
@@ -41,7 +45,6 @@ const LandingPageConsultant = ({}) => {
   const handleAddPatient = async (e) => {
     e.preventDefault();
     try {
-      console.log(newPatient);
       const response = await axios.post(
         `${API_URL}/record/patient`,
         {
@@ -56,7 +59,6 @@ const LandingPageConsultant = ({}) => {
           },
         }
       );
-      console.log(response);
     } catch (error) {
       console.error(error);
     }
@@ -71,6 +73,67 @@ const LandingPageConsultant = ({}) => {
   useEffect(() => {
     const userData = localStorage.getItem("userData");
     if (userData) setUser(JSON.parse(userData));
+
+    const fetchNotification = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/n?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        // console.log(response);
+        const unreadNotifications = response.data.filter(
+          (notification) => notification.status === "Unread"
+        );
+        setUnreadNotification(unreadNotifications.length);
+        setNotification(unreadNotifications.reverse());
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const fetchAppointment = async () => {
+      try {
+        const response = await axios.get(
+          `${API_URL}/appointment/u?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        const today = new Date().toISOString().split("T")[0];
+        const todaysAppointments = response.data.filter(
+          (appt) => appt.date.split("T")[0] === today
+        );
+        setAppointment(todaysAppointments);
+        setAppointmentNum(todaysAppointments.length);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    async function fetchPatients() {
+      try {
+        const response = await axios.get(`${API_URL}/record/patient`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const today = new Date().toISOString().split("T")[0];
+        const newPatientsToday = response.data.filter(
+          (patient) => patient.createdAt.split("T")[0] === today
+        ).length;
+        setNewPatients(newPatientsToday);
+        setTotalPatients(response.data.length);
+      } catch (error) {
+        console.error();
+      }
+    }
+
+    fetchPatients();
+    fetchNotification();
+    fetchAppointment();
   }, []);
 
   return (
@@ -122,14 +185,14 @@ const LandingPageConsultant = ({}) => {
               <IoCalendar />
             </div>
             <div className="consul-text">Appointments</div>
-            <div className="consul-number">8</div>
+            <div className="consul-number">{appointmentNum}</div>
           </div>
           <div className="consultant-report-card unread-mails">
             <div className="consul-icon" style={{ color: "#9a6cb4" }}>
               <IoMail />
             </div>
             <div className="consul-text">Unread Mails</div>
-            <div className="consul-number">10</div>
+            <div className="consul-number">{unreadNotification}</div>
           </div>
         </section>
 
@@ -151,20 +214,21 @@ const LandingPageConsultant = ({}) => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Ella Cruz</td>
-                <td>Mary Chiles</td>
-                <td>30 Sept 2021</td>
-                <td>10:00 AM</td>
-                <td>Pending</td>
-              </tr>
-              <tr>
-                <td>Mary Andres</td>
-                <td>Mary Chiles</td>
-                <td>30 Sept 2021</td>
-                <td>01:00 PM</td>
-                <td>Confirmed</td>
-              </tr>
+              {appointment &&
+                appointment.map((appt, index) => (
+                  <tr key={index}>
+                    <td>{appt.patientName}</td>
+                    <td>{appt.location}</td>
+                    <td>{new Date(appt.date).toLocaleDateString()}</td>
+                    <td>
+                      {new Date(appt.date).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                    <td>{appt.status}</td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </section>
@@ -257,18 +321,12 @@ const LandingPageConsultant = ({}) => {
         <div className="consultant-notifications">
           <h3>Notifications</h3>
           <div className="notifications-list">
-            <div className="notification-item">
-              New patient appointment: Ella Cruz - 03:00 PM
-            </div>
-            <div className="notification-item">
-              Appointment reminder: Mary - 05:00 PM
-            </div>
-            <div className="notification-item">
-              Follow-up needed: Mikkaella - 08:00 PM
-            </div>
-            <div className="notification-item">
-              New message from Mikkaella Rodriguez - 03:00 PM
-            </div>
+            {notification &&
+              notification.map((notif, index) => (
+                <div key={index} className="notification-item">
+                  {notif.message}
+                </div>
+              ))}
           </div>
         </div>
       </aside>
