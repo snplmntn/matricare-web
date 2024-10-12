@@ -153,7 +153,7 @@ const ConsultantPatientInfo = () => {
       }
     }
 
-    async function fetchPatients() {
+    async function fetchAdmins() {
       try {
         const response = await axios.get(`${API_URL}/user/a`, {
           headers: {
@@ -170,6 +170,7 @@ const ConsultantPatientInfo = () => {
     }
 
     fetchPatients();
+    fetchAdmins();
   }, []);
 
   return (
