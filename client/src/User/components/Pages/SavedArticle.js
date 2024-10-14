@@ -5,10 +5,12 @@ import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 
 const SavedArticle = () => {
+  const navigate = useNavigate();
   const userID = getCookie("userID");
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
   const [savedArticles, setSavedArticles] = useState([]);
+  const [lastRead, setLastRead] = useState([]);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("savedArticles")) || [];
@@ -25,7 +27,6 @@ const SavedArticle = () => {
           }
         );
         setSavedArticles(response.data.other.savedArticle);
-        console.log(response.data.other.savedArticle);
       } catch (error) {
         console.error(error);
       }
@@ -33,22 +34,33 @@ const SavedArticle = () => {
     fetchSavedArticle();
   }, []);
 
-  const handleToggleSave = (article) => {
-    const updatedArticles = savedArticles.filter(
-      (a) => a.title !== article.title
-    );
-
-    if (updatedArticles.length === savedArticles.length) {
-      updatedArticles.push(article);
+  const handleUnsave = async (article) => {
+    try {
+      const response = await axios.delete(
+        `${API_URL}/user/unsave?userId=${userID}&articleId=${article._id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setSavedArticles(savedArticles.filter((a) => a._id !== article._id));
+    } catch (error) {
+      console.error(error);
     }
-
-    setSavedArticles(updatedArticles);
-    localStorage.setItem("savedArticles", JSON.stringify(updatedArticles));
   };
 
-  const handleArticleClick = (article) => {
-    // Handle when an article is clicked (e.g., redirect to full article)
-    console.log("Redirecting to article:", article.title);
+  const handleArticleClick = (book) => {
+    const updatedLastRead = [
+      book,
+      ...lastRead.filter((b) => b._id !== book._id),
+    ];
+    setLastRead(updatedLastRead);
+
+    // Save the updated last read list to local storage
+    localStorage.setItem("lastRead", JSON.stringify(updatedLastRead));
+
+    navigate(`/book/${book._id}`);
   };
 
   const formatDate = (date) => {
@@ -92,7 +104,7 @@ const SavedArticle = () => {
                     className="unsave-button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleToggleSave(article);
+                      handleUnsave(article);
                     }}
                   >
                     {savedArticles.find((a) => a.title === article.title)

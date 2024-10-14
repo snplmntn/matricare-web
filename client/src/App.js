@@ -184,7 +184,7 @@ function AppContent() {
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
         <Route path="/duedate-calculator" element={<DateCalculator />} />
         <Route
-          path="/book"
+          path="/book/:bookId"
           element={
             <>
               {" "}
@@ -198,6 +198,15 @@ function AppContent() {
             <>
               {" "}
               <LibrarySidebar /> <Library />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/book"
+          element={
+            <>
+              {" "}
+              <LibrarySidebar /> <Article />{" "}
             </>
           }
         />
