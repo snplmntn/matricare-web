@@ -7,6 +7,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
+import { FcPrint, FcDownload } from "react-icons/fc";
 
 const PatientRecords = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -22,6 +23,18 @@ const PatientRecords = () => {
   const [status, setStatus] = useState("..."); // Default status
   const [prescribedBy, setPrescribedBy] = useState("");
   const [tasks, setTasks] = useState([]);
+  const [documents, setDocuments] = useState([
+    {
+      name: "ECG Test Report",
+      date: "2024-02-25",
+      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
+    },
+    {
+      name: "Medical History",
+      date: "2024-03-15",
+      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
+    },
+  ]);
 
   const handleAddTask = async () => {
     if (taskName.trim()) {
@@ -50,7 +63,10 @@ const PatientRecords = () => {
     }
   };
 
-  const conceptionDate = moment("2024-02-14");
+  const conceptionDate =
+    patientInfo && patientInfo.userId.pregnancyStartDate
+      ? moment(patientInfo.userId.pregnancyStartDate)
+      : moment.invalid();
 
   // Calculate estimated due date (40 weeks later)
   const dueDate = conceptionDate.clone().add(40, "weeks");
@@ -62,12 +78,6 @@ const PatientRecords = () => {
   const handleDocumentClick = (docName) => {
     // Set selected document and its image URL
     setSelectedDocument(docName);
-    // Example image URLs, replace with actual URLs
-    const images = {
-      "ECG Test Report": "path_to_ecg_test_report_image.jpg",
-      "Medical History": "path_to_medical_history_image.jpg",
-    };
-    setDocumentImage(images[docName] || null);
     setDetailsVisible(true); // Show details view
   };
 
@@ -76,45 +86,27 @@ const PatientRecords = () => {
     setSelectedDocument(null);
   };
 
-  //selected patient
-  useEffect(() => {
-    async function fetchCurrentPatient() {
-      try {
-        const response = await axios.get(`${API_URL}/user?userId=${userId}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setPatientInfo(response.data.other);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchCurrentPatient();
-  }, []);
-
-  //current doctor
-  useEffect(() => {
-    async function fetchCurrentDoctor() {
-      try {
-        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setPrescribedBy(response.data.other.fullName);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-    fetchCurrentDoctor();
-  }, []);
-
   //get task
   useEffect(() => {
-    async function fetchTasks() {
-      console.log("patient user Id: " + userId);
+    async function fetchPatient() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/record/patient?id=${userId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log(response.data[0]);
+        setPatientInfo(response.data[0]);
+        // });
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
+    async function fetchTasks() {
       try {
         const response = await axios.get(
           `${API_URL}/record/task/u?userId=${userId}`,
@@ -127,14 +119,91 @@ const PatientRecords = () => {
 
         // response.data.map((i) => {
         setTasks(response.data);
-        console.log(tasks);
         // });
       } catch (error) {
         console.error(error);
       }
     }
+
+    async function fetchCurrentDoctor() {
+      try {
+        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setPrescribedBy(response.data.other.fullName);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function fetchDocuments() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/record/document/u?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setDocuments(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchPatient();
+    fetchCurrentDoctor();
     fetchTasks();
+    fetchDocuments();
   }, []);
+
+  const handleClose = () => {
+    setSelectedDocument(null);
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = selectedDocument.documentLink; // Use the file URL from selectedDocument
+    link.setAttribute("download", selectedDocument.name); // Set the download attribute with the filename
+    link.setAttribute("target", "_blank"); // Open in a new tab
+    document.body.appendChild(link); // Append the link to the body
+    link.click(); // Simulate click to trigger download
+    document.body.removeChild(link); // Remove the link from the document
+  };
+
+  const handlePrint = () => {
+    const printWindow = window.open(selectedDocument.documentLink, "_blank");
+    printWindow.onload = () => {
+      printWindow.print(); // Trigger print when the document is loaded
+    };
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("en-PH", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
+  };
+
+  const calculateAge = (birthdate) => {
+    const birthDate = new Date(birthdate);
+    const today = new Date();
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDifference = today.getMonth() - birthDate.getMonth();
+
+    if (
+      monthDifference < 0 ||
+      (monthDifference === 0 && today.getDate() < birthDate.getDate())
+    ) {
+      age--;
+    }
+
+    return age;
+  };
 
   return (
     <div className="patient-records-container">
@@ -147,13 +216,16 @@ const PatientRecords = () => {
         </div>
         <div className="PR-top-section">
           <div className="PR-patient-info">
-            <img
-              src={patientInfo ? patientInfo.profilePicture : "img/topic2.jpg"}
-              alt="Patient Photo"
-            />
+            <img src="img/topic2.jpg" alt="Patient Photo" />
             <div className="PR-patient-details">
               <h3>{patientInfo && patientInfo.fullName}</h3>
-              <p>02/21/1996 (28 yrs old), F</p>
+              <p>
+                {patientInfo && patientInfo.userId.birthdate
+                  ? `${formatDate(
+                      patientInfo.userId.birthdate
+                    )} : ${calculateAge(patientInfo.userId.birthdate)} yrs old`
+                  : "Birthdate not set"}
+              </p>
               <div className="PR-phone-info">
                 <FaMobileAlt className="PR-phone-icon" />
                 <p>{patientInfo && patientInfo.phoneNumber}</p>
@@ -163,7 +235,7 @@ const PatientRecords = () => {
           <div className="PR-info-columns">
             <div className="PR-address-info">
               <h4>Home Address:</h4>
-              <p>{patientInfo && patientInfo.address}</p>
+              <p>{patientInfo && patientInfo.userId.address}</p>
             </div>
             <div className="PR-email-info">
               <h4>Email Address:</h4>
@@ -171,10 +243,10 @@ const PatientRecords = () => {
             </div>
             <div className="PR-partner-info">
               <h4>Husband/Partner:</h4>
-              <p>John Doe</p>
+              <p>{patientInfo && patientInfo.userId.husband}</p>
               <div className="PR-partner-contact">
                 <FaMobileAlt className="PR-phone-icon" />
-                <p>+63 905 4562 702</p>
+                <p>{patientInfo && patientInfo.userId.husbandNumber}</p>
               </div>
             </div>
           </div>
@@ -290,10 +362,14 @@ const PatientRecords = () => {
               <p className="PR-due-date">
                 Estimated Pregnancy <br />
                 Due Date: <br />
-                <strong>{dueDate.format("MMMM D, YYYY")}</strong>
+                <strong>
+                  {dueDate.isValid() ? dueDate.format("MMMM D, YYYY") : "N/A"}
+                </strong>
               </p>
             </div>
-            <div className="PR-circle">{weeksPassed}</div>
+            <div className="PR-circle">
+              {dueDate.isValid() ? weeksPassed : "N/A"}
+            </div>
           </div>
         </div>
 
@@ -320,22 +396,60 @@ const PatientRecords = () => {
               Medical History
               <span className="docu-date">03/15/2024</span>
             </div>
+
+            {documents.map((doc, index) => (
+              <div
+                key={index}
+                className="MR-docu-item"
+                onClick={() => handleDocumentClick(doc)}
+              >
+                <span className="MR-doc-name">{doc.name}</span>
+                <span className="MR-doc-date">{formatDate(doc.date)}</span>
+              </div>
+            ))}
           </div>
         </div>
 
         {/* Document Details View */}
-        {detailsVisible && selectedDocument && (
-          <div className="document-details">
-            <div className="document-details-content">
-              <h4>{selectedDocument}</h4>
-              <button onClick={handleCloseDetails}>x</button>
-              <img
-                src="img/History.png"
-                alt={`Detailed view of ${selectedDocument}`}
+        {selectedDocument ? (
+          <div className="modal-overlay">
+            <div className="selected-docu">
+              <button
+                className="selected-docu-close"
+                onClick={handleClose}
+                aria-label="Close Modal"
+              >
+                &times;
+              </button>
+              <div className="document-info">
+                <p>{formatDate(selectedDocument.date)}</p>
+                <p>{selectedDocument.name}</p>
+                <div className="docu-button">
+                  <button
+                    onClick={handleDownload}
+                    aria-label="Download Document"
+                    className="docu-icon"
+                  >
+                    <FcDownload />
+                  </button>
+                  <button
+                    onClick={handlePrint}
+                    aria-label="Print Document"
+                    className="docu-icon"
+                  >
+                    <FcPrint />
+                  </button>
+                </div>
+              </div>
+              <embed
+                src={selectedDocument.documentLink}
+                type="application/pdf"
+                width="100%"
+                height="600px"
               />
             </div>
           </div>
-        )}
+        ) : null}
       </main>
     </div>
   );

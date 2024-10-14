@@ -12,8 +12,32 @@ const user_get = catchAsync(async (req, res, next) => {
 
   const user = userId
     ? await User.findById(userId)
-    : await User.findOne({ username: username });
-  const { password, savedPost, likedPost, __v, ...other } = user._doc;
+        .populate({
+          path: "savedPost",
+          populate: {
+            path: "userId", // Populating userId inside savedPost
+          },
+        })
+        .populate({
+          path: "savedArticle", // Populating savedArticle
+          populate: {
+            path: "userId", // Populating userId inside savedArticle (if needed)
+          },
+        })
+    : await User.findOne({ username: username })
+        .populate({
+          path: "savedPost",
+          populate: {
+            path: "userId", // Populating userId inside savedPost
+          },
+        })
+        .populate({
+          path: "savedArticle", // Populating savedArticle
+          populate: {
+            path: "userId", // Populating userId inside savedArticle (if needed)
+          },
+        });
+  const { password, likedPost, __v, ...other } = user._doc;
 
   if (!user) return next(new AppError("User not found", 404));
 
@@ -24,7 +48,19 @@ const user_get = catchAsync(async (req, res, next) => {
 const role_get = catchAsync(async (req, res, next) => {
   const { role } = req.query;
 
-  const accounts = await User.find({ role });
+  const accounts = await User.find({ role })
+    .populate({
+      path: "savedPost",
+      populate: {
+        path: "userId", // Populating userId inside savedPost
+      },
+    })
+    .populate({
+      path: "savedArticle", // Populating savedArticle
+      populate: {
+        path: "userId", // Populating userId inside savedArticle (if needed)
+      },
+    });
 
   if (!accounts) return next(new AppError("User not found", 404));
 
@@ -33,7 +69,19 @@ const role_get = catchAsync(async (req, res, next) => {
 
 // Get All Users
 const user_index = catchAsync(async (req, res, next) => {
-  const accounts = await User.find();
+  const accounts = await User.find()
+    .populate({
+      path: "savedPost",
+      populate: {
+        path: "userId", // Populating userId inside savedPost
+      },
+    })
+    .populate({
+      path: "savedArticle", // Populating savedArticle
+      populate: {
+        path: "userId", // Populating userId inside savedArticle (if needed)
+      },
+    });
 
   if (!accounts) return next(new AppError("Users not found", 404));
 
@@ -131,10 +179,74 @@ const user_update = catchAsync(async (req, res, next) => {
     .json({ message: "Account Successfully Updated", token: token });
 });
 
+const save_article_put = catchAsync(async (req, res, next) => {
+  const { userId, postId, articleId } = req.query;
+
+  if (!userId) return next(new AppError("No User Identifier", 400));
+  if (!postId && !articleId)
+    return next(new AppError("No Query Identifier", 400));
+
+  const identifier = postId ? "savedPost" : "savedArticle";
+  const id = postId ? postId : articleId;
+  const update = {};
+  update[identifier] = id;
+
+  // Check if the post/article is already saved
+  const user = await User.findById(userId);
+  if (user[identifier].includes(id)) {
+    return next(new AppError("Post/Article already saved", 400));
+  }
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $push: update },
+    { new: true }
+  );
+
+  if (!updatedUser) return next(new AppError("User not found", 404));
+
+  return res.status(200).json({
+    message: "Post/Article saved Successfully",
+    updatedUser,
+  });
+});
+
+const remove_saved_article = catchAsync(async (req, res, next) => {
+  const { userId, postId, articleId } = req.query;
+
+  if (!userId) return next(new AppError("No User Identifier", 400));
+  if (!postId && !articleId)
+    return next(new AppError("No Query Identifier", 400));
+
+  const identifier = postId ? "savedPost" : "savedArticle";
+  const id = postId ? postId : articleId;
+  const update = {};
+  update[identifier] = id;
+
+  // Check if the post/article is already saved
+  const user = await User.findById(userId);
+  if (!user[identifier].includes(id)) {
+    return next(new AppError("Post/Article is not yet saved.", 200));
+  }
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { $pull: update },
+    { new: true }
+  );
+  if (!updatedUser) return next(new AppError("User not found", 404));
+
+  return res.status(200).json({
+    message: "Post/Article unsaved Successfully",
+    updatedUser,
+  });
+});
+
 module.exports = {
   user_get,
   user_index,
   role_get,
   user_delete,
   user_update,
+  save_article_put,
+  remove_saved_article,
 };

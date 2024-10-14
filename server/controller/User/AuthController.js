@@ -1,4 +1,5 @@
 const User = require("../../models/User/User");
+const Patient = require("../../models/User/Patient");
 const InvalidToken = require("../../models/InvalidToken");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -67,6 +68,16 @@ const user_signup = catchAsync(async (req, res, next) => {
     role,
     pregnancyStartDate,
     babyName,
+  });
+
+  const userCount = await Patient.find().countDocuments();
+
+  await Patient.create({
+    fullName,
+    email,
+    phoneNumber,
+    userId: user._id,
+    seq: userCount + 1,
   });
 
   const token = jwt.sign({ user: user }, process.env.JWT_KEY, {

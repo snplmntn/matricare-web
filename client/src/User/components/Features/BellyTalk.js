@@ -58,13 +58,11 @@ const BellyTalk = ({ user }) => {
   };
 
   const handleNextStep = async () => {
-    setIsPosting(true);
     setImgLink("");
     if (selectedImage) {
       const formData = new FormData();
       formData.append("picture", selectedImage);
       try {
-        console.log(selectedImage);
         const response = await axios.post(
           `${API_URL}/upload/b?userId=${userID}`,
           formData,
@@ -75,25 +73,29 @@ const BellyTalk = ({ user }) => {
             },
           }
         );
-        console.log(response);
         setImgLink(response.data.pictureLink);
       } catch (error) {
         console.error(error);
       }
     }
-    setIsPosting(false);
-    setStep(2);
   };
 
-
   const handlePostSubmit = async () => {
-    console.log(user.current);
     setIsPosting(true);
     if (newPostText.trim() === "") {
+      setIsPosting(false);
       alert("Post content cannot be empty.");
       return;
     }
 
+    await handleNextStep();
+    setTimeout(() => {
+      if (!imgLink) {
+        setIsPosting(false);
+        alert("Image upload failed. Please try again.");
+        return;
+      }
+    }, 1000);
 
     const newPost = {
       userId: userID,
@@ -101,30 +103,19 @@ const BellyTalk = ({ user }) => {
       content: newPostText,
       address: "Manila City",
       picture: imgLink,
-      profilePicture: user.current.profilePicture,
     };
 
     console.log(newPost);
 
     try {
-      setIsPosting("Posting...");
+      setIsPosting(true);
       const response = await axios.post(`${API_URL}/post/`, newPost, {
         headers: {
           Authorization: token,
         },
       });
 
-      setPosts([
-        {
-          userId: userID,
-          fullname: user.current.name,
-          content: newPostText,
-          address: "Manila City",
-          picture: imagePreview,
-          profilePicture: user.current.profilePicture,
-        },
-        ...posts,
-      ]);
+      setPosts([response.data.savedPost, ...posts]);
     } catch (error) {
       console.error(error);
     }
@@ -153,11 +144,14 @@ const BellyTalk = ({ user }) => {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const response = await axios.get(`${API_URL}/post/i`, {
-          headers: {
-            Authorization: token,
-          },
-        });
+        const response = await axios.get(
+          `${API_URL}/${token ? "post" : "bellytalk"}/i`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
         setPosts(response.data);
         setAllPost(response.data);
       } catch (error) {
@@ -329,7 +323,6 @@ const BellyTalk = ({ user }) => {
                     )}
                   </>
                 )}
-
               </div>
             </div>
           )}

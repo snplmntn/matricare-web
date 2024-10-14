@@ -1,5 +1,11 @@
 import React, { useState, Fragment, useRef, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation, } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 import { CookiesProvider, useCookies } from "react-cookie";
 import { createHashHistory } from "history";
 import "./App.css";
@@ -41,10 +47,8 @@ import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNotifications";
 
-
 // Verify
 import Verify from "./User/components/Pages/Verify";
-
 
 function AppContent() {
   const history = createHashHistory();
@@ -70,7 +74,12 @@ function AppContent() {
     if (role) {
       switch (role) {
         case "Assistant":
-          return <LandingPageAssistant user={parsedUser} />;
+          return (
+            <Fragment>
+              <AssistantSidebar />
+              <LandingPageAssistant user={parsedUser} />
+            </Fragment>
+          );
         case "Obgyne":
           return (
             <Fragment>
@@ -89,51 +98,227 @@ function AppContent() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={getPage(<><Header1 /><LandingPage /></>)} />
-        <Route path="/signup" element={!token ? <><Header1 /><Signup /></> : <HomePage user={parsedUser} />} />
-        <Route path="/login" element={!token ? <><Header1 /><Login /></> : <HomePage user={parsedUser} />} />
+        <Route
+          path="/"
+          element={getPage(
+            <>
+              <Header1 />
+              <LandingPage />
+            </>
+          )}
+        />
+        <Route
+          path="/signup"
+          element={
+            !token ? (
+              <>
+                <Header1 />
+                <Signup />
+              </>
+            ) : (
+              <HomePage user={parsedUser} />
+            )
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            !token ? (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            ) : (
+              <HomePage user={parsedUser} />
+            )
+          }
+        />
         <Route path="/verify" element={<Verify />} />
-        <Route path="/forgot-password" element={token ? <HomePage user={parsedUser} /> : <><Header1 /><ForgotPass /></>} />
+        <Route
+          path="/forgot-password"
+          element={
+            token ? (
+              <HomePage user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <ForgotPass />
+              </>
+            )
+          }
+        />
         <Route path="/notification" element={<Notifications />} />
-      
-      {/* User Routes */}
-        <Route path="/app" element={token ? <HomePage user={parsedUser} /> : <><Header1 /><Login /></>} />
-        <Route path="/userprofile" element={token ? <UserProfile user={parsedUser} /> : <><Header1 /><Login /></>} />
-        <Route path="/medicalrecords" element={<MedicalRec user={parsedUser} />} />
+
+        {/* User Routes */}
+        <Route
+          path="/app"
+          element={
+            token ? (
+              <HomePage user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/userprofile"
+          element={
+            token ? (
+              <UserProfile user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/medicalrecords"
+          element={<MedicalRec user={parsedUser} />}
+        />
         <Route path="/saved-posts" element={<SavedPosts />} />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
         <Route path="/duedate-calculator" element={<DateCalculator />} />
-        <Route path="/book" element={<> <LibrarySidebar /> <Article /> </>} />
-        <Route path="/library" element={<> <LibrarySidebar /> <Library /> </>} />
-        <Route path="/savedarticle" element={<> <LibrarySidebar /> <SavedArticle /> </>} />
+        <Route
+          path="/book"
+          element={
+            <>
+              {" "}
+              <LibrarySidebar /> <Article />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            <>
+              {" "}
+              <LibrarySidebar /> <Library />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/savedarticle"
+          element={
+            <>
+              {" "}
+              <LibrarySidebar /> <SavedArticle />{" "}
+            </>
+          }
+        />
 
-         {/* Specific Library Items */}
-         {Array.from({ length: 11 }, (_, index) => (
+        {/* Specific Library Items */}
+        {Array.from({ length: 11 }, (_, index) => (
           <Route
             key={index}
             path={`/library-item${index + 1}`}
-            element={<> <LibrarySidebar /> {React.createElement(require(`./User/components/Library/Library${index + 1}`).default)} </>}
+            element={
+              <>
+                {" "}
+                <LibrarySidebar />{" "}
+                {React.createElement(
+                  require(`./User/components/Library/Library${index + 1}`)
+                    .default
+                )}{" "}
+              </>
+            }
           />
         ))}
 
         {/* CONSULTANT Routes */}
-        <Route path="/consultant-landing" element={<> <ConsultantSidebar /> <LandingPageConsultant user={parsedUser} /> </>} />
+        <Route
+          path="/consultant-landing"
+          element={
+            <>
+              {" "}
+              <ConsultantSidebar /> <LandingPageConsultant
+                user={parsedUser}
+              />{" "}
+            </>
+          }
+        />
         <Route path="/consultant-records" element={<ConsultantRecord />} />
-        <Route path="/consultant-patientsinfo" element={<> <ConsultantSidebar /> <ConsultantPatientInfo /> </>} />
-        <Route path="/consultant-appointment" element={<> <ConsultantSidebar /> <AppointmentConsultant /> </>} />
-        <Route path="/consultant-notification" element={<ConsultantNotifications />} />
+        <Route
+          path="/consultant-patientsinfo"
+          element={
+            <>
+              {" "}
+              <ConsultantSidebar /> <ConsultantPatientInfo />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/consultant-appointment"
+          element={
+            <>
+              {" "}
+              <ConsultantSidebar /> <AppointmentConsultant />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/consultant-notification"
+          element={<ConsultantNotifications />}
+        />
         <Route path="/patient-records/:userId" element={<PatientRecords />} />
-        <Route path="/library-consultant" element={<> <ConsultantSidebar /> <LibraryConsultant/> </>} />
-        
-       
+        <Route
+          path="/library-consultant"
+          element={
+            <>
+              {" "}
+              <ConsultantSidebar /> <LibraryConsultant />{" "}
+            </>
+          }
+        />
+
         {/* ASSISTANT */}
-        <Route path="/assistant-landing" element={<> <AssistantSidebar /> <LandingPageAssistant user={parsedUser} /> </>} />
-        <Route path="/library-assistant" element={<> <AssistantSidebar /> <LibraryAssistant /> </>} />
-        <Route path="/assistant-notification" element={<NotificationAssistant />} />
-        <Route path="/admin-profile" element={<> <AssistantSidebar /> <PatientUserManagement /> </>} />
-        <Route path="/appointment-assistant" element={<> <AssistantSidebar /> <AppointmentAssistant /> </>} />
+        <Route
+          path="/assistant-landing"
+          element={
+            <>
+              {" "}
+              <AssistantSidebar /> <LandingPageAssistant
+                user={parsedUser}
+              />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/library-assistant"
+          element={
+            <>
+              {" "}
+              <AssistantSidebar /> <LibraryAssistant />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/assistant-notification"
+          element={<NotificationAssistant />}
+        />
+        <Route
+          path="/admin-profile"
+          element={
+            <>
+              {" "}
+              <AssistantSidebar /> <PatientUserManagement />{" "}
+            </>
+          }
+        />
+        <Route
+          path="/appointment-assistant"
+          element={
+            <>
+              {" "}
+              <AssistantSidebar /> <AppointmentAssistant />{" "}
+            </>
+          }
+        />
         <Route path="/patient-records/:userId" element={<PatientRecords />} />
-        
       </Routes>
       <Footer />
     </div>

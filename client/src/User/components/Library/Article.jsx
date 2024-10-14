@@ -4,8 +4,10 @@ import { IoBookmark, IoArrowBack } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 
-const Library1 = ({ article }) => {
+const Article = ({ article, isSaved }) => {
+  const userID = getCookie("userID");
   const [savedArticles, setSavedArticles] = useState([]);
+  const [isSavedComponent, setIsSaved] = useState(isSaved);
 
   const handleReload = (e) => {
     e.preventDefault();
@@ -15,26 +17,36 @@ const Library1 = ({ article }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
 
-  const handleToggleSave = (article) => {
-    const updatedArticles = savedArticles.filter(
-      (a) => a.title !== article.title
-    );
-
-    if (updatedArticles.length === savedArticles.length) {
-      // Add more properties when saving the article (date, reviewer)
-      const articleToSave = {
-        title: article.title,
-        image: article.picture || "/img/topic1.jpg",
-        date: formatDate(article.createdAt) || "11/30/2019",
-        reviewer: article.reviewedBy || "Dra. Donna Jill A. Tungol",
-      };
-
-      updatedArticles.push(articleToSave);
+  const handleToggleSave = async () => {
+    if (!isSavedComponent) {
+      try {
+        const response = await axios.get(
+          `${API_URL}/user/save?userId=${userID}&articleId=${article._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setIsSaved(true);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        const response = await axios.delete(
+          `${API_URL}/user/unsave?userId=${userID}&articleId=${article._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setIsSaved(false);
+      } catch (error) {
+        console.error(error);
+      }
     }
-
-    // Update state and local storage
-    setSavedArticles(updatedArticles);
-    localStorage.setItem("savedArticles", JSON.stringify(updatedArticles));
   };
 
   const isArticleSaved = (articleTitle) => {
@@ -48,6 +60,27 @@ const Library1 = ({ article }) => {
       day: "numeric",
     });
   };
+
+  useEffect(() => {
+    async function fetchSavedArticle() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/user?userId=${userID}`,
+
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setSavedArticles(response.data.other.savedArticle);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchSavedArticle();
+  }, []);
 
   return (
     <div className="library-content-container">
@@ -65,20 +98,12 @@ const Library1 = ({ article }) => {
               className="library-content-save-btn"
               onClick={() =>
                 handleToggleSave({
-                  title:
-                    "Stages of Pregnancy: First, Second and Third Trimester",
-                  image: "/img/topic1.jpg",
-                  date: "11/30/2019",
-                  reviewer: "Dra. Donna Jill A. Tungol",
+                  article,
                 })
               }
             >
               <IoBookmark />
-              {isArticleSaved(
-                "Stages of Pregnancy: First, Second and Third Trimester"
-              )
-                ? "Saved"
-                : "Save to Library"}
+              {isSavedComponent ? "Saved" : "Save to Library"}
             </button>
           </div>
         </div>
@@ -133,4 +158,4 @@ const Library1 = ({ article }) => {
   );
 };
 
-export default Library1;
+export default Article;

@@ -38,10 +38,10 @@ router.delete("/like", likeController.like_delete);
 // Create Comment
 router.post("/comment", commentController.comment_post);
 
-// Get Like
+// Get Comment
 router.get("/comment", commentController.comment_get);
 
-// Delete Post
+// Delete Comment
 router.delete("/comment", commentController.comment_delete);
 
 module.exports = router;

@@ -121,6 +121,14 @@ const appointment_put = catchAsync(async (req, res, next) => {
     });
 
     await newNotification.save();
+
+    const users = await User.find({ role: "Assistant" }, "_id");
+    const recipientUserIds = users.map((user) => user._id);
+    await Notification.create({
+      senderName: `MatriCare`,
+      message: `There are changes in the Appointment. Look it up!`,
+      recipientUserId: updatedArticle.userId,
+    });
   }
   return res
     .status(200)
