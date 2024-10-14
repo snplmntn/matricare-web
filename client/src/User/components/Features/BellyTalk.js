@@ -339,7 +339,7 @@ const BellyTalk = ({ user }) => {
               <BellyTalkPost
                 key={post._id}
                 post={post}
-                user={user.current}
+                user={user}
                 onDeletePost={onDeletePost}
               />
             ))

@@ -1,4 +1,6 @@
 const Document = require("../../../models/User/Document");
+const Notification = require("../../../models/User/Notification");
+const User = require("../../../models/User/User");
 const AppError = require("../../../Utilities/appError");
 const catchAsync = require("../../../Utilities/catchAsync");
 
@@ -29,6 +31,15 @@ const document_post = catchAsync(async (req, res, next) => {
   const newDocument = new Document(req.body);
 
   await newDocument.save();
+
+  const users = await User.find({ role: "Obgyne" });
+  const recipientUserIds = users.map((user) => user._id);
+  await Notification.create({
+    senderName: "MatriCare",
+    message: `Patient: ${req.body.patientName} uploaded a new Document.`,
+    recipientUserId: recipientUserIds,
+  });
+
   return res
     .status(200)
     .json({ message: "Document Successfully Created", newDocument });

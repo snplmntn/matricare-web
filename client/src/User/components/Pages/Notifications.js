@@ -75,6 +75,7 @@ function Notifications() {
           },
         });
         // console.log(response);
+        console.log(response.data);
         setNotification(response.data.reverse());
       } catch (error) {
         console.error(error);
@@ -129,6 +130,9 @@ function Notifications() {
                     src={
                       notification.senderName === "MatriCare"
                         ? "img/LOGO.png"
+                        : notification.senderId &&
+                          notification.senderId.profilePicture
+                        ? notification.senderId.profilePicture
                         : "img/topic1.jpg"
                     }
                     alt={notification.senderName}
@@ -174,6 +178,9 @@ function Notifications() {
               src={
                 selectedNotification.senderName === "MatriCare"
                   ? "img/LOGO.png"
+                  : selectedNotification.senderId &&
+                    selectedNotification.senderId.profilePicture
+                  ? selectedNotification.senderId.profilePicture
                   : "img/topic1.jpg"
               }
               alt={selectedNotification.senderName}

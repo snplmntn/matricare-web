@@ -21,7 +21,6 @@ const LandingPageConsultant = ({}) => {
   const [totalPatients, setTotalPatients] = useState(0);
   const [user, setUser] = useState({});
   const [newPatient, setNewPatient] = useState({
-    assignedId: userID,
     fullName: "",
     phoneNumber: "",
     email: "",
@@ -48,7 +47,6 @@ const LandingPageConsultant = ({}) => {
       const response = await axios.post(
         `${API_URL}/record/patient`,
         {
-          assignedId: userID,
           email: newPatient.email,
           fullName: newPatient.fullName,
           phoneNumber: newPatient.phoneNumber,
