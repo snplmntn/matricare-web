@@ -220,7 +220,6 @@ const MedicalRec = ({ user }) => {
           },
         });
         setPatient(response.data.other);
-        console.log(response.data.other);
       } catch (error) {
         console.error(error);
       }

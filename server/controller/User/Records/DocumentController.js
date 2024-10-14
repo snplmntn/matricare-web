@@ -32,11 +32,12 @@ const document_post = catchAsync(async (req, res, next) => {
 
   await newDocument.save();
 
+  const userUploader = await User.findById(req.body.userId);
   const users = await User.find({ role: "Obgyne" });
   const recipientUserIds = users.map((user) => user._id);
   await Notification.create({
     senderName: "MatriCare",
-    message: `Patient: ${req.body.patientName} uploaded a new Document.`,
+    message: `Patient: ${userUploader.fullName} uploaded a new Document.`,
     recipientUserId: recipientUserIds,
   });
 
