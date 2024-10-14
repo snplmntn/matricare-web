@@ -3,21 +3,25 @@ import "../../styles/library/library1.css";
 import { IoBookmark, IoArrowBack } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
+import { useParams, useNavigate } from "react-router-dom";
 
-const Article = ({ article, isSaved }) => {
+const Article = () => {
+  const { bookId } = useParams();
+  const navigate = useNavigate();
   const userID = getCookie("userID");
+  const [article, setArticle] = useState();
   const [savedArticles, setSavedArticles] = useState([]);
-  const [isSavedComponent, setIsSaved] = useState(isSaved);
+  const [isSavedComponent, setIsSaved] = useState();
 
-  const handleReload = (e) => {
-    e.preventDefault();
-    window.location.reload();
+  const handleBack = (e) => {
+    navigate(-1);
   };
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
 
   const handleToggleSave = async () => {
+    console.log(isSavedComponent);
     if (!isSavedComponent) {
       try {
         const response = await axios.get(
@@ -49,10 +53,6 @@ const Article = ({ article, isSaved }) => {
     }
   };
 
-  const isArticleSaved = (articleTitle) => {
-    return savedArticles.some((article) => article.title === articleTitle);
-  };
-
   const formatDate = (date) => {
     return new Date(date).toLocaleString("en-PH", {
       year: "numeric",
@@ -62,6 +62,23 @@ const Article = ({ article, isSaved }) => {
   };
 
   useEffect(() => {
+    async function fetchArticle() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/article?id=${bookId}`,
+
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setArticle(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     async function fetchSavedArticle() {
       try {
         const response = await axios.get(
@@ -74,17 +91,23 @@ const Article = ({ article, isSaved }) => {
           }
         );
         setSavedArticles(response.data.other.savedArticle);
+        setIsSaved(
+          response.data.other.savedArticle
+            .map((saved) => saved._id)
+            .includes(bookId)
+        );
       } catch (error) {
         console.error(error);
       }
     }
 
+    fetchArticle();
     fetchSavedArticle();
   }, []);
 
   return (
     <div className="library-content-container">
-      <button onClick={handleReload} className="library-back-button">
+      <button onClick={handleBack} className="library-back-button">
         <IoArrowBack />
       </button>
 

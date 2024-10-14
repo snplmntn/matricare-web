@@ -50,10 +50,6 @@ const Library = () => {
   const userID = getCookie("userID");
   const [savedArticles, setSavedArticles] = useState([]);
 
-  const handleRowClick = (id) => {
-    navigate(`/book/${id}`);
-  };
-
   // Load the last read books from local storage on component mount
   useEffect(() => {
     const savedLastRead = JSON.parse(localStorage.getItem("lastRead")) || [];
@@ -84,7 +80,6 @@ const Library = () => {
           }
         );
         setSavedArticles(response.data.other.savedArticle);
-        console.log(response.data.other.savedArticle);
       } catch (error) {
         console.error(error);
       }
@@ -93,6 +88,17 @@ const Library = () => {
     fetchBooks();
     fetchSavedArticle();
   }, []);
+
+  // const handleBookClick = (book) => {
+  //   const updatedLastRead = [
+  //     book,
+  //     ...lastRead.filter((b) => b._id !== book._id),
+  //   ];
+  //   setLastRead(updatedLastRead);
+
+  //   // Save the updated last read list to local storage
+  //   localStorage.setItem("lastRead", JSON.stringify(updatedLastRead));
+  // };
 
   const handleBookClick = (book) => {
     const updatedLastRead = [
@@ -103,6 +109,8 @@ const Library = () => {
 
     // Save the updated last read list to local storage
     localStorage.setItem("lastRead", JSON.stringify(updatedLastRead));
+
+    navigate(`/book/${book._id}`);
   };
 
   const filteredBooks = article?.filter((book) => {
@@ -125,108 +133,99 @@ const Library = () => {
   ];
 
   return (
-    <>
-      {!showArticle ? (
-        <div className="library-layout">
-          <div className="main-content">
-            <header className="library-header">
-              <div className="library-title">MatriCare.</div>
-              <div className="header-actions">
-                <div className="search-container">
-                  <input
-                    type="text"
-                    className="search-bar-library"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <IoSearch className="search-icon" />
-                </div>
-                <select
-                  className="filter-dropdown"
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)} // Update filter on selection
-                >
-                  {filterOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </header>
-
-            <section id="last-read" className="last-read-section">
-              <h2>Books You Last Read</h2>
-              <Slider {...sliderSettings}>
-                {lastRead.length > 0 ? (
-                  lastRead.map((book, index) => (
-                    <div
-                      key={book.id}
-                      className="last-read-item"
-                      onClick={() => {
-                        setArticleNum(index);
-                        handleBookClick(book);
-                        setShowArticle(true);
-                      }}
-                    >
-                      <div className="book-background">
-                        <img
-                          src={book.picture}
-                          alt={book.title}
-                          className="book-cover"
-                        />
-                        <div className="book-details">
-                          <h3 className="book-title">{book.title}</h3>
-                          <p className="book-author">Author: {book.author}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>No books read yet.</p>
-                )}
-              </Slider>
-            </section>
-
-            <section id="library" className="library-section">
-              <h2>Library</h2>
-              <div className="book-list-container">
-                {filteredBooks &&
-                  filteredBooks.map((book, index) => (
-                    <div
-                      key={book._id}
-                      className="library-item"
-                      onClick={() => {
-                        setArticleNum(index);
-                        handleBookClick(book);
-                        setShowArticle(true);
-                      }}
-                    >
-                      <img
-                        src={book.picture}
-                        alt={book.title}
-                        className="book-cover"
-                      />
-                      <div className="book-details">
-                        <h3 className="book-title">{book.title}</h3>
-                        <p className="book-author">Author: {book.author}</p>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </section>
+    <div className="library-layout">
+      <div className="main-content">
+        <header className="library-header">
+          <div className="library-title">MatriCare.</div>
+          <div className="header-actions">
+            <div className="search-container">
+              <input
+                type="text"
+                className="search-bar-library"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <IoSearch className="search-icon" />
+            </div>
+            <select
+              className="filter-dropdown"
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)} // Update filter on selection
+            >
+              {filterOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
           </div>
-        </div>
-      ) : (
-        <Article
-          article={article[articleNum]}
-          isSaved={savedArticles
-            .map((saved) => saved._id)
-            .includes(article[articleNum]._id)}
-        />
-      )}
-    </>
+        </header>
+
+        <section id="last-read" className="last-read-section">
+          <h2>Books You Last Read</h2>
+          <Slider {...sliderSettings}>
+            {lastRead.length > 0 ? (
+              lastRead.map((book, index) => (
+                <div
+                  key={book._id}
+                  className="last-read-item"
+                  onClick={() => {
+                    console.log(book._id); // Log the book id
+                    setArticleNum(index);
+                    handleBookClick(book);
+                    setShowArticle(true);
+                  }}
+                >
+                  <div className="book-background">
+                    <img
+                      src={book.picture}
+                      alt={book.title}
+                      className="book-cover"
+                    />
+                    <div className="book-details">
+                      <h3 className="book-title">{book.title}</h3>
+                      <p className="book-author">Author: {book.author}</p>
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No books read yet.</p>
+            )}
+          </Slider>
+        </section>
+
+        <section id="library" className="library-section">
+          <h2>Library</h2>
+          <div className="book-list-container">
+            {filteredBooks &&
+              filteredBooks.map((book, index) => (
+                <div
+                  key={book._id}
+                  className="library-item"
+                  onClick={() => {
+                    console.log(book._id); // Log the book id
+                    setArticleNum(index);
+                    handleBookClick(book);
+                    setShowArticle(true);
+                  }}
+                >
+                  <img
+                    src={book.picture}
+                    alt={book.title}
+                    className="book-cover"
+                  />
+                  <div className="book-details">
+                    <h3 className="book-title">{book.title}</h3>
+                    <p className="book-author">Author: {book.author}</p>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </section>
+      </div>
+    </div>
   );
 };
 
