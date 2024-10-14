@@ -269,10 +269,7 @@ function AppContent() {
             </>
           }
         />
-        <Route
-          path="/consultant-notification"
-          element={<ConsultantNotifications />}
-        />
+        <Route path="/consultant-notification" element={<Notifications />} />
         <Route path="/patient-records/:userId" element={<PatientRecords />} />
         <Route
           path="/library-consultant"
@@ -305,10 +302,7 @@ function AppContent() {
             </>
           }
         />
-        <Route
-          path="/assistant-notification"
-          element={<NotificationAssistant />}
-        />
+        <Route path="/assistant-notification" element={<Notifications />} />
         <Route
           path="/admin-profile"
           element={

@@ -41,6 +41,11 @@ const article_put = catchAsync(async (req, res, next) => {
   if (!req.query.id)
     return next(new AppError("Article identifier not found", 400));
 
+  const article = await Article.findById(req.query.id);
+
+  if (req.body.content && article.status === "Revision")
+    req.body.status = "Draft";
+
   const updatedArticle = await Article.findByIdAndUpdate(
     req.query.id,
     { $set: req.body },
@@ -54,7 +59,7 @@ const article_put = catchAsync(async (req, res, next) => {
   if (updatedArticle.status === "Approved") {
     await Notification.create({
       senderName: `MatriCare`,
-      message: `The article that you submitted is approved.`,
+      message: `The article that you submitted titled "${updatedArticle.title}" is approved.`,
       recipientUserId: updatedArticle.userId,
     });
 
@@ -68,7 +73,7 @@ const article_put = catchAsync(async (req, res, next) => {
 
     await newNotification.save();
   } else if (updatedArticle.status === "Revision") {
-    const newNotification = await Notification.create({
+    await Notification.create({
       senderName: `MatriCare`,
       message: `Unfortunately, the article "${updatedArticle.title}" that you submitted is rejected. Revisions are needed.`,
       recipientUserId: updatedArticle.userId,

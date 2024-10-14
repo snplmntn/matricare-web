@@ -56,9 +56,9 @@ const AppointmentAssistant = () => {
             Authorization: token,
           },
         });
-        const sortedAppointments = await response.data
-          .filter((appt) => new Date(appt.date) < new Date())
-          .sort((a, b) => new Date(a.date) - new Date(b.date));
+        const sortedAppointments = await response.data.sort(
+          (a, b) => new Date(a.date) - new Date(b.date)
+        );
         setUpcomingAppointments(sortedAppointments.reverse());
       } catch (error) {
         console.error(error);

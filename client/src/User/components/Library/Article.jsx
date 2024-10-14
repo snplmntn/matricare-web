@@ -21,7 +21,6 @@ const Article = () => {
   const token = getCookie("token");
 
   const handleToggleSave = async () => {
-    console.log(isSavedComponent);
     if (!isSavedComponent) {
       try {
         const response = await axios.get(
