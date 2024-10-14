@@ -260,7 +260,14 @@ const MedicalRec = ({ user }) => {
           </Link>
           <div className="MR-top-section">
             <div className="MR-patient-info">
-              <img src="img/topic2.jpg" alt="Patient Photo" />
+              <img
+                src={
+                  patient && patient.profilePicture
+                    ? patient.profilePicture
+                    : "img/topic2.jpg"
+                }
+                alt="Patient Photo"
+              />
               <div className="MR-patient-details">
                 <h3>{patient && patient.fullName}</h3>
                 <p>

@@ -14,11 +14,9 @@ const patient_get = catchAsync(async (req, res, next) => {
 
 // Get Patient by AssignedId
 const patient_assigned_get = catchAsync(async (req, res, next) => {
-  const { assignedId } = req.query;
+  const { id } = req.query;
 
-  const patient = await Patient.find({
-    assignedId: assignedId,
-  }).populate("userId");
+  const patient = await Patient.findById(id).populate("userId");
 
   if (!patient) return next(new AppError("Patient not found", 404));
 
