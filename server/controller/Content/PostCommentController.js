@@ -5,14 +5,14 @@ const catchAsync = require("../../Utilities/catchAsync");
 
 // Create Comment
 const comment_post = catchAsync(async (req, res, next) => {
-  const { profilePicture, userId, fullname, postId, content } = req.body;
+  const { profilePicture, userId, fullName, postId, content } = req.body;
 
   if (!postId) return next(new AppError("Post not found", 404));
 
   const comment = new PostComment({
     profilePicture,
     userId,
-    fullname,
+    fullName,
     postId,
     content,
   });
@@ -59,7 +59,7 @@ const comment_get = catchAsync(async (req, res, next) => {
 
     comments = await Promise.all(
       post.comments.map(async (id) => {
-        const comment = await PostComment.findById(id);
+        const comment = await PostComment.findById(id).populate("userId");
         return comment;
       })
     );

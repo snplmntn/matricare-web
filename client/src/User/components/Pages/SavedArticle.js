@@ -1,30 +1,63 @@
-import React, { useState, useEffect } from 'react'; 
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import '../../styles/pages/savedarticle.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import "../../styles/pages/savedarticle.css";
+import axios from "axios";
+import { getCookie } from "../../../utils/getCookie";
 
 const SavedArticle = () => {
-    const [savedArticles, setSavedArticles] = useState([]);
-  
-    useEffect(() => {
-      const saved = JSON.parse(localStorage.getItem('savedArticles')) || [];
-      setSavedArticles(saved);
-    }, []);
-  
-    const handleToggleSave = (article) => {
-      const updatedArticles = savedArticles.filter(a => a.title !== article.title);
-  
-      if (updatedArticles.length === savedArticles.length) {
-        updatedArticles.push(article);
+  const userID = getCookie("userID");
+  const API_URL = process.env.REACT_APP_API_URL;
+  const token = getCookie("token");
+  const [savedArticles, setSavedArticles] = useState([]);
+
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("savedArticles")) || [];
+
+    async function fetchSavedArticle() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/user?userId=${userID}`,
+
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setSavedArticles(response.data.other.savedArticle);
+        console.log(response.data.other.savedArticle);
+      } catch (error) {
+        console.error(error);
       }
-  
-      setSavedArticles(updatedArticles);
-      localStorage.setItem('savedArticles', JSON.stringify(updatedArticles));
-    };
-  
-    const handleArticleClick = (article) => {
-      // Handle when an article is clicked (e.g., redirect to full article)
-      console.log('Redirecting to article:', article.title);
-    };
+    }
+    fetchSavedArticle();
+  }, []);
+
+  const handleToggleSave = (article) => {
+    const updatedArticles = savedArticles.filter(
+      (a) => a.title !== article.title
+    );
+
+    if (updatedArticles.length === savedArticles.length) {
+      updatedArticles.push(article);
+    }
+
+    setSavedArticles(updatedArticles);
+    localStorage.setItem("savedArticles", JSON.stringify(updatedArticles));
+  };
+
+  const handleArticleClick = (article) => {
+    // Handle when an article is clicked (e.g., redirect to full article)
+    console.log("Redirecting to article:", article.title);
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleString("en-PH", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+    });
+  };
 
   return (
     <div className="saved-articles-layout">
@@ -36,16 +69,36 @@ const SavedArticle = () => {
               <p>No saved articles yet.</p>
             ) : (
               savedArticles.map((article, index) => (
-                <div key={index} className="saved-article-item" onClick={() => handleArticleClick(article)}>
-                  <img src={article.image} alt={article.title} className="article-cover" />
+                <div
+                  key={index}
+                  className="saved-article-item"
+                  onClick={() => handleArticleClick(article)}
+                >
+                  <img
+                    src={article.picture}
+                    alt={article.title}
+                    className="article-cover"
+                  />
                   <div className="article-details">
                     <h3 className="article-title">{article.title}</h3>
-                    <p className="article-date">Published on: {article.date}</p>
-                    <p className="article-reviewer">Reviewed by: {article.reviewer}</p>
+                    <p className="article-date">
+                      Published on: {formatDate(article.createdAt)}
+                    </p>
+                    <p className="article-reviewer">
+                      Reviewed by: {article.reviewedBy}
+                    </p>
                   </div>
-                  <button className="unsave-button" onClick={(e) => { e.stopPropagation(); handleToggleSave(article); }}>
-                    {savedArticles.find(a => a.title === article.title) ? 'Unsave' : 'Save'}
-                </button>
+                  <button
+                    className="unsave-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleSave(article);
+                    }}
+                  >
+                    {savedArticles.find((a) => a.title === article.title)
+                      ? "Unsave"
+                      : "Save"}
+                  </button>
                 </div>
               ))
             )}

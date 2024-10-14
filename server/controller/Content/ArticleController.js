@@ -52,15 +52,27 @@ const article_put = catchAsync(async (req, res, next) => {
   }
 
   if (updatedArticle.status === "Approved") {
+    await Notification.create({
+      senderName: `MatriCare`,
+      message: `The article that you submitted is approved.`,
+      recipientUserId: updatedArticle.userId,
+    });
+
     const users = await User.find({}, "_id");
     const recipientUserIds = users.map((user) => user._id);
-    const newNotification = new Notification({
+    const newNotification = await Notification.create({
       senderName: `MatriCare`,
       message: `New Article has been uploaded - ${updatedArticle.title}. Check It Out!`,
       recipientUserId: recipientUserIds,
     });
 
     await newNotification.save();
+  } else if (updatedArticle.status === "Revision") {
+    const newNotification = await Notification.create({
+      senderName: `MatriCare`,
+      message: `Unfortunately, the article "${updatedArticle.title}" that you submitted is rejected. Revisions are needed.`,
+      recipientUserId: updatedArticle.userId,
+    });
   }
   return res
     .status(200)

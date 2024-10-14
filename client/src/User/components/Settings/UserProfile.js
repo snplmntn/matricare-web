@@ -181,6 +181,13 @@ const UserProfile = ({ user }) => {
   const handleUserUpdate = async () => {
     if (selectedImage) await handleUploadProfilePicture();
 
+    setTimeout(() => {
+      if (!profilePicture) {
+        alert("Image upload failed. Please try again.");
+        return;
+      }
+    }, 1000);
+
     const updatedUserForm = {};
     if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
     if (email !== user.email) updatedUserForm.email = email;
@@ -200,8 +207,6 @@ const UserProfile = ({ user }) => {
       const birthdate = new Date(birthday);
       updatedUserForm.birthdate = birthdate;
     }
-
-    console.log(updatedUserForm);
 
     try {
       const response = await axios.put(

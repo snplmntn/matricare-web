@@ -6,7 +6,7 @@ const catchAsync = require("../../Utilities/catchAsync");
 const post_get = catchAsync(async (req, res, next) => {
   const post = await Post.findOne({
     _id: req.query.id,
-  });
+  }).populate("userId");
 
   if (!post) return next(new AppError("Post not found", 404));
 
@@ -24,7 +24,11 @@ const post_index = catchAsync(async (req, res, next) => {
   }
 
   // Fetch posts based on the constructed query, sorting by _id in descending order
-  const posts = await Post.find(query).sort({ _id: -1 }).limit(20).lean();
+  const posts = await Post.find(query)
+    .populate("userId")
+    .sort({ _id: -1 })
+    .limit(20)
+    .lean();
 
   return res.status(200).json(posts);
 });
@@ -33,7 +37,7 @@ const post_index = catchAsync(async (req, res, next) => {
 const post_user_get = catchAsync(async (req, res, next) => {
   const posts = await Post.find({
     fullname: req.query.fullname,
-  });
+  }).populate("userId");
   if (!posts) return next(new AppError("Post not found", 404));
   return res.status(200).json(posts);
 });

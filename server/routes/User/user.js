@@ -18,6 +18,12 @@ router.delete("/", userController.user_delete);
 // Update User
 router.put("/", userController.user_update);
 
+// Add Saved Post / Article
+router.get("/save", userController.save_article_put);
+
+// Remove Saved Post / Article
+router.delete("/unsave", userController.remove_saved_article);
+
 // Get User by Role
 router.get("/n", notificationController.notification_get);
 

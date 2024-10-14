@@ -292,6 +292,12 @@ const LandingPageAssistant = ({}) => {
     });
   };
 
+  const [selectedMonth, setSelectedMonth] = useState(months[today.getMonth()]);
+
+  const handleMonthChange = (event) => {
+    setSelectedMonth(event.target.value);
+  };
+
   return (
     <div className="landingpage-assistant-container">
       <main className="landingpage-assistant-main-content">
@@ -353,7 +359,12 @@ const LandingPageAssistant = ({}) => {
           <div className="landingpage-assistant-dashboard-item landingpage-assistant-recent-appointments">
             <h2>Recent Appointments</h2>
             <div className="landingpage-assistant-month-selector">
-              <select id="month-select" name="month">
+              <select
+                id="month-select"
+                name="month"
+                value={selectedMonth}
+                onChange={handleMonthChange}
+              >
                 {months.map((month, index) => (
                   <option key={index} value={month}>
                     {month}
@@ -362,44 +373,54 @@ const LandingPageAssistant = ({}) => {
               </select>
             </div>
             <div className="landingpage-assistant-patients-list">
-              {Object.keys(groupedPatients).map((date) => (
-                <div
-                  key={date}
-                  className="landingpage-assistant-patient-date-group"
-                >
-                  <h3 className="appointment-date-label">
-                    {date === todayStr ? "Today" : date}
-                  </h3>
-                  {groupedPatients[date].map((appointment) => (
-                    <div
-                      key={appointment.id}
-                      className="landingpage-assistant-patient-item"
-                    >
-                      <div className="patient-picture">
-                        <img
-                          src={
-                            appointment.userId.profilePicture
-                              ? appointment.userId.profilePicture
-                              : "img/LOGO.png"
-                          }
-                          alt={appointment.patientName}
-                        />
-                      </div>
-                      <div className="patient-details">
-                        <div className="patient-name">
-                          {appointment.patientName}
+              {Object.keys(groupedPatients)
+                .filter((date) => {
+                  const appointmentMonth = new Date(date).toLocaleString(
+                    "en-GB",
+                    {
+                      month: "long",
+                    }
+                  );
+                  return appointmentMonth === selectedMonth;
+                })
+                .map((date) => (
+                  <div
+                    key={date}
+                    className="landingpage-assistant-patient-date-group"
+                  >
+                    <h3 className="appointment-date-label">
+                      {date === todayStr ? "Today" : date}
+                    </h3>
+                    {groupedPatients[date].map((appointment) => (
+                      <div
+                        key={appointment.id}
+                        className="landingpage-assistant-patient-item"
+                      >
+                        <div className="patient-picture">
+                          <img
+                            src={
+                              appointment.userId.profilePicture
+                                ? appointment.userId.profilePicture
+                                : "img/LOGO.png"
+                            }
+                            alt={appointment.patientName}
+                          />
                         </div>
-                        <div className="branch-location">
-                          {appointment.branch}
+                        <div className="patient-details">
+                          <div className="patient-name">
+                            {appointment.patientName}
+                          </div>
+                          <div className="branch-location">
+                            {appointment.branch}
+                          </div>
+                        </div>
+                        <div className="appointment-date">
+                          {formatDateTime(appointment.date)}
                         </div>
                       </div>
-                      <div className="appointment-date">
-                        {formatDateTime(appointment.date)}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ))}
+                    ))}
+                  </div>
+                ))}
             </div>
           </div>
         </section>

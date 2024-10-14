@@ -7,7 +7,7 @@ const PostCommentSchema = new mongoose.Schema(
     fullName: String,
     postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
     content: String,
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }]
+    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }],
   },
   {
     timestamps: true,

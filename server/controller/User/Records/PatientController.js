@@ -5,7 +5,7 @@ const catchAsync = require("../../../Utilities/catchAsync");
 
 // Get Patient by Id
 const patient_get = catchAsync(async (req, res, next) => {
-  const patient = await Patient.find();
+  const patient = await Patient.find().populate("userId");
 
   if (!patient) return next(new AppError("Patient not found", 404));
 
@@ -18,7 +18,7 @@ const patient_assigned_get = catchAsync(async (req, res, next) => {
 
   const patient = await Patient.find({
     assignedId: assignedId,
-  });
+  }).populate("userId");
 
   if (!patient) return next(new AppError("Patient not found", 404));
 

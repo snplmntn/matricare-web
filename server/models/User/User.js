@@ -62,9 +62,8 @@ const userSchema = new mongoose.Schema(
       default: "Patient",
     },
     assignedTask: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
-    articleLastRead: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
-    likedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
+    savedArticle: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
   },
   {
     timestamps: true,

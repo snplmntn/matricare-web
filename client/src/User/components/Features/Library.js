@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/features/library.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -37,6 +37,7 @@ const sliderSettings = {
 };
 
 const Library = () => {
+  const navigate = useNavigate();
   const [lastRead, setLastRead] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All"); // State for selected filter
@@ -46,6 +47,12 @@ const Library = () => {
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
+  const userID = getCookie("userID");
+  const [savedArticles, setSavedArticles] = useState([]);
+
+  const handleRowClick = (id) => {
+    navigate(`/book/${id}`);
+  };
 
   // Load the last read books from local storage on component mount
   useEffect(() => {
@@ -64,7 +71,27 @@ const Library = () => {
         console.error(error);
       }
     }
+
+    async function fetchSavedArticle() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/user?userId=${userID}`,
+
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setSavedArticles(response.data.other.savedArticle);
+        console.log(response.data.other.savedArticle);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchBooks();
+    fetchSavedArticle();
   }, []);
 
   const handleBookClick = (book) => {
@@ -192,7 +219,12 @@ const Library = () => {
           </div>
         </div>
       ) : (
-        <Article article={article[articleNum]} />
+        <Article
+          article={article[articleNum]}
+          isSaved={savedArticles
+            .map((saved) => saved._id)
+            .includes(article[articleNum]._id)}
+        />
       )}
     </>
   );

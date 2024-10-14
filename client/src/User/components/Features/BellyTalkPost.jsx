@@ -66,9 +66,24 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!token) {
       navigate("/login");
+    }
+
+    try {
+      const response = await axios.get(
+        `${API_URL}/user/save?userId=${userID}&postId=${post._id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      console.log(response.data);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -99,7 +114,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       const commentForm = {
         profilePicture: user.current.profilePicture,
         userId: userID,
-        fullname: user.current.name,
+        fullName: user.current.name,
         postId: post._id,
         content: commentText,
       };
@@ -155,7 +170,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     async function fetchComments() {
       try {
         const response = await axios.get(
-          `${API_URL}/post/comment?postId=${post._id}`,
+          `${API_URL}/${token ? "post" : "bellytalk"}/comment?postId=${
+            post._id
+          }`,
 
           {
             headers: {
@@ -168,7 +185,26 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         console.error(error);
       }
     }
+
+    async function fetchSavedPost() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/user?userId=${userID}`,
+
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setSavedPosts(response.data.other.savedPost);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchComments();
+    fetchSavedPost();
   }, []);
 
   const toggleMenu = () => {
@@ -217,7 +253,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     <div className="bellytalk-feed-item" key={post.id}>
       <img
         src={`${
-          post.profilePicture ? `${post.profilePicture}` : "img/topic1.jpg"
+          post.userId && post.userId.profilePicture
+            ? `${post.userId.profilePicture}`
+            : "img/topic1.jpg"
         }`}
         alt="Avatar"
         className="bellytalk-avatar-overlay"
@@ -225,10 +263,14 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       <div className="bellytalk-post-content">
         <div className="bellytalk-post-header">
           <h4>{post.fullname}</h4>
-          <IoEllipsisVertical
-            className="bellytalk-menu-icon"
-            onClick={toggleMenu} // Toggle menu on click
-          />
+          {post.userId._id === userID && (
+            <>
+              <IoEllipsisVertical
+                className="bellytalk-menu-icon"
+                onClick={toggleMenu} // Toggle menu on click
+              />
+            </>
+          )}
           {isMenuOpen && (
             <ul className="bellytalk-meatball-menu">
               <li onClick={handleEditPost}>Edit Post</li>
@@ -260,7 +302,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           />
           <IoBookmark
             className={`bellytalk-action-icon ${
-              savedPosts.includes(post.id) ? "active" : ""
+              savedPosts.includes(post._id) ? "active" : ""
             }`}
             onClick={() => handleSave(post.id)}
           />
@@ -286,15 +328,15 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
               <div className="comment-user-info">
                 <img
                   src={
-                    comment.profilePicture
-                      ? comment.profilePicture
+                    comment.userId && comment.userId.profilePicture
+                      ? comment.userId.profilePicture
                       : "img/LOGO.png"
                   }
                   alt="User Avatar"
                   className="comment-avatar"
                 />
                 <div>
-                  <h4>{comment.fullname}</h4>
+                  <h4>{comment.fullName}</h4>
                   <p>{comment.content}</p>
                 </div>
               </div>

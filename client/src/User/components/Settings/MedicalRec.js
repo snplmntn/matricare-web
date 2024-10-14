@@ -123,7 +123,6 @@ const MedicalRec = ({ user }) => {
   };
 
   const handleDocumentClick = (doc) => {
-    console.log(doc);
     setSelectedDocument(doc);
   };
 
