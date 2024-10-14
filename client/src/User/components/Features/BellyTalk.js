@@ -88,14 +88,16 @@ const BellyTalk = ({ user }) => {
       return;
     }
 
-    await handleNextStep();
-    setTimeout(() => {
-      if (!imgLink) {
-        setIsPosting(false);
-        alert("Image upload failed. Please try again.");
-        return;
-      }
-    }, 1000);
+    if (selectedImage) {
+      await handleNextStep();
+      setTimeout(() => {
+        if (!imgLink) {
+          setIsPosting(false);
+          alert("Image upload failed. Please try again.");
+          return;
+        }
+      }, 1000);
+    }
 
     const newPost = {
       userId: userID,
@@ -104,8 +106,6 @@ const BellyTalk = ({ user }) => {
       address: "Manila City",
       picture: imgLink,
     };
-
-    console.log(newPost);
 
     try {
       setIsPosting(true);
@@ -187,6 +187,11 @@ const BellyTalk = ({ user }) => {
       setPosts(filteredPosts);
     }
   }, [activeFilters, allPost]);
+
+  const onDeletePost = async (postId) => {
+    setPosts(posts.filter((post) => post._id !== postId));
+    setAllPost(allPost.filter((post) => post._id !== postId));
+  };
 
   return (
     <div className="bellytalk-container">
@@ -331,7 +336,12 @@ const BellyTalk = ({ user }) => {
         <section className="bellytalk-feed">
           {posts ? (
             posts.map((post) => (
-              <BellyTalkPost key={post._id} post={post} user={user} />
+              <BellyTalkPost
+                key={post._id}
+                post={post}
+                user={user.current}
+                onDeletePost={onDeletePost}
+              />
             ))
           ) : (
             <p>NO POSTS</p>
