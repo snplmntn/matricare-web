@@ -418,6 +418,7 @@ const AppointmentConsultant = () => {
                       >
                         <option value="Confirmed">Confirmed</option>
                         <option value="Pending">Pending</option>
+                        <option value="Rescheduled">Reschedule</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../styles/features/libraryconsultant.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoSearch } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
@@ -144,14 +144,15 @@ const bookRoutes = {
 };
 
 const LibraryConsultant = () => {
+  const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
+  const [user, setUser] = useState();
   const token = getCookie("token");
   const userID = getCookie("userID");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [books, setBooks] = useState(initialBooks);
   const [hoveredBookId, setHoveredBookId] = useState(null);
-  const [showArticle, setShowArticle] = useState(false);
   const [articleNum, setArticleNum] = useState();
 
   const filteredBooks = books.filter((book) => {
@@ -179,6 +180,7 @@ const LibraryConsultant = () => {
       await axios.put(
         `${API_URL}/article?id=${id}`,
         {
+          reviewedBy: user.name,
           status: "Approved",
         },
         {
@@ -212,7 +214,6 @@ const LibraryConsultant = () => {
           },
         }
       );
-      console.log(`Rejected article with ID: ${id}`);
       setBooks((prevBooks) =>
         prevBooks.map((book) =>
           book._id === id ? { ...book, status: "Revision" } : book
@@ -224,6 +225,9 @@ const LibraryConsultant = () => {
   };
 
   useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    if (userData) setUser(JSON.parse(userData));
+
     async function fetchBooks() {
       try {
         const response = await axios.get(`${API_URL}/article`, {
@@ -240,116 +244,119 @@ const LibraryConsultant = () => {
   }, []);
 
   return (
-    <>
-      {" "}
-      {!showArticle ? (
-        <div className="LC-library-layout">
-          <div className="LC-main-content">
-            <header className="LC-library-header">
-              <div className="LC-library-title">MatriCare.</div>
-              <div className="LC-header-actions">
-                <div className="LC-search-container">
-                  <input
-                    type="text"
-                    className="search-bar-library"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                  />
-                  <IoSearch className="LC-search-icon" />
-                </div>
-                <select
-                  className="LC-filter-dropdown"
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)} // Update filter on selection
-                >
-                  {filterOptions.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </header>
+    <div className="LC-library-layout">
+      <div className="LC-main-content">
+        <header className="LC-library-header">
+          <div className="LC-library-title">MatriCare.</div>
+          <div className="LC-header-actions">
+            <div className="LC-search-container">
+              <input
+                type="text"
+                className="search-bar-library"
+                placeholder="Search..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <IoSearch className="LC-search-icon" />
+            </div>
+            <select
+              className="LC-filter-dropdown"
+              value={selectedFilter}
+              onChange={(e) => setSelectedFilter(e.target.value)} // Update filter on selection
+            >
+              {filterOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+        </header>
 
-            <section id="library" className="LC-library-section">
-              <h2>Library</h2>
-              <div className="LC-book-list-container">
-                {filteredBooks.map((book, index) => (
-                  <div
-                    key={book.id}
-                    className="LC-library-item"
-                    onMouseEnter={() => setHoveredBookId(book.id)} // Track hovered book
-                    onMouseLeave={() => setHoveredBookId(null)} // Clear on leave
-                    onClick={() => {
-                      setArticleNum(index);
-                      setShowArticle(true);
-                    }}
-                  >
-                    <Link
-                      to={bookRoutes[book._id]}
-                      className="LC-library-item-link"
-                    >
-                      <div className="LC-book-cover-container">
-                        <img
-                          src={book.picture}
-                          alt={book.title}
-                          className="LC-book-cover"
-                        />
-                        {book.status === "Draft" && (
-                          <div
-                            className={`LC-overlay ${
-                              !book.approved ? "LC-visible-overlay" : ""
-                            }`}
-                          >
-                            {hoveredBookId !== book._id ? (
-                              <span className="LC-overlay-text">
-                                {book.status === "Revision"
-                                  ? "For Revisions"
-                                  : "Waiting for Approval"}
-                              </span>
-                            ) : (
-                              <div className="LC-approval-buttons">
-                                <button
-                                  className="LC-approve-btn"
-                                  onClick={(e) => {
-                                    e.stopPropagation(); // Prevent Link navigation
-                                    e.preventDefault();
-                                    handleApproveArticle(book._id);
-                                  }}
-                                >
-                                  Approve
-                                </button>
-                                <button
-                                  className="LC-reject-btn"
-                                  onClick={(e) => {
-                                    e.stopPropagation(); // Prevent Link navigation
-                                    e.preventDefault();
-                                    handleRejectArticle(book._id);
-                                  }}
-                                >
-                                  Reject
-                                </button>
-                              </div>
-                            )}
+        <section id="library" className="LC-library-section">
+          <h2>Library</h2>
+          <div className="LC-book-list-container">
+            {filteredBooks.map((book, index) => (
+              <div
+                key={book._id}
+                className="LC-library-item"
+                onMouseEnter={() => setHoveredBookId(book._id)} // Track hovered book
+                onMouseLeave={() => setHoveredBookId(null)} // Clear on leave
+                onClick={() => {
+                  setArticleNum(index);
+                  navigate(`/book/${book._id}`);
+                }}
+              >
+                <Link
+                  to={bookRoutes[book._id]}
+                  className="LC-library-item-link"
+                >
+                  <div className="LC-book-cover-container">
+                    <img
+                      src={book.picture}
+                      alt={book.title}
+                      className="LC-book-cover"
+                    />
+                    {book.status === "Draft" ? (
+                      <div
+                        className={`LC-overlay ${
+                          !book.approved ? "LC-visible-overlay" : ""
+                        }`}
+                      >
+                        {hoveredBookId !== book._id ? (
+                          <span className="LC-overlay-text">
+                            {book.status === "Revision"
+                              ? "For Revisions"
+                              : "Waiting for Approval"}
+                          </span>
+                        ) : (
+                          <div className="LC-approval-buttons">
+                            <button
+                              className="LC-approve-btn"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent Link navigation
+                                e.preventDefault();
+                                handleApproveArticle(book._id);
+                              }}
+                            >
+                              Approve
+                            </button>
+                            <button
+                              className="LC-reject-btn"
+                              onClick={(e) => {
+                                e.stopPropagation(); // Prevent Link navigation
+                                e.preventDefault();
+                                handleRejectArticle(book._id);
+                              }}
+                            >
+                              Reject
+                            </button>
                           </div>
                         )}
                       </div>
-                      <div className="LC-book-details">
-                        <h3 className="LC-book-title">{book.title}</h3>
-                        <p className="LC-book-author">Author: {book.author}</p>
-                      </div>
-                    </Link>
+                    ) : (
+                      book.status === "Revision" && (
+                        <div
+                          className={`LC-overlay ${
+                            !book.approved ? "LC-visible-overlay" : ""
+                          }`}
+                        >
+                          <span className="LC-overlay-text">For Revision</span>
+                        </div>
+                      )
+                    )}
                   </div>
-                ))}
+                  <div className="LC-book-details">
+                    <h3 className="LC-book-title">{book.title}</h3>
+                    <p className="LC-book-author">Author: {book.author}</p>
+                  </div>
+                </Link>
               </div>
-            </section>
+            ))}
           </div>
-        </div>
-      ) : (
-        <Article article={books[articleNum]} />
-      )}
-    </>
+        </section>
+      </div>
+    </div>
   );
 };
 

@@ -127,7 +127,7 @@ const appointment_put = catchAsync(async (req, res, next) => {
     await Notification.create({
       senderName: `MatriCare`,
       message: `There are changes in the Appointment. Look it up!`,
-      recipientUserId: updatedArticle.userId,
+      recipientUserId: recipientUserIds,
     });
   }
   return res

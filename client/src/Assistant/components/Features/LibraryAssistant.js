@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../../style/features/libraryassistant.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoSearch } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
@@ -8,6 +8,7 @@ import Article from "../../../User/components/Library/Article";
 import ArticleEdit from "../Library/ArticleEdit";
 
 const LibraryAssistant = () => {
+  const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
   const userID = getCookie("userID");
@@ -68,28 +69,28 @@ const LibraryAssistant = () => {
     setSelectedImage(file);
   };
 
-  // const handleUploadBookCover = async () => {
-  //   if (selectedImage) {
-  //     const formData = new FormData();
-  //     formData.append("picture", selectedImage);
+  async function uploadBookCover() {
+    if (selectedImage) {
+      const formData = new FormData();
+      formData.append("picture", selectedImage);
 
-  //     try {
-  //       const response = await axios.post(
-  //         `${API_URL}/upload/a?userId=${userID}`,
-  //         formData,
-  //         {
-  //           headers: {
-  //             Authorization: token,
-  //             "Content-Type": "multipart/form-data",
-  //           },
-  //         }
-  //       );
-  //       setBookCover(response.data.pictureLink);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   }
-  // };
+      try {
+        const response = await axios.post(
+          `${API_URL}/upload/a?userId=${userID}`,
+          formData,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setBookCover(response.data.pictureLink);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
 
   const handleAddArticle = async (e) => {
     e.preventDefault();
@@ -102,74 +103,47 @@ const LibraryAssistant = () => {
     if (newArticle.category === null)
       return alert("Please fill in all fields and upload a Book Cover.");
 
-    try {
-      if (selectedImage) {
-        const formData = new FormData();
-        formData.append("picture", selectedImage);
+    await uploadBookCover();
 
-        try {
-          const response = await axios.post(
-            `${API_URL}/upload/a?userId=${userID}`,
-            formData,
-            {
-              headers: {
-                Authorization: token,
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-          setBookCover(response.data.pictureLink);
-        } catch (err) {
-          console.error(err);
-        }
+    setTimeout(async () => {
+      if (!bookCover) {
+        return alert("Error Uploading Image, Please Try Again.");
       }
-    } catch (err) {
-      console.error(err);
-    }
 
-    const newBook = {
-      userId: userID,
-      fullTitle: newArticle.title,
-      title: newArticle.title,
-      author: newArticle.author,
-      category: newArticle.category,
-      picture: bookCover,
-      status: "Draft",
-    };
+      const newBook = {
+        userId: userID,
+        fullTitle: newArticle.title,
+        title: newArticle.title,
+        author: newArticle.author,
+        category: newArticle.category,
+        picture: bookCover,
+        status: "Draft",
+      };
 
-    try {
-      const response = await axios.post(`${API_URL}/article`, newBook, {
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json ",
-        },
+      try {
+        const response = await axios.post(`${API_URL}/article`, newBook, {
+          headers: {
+            Authorization: token,
+            "Content-Type": "application/json ",
+          },
+        });
+
+        setArticles((prevBooks) => {
+          const updatedBooks = [...prevBooks, response.data.newArticle];
+          return updatedBooks;
+        });
+      } catch (err) {
+        console.error(err);
+      }
+
+      setNewArticle({
+        title: "",
+        author: "",
+        category: "Choose A Category",
+        cover: null,
       });
-      console.log(response);
-
-      setArticles((prevBooks) => {
-        const updatedBooks = [...prevBooks, response.data.newArticle];
-        return updatedBooks;
-      });
-    } catch (err) {
-      console.error(err);
-    }
-
-    setNewArticle({
-      title: "",
-      author: "",
-      category: "Choose A Category",
-      cover: null,
-    });
-    setShowForm(false);
-  };
-
-  const handleApproveArticle = (id) => {
-    // Approve the article by updating its approved status
-    setBooks((prevBooks) =>
-      prevBooks.map((book) =>
-        book.id === id ? { ...book, approved: true } : book
-      )
-    );
+      setShowForm(false);
+    }, 2000);
   };
 
   return (
@@ -296,7 +270,7 @@ const LibraryAssistant = () => {
                       onClick={() => {
                         setArticleNum(index);
                         book.status === "Approved"
-                          ? setShowArticle(1)
+                          ? navigate(`/book/${book._id}`)
                           : setShowArticle(2);
                       }}
                     >
@@ -307,10 +281,13 @@ const LibraryAssistant = () => {
                           className="LA-book-cover"
                         />
                         {/* Show overlay for unapproved books */}
-                        {book.status === "Draft" && (
+                        {(book.status === "Draft" ||
+                          book.status === "Revision") && (
                           <div className="LA-overlay">
                             <span className="LA-overlay-text">
-                              Waiting for Approval
+                              {book.status === "Draft"
+                                ? "Waiting for Approval"
+                                : "For Revisions"}
                             </span>
                           </div>
                         )}
@@ -325,8 +302,6 @@ const LibraryAssistant = () => {
             </section>
           </div>
         </div>
-      ) : showArticle === 1 ? (
-        <Article article={article[articleNum]} />
       ) : (
         <ArticleEdit article={article[articleNum]} />
       )}
