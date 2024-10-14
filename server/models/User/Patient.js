@@ -21,7 +21,6 @@ const patientSchema = new mongoose.Schema(
     },
     seq: Number,
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    assignedId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {
     timestamps: true,

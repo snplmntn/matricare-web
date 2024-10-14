@@ -88,7 +88,7 @@ const AppointmentConsultant = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       const response = await axios.put(
-        `${API_URL}/appointment?id=${id}`,
+        `${API_URL}/appointment?id=${id}&userId=${userID}`,
         {
           status: newStatus,
         },
@@ -133,7 +133,6 @@ const AppointmentConsultant = () => {
 
       const appointmentObj = {
         email: email,
-        assignedId: userID,
         patientName: patientName,
         location: location,
         category: category,
@@ -151,10 +150,7 @@ const AppointmentConsultant = () => {
           }
         );
 
-        setAppointments([
-          ...appointments,
-          { ...newAppointment, date: fullDateTime },
-        ]);
+        setAppointments([...appointments, response.data.newAppointment]);
       } catch (error) {
         console.error("Resend email error:", error);
       }
@@ -188,14 +184,11 @@ const AppointmentConsultant = () => {
   useEffect(() => {
     async function fetchAppointments() {
       try {
-        const response = await axios.get(
-          `${API_URL}/appointment/u?assignedId=${userID}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/appointment/u`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         console.log(response);
         setAppointments(response.data);
       } catch (error) {

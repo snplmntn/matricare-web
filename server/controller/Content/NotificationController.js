@@ -10,13 +10,13 @@ const notification_get = catchAsync(async (req, res, next) => {
   if (id) {
     notification = await Notification.findOne({
       _id: req.query.id,
-    });
+    }).populate("senderId");
   } else if (userId) {
     notification = await Notification.find({
       recipientUserId: req.query.userId,
-    });
+    }).populate("senderId");
   } else {
-    notification = await Notification.find();
+    notification = await Notification.find().populate("senderId");
   }
 
   if (!notification) return next(new AppError("Notification not found", 404));
