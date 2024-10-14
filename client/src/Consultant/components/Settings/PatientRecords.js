@@ -91,15 +91,14 @@ const PatientRecords = () => {
     async function fetchPatient() {
       try {
         const response = await axios.get(
-          `${API_URL}/record/patient?id=${userId}`,
+          `${API_URL}/record/patient/u?id=${userId}`,
           {
             headers: {
               Authorization: token,
             },
           }
         );
-        console.log(response.data[0]);
-        setPatientInfo(response.data[0]);
+        setPatientInfo(response.data);
         // });
       } catch (error) {
         console.error(error);
@@ -216,7 +215,16 @@ const PatientRecords = () => {
         </div>
         <div className="PR-top-section">
           <div className="PR-patient-info">
-            <img src="img/topic2.jpg" alt="Patient Photo" />
+            <img
+              src={
+                patientInfo &&
+                patientInfo.userId &&
+                patientInfo.userId.profilePicture
+                  ? patientInfo.userId.profilePicture
+                  : "img/topic2.jpg"
+              }
+              alt="Patient Photo"
+            />
             <div className="PR-patient-details">
               <h3>{patientInfo && patientInfo.fullName}</h3>
               <p>
@@ -376,35 +384,17 @@ const PatientRecords = () => {
         <div className="PR-patient-docu">
           <div className="PR-documents">
             <h4>Documents</h4>
-            <div
-              className="PR-docu-item"
-              onClick={() => handleDocumentClick("ECG Test Report")}
-            >
-              <span className="docu-icon">
-                <FaFilePdf />
-              </span>{" "}
-              ECG Test Report
-              <span className="docu-date">02/25/2024</span>
-            </div>
-            <div
-              className="PR-docu-item"
-              onClick={() => handleDocumentClick("Medical History")}
-            >
-              <span className="docu-icon">
-                <FaFilePdf />
-              </span>{" "}
-              Medical History
-              <span className="docu-date">03/15/2024</span>
-            </div>
-
             {documents.map((doc, index) => (
               <div
-                key={index}
-                className="MR-docu-item"
+                key={doc._id}
+                className="PR-docu-item"
                 onClick={() => handleDocumentClick(doc)}
               >
-                <span className="MR-doc-name">{doc.name}</span>
-                <span className="MR-doc-date">{formatDate(doc.date)}</span>
+                <span className="docu-icon">
+                  <FaFilePdf />
+                </span>
+                {doc.name}
+                <span className="docu-date">{formatDate(doc.date)}</span>
               </div>
             ))}
           </div>

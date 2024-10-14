@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/pages/login.css";
@@ -22,6 +22,7 @@ export default function Login() {
   const [loginToken, setLoginToken] = useState("");
   const [verifyToken, setVerifyToken] = useState("");
   const [rememberDevice, setRememberDevice] = useState(false);
+  const [userTrustedDevice, setUserTrustedDevice] = useState([]);
 
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
@@ -33,23 +34,36 @@ export default function Login() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
-  const handleCodeSubmission = () => {
-    setAuthMessage("");
+  const handleRedirectToApp = async () => {
     const role = cookies.role;
+    setTimeout(() => {
+      setCookie("token", loginToken);
+      navigate(
+        role === "Patient"
+          ? "/app"
+          : role === "Assistant"
+          ? "/assistant-landing"
+          : role === "Obgyne" && "/consultant-landing"
+      );
+    }, 3000);
+  };
+
+  const handleCodeSubmission = () => {
+    console.log(userTrustedDevice);
+    setAuthMessage("");
+    let userID = getCookie("userID");
 
     if (verifyToken === verificationCode.toUpperCase()) {
       setAuthMessage("Verification Successful!");
 
-      setTimeout(() => {
-        document.cookie = `token=${loginToken}`;
-        navigate(
-          role === "Patient"
-            ? "/app"
-            : role === "Assistant"
-            ? "/assistant-landing"
-            : role === "Obgyne" && "/consultant-landing"
-        );
-      }, 3000);
+      if (rememberDevice) {
+        const userTrustedDeviceArray = [...userTrustedDevice, userID];
+        setCookie("userTrustedDevice", JSON.stringify(userTrustedDeviceArray), {
+          path: "/",
+          maxAge: 30 * 24 * 60 * 60,
+        });
+      }
+      handleRedirectToApp();
     } else {
       setAuthMessage("Invalid verification code. Please try again.");
     }
@@ -64,6 +78,7 @@ export default function Login() {
   };
 
   const handleLogin = async (e) => {
+    console.log(userTrustedDevice);
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -90,17 +105,32 @@ export default function Login() {
       };
 
       localStorage.setItem("userData", JSON.stringify(userDetails));
-      const userEmail = response.data.user.email; // Assume the email is returned from the backend
+      const userEmail = response.data.user.email;
       document.cookie = `userID=${response.data.user._id}`;
       document.cookie = `role=${response.data.user.role}`;
       setLoginToken(response.data.token);
 
+      if (userTrustedDevice.includes(response.data.user._id)) {
+        await handleRedirectToApp();
+        setTimeout(() => {
+          setCookie("token", response.data.token);
+          navigate(
+            response.data.user.role === "Patient"
+              ? "/app"
+              : response.data.user.role === "Assistant"
+              ? "/assistant-landing"
+              : response.data.user.role === "Obgyne" && "/consultant-landing"
+          );
+        }, 3000);
+        return;
+      }
+
       // After successful login, show the verification modal
       setEmail(userEmail);
-      setSuccessMessage("Login successful! Please verify your account.");
-      setShowVerificationModal(true);
       setLoading(false);
+      setSuccessMessage("Login successful! Please verify your account.");
       await handleResendEmail();
+      setShowVerificationModal(true);
     } catch (err) {
       // Log the error
       console.error(
@@ -139,6 +169,12 @@ export default function Login() {
     const censoredDomainPart = "*".repeat(Math.max(domain.length - 1, 0)); // Ensure the repeat count is not negative
     return `${visibleNamePart}${censoredNamePart}@${visibleDomainPart}${censoredDomainPart}`;
   };
+
+  useEffect(() => {
+    const storedTrustedUserDevice = cookies.userTrustedDevice;
+    const storedArray = storedTrustedUserDevice ? storedTrustedUserDevice : [];
+    setUserTrustedDevice(storedArray);
+  }, []);
 
   return (
     <div className="login-outer-container login-background">
@@ -250,16 +286,19 @@ export default function Login() {
           </div>
 
           <div className="Authentication__RememberDevice">
-          <input
-            type="checkbox"
-            id="rememberDevice"
-            className="Authentication__Checkbox"
-            onChange={(e) => setRememberDevice(e.target.checked)} // Manage the checkbox state
-          />
-          <label htmlFor="rememberDevice" className="Authentication__CheckboxLabel">
-            Remember this Device
-          </label>
-        </div>
+            <input
+              type="checkbox"
+              id="rememberDevice"
+              className="Authentication__Checkbox"
+              onChange={(e) => setRememberDevice(e.target.checked)}
+            />
+            <label
+              htmlFor="rememberDevice"
+              className="Authentication__CheckboxLabel"
+            >
+              Remember this Device
+            </label>
+          </div>
 
           <button
             className="Authentication__Button Authentication__SubmitButton"

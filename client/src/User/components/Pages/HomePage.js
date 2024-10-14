@@ -405,7 +405,6 @@ function HomePage({ user }) {
                     <div className="bellytalk-scrollable">
                       {newPost &&
                         newPost.map((post) => {
-                          console.log(post.likes);
                           const likedUserIDs = post.likes.map((i) => i.userId);
                           const isLikedByMe = likedUserIDs.includes(userID);
                           return (

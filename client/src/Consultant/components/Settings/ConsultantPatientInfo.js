@@ -82,12 +82,24 @@ const ConsultantPatientInfo = () => {
     setEditingUserId(userId);
   };
 
-  const handleDeleteClick = (userId) => {
+  const handleDeleteClick = async (userId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       if (view === "patients") {
-        setPatients(patients.filter((user) => user.id !== userId));
+        try {
+          const response = await axios.delete(
+            `${API_URL}/record/patient?id=${userId}`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          setPatients(patients.filter((patient) => patient._id !== userId));
+        } catch (error) {
+          console.error(error);
+        }
       } else {
-        setAdmins(admins.filter((user) => user.id !== userId));
+        setAdmins(admins.filter((user) => user._id !== userId));
       }
       setSelectedUsers(selectedUsers.filter((id) => id !== userId));
     }
@@ -128,7 +140,7 @@ const ConsultantPatientInfo = () => {
           },
         }
       );
-      setPatients([...patients, patientForm]);
+      setPatients([...patients, response.data.newPatient]);
     } catch (error) {
       console.error(error);
     }
@@ -260,13 +272,13 @@ const ConsultantPatientInfo = () => {
           </thead>
           <tbody>
             {filteredUsers.map((user, index) => (
-              <tr key={user.id} onClick={() => handleRowClick(user._id)}>
+              <tr key={user._id} onClick={() => handleRowClick(user._id)}>
                 {view === "patients" && (
                   <td>
                     <input
                       type="checkbox"
-                      checked={selectedUsers.includes(user.id)}
-                      onChange={() => handleUserSelection(user.id)}
+                      checked={selectedUsers.includes(user._id)}
+                      onChange={() => handleUserSelection(user._id)}
                     />
                   </td>
                 )}
@@ -274,11 +286,10 @@ const ConsultantPatientInfo = () => {
                 <td>
                   <img
                     src={
-                      user.profilePicture
-                        ? user.profilePicture
-                        : "img//topic1.jpg"
+                      user && user.userId && user.userId.profilePicture
+                        ? user.userId.profilePicture
+                        : "img/topic2.jpg"
                     }
-                    // alt={user.name}
                     className="CPM-user-photo"
                   />
                 </td>
@@ -298,24 +309,33 @@ const ConsultantPatientInfo = () => {
                   </>
                 )}
                 <td>
-                  {editingUserId === user.id ? (
+                  {editingUserId === user._id ? (
                     <button
                       className="CPM-operation-btn"
-                      onClick={handleSaveClick}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleSaveClick();
+                      }}
                     >
                       <IoSave />
                     </button>
                   ) : (
                     <button
                       className="CPM-operation-btn"
-                      onClick={() => handleEditClick(user.id)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        handleEditClick(user._id);
+                      }}
                     >
                       <IoPencil />
                     </button>
                   )}
                   <button
                     className="CPM-operation-btn CPM-delete-btn"
-                    onClick={() => handleDeleteClick(user.id)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleDeleteClick(user._id);
+                    }}
                   >
                     <IoTrash />
                   </button>
