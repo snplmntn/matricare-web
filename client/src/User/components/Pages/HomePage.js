@@ -404,22 +404,30 @@ function HomePage({ user }) {
                   <div className="bellytalk-content">
                     <div className="bellytalk-scrollable">
                       {newPost &&
-                        newPost.map((post) => (
-                          <div key={post._id} className="bellytalk-item">
-                            <div className="profile-icon">
-                              <img
-                                src="img/logo.png"
-                                alt="Profile"
-                                className="profile-icon-image"
+                        newPost.map((post) => {
+                          console.log(post.likes);
+                          const likedUserIDs = post.likes.map((i) => i.userId);
+                          const isLikedByMe = likedUserIDs.includes(userID);
+                          return (
+                            <div key={post._id} className="bellytalk-item">
+                              <div className="profile-icon">
+                                <img
+                                  src="img/logo.png"
+                                  alt="Profile"
+                                  className="profile-icon-image"
+                                />
+                              </div>
+                              <p>{`${post.content}`}</p>
+                              <FontAwesomeIcon
+                                style={{
+                                  color: isLikedByMe ? "#e39fa9" : "#9a6cb4",
+                                }}
+                                icon={faHeart}
+                                className="bellytalk-like-icon"
                               />
                             </div>
-                            <p>{`${post.content}`}</p>
-                            <FontAwesomeIcon
-                              icon={faHeart}
-                              className="bellytalk-like-icon"
-                            />
-                          </div>
-                        ))}
+                          );
+                        })}
                     </div>
                   </div>
                 ) : (

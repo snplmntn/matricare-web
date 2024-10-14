@@ -30,8 +30,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       navigate("/login");
     }
 
-    // setIsLikedByMe(!isLikedByMe);
-    // console.log(isLikedByMe);
     if (!isLikedByMe) {
       //like post
       try {
@@ -133,7 +131,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     }
     setCommentText("");
     setOpenReply(false);
-    // setReplyingTo(null);
   };
 
   //fetch likes
@@ -142,7 +139,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       try {
         const response = await axios.get(
           `${API_URL}/post/like?postId=${post._id}`,
-
           {
             headers: {
               Authorization: token,
@@ -173,7 +169,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           `${API_URL}/${token ? "post" : "bellytalk"}/comment?postId=${
             post._id
           }`,
-
           {
             headers: {
               Authorization: token,
@@ -188,15 +183,11 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
 
     async function fetchSavedPost() {
       try {
-        const response = await axios.get(
-          `${API_URL}/user?userId=${userID}`,
-
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setSavedPosts(response.data.other.savedPost);
       } catch (error) {
         console.error(error);
@@ -238,7 +229,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     }
 
     try {
-      await axios.delete(`${API_URL}/post/${post._id}`, {
+      await axios.delete(`${API_URL}/post?id=${post._id}`, {
         headers: {
           Authorization: token,
         },
@@ -263,7 +254,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       <div className="bellytalk-post-content">
         <div className="bellytalk-post-header">
           <h4>{post.fullname}</h4>
-          {post.userId._id === userID && (
+          {post.userId && post.userId._id === userID && (
             <>
               <IoEllipsisVertical
                 className="bellytalk-menu-icon"
