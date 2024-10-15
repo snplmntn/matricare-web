@@ -117,7 +117,7 @@ function Notifications() {
       <div className="NotificationsSection">
         <h2 className="section-title">Notifications</h2>
         <hr className="section-divider" />
-        {notification ? (
+        {notification && notification.length > 0 ? (
           <div className="notifications-list">
             {notification.map((notification, index) => (
               <div

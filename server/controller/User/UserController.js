@@ -194,7 +194,9 @@ const save_article_put = catchAsync(async (req, res, next) => {
   // Check if the post/article is already saved
   const user = await User.findById(userId);
   if (user[identifier].includes(id)) {
-    return next(new AppError("Post/Article already saved", 400));
+    return res.status(200).json({
+      message: "Post/Article already saved",
+    });
   }
 
   const updatedUser = await User.findByIdAndUpdate(

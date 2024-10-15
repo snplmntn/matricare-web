@@ -78,7 +78,6 @@ export default function Login() {
   };
 
   const handleLogin = async (e) => {
-    console.log(userTrustedDevice);
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -132,15 +131,17 @@ export default function Login() {
       await handleResendEmail();
       setShowVerificationModal(true);
     } catch (err) {
+      if (err.response.status === 401) {
+        setError("Invalid credentials. Please try again.");
+      } else if (err.response.status === 404) {
+        setError("Username or Email not found. Please register first.");
+      } else {
+        setError("Failed to login. Please try again.");
+      }
       // Log the error
       console.error(
         "Login error:",
         err.response ? err.response.data : err.message
-      );
-      setError(
-        err.response
-          ? err.response.data.message
-          : "Login error. Please try again."
       );
       setLoading(false); // Stop loading
     }
