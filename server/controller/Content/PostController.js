@@ -45,9 +45,10 @@ const post_user_get = catchAsync(async (req, res, next) => {
 
 // Create Post
 const post_post = catchAsync(async (req, res, next) => {
-  const newPost = new Post(req.body);
+  const newPost = await Post.create(req.body);
 
-  const savedPost = await newPost.save();
+  const savedPost = await Post.findById(newPost._id).populate("userId");
+
   return res
     .status(200)
     .json({ message: "Post Successfully Created", savedPost });
