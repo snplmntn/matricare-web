@@ -90,41 +90,41 @@ const BellyTalk = ({ user }) => {
 
     if (selectedImage) {
       await handleNextStep();
-      setTimeout(() => {
-        if (!imgLink) {
-          setIsPosting(false);
-          alert("Image upload failed. Please try again.");
-          return;
-        }
-      }, 1000);
     }
 
-    const newPost = {
-      userId: userID,
-      fullname: user.current.name,
-      content: newPostText,
-      address: "Manila City",
-      picture: imgLink,
-    };
+    if (!imgLink && selectedImage) {
+      setIsPosting(false);
+      alert("Image upload failed. Please try again.");
+      return;
+    } else {
+      const newPost = {
+        userId: userID,
+        fullname: user.current.name,
+        content: newPostText,
+        address: "Manila City",
+        picture: imgLink,
+      };
 
-    try {
-      setIsPosting(true);
-      const response = await axios.post(`${API_URL}/post/`, newPost, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      try {
+        setIsPosting(true);
+        const response = await axios.post(`${API_URL}/post/`, newPost, {
+          headers: {
+            Authorization: token,
+          },
+        });
 
-      setPosts([response.data.savedPost, ...posts]);
-    } catch (error) {
-      console.error(error);
+        setPosts([response.data.savedPost, ...posts]);
+        setAllPost([response.data.savedPost, ...allPost]);
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error(error);
+      }
     }
+
     setNewPostText("");
     setSelectedImage(null);
     setImagePreview(null);
     setSuccessMessage("Post Submitted");
-    setIsPosting("Next");
-    setIsModalOpen(false);
     setSelectedCategories([]);
   };
 
@@ -304,6 +304,7 @@ const BellyTalk = ({ user }) => {
                       <input
                         id="file-upload"
                         type="file"
+                        accept="image/*"
                         onChange={handleFileChange}
                         style={{ display: "none" }} // Hide the default file input
                       />

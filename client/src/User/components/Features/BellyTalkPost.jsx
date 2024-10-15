@@ -16,9 +16,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newCaption, setNewCaption] = useState(post.content);
   const navigate = useNavigate();
-  const [savedPosts, setSavedPosts] = useState([]);
   const [commentText, setCommentText] = useState("");
   const [isLikedByMe, setIsLikedByMe] = useState(false);
+  const [isSavedByMe, setIsSavedByMe] = useState(false);
   const [comments, setComments] = useState([]);
   const API_URL = process.env.REACT_APP_API_URL;
 
@@ -69,19 +69,36 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       navigate("/login");
     }
 
-    try {
-      const response = await axios.get(
-        `${API_URL}/user/save?userId=${userID}&postId=${post._id}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
+    if (!isSavedByMe) {
+      try {
+        const response = await axios.get(
+          `${API_URL}/user/save?userId=${userID}&postId=${post._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setIsSavedByMe(!isSavedByMe);
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      try {
+        const response = await axios.delete(
+          `${API_URL}/user/unsave?userId=${userID}&postId=${post._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setIsSavedByMe(!isSavedByMe);
+        console.log(response.data, !isSavedByMe);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -188,7 +205,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             Authorization: token,
           },
         });
-        setSavedPosts(response.data.other.savedPost);
+        const savedIds = response.data.other.savedPost.map((post) => post._id);
+        const saved = savedIds.includes(post._id);
+        setIsSavedByMe(saved);
       } catch (error) {
         console.error(error);
       }
@@ -292,9 +311,8 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             }}
           />
           <IoBookmark
-            className={`bellytalk-action-icon ${
-              savedPosts.includes(post._id) ? "active" : ""
-            }`}
+            className={`bellytalk-action-icon`}
+            style={{ color: isSavedByMe ? "#e39fa9" : "#9a6cb4" }}
             onClick={() => handleSave(post.id)}
           />
         </div>

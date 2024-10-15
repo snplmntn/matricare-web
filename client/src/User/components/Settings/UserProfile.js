@@ -178,49 +178,51 @@ const UserProfile = ({ user }) => {
   };
 
   //handle user ifo update
-  const handleUserUpdate = async () => {
-    if (selectedImage) await handleUploadProfilePicture();
+  const handleUserUpdate = async (e) => {
+    e.preventDefault();
 
-    setTimeout(() => {
-      if (!profilePicture) {
-        alert("Image upload failed. Please try again.");
-        return;
+    if (selectedImage) {
+      await handleUploadProfilePicture();
+    }
+
+    if (!profilePicture && selectedImage) {
+      alert("Image upload failed. Please try again.");
+      return;
+    } else {
+      const updatedUserForm = {};
+      if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
+      if (email !== user.email) updatedUserForm.email = email;
+      if (phoneNumber !== user.phoneNumber)
+        updatedUserForm.phoneNumber = phoneNumber;
+      if (address !== user.address) updatedUserForm.address = address;
+      if (partner !== user.husband) updatedUserForm.husband = partner;
+      if (number !== user.husbandNumber) updatedUserForm.husbandNumber = number;
+      if (profilePicture !== user.profilePicture)
+        updatedUserForm.profilePicture = profilePicture;
+      if (babyName !== user.babyName) updatedUserForm.babyName = babyName;
+      if (lastMenstrualPeriod !== user.pregnancyStartDate) {
+        const pregnancyStartDate = new Date(lastMenstrualPeriod);
+        updatedUserForm.pregnancyStartDate = pregnancyStartDate;
       }
-    }, 1000);
+      if (birthday !== user.birthdate) {
+        const birthdate = new Date(birthday);
+        updatedUserForm.birthdate = birthdate;
+      }
 
-    const updatedUserForm = {};
-    if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
-    if (email !== user.email) updatedUserForm.email = email;
-    if (phoneNumber !== user.phoneNumber)
-      updatedUserForm.phoneNumber = phoneNumber;
-    if (address !== user.address) updatedUserForm.address = address;
-    if (partner !== user.husband) updatedUserForm.husband = partner;
-    if (number !== user.husbandNumber) updatedUserForm.husbandNumber = number;
-    if (profilePicture !== user.profilePicture)
-      updatedUserForm.profilePicture = profilePicture;
-    if (babyName !== user.babyName) updatedUserForm.babyName = babyName;
-    if (lastMenstrualPeriod !== user.pregnancyStartDate) {
-      const pregnancyStartDate = new Date(lastMenstrualPeriod);
-      updatedUserForm.pregnancyStartDate = pregnancyStartDate;
-    }
-    if (birthday !== user.birthdate) {
-      const birthdate = new Date(birthday);
-      updatedUserForm.birthdate = birthdate;
-    }
-
-    try {
-      const response = await axios.put(
-        `${API_URL}/user?userId=${userID}`,
-        updatedUserForm,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      console.log(response);
-    } catch (error) {
-      console.error(error);
+      try {
+        const response = await axios.put(
+          `${API_URL}/user?userId=${userID}`,
+          updatedUserForm,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setIsEditing(false);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -380,7 +382,7 @@ const UserProfile = ({ user }) => {
               <span className="UP-divider-text">Personal Details</span>
             </div>
             <div className="user-profile-details">
-              <form onSubmit={handleProfileUpdate}>
+              <form onSubmit={handleUserUpdate}>
                 <div className="user-profile-input-group">
                   <label htmlFor="userName">Full Name:</label>
                   <input
@@ -460,11 +462,7 @@ const UserProfile = ({ user }) => {
                 </div>
 
                 <div className="user-profile-button-group">
-                  <button
-                    type="submit"
-                    className="user-profile-save-btn"
-                    onClick={handleUserUpdate}
-                  >
+                  <button type="submit" className="user-profile-save-btn">
                     Save
                   </button>
                   <button

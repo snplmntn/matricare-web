@@ -15,69 +15,7 @@ const SavedPosts = () => {
   const userID = getCookie("userID");
   const API_URL = process.env.REACT_APP_API_URL;
   const [selectedPost, setSelectedPost] = useState(null);
-  const [savedPosts, setSavedPosts] = useState([
-    // Static sample posts
-    {
-      id: 1,
-      imageUrl: "img/topic1.jpg",
-      fullname: "Ella Diaz",
-      content: "Hi",
-      category: "Breast Feeding",
-      likes: 10,
-      comments: 1,
-      time: "2:00 pm",
-    },
-    {
-      id: 2,
-      imageUrl: "img/topic2.jpg",
-      fullname: "Bea Rosal",
-      content: "Hi",
-      category: "Maternal Style",
-      likes: 20,
-      comments: 3,
-      time: "2:00 pm",
-    },
-    {
-      id: 3,
-      imageUrl: "img/topic3.jpg",
-      fullname: "Maxene Delos Santos",
-      content: "Hi",
-      category: "Gender Reveal",
-      likes: 20,
-      comments: 1,
-      time: "2:00 pm",
-    },
-    {
-      id: 4,
-      imageUrl: "img/topic4.jpg",
-      fullname: "Alexandra Tomas",
-      content: "Hi",
-      category: "Labor",
-      likes: 40,
-      comments: 20,
-      time: "2:00 pm",
-    },
-    {
-      id: 5,
-      imageUrl: "img/topic5.jpg",
-      fullname: "Alexis Rodriguez",
-      content: "Hi",
-      category: "Baby Essentials",
-      likes: 10,
-      comments: 4,
-      time: "2:00 pm",
-    },
-    {
-      id: 6,
-      imageUrl: "img/topic5.jpg",
-      fullname: "Stefanie Rengel",
-      content: "Hi",
-      category: "Gender Reveal",
-      likes: 10,
-      comments: 1.4,
-      time: "2:00 pm",
-    },
-  ]);
+  const [savedPosts, setSavedPosts] = useState([]);
 
   const navigate = useNavigate();
 
@@ -177,7 +115,7 @@ const SavedPosts = () => {
       )}
 
       {selectedPost && (
-        <div className="modal-overlay">
+        <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="savedpost-feed-item">
             <div className="savedpost-post-header">
               <img

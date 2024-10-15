@@ -194,7 +194,9 @@ const save_article_put = catchAsync(async (req, res, next) => {
   // Check if the post/article is already saved
   const user = await User.findById(userId);
   if (user[identifier].includes(id)) {
-    return next(new AppError("Post/Article already saved", 400));
+    return res.status(200).json({
+      message: `${postId ? "Post" : "Article"} is not yet saved.`,
+    });
   }
 
   const updatedUser = await User.findByIdAndUpdate(
@@ -206,7 +208,7 @@ const save_article_put = catchAsync(async (req, res, next) => {
   if (!updatedUser) return next(new AppError("User not found", 404));
 
   return res.status(200).json({
-    message: "Post/Article saved Successfully",
+    message: `${postId ? "Post" : "Article"} saved Successfully`,
     updatedUser,
   });
 });
@@ -226,7 +228,9 @@ const remove_saved_article = catchAsync(async (req, res, next) => {
   // Check if the post/article is already saved
   const user = await User.findById(userId);
   if (!user[identifier].includes(id)) {
-    return next(new AppError("Post/Article is not yet saved.", 200));
+    return res.status(200).json({
+      message: `${postId ? "Post" : "Article"} is not yet saved.`,
+    });
   }
   const updatedUser = await User.findByIdAndUpdate(
     userId,
@@ -236,7 +240,7 @@ const remove_saved_article = catchAsync(async (req, res, next) => {
   if (!updatedUser) return next(new AppError("User not found", 404));
 
   return res.status(200).json({
-    message: "Post/Article unsaved Successfully",
+    message: `${postId ? "Post" : "Article"} unsaved Successfully`,
     updatedUser,
   });
 });
