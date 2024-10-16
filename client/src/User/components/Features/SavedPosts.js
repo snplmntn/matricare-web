@@ -81,7 +81,11 @@ const SavedPosts = () => {
                 onClick={() => handlePostClick(post)}
               >
                 <img
-                  src={post.userId && post.userId.profilePicture}
+                  src={
+                    post.userId && post.userId.profilePicture
+                      ? post.userId.profilePicture
+                      : "img/profilePicture.jpg"
+                  }
                   alt={post.fullname}
                   className="post-image"
                 />
@@ -119,7 +123,11 @@ const SavedPosts = () => {
           <div className="savedpost-feed-item">
             <div className="savedpost-post-header">
               <img
-                src={selectedPost.userId && selectedPost.userId.profilePicture}
+                src={
+                  selectedPost.userId && selectedPost.userId.profilePicture
+                    ? `${selectedPost.userId.profilePicture}`
+                    : "img/profilePicture.jpg"
+                }
                 alt={selectedPost.fullname}
                 className="savedpost-avatar-overlay"
               />

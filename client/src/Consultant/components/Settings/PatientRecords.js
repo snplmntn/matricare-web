@@ -53,18 +53,17 @@ const PatientRecords = () => {
           },
         });
         setStatus("On Progress");
-        console.log(response);
+        setTasks([...tasks, response.data.newTask]);
       } catch (e) {
         console.error(e);
       }
-      setTasks([...tasks, newTask]);
       setTaskName("");
       setFormVisible(false); // Hide form after adding
     }
   };
 
   const conceptionDate =
-    patientInfo && patientInfo.userId.pregnancyStartDate
+    patientInfo && patientInfo.userId && patientInfo.userId.pregnancyStartDate
       ? moment(patientInfo.userId.pregnancyStartDate)
       : moment.invalid();
 
@@ -221,14 +220,16 @@ const PatientRecords = () => {
                 patientInfo.userId &&
                 patientInfo.userId.profilePicture
                   ? patientInfo.userId.profilePicture
-                  : "img/topic2.jpg"
+                  : "/img/profilePicture.jpg"
               }
               alt="Patient Photo"
             />
             <div className="PR-patient-details">
               <h3>{patientInfo && patientInfo.fullName}</h3>
               <p>
-                {patientInfo && patientInfo.userId.birthdate
+                {patientInfo &&
+                patientInfo.userId &&
+                patientInfo.userId.birthdate
                   ? `${formatDate(
                       patientInfo.userId.birthdate
                     )} : ${calculateAge(patientInfo.userId.birthdate)} yrs old`
@@ -243,7 +244,11 @@ const PatientRecords = () => {
           <div className="PR-info-columns">
             <div className="PR-address-info">
               <h4>Home Address:</h4>
-              <p>{patientInfo && patientInfo.userId.address}</p>
+              <p>
+                {patientInfo &&
+                  patientInfo.userId &&
+                  patientInfo.userId.address}
+              </p>
             </div>
             <div className="PR-email-info">
               <h4>Email Address:</h4>
@@ -251,10 +256,18 @@ const PatientRecords = () => {
             </div>
             <div className="PR-partner-info">
               <h4>Husband/Partner:</h4>
-              <p>{patientInfo && patientInfo.userId.husband}</p>
+              <p>
+                {patientInfo &&
+                  patientInfo.userId &&
+                  patientInfo.userId.husband}
+              </p>
               <div className="PR-partner-contact">
                 <FaMobileAlt className="PR-phone-icon" />
-                <p>{patientInfo && patientInfo.userId.husbandNumber}</p>
+                <p>
+                  {patientInfo &&
+                    patientInfo.userId &&
+                    patientInfo.userId.husbandNumber}
+                </p>
               </div>
             </div>
           </div>
