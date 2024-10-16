@@ -8,8 +8,8 @@ import {
   IoBookmark,
   IoPencil,
   IoArrowBack,
-  IoCloudUploadOutline,
 } from "react-icons/io5";
+import { FcPicture } from "react-icons/fc";
 
 import axios from "axios";
 
@@ -218,51 +218,6 @@ const BellyTalk = ({ user }) => {
       </div>
 
       <main className="bellytalk-main-content">
-        <section className="trending-section">
-          <h2>Trending Now</h2>
-          <div className="trending-articles">
-            <article className="trending-article">
-              <div className="article-image">
-                <img src="img/topic1.jpg" alt="Article Headline 1" />
-                <div className="headlines">
-                  <h3>Maternal Health Disparities</h3>
-                  <p>Posted by: Bea Benella Rosal</p>
-                </div>
-              </div>
-            </article>
-            <article className="trending-article">
-              <div className="article-image">
-                <img src="img/topic2.jpg" alt="Article Headline 2" />
-                <div className="headlines">
-                  <h3>Home Births and Midwifery</h3>
-                  <p>Posted by: Bea Benella Rosal</p>
-                </div>
-              </div>
-            </article>
-            <article className="trending-article">
-              <div className="article-image">
-                <img src="img/topic3.jpg" alt="Article Headline 3" />
-                <div className="headlines">
-                  <h3>Celebrity Pregnancy Announcements</h3>
-                  <p>Posted by: Bea Benella Rosal</p>
-                </div>
-              </div>
-            </article>
-            <article className="trending-article">
-              <div className="article-image">
-                <img src="img/topic4.jpg" alt="Article Headline 4" />
-                <div className="headlines">
-                  <h3>
-                    Rihanna Reveals Due Date for Her Second Baby During a
-                    Concert
-                  </h3>
-                  <p>Posted by: Bea Benella Rosal</p>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
-
         <div className="sharebox">
           <div className="sharebox-container" onClick={openModal}>
             <IoPencil className="pen-icon" />
@@ -294,12 +249,12 @@ const BellyTalk = ({ user }) => {
                       className="sharebox-textarea"
                     />
                     <div className="upload-button">
+                      <p>Add to your post</p>
                       <label
                         htmlFor="file-upload"
                         className="custom-file-upload"
                       >
-                        <IoCloudUploadOutline />
-                        Upload Photo
+                        <FcPicture  />
                       </label>
                       <input
                         id="file-upload"
