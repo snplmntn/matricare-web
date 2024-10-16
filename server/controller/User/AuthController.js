@@ -48,10 +48,16 @@ const user_signup = catchAsync(async (req, res, next) => {
   } = req.body;
 
   // Check if user already exists
-  const userExists = await User.findOne({ email });
+  const userEmail = await User.findOne({ email });
 
-  if (userExists) {
-    return next(new AppError("User already exists", 400));
+  if (userEmail) {
+    return next(new AppError("Email already used.", 400));
+  }
+
+  const userName = await User.findOne({ username });
+
+  if (userName) {
+    return next(new AppError("Username already used.", 400));
   }
 
   // Hash the password before saving

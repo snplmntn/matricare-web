@@ -9,6 +9,7 @@ import {
 import { CookiesProvider, useCookies } from "react-cookie";
 import { createHashHistory } from "history";
 import "./App.css";
+import axios from "axios";
 
 // Components
 import Footer from "./User/components/Pages/Footer";
@@ -51,6 +52,7 @@ import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNot
 import Verify from "./User/components/Pages/Verify";
 
 function AppContent() {
+  const API_URL = process.env.REACT_APP_API_URL;
   const history = createHashHistory();
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,20 +60,51 @@ function AppContent() {
   const parsedUser = useRef({});
   const token = cookies.token;
   const role = cookies.role;
+  const userID = cookies.userID;
+  const userData = localStorage.getItem("userData");
 
   useEffect(() => {
-    if (token) {
-      const userData = localStorage.getItem("userData");
-      if (userData) {
-        const parsedData = JSON.parse(userData);
-        parsedData.name = parsedData.name.split(" ")[0];
-        parsedUser.current = parsedData;
+    async function checkToken() {
+      if (token) {
+        try {
+          await axios.get(`${API_URL}/user?userId=${userID}`, {
+            headers: {
+              Authorization: token,
+            },
+          });
+        } catch (err) {
+          console.error(err);
+
+          removeCookie("token");
+          removeCookie("userID");
+          removeCookie("verifyToken");
+          removeCookie("role");
+          localStorage.removeItem("userData");
+          localStorage.removeItem("address");
+          localStorage.removeItem("email");
+          localStorage.removeItem("events");
+          localStorage.removeItem("userData");
+          localStorage.removeItem("phoneNumber");
+          localStorage.removeItem("profileImageUrl");
+          localStorage.removeItem("savedArticles");
+          localStorage.removeItem("userName");
+          window.location.href = "/";
+        }
       }
     }
+    checkToken();
   }, []);
 
+  useEffect(() => {
+    if (userData) {
+      const parsedData = JSON.parse(userData);
+      parsedData.name = parsedData.name.split(" ")[0];
+      parsedUser.current = parsedData;
+    }
+  }, [userData]);
+
   const getPage = (Component) => {
-    if (role) {
+    if (role && token) {
       switch (role) {
         case "Assistant":
           return (

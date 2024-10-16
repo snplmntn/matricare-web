@@ -313,7 +313,10 @@ const LandingPageAssistant = ({}) => {
           <div className="landingpage-assistant-user-profile">
             <h1>{user.name}</h1>
             <p>{user.role}</p>
-            <img src="img/LOGO.png" alt="Profile" />
+            <img
+              src={user ? user.profilePicture : "img/LOGO.png"}
+              alt="Profile"
+            />
           </div>
         </header>
 

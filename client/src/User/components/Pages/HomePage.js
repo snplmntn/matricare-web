@@ -137,7 +137,6 @@ function HomePage({ user }) {
         },
       });
 
-      removeCookie("token");
       removeCookie("userID");
       removeCookie("verifyToken");
       removeCookie("role");
@@ -150,7 +149,7 @@ function HomePage({ user }) {
       localStorage.removeItem("profileImageUrl");
       localStorage.removeItem("savedArticles");
       localStorage.removeItem("userName");
-      window.location.href = "/";
+      removeCookie("token");
     } catch (err) {
       console.error(
         "Something went wrong!",
