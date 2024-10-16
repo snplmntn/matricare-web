@@ -6,6 +6,8 @@ import {
   IoDocumentText,
   IoChatbubbles,
   IoLibrary,
+  IoDocumentOutline,
+  IoDocument,
 } from "react-icons/io5";
 import "../../styles/pages/consultantsidebar.css";
 
@@ -50,6 +52,13 @@ const ConsultantSidebar = () => {
           title="BellyTalk"
         >
           <IoChatbubbles />
+        </Link>
+        <Link
+          to="/consultant-logs"
+          className="consultant-sidebar-item records"
+          title="Logs"
+        >
+          <IoDocument />
         </Link>
       </div>
     </aside>
