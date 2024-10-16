@@ -50,6 +50,7 @@ import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNot
 
 // Verify
 import Verify from "./User/components/Pages/Verify";
+import ConsultantLogs from "./Consultant/components/Settings/ConsultantLogs";
 
 function AppContent() {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -299,6 +300,15 @@ function AppContent() {
             <>
               {" "}
               <ConsultantSidebar /> <AppointmentConsultant />{" "}
+            </>
+          }
+        />
+         <Route
+          path="/consultant-logs"
+          element={
+            <>
+              {" "}
+              <ConsultantSidebar /> <ConsultantLogs />{" "}
             </>
           }
         />
