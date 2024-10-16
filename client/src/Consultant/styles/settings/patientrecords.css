@@ -299,7 +299,7 @@
 
 .PR-panel li .diagnosis-duration{
     font-size: 12px;
-    margin-top: -10px;
+    margin-top: 5px;
 }
 
 .PR-panel li .status {
@@ -484,6 +484,94 @@
     cursor: pointer;
     z-index: 10; /* Ensure it's above other content */
 }
+
+.PR-Add{
+    background-color: #9a6cb4;
+    border: none;
+    color: #ffffff;
+    font-size: 14px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.PR-modal {
+    display: flex;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .PR-modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 25%;
+    max-width: 600px;
+    border-radius: 10px;
+  }
+
+  .PR-modal-content h2{
+    border-left: solid 15px #9a6cb4;
+    text-align: left;
+    text-indent: 20px;
+  }
+
+  .PR-Save{
+    background-color: #9a6cb4; 
+    color: #ffffff; 
+    border: none;
+    font-size: 16px;
+    border-radius: 10px;
+    margin-left: 360px;
+    padding: 10px;
+    width: 40%; 
+    margin-top: 50px;
+    cursor: pointer; 
+    transition: background-color 0.3s ease;
+  }
+  
+  .PR-modal-close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+  .PR-modal-close:hover,
+  .PR-modal-close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .PR-input-row {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 10px; 
+    margin-bottom: 15px;
+    margin-top: 40px;
+  }
+  
+  .PR-input-row input {
+    flex: 1; 
+    min-width: 120px; 
+    padding: 8px; /* Add padding for better appearance */
+    border: 1px solid #ccc; /* Style the border */
+    border-radius: 4px; /* Rounded corners */
+  }
+  
+  .PR-input-row input[type="file"] {
+    flex: auto; /* Ensure the file input takes its natural width */
+  }
+  
+  
 
 
 
