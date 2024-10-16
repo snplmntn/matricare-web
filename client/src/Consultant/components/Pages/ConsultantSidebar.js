@@ -70,7 +70,7 @@ const ConsultantSidebar = () => {
       </div>
         <button className="logout-button" onClick={handleLogout}>
         <IoLogOutOutline/>
-          Log Out
+          Logout
         </button>
     </aside>
   );
