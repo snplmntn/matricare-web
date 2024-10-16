@@ -6,11 +6,11 @@
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
-    position: fixed; /* Ensure sidebar stays in place */
+    position: fixed; 
     top: 0;
     left: 0;
-    height: 100vh; /* Full viewport height */
-    z-index: 1000; /* Ensure it’s on top of other content */
+    height: 100vh; 
+    z-index: 1000; 
 }
 
 .consultant-sidebar-logo {
@@ -29,7 +29,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    margin-top: 60px;
+    margin-top: 10px;
 }
 
 .consultant-sidebar-item {
@@ -41,7 +41,7 @@
     display: flex;
     align-items: center;
     margin-left: 70px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 30px;
 }
 
@@ -49,3 +49,17 @@
     color: #7c459c;
 }
 
+.logout-button {
+    display: inline-flex; 
+    align-items: center;
+    background-color: transparent; 
+    border: none;
+    color: #ffffff; 
+    cursor: pointer;
+    padding: 15px 30px; 
+    font-size: 18px;
+    margin-left: -20px;
+    border-radius: 25px;
+    margin-bottom: 15px;
+    margin-top: 70px; 
+  }
