@@ -314,7 +314,11 @@ const LandingPageAssistant = ({}) => {
             <h1>{user.name}</h1>
             <p>{user.role}</p>
             <img
-              src={user ? user.profilePicture : "img/LOGO.png"}
+              src={
+                user && user.profilePicture
+                  ? user.profilePicture
+                  : "img/LOGO.png"
+              }
               alt="Profile"
             />
           </div>
@@ -402,6 +406,8 @@ const LandingPageAssistant = ({}) => {
                         <div className="patient-picture">
                           <img
                             src={
+                              appointment &&
+                              appointment.userId &&
                               appointment.userId.profilePicture
                                 ? appointment.userId.profilePicture
                                 : "img/LOGO.png"
