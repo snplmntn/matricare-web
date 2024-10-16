@@ -1,17 +1,23 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   IoHome,
   IoCalendar,
   IoDocumentText,
   IoChatbubbles,
   IoLibrary,
-  IoDocumentOutline,
-  IoDocument,
+  IoBarChart,
+  IoClipboard ,
 } from "react-icons/io5";
 import "../../styles/pages/consultantsidebar.css";
 
 const ConsultantSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/login");
+  };
+
   return (
     <aside className="consultant-sidebar">
       <div className="consultant-sidebar-logo">
@@ -40,13 +46,6 @@ const ConsultantSidebar = () => {
           <IoLibrary />
         </Link>
         <Link
-          to="/consultant-patientsinfo"
-          className="consultant-sidebar-item records"
-          title="Records"
-        >
-          <IoDocumentText />
-        </Link>
-        <Link
           to="/belly-talk"
           className="consultant-sidebar-item bellytalk"
           title="BellyTalk"
@@ -54,13 +53,23 @@ const ConsultantSidebar = () => {
           <IoChatbubbles />
         </Link>
         <Link
+          to="/manageBellytalk"
+          className="consultant-sidebar-item bellytalk"
+          title="Manage BellyTalk>"
+        >
+          <IoBarChart  />
+        </Link>
+        <Link
           to="/consultant-logs"
-          className="consultant-sidebar-item records"
+          className="consultant-sidebar-item logs"
           title="Logs"
         >
-          <IoDocument />
+          <IoClipboard  />
         </Link>
       </div>
+        <button className="logout-button" onClick={handleLogout}>
+          Log Out
+        </button>
     </aside>
   );
 };
