@@ -1,10 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { IoHome, IoCalendar, IoChatbubbles, IoLibrary, IoPerson } from 'react-icons/io5';
+import { Link, useNavigate } from 'react-router-dom';
+import { IoHome, IoCalendar, IoChatbubbles, IoLibrary, IoPerson, IoLogOutOutline } from 'react-icons/io5';
 import '../../style/pages/assistantsidebar.css';
 
 
 const AssistantSidebar = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/login");
+  };
+
     return (
     <aside className="landingpage-assistant-sidebar">
         <div className="landingpage-assistant-sidebar-logo">
@@ -26,6 +32,10 @@ const AssistantSidebar = () => {
           <Link to="/belly-talk" className="landingpage-assistant-sidebar-item" title="BellyTalk">
             <IoChatbubbles className="landingpage-assistant-icon" />
           </Link>
+          <button className="assistant-logout-button" onClick={handleLogout}>
+        <IoLogOutOutline/>
+          Logout
+        </button>
         </div>
       </aside>
      );
