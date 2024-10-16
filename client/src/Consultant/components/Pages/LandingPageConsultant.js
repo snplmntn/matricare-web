@@ -199,8 +199,8 @@ const LandingPageConsultant = ({}) => {
         <section className="consultant-patients-table">
           <div className="patients-header">
             <h3>Today's Appointment</h3>
-            <a href="/consultant-patientsinfo" className="view-all-patients">
-              View Patients
+            <a href="/consultant-appointment" className="view-all-patients">
+              View Appointment
             </a>
           </div>
           <table>
