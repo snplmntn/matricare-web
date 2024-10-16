@@ -131,9 +131,9 @@ export default function Login() {
       await handleResendEmail();
       setShowVerificationModal(true);
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err.response && err.response.status === 401) {
         setError("Invalid credentials. Please try again.");
-      } else if (err.response.status === 404) {
+      } else if (err.response && err.response.status === 404) {
         setError("Username or Email not found. Please register first.");
       } else {
         setError("Failed to login. Please try again.");

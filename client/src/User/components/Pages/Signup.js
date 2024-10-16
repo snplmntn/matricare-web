@@ -97,12 +97,17 @@ export default function Signup() {
 
       // Handle response, such as redirecting the user
     } catch (err) {
+      console.log(err);
+      if (err.response && err.response.status === 400) {
+        setError(err.response.data.message);
+      } else {
+        setError("Signup error. Please try again.");
+      }
       console.error(
         "Signup error:",
-        err.response ? err.response.data.msg : err.message
-      );
-      setError(
-        err.response ? err.response.data.msg : "Signup error. Please try again."
+        err.response
+          ? err.response.data.message
+          : "Signup error. Please try again."
       );
     } finally {
       setLoading(false); // End loading state
@@ -110,8 +115,7 @@ export default function Signup() {
   };
 
   return (
-    <div
-      className="signup-outer-container signup-background">
+    <div className="signup-outer-container signup-background">
       <div
         className="background-image"
         style={{ backgroundImage: `url(/img/login.jpg)` }}
