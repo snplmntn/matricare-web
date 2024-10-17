@@ -1,63 +1,22 @@
 /* Container */
-.PatientUserManagement-container {
+.UM-container {
   display: flex;
   height: 100vh;
+  width: 89%;
+  margin-left: 200px;
   background-color: #9a6cb4;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-
-/* Navbar */
-.PUM-navbar {
-  width: 200px;
-  background-color: #9a6cb4;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 20px;
-}
-
-.PUM-sidebar-logo img {
-  border-radius: 50%;
-  width: 160px;
-  height: 160px;
-}
-
-.PUM-sidebar-menu {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 60px;
-  margin-left: 20px;
-}
-
-.PUM-sidebar-item {
-  width: 80%;
-  padding: 20px 0;
-  color: white;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  font-size: 30px;
-}
-
-.PUM-sidebar-item:hover {
-  color: #7c459c;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
 /* Main Section */
-.PUM-main-section {
+.UM-main-section {
   flex-grow: 1;
   padding: 20px;
-  display: flex;
-  flex-direction: column;
   background-color: #ffffffe5;
   border-radius: 50px 0 0 50px;
 }
 
-.PUM-header {
+.UM-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -66,27 +25,27 @@
   margin-top: -20px;
 }
 
-.PUM-user-profile {
+.UM-user-profile {
   display: flex;
   flex-direction: column;
   text-align: right;
   margin-top: 30px;
 }
 
-.PUM-user-profile h1 {
+.UM-user-profile h1 {
   margin: 0; /* Remove default margin */
   font-size: 18px; /* Adjust the size as needed */
   margin-right: 70px;
 }
 
-.PUM-user-profile p {
+.UM-user-profile p {
   margin: 0;
   font-size: 14px;
   color: #666;
   margin-right: 70px;
 }
 
-.PUM-user-profile img {
+.UM-user-profile img {
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -95,45 +54,45 @@
 }
 
 /* Filter Options */
-.PUM-filter-options {
+.UM-filter-options {
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
 }
 
-.PUM-filter-container {
+.UM-filter-container {
   display: flex;
   align-items: center;
   margin-top: -50px;
   margin-right: 40px;
 }
 
-.PUM-filter-container label {
+.UM-filter-container label {
   margin-right: 8px; /* Adjust the spacing between the label and select */
   margin-top: 8px;
 }
 
-.PUM-filter-container select {
+.UM-filter-container select {
   padding: 4px 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
   width: 150px;
 }
 
-.PUM-toggle-select {
+.UM-toggle-select {
   display: flex;
   align-items: center;
   margin-left: 180px;
   margin-top: -50px;
 }
 
-.PUM-toggle-select label {
+.UM-toggle-select label {
   margin-left: 5px;
   font-size: 16px;
   margin-top: 5px;
 }
 
-.PUM-total-users {
+.UM-total-users {
   font-weight: bold;
   color: #ccc;
   font-size: 14px;
@@ -141,7 +100,7 @@
   margin-top: 3px;
 }
 
-.PUM-select {
+.UM-select {
   width: 150px;
   padding: 5px;
   border-radius: 4px;
@@ -149,36 +108,56 @@
 }
 
 /* User Table */
-.PUM-user-table {
+.UM-user-table {
   width: 95%;
-  border-collapse: collapse;
+  border-collapse: separate;
   margin-top: 10px;
   margin-left: 40px;
+  border-radius: 8px;
+  border-spacing: 0 15px;
+  table-layout: auto; 
 }
 
-.PUM-user-table thead {
+.UM-user-table thead {
   background-color: #ffffff;
 }
 
-.PUM-user-table th,
-.PUM-user-table td {
-  padding: 8px;
+.UM-user-table td {
+  padding: 12px 15px;
+  color: #333;
   text-align: left;
-  background-color: #ffffff;
-}
-.PUM-user-table th {
-  color: #666;
+  background-color: #fff; 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+  word-wrap: break-word; 
 }
 
-.PUM-user-photo {
+.UM-user-table th {
+  background-color: #9a6cb4 !important;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.UM-user-photo {
   width: 40px;
   height: 40px;
   border-radius: 10px;
   object-fit: cover; /* Ensures the image covers the area without stretching */
 }
 
+.UM-user-table th:nth-child(1), 
+.UM-user-table td:nth-child(1),
+.UM-user-table th:nth-child(2), 
+.UM-user-table td:nth-child(2),
+.UM-user-table th:nth-child(3), 
+.UM-user-table td:nth-child(3) {
+  text-align: center;
+}
+
+
 /* Operation Buttons */
-.PUM-operation-btn {
+.UM-operation-btn {
   background: none;
   border: none;
   cursor: pointer;
@@ -189,24 +168,40 @@
   justify-content: center;
 }
 
-.PUM-delete-btn {
+.UM-delete-btn {
   color: #7c459c;
 }
 
-.PUM-operation-btn {
+.UM-operation-btn {
   color: #7c459c;
 }
+
+.UM-add-btn{
+  background-color: #9a6cb4;
+  color: white;
+  width: 150px;
+  height: 40px;
+  border-radius: 30px;
+  border: none;
+  margin-top: -40px;
+}
+
+.UM-add-btn:hover{
+  background-color: #e39fa9;
+  color: #333;
+}
+
 
 /* Type Buttons */
-.PUM-type-buttons {
+.UM-type-buttons {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 20px;
-  margin-top: 20px;
+  margin-top: 50px;
   margin-left: 40px;
 }
 
-.PUM-type-button {
+.UM-type-button {
   padding: 20px 70px;
   margin-right: 10px;
   border: none;
@@ -217,32 +212,32 @@
   font-size: 18px;
 }
 
-.PUM-type-button.active {
+.UM-type-button.active {
   border-bottom: 3px solid #e39fa9; /* Add a line below the button */
   color: #040404; /* Optional: Change the text color to match the line */
 }
 
-.PUM-type-button:hover {
+.UM-type-button:hover {
   background-color: #7c459c;
   color: #ffffff;
 }
 
 /* View Label */
-.PUM-view-label {
+.UM-view-label {
   margin-bottom: 10px;
   text-align: left;
-  margin-top: 10px;
+  margin-top: 50px;
   margin-left: 40px;
 }
 
-.PUM-view-label h2 {
+.UM-view-label h2 {
   font-size: 30px;
   font-weight: bold;
   color: #4a4a4a;
   margin-top: 10px;
 }
 
-.PUM-status-select {
+.UM-status-select {
   padding: 5px;
   width: 100px;
   border-radius: 4px;
@@ -251,42 +246,21 @@
   color: #333;
 }
 
-.PUM-status-select:focus {
+.UM-status-select:focus {
   border-color: #007bff;
   outline: none;
 }
 
-.PUM-status-select option {
+.UM-status-select option {
   padding: 5px;
   background-color: #fff;
   color: #333;
   width: 250px;
 }
 
-/* Style for table headers and cells */
-.PUM-user-table th,
-.PUM-user-table td {
-  padding: 8px;
-  text-align: left;
-  background-color: #ffffff;
-  width: 250px;
-}
-
-/* Set column widths */
-.PUM-user-table th:nth-child(1),
-.PUM-user-table td:nth-child(1) {
-  text-align: center;
-  width: 100px;
-}
-
-.PUM-user-table th:nth-child(2),
-.PUM-user-table td:nth-child(2) {
-  text-align: center;
-}
-
 /* add patient form */
 
-.PUM-patient {
+.UM-patient {
   position: fixed;
   top: 0;
   left: 0;
@@ -299,7 +273,7 @@
   z-index: 1000;
 }
 
-.PUM-add-patient-form {
+.UM-add-patient-form {
   background-color: #fff;
   padding: 2rem;
   border-radius: 10px;
@@ -307,23 +281,23 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
-.PUM-add-form {
+.UM-add-form {
   margin-bottom: 1rem;
 }
 
-.PUM-add-form label {
+.UM-add-form label {
   display: block;
   margin-bottom: 0.5rem;
 }
 
-.PUM-add-form input {
+.UM-add-form input {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.PUM-add-submit {
+.UM-add-submit {
   margin: 10px 0;
   padding: 10px;
   width: 150px;
@@ -336,7 +310,7 @@
   margin-left: 70px;
 }
 
-.PUM-add-cancel {
+.UM-add-cancel {
   margin: 10px 0;
   padding: 10px;
   width: 100px;
