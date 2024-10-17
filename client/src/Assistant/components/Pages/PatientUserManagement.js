@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../style/pages/patientusermanagement.css";
-import { IoPencil, IoTrash, IoSave } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
 
-const ConsultantPatientInfo = () => {
+const PatientUserManagement = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const token = getCookie("token");
@@ -78,27 +77,10 @@ const ConsultantPatientInfo = () => {
     setFilter(event.target.value);
   };
 
-  const handleEditClick = (userId) => {
-    setEditingUserId(userId);
-  };
-
-  const handleDeleteClick = (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      if (view === "patients") {
-        setPatients(patients.filter((user) => user.id !== userId));
-      } else {
-        setAdmins(admins.filter((user) => user.id !== userId));
-      }
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
-    }
-  };
-
-  const handleSaveClick = () => {
-    setEditingUserId(null);
-  };
-
   const handleRowClick = (userId) => {
-    navigate(`/patient-records/${userId}`);
+    if (view === "patients") {
+      navigate(`/patient-records/${userId}`);
+    }
   };
 
   const handleAddPatientClick = () => {
@@ -173,49 +155,64 @@ const ConsultantPatientInfo = () => {
     fetchAdmins();
   }, []);
 
+  const handleStatusChange = (userId, newStatus) => {
+    // Logic to update the user's status, e.g., via API call or state update
+    console.log(`User ID: ${userId}, New Status: ${newStatus}`);
+    // You could update state or send the new status to the backend here
+  };
+
+
   return (
-    <div className="CPM-container">
-      <div className="CPM-main-section">
-        <header className="CPM-header">
-          <div className="CPM-user-profile">
+    <div className="UM-container">
+      <div className="UM-main-section">
+        <header className="UM-header">
+          <div className="UM-user-profile">
             <h1>{`${user.name}`}</h1>
             <p>Assistant</p>
-            <img
-              src={
-                user.profilePicture
-                  ? user.profilePicture
-                  : "img/profilePicture.jpg"
-              }
-              alt="Profile"
-            />
-            <button className="CPM-add-btn" onClick={handleAddPatientClick}>
+            <img src="img/LOGO.png" alt="Profile" />
+            <button className="UM-add-btn" onClick={handleAddPatientClick}>
               + Add Patients
             </button>
           </div>
         </header>
 
-        <div className="CPM-type-buttons">
+        <div className="UM-type-buttons">
           <button
-            className={`CPM-type-button ${view === "patients" ? "active" : ""}`}
+            className={`UM-type-button ${view === "patients" ? "active" : ""}`}
             onClick={() => setView("patients")}
           >
             Patients
           </button>
           <button
-            className={`CPM-type-button ${view === "admins" ? "active" : ""}`}
+            className={`UM-type-button ${view === "specialist" ? "active" : ""}`}
+            onClick={() => setView("specialist")}
+          >
+            Ob-Gyne Specialist
+          </button>
+          <button
+            className={`UM-type-button ${view === "admins" ? "active" : ""}`}
             onClick={() => setView("admins")}
           >
             Admins
           </button>
         </div>
 
-        <div className="CPM-view-label">
-          {view === "patients" ? <h2>Patients</h2> : <h2>Admins</h2>}
+        <div className="UM-view-label">
+        {view === "patients" ? (
+          <h2>Patients</h2>
+        ) : view === "admins" ? (
+          <h2>Admins</h2>
+        ) : view === "specialist" ? (
+          <h2>Ob-Gyne Specialists</h2>
+        ) : (
+          <h2>Default Title</h2>
+        )}
+
         </div>
 
-        <div className="CPM-filter-options">
+        <div className="UM-filter-options">
           {view === "patients" && (
-            <div className="CPM-toggle-select">
+            <div className="UM-toggle-select">
               <input
                 type="checkbox"
                 id="selectAll"
@@ -223,12 +220,12 @@ const ConsultantPatientInfo = () => {
                 onChange={toggleSelectAll}
               />
               <label htmlFor="selectAll">Select All Users</label>
-              <span className="CPM-total-users">({patients.length} Users)</span>
+              <span className="UM-total-users">({patients.length} Users)</span>
             </div>
           )}
           {view === "patients" && (
-            <div className="CPM-filter-section">
-              <div className="CPM-filter-container">
+            <div className="UM-filter-section">
+              <div className="UM-filter-container">
                 <label htmlFor="filter">Filter:</label>
                 <select id="filter" onChange={handleFilterChange}>
                   <option value="all">All</option>
@@ -240,18 +237,27 @@ const ConsultantPatientInfo = () => {
           )}
         </div>
 
-        <table className="CPM-user-table">
+        <table className="UM-user-table">
           <thead>
             <tr>
               {view === "patients" && <th>Select</th>}
 
-              <th>Patient ID</th>
+              <th> ID</th>
               <th>Photo</th>
               {view === "patients" && (
                 <>
                   <th>Patient Name</th>
                   <th>Phone Number</th>
                   <th>Email Address</th>
+                </>
+              )}
+              {view === "specialist" && (
+                <>
+                  <th>Specialist Name</th>
+                  <th>PRC ID</th>
+                  <th>Phone Number</th>
+                  <th>Email Address</th>
+                  <th>Verification Status</th>
                 </>
               )}
               {view === "admins" && (
@@ -262,7 +268,6 @@ const ConsultantPatientInfo = () => {
                   <th>Role</th>
                 </>
               )}
-              <th>Operation</th>
             </tr>
           </thead>
           <tbody>
@@ -279,37 +284,39 @@ const ConsultantPatientInfo = () => {
                 )}
                 <td>{user.seq}</td>
                 <td>
-                  {view === "patients" ? (
-                    <>
-                      <img
-                        src={
-                          user.userId.profilePicture
-                            ? user.userId.profilePicture
-                            : "img/profilePicture.jpg"
-                        }
-                        // alt={user.name}
-                        className="CPM-user-photo"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <img
-                        src={
-                          user.profilePicture
-                            ? user.profilePicture
-                            : "img/profilePicture.jpg"
-                        }
-                        // alt={user.name}
-                        className="CPM-user-photo"
-                      />
-                    </>
-                  )}
+                  <img
+                    src={
+                      user.profilePicture
+                        ? user.profilePicture
+                        : "img//topic1.jpg"
+                    }
+                    // alt={user.name}
+                    className="UM-user-photo"
+                  />
                 </td>
                 {view === "patients" && (
                   <>
                     <td>{user.fullName}</td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
+                  </>
+                )}
+                {view === "specialist" && (
+                  <>
+                    <td>{user.fullName}</td>
+                    <td>{user.prcID}</td>
+                    <td>{user.phoneNumber}</td>
+                    <td>{user.email}</td>
+                    <td>
+                      <select
+                        value={user.status}
+                        onChange={(e) => handleStatusChange(user.id, e.target.value)} // Function to handle status change
+                      >
+                        <option value="Verified">Verified</option>
+                        <option value="On Process">On Process</option>
+                      </select>
+                    </td>
+
                   </>
                 )}
                 {view === "admins" && (
@@ -320,39 +327,16 @@ const ConsultantPatientInfo = () => {
                     <td>{user.role}</td>
                   </>
                 )}
-                <td>
-                  {editingUserId === user.id ? (
-                    <button
-                      className="CPM-operation-btn"
-                      onClick={handleSaveClick}
-                    >
-                      <IoSave />
-                    </button>
-                  ) : (
-                    <button
-                      className="CPM-operation-btn"
-                      onClick={() => handleEditClick(user.id)}
-                    >
-                      <IoPencil />
-                    </button>
-                  )}
-                  <button
-                    className="CPM-operation-btn CPM-delete-btn"
-                    onClick={() => handleDeleteClick(user.id)}
-                  >
-                    <IoTrash />
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       {showForm && (
-        <div className="CPM-patient">
-          <div className="CPM-add-patient-form">
+        <div className="UM-patient">
+          <div className="UM-add-patient-form">
             <form onSubmit={handleAddPatientSubmit}>
-              <div className="CPM-add-form">
+              <div className="UM-add-form">
                 <label htmlFor="patientName">Name:</label>
                 <input
                   type="text"
@@ -363,7 +347,7 @@ const ConsultantPatientInfo = () => {
                   required
                 />
               </div>
-              <div className="CPM-add-form">
+              <div className="UM-add-form">
                 <label htmlFor="patientMobile">Mobile Number:</label>
                 <input
                   type="tel"
@@ -374,7 +358,7 @@ const ConsultantPatientInfo = () => {
                   required
                 />
               </div>
-              <div className="CPM-add-form">
+              <div className="UM-add-form">
                 <label htmlFor="patientEmail">Email:</label>
                 <input
                   type="email"
@@ -385,12 +369,12 @@ const ConsultantPatientInfo = () => {
                   required
                 />
               </div>
-              <button type="submit" className="CPM-add-submit">
+              <button type="submit" className="UM-add-submit">
                 Add Patient
               </button>
               <button
                 type="button"
-                className="CPM-add-cancel"
+                className="UM-add-cancel"
                 onClick={handleCancelClick}
               >
                 Cancel
@@ -403,4 +387,4 @@ const ConsultantPatientInfo = () => {
   );
 };
 
-export default ConsultantPatientInfo;
+export default PatientUserManagement;
