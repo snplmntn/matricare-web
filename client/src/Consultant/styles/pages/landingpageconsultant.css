@@ -50,29 +50,6 @@
   z-index: 1000;
 }
 
-.consultant-search-input:focus {
-  border-color: #017575;
-}
-.consultant-header-controls {
-  display: flex;
-  align-items: center;
-}
-
-.add-patient-btn {
-  background-color: #9a6cb4;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  margin-right: 50px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.add-patient-btn:hover {
-  background-color: #7c459c;
-}
-
 .consultant-profile {
   display: flex;
   align-items: center;
@@ -82,25 +59,40 @@
 .consultant-profile-icons {
   display: flex;
   align-items: center;
-  margin-right: 10px; /* Adds space between icons and the text */
+  margin-right: 10px;
+  z-index: 1001; 
+}
+
+.consul-profile-icon,
+.consul-notification-icon {
+  font-size: 30px;
+  color: #7c459c; 
 }
 
 .consul-profile-icon {
-  font-size: 30px;
-  margin-right: -70px;
-  color: #7c459c;
+  margin-right: 10px; 
 }
+
 .consul-notification-icon {
-  font-size: 30px !important;
-  margin-left: 5px;
-  color: #7c459c;
+  margin-left: 10px; 
+}
+
+
+.consultant-profile-info {
+  position: fixed; 
+  right: 20px; 
+  top: 20px;
+  display: flex;
+  align-items: center; 
+  z-index: 1000; 
+  background-color: transparent; 
 }
 
 .consultant-profile-text {
   display: flex;
-  flex-direction: column; /* Stacks the name and title vertically */
-  margin-right: -50px; /* Adds space between the text and the image */
-  text-align: right;
+  flex-direction: column; 
+  text-align: right; /* Align text to the right */
+  margin-right: 10px; /* Space between text and image */
 }
 
 .consultant-profile h1 {
@@ -109,16 +101,17 @@
 }
 
 .consultant-profile p {
-  margin: 0;
-  font-size: 14px;
-  color: #666;
+  margin: 0; /* Remove default margin */
+  font-size: 14px; /* Adjust the size as needed */
+  color: #666; /* Adjust the color as needed */
 }
 
-.consultant-profile img {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
+.consultant-profile-image {
+  border-radius: 50%; /* Circular image */
+  width: 50px; /* Adjust the width */
+  height: 50px; /* Adjust the height */
 }
+
 
 .consultant-greeting-section {
   display: flex;
@@ -241,21 +234,28 @@
 }
 
 .consultant-patients-table table {
-  width: 100%;
-  border-collapse: separate; /* Change from collapse to separate */
-  border-spacing: 0 10px;
-  margin-left: 20px;
+  width: 95%;
+  border-collapse: separate;
+  margin-top: 10px;
+  margin-left: 40px;
+  border-radius: 8px;
+  border-spacing: 0 15px;
 }
 
 .consultant-patients-table th {
+  background-color: #9a6cb4 !important;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 12px 15px;
   text-align: left;
-  padding: 10px;
 }
 
 .consultant-patients-table td {
+  padding: 12px 15px;
+  color: #333;
   text-align: left;
-  padding: 10px;
-  background-color: white;
+  background-color: #fff; 
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
 }
 
 .consultant-right-sidebar {
@@ -284,6 +284,14 @@
 
 .consultant-notifications {
   margin-bottom: 20px;
+  height: 400px; 
+  overflow-y: scroll; 
+  scrollbar-width: none; 
+  -ms-overflow-style: none; 
+}
+
+.consultant-notifications::-webkit-scrollbar {
+  display: none; 
 }
 
 .consultant-notifications h3 {
