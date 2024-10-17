@@ -3,11 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   IoHome,
   IoCalendar,
-  IoDocumentText,
+  IoFolderOpen,
   IoChatbubbles,
   IoLibrary,
   IoBarChart,
-  IoClipboard ,
   IoLogOutOutline ,
 } from "react-icons/io5";
 import "../../styles/pages/consultantsidebar.css";
@@ -56,16 +55,16 @@ const ConsultantSidebar = () => {
         <Link
           to="/manageBellytalk"
           className="consultant-sidebar-item bellytalk"
-          title="Manage BellyTalk>"
+          title="Manage BellyTalk"
         >
           <IoBarChart  />
         </Link>
         <Link
-          to="/consultant-logs"
-          className="consultant-sidebar-item logs"
-          title="Logs"
+          to="/consultant-patientsinfo"
+          className="consultant-sidebar-item records"
+          title="Patient Records"
         >
-          <IoClipboard  />
+          <IoFolderOpen   />
         </Link>
       </div>
         <button className="logout-button" onClick={handleLogout}>
