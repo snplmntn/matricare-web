@@ -28,7 +28,6 @@ const LandingPageConsultant = ({}) => {
   const [notification, setNotification] = useState([]);
   const [unreadNotification, setUnreadNotification] = useState(0);
   const [appointment, setAppointment] = useState([]);
-  const [allAppointment, setAllAppointment] = useState([]);
   const [appointmentNum, setAppointmentNum] = useState(0);
 
   const token = getCookie("token");
@@ -71,20 +70,6 @@ const LandingPageConsultant = ({}) => {
     setNewPatient((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const formatDate = (date) => {
-    const d = new Date(date);
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); // Format as YYYY-MM-DD
-  };
-
-  useEffect(() => {
-    const formattedDate = formatDate(date); // Apply the new formatting
-    const todaysAppointments = allAppointment.filter(
-      (appt) => formatDate(appt.date) === formattedDate
-    );
-    setAppointment(todaysAppointments);
-    setAppointmentNum(todaysAppointments.length);
-  }, [date, allAppointment]);
-
   useEffect(() => {
     const userData = localStorage.getItem("userData");
     if (userData) setUser(JSON.parse(userData));
@@ -114,9 +99,13 @@ const LandingPageConsultant = ({}) => {
             Authorization: token,
           },
         });
-        // console.log(response.data);
-
-        setAllAppointment(response.data);
+        console.log(response.data);
+        const today = new Date().toISOString().split("T")[0];
+        const todaysAppointments = response.data.filter(
+          (appt) => appt.date.split("T")[0] === today
+        );
+        setAppointment(todaysAppointments);
+        setAppointmentNum(todaysAppointments.length);
       } catch (error) {
         console.error(error);
       }
@@ -156,11 +145,6 @@ const LandingPageConsultant = ({}) => {
               className="consultant-search-input"
               placeholder="Search Appointments..."
             />
-          </div>
-          <div className="consultant-header-controls">
-            <button className="add-patient-btn" onClick={toggleForm}>
-              + Add Patients
-            </button>
           </div>
         </header>
 
@@ -241,81 +225,25 @@ const LandingPageConsultant = ({}) => {
             </tbody>
           </table>
         </section>
-        {isFormOpen && (
-          <div className="add-patient">
-            <div className="add-patient-content">
-              <h2>Add New Patient</h2>
-              <form onSubmit={handleAddPatient}>
-                <div className="CPM-add-form">
-                  <label htmlFor="patientName">Name:</label>
-                  <input
-                    type="text"
-                    id="patientName"
-                    name="fullName"
-                    value={newPatient.fullName}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </div>
-                <div className="CPM-add-form">
-                  <label htmlFor="patientMobile">Mobile Number:</label>
-                  <input
-                    type="tel"
-                    id="patientMobile"
-                    name="phoneNumber"
-                    value={newPatient.phoneNumber}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </div>
-                <div className="CPM-add-form">
-                  <label htmlFor="patientEmail">Email:</label>
-                  <input
-                    type="email"
-                    id="patientEmail"
-                    name="email"
-                    value={newPatient.email}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </div>
-                <button type="submit" className="CPM-add-submit">
-                  Add Patient
-                </button>
-                <button
-                  type="button"
-                  className="CPM-add-cancel"
-                  onClick={handleCancelClick}
-                >
-                  Cancel
-                </button>
-              </form>
-            </div>
-          </div>
-        )}
       </main>
 
       <aside className="consultant-right-sidebar">
         <div className="consultant-profile">
-          <a
-            href="/consultant-patientsinfo"
-            className="consul-profile-icon"
-            title="Profile"
-          >
-            <IoPersonCircleOutline />
-          </a>
-          <a
-            href="/consultant-notification"
-            className="consul-notification-icon"
-            title="Notifications"
-          >
-            <IoNotificationsSharp />
-          </a>
+        <div className="consultant-profile-icons">
+            <a href="/userprofile" className="consul-profile-icon" title="Profile">
+              <IoPersonCircleOutline />
+            </a>
+            <a href="/consultant-notification" className="consul-notification-icon" title="Notifications">
+              <IoNotificationsSharp />
+            </a>
+          </div>
+          <div className="consultant-profile-info">
           <div className="consultant-profile-text">
             <h1>{`Doctor ${user.name?.split(" ")[0]}`}</h1>
             <p>{`${user.role}`}</p>
           </div>
-          <img src="img/LOGO.png" alt="Profile" />
+          <img src="img/LOGO.png" alt="Profile" className="consultant-profile-image" />
+        </div>
         </div>
 
         <div className="consultant-schedule-calendar">
