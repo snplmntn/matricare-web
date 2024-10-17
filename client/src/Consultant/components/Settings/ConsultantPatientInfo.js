@@ -82,36 +82,28 @@ const ConsultantPatientInfo = () => {
     setEditingUserId(userId);
   };
 
-  const handleDeleteClick = async (userId) => {
+  const handleDeleteClick = (userId) => {
     if (window.confirm("Are you sure you want to delete this user?")) {
       if (view === "patients") {
-        try {
-          const response = await axios.delete(
-            `${API_URL}/record/patient?id=${userId}`,
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
-          );
-          setPatients(patients.filter((patient) => patient._id !== userId));
-        } catch (error) {
-          console.error(error);
-        }
+        setPatients(patients.filter((user) => user.id !== userId));
       } else {
-        setAdmins(admins.filter((user) => user._id !== userId));
+        setAdmins(admins.filter((user) => user.id !== userId));
       }
       setSelectedUsers(selectedUsers.filter((id) => id !== userId));
     }
   };
+
 
   const handleSaveClick = () => {
     setEditingUserId(null);
   };
 
   const handleRowClick = (userId) => {
-    navigate(`/patient-records/${userId}`);
+    if (view === "patients") {
+      navigate(`/patient-records/${userId}`);
+    }
   };
+  
 
   const handleAddPatientClick = () => {
     setShowForm(true); // Show the form when the button is clicked
@@ -140,7 +132,7 @@ const ConsultantPatientInfo = () => {
           },
         }
       );
-      setPatients([...patients, response.data.newPatient]);
+      setPatients([...patients, patientForm]);
     } catch (error) {
       console.error(error);
     }
@@ -157,6 +149,7 @@ const ConsultantPatientInfo = () => {
         const response = await axios.get(`${API_URL}/record/patient`, {
           headers: {
             Authorization: token,
+            "Content-Type": "multipart/form-data",
           },
         });
         setPatients(response.data);
@@ -164,25 +157,7 @@ const ConsultantPatientInfo = () => {
         console.error();
       }
     }
-
-    async function fetchAdmins() {
-      try {
-        const response = await axios.get(`${API_URL}/user/a`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        const filteredAdmins = response.data.filter(
-          (admin) => admin.role === "Assistant" || admin.role === "Obgyne"
-        );
-        setAdmins(filteredAdmins);
-      } catch (error) {
-        console.error(error);
-      }
-    }
-
     fetchPatients();
-    fetchAdmins();
   }, []);
 
   return (
@@ -192,14 +167,7 @@ const ConsultantPatientInfo = () => {
           <div className="CPM-user-profile">
             <h1>{`Dr. ${user.name}`}</h1>
             <p>Obstetrician-gynecologist</p>
-            <img
-              src={
-                user.profilePicture
-                  ? user.profilePicture
-                  : "img/profilePicture.jpg"
-              }
-              alt="Profile"
-            />
+            <img src="img/LOGO.png" alt="Profile" />
             <button className="CPM-add-btn" onClick={handleAddPatientClick}>
               + Add Patients
             </button>
@@ -214,6 +182,12 @@ const ConsultantPatientInfo = () => {
             Patients
           </button>
           <button
+            className={`CPM-type-button ${view === "specialist" ? "active" : ""}`}
+            onClick={() => setView("specialist")}
+          >
+            Ob-Gyne Specialist
+          </button>
+          <button
             className={`CPM-type-button ${view === "admins" ? "active" : ""}`}
             onClick={() => setView("admins")}
           >
@@ -222,7 +196,16 @@ const ConsultantPatientInfo = () => {
         </div>
 
         <div className="CPM-view-label">
-          {view === "patients" ? <h2>Patients</h2> : <h2>Admins</h2>}
+        {view === "patients" ? (
+          <h2>Patients</h2>
+        ) : view === "admins" ? (
+          <h2>Admins</h2>
+        ) : view === "specialist" ? (
+          <h2>Ob-Gyne Specialists</h2>
+        ) : (
+          <h2>Default Title</h2>
+        )}
+
         </div>
 
         <div className="CPM-filter-options">
@@ -257,13 +240,21 @@ const ConsultantPatientInfo = () => {
             <tr>
               {view === "patients" && <th>Select</th>}
 
-              <th>Patient ID</th>
+              <th> ID</th>
               <th>Photo</th>
               {view === "patients" && (
                 <>
                   <th>Patient Name</th>
                   <th>Phone Number</th>
                   <th>Email Address</th>
+                </>
+              )}
+              {view === "specialist" && (
+                <>
+                  <th>Specialist Name</th>
+                  <th>Phone Number</th>
+                  <th>Email Address</th>
+                  <th>Verification Status</th>
                 </>
               )}
               {view === "admins" && (
@@ -274,48 +265,31 @@ const ConsultantPatientInfo = () => {
                   <th>Role</th>
                 </>
               )}
-              <th>Operation</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.map((user, index) => (
-              <tr key={user._id} onClick={() => handleRowClick(user._id)}>
+              <tr key={user.id} onClick={() => handleRowClick(user._id)}>
                 {view === "patients" && (
                   <td>
                     <input
                       type="checkbox"
-                      checked={selectedUsers.includes(user._id)}
-                      onChange={() => handleUserSelection(user._id)}
+                      checked={selectedUsers.includes(user.id)}
+                      onChange={() => handleUserSelection(user.id)}
                     />
                   </td>
                 )}
                 <td>{user.seq}</td>
                 <td>
-                  {view === "patients" ? (
-                    <>
-                      <img
-                        src={
-                          user.userId.profilePicture
-                            ? user.userId.profilePicture
-                            : "img/profilePicture.jpg"
-                        }
-                        // alt={user.name}
-                        className="CPM-user-photo"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <img
-                        src={
-                          user.profilePicture
-                            ? user.profilePicture
-                            : "img/profilePicture.jpg"
-                        }
-                        // alt={user.name}
-                        className="CPM-user-photo"
-                      />
-                    </>
-                  )}
+                  <img
+                    src={
+                      user.profilePicture
+                        ? user.profilePicture
+                        : "img//topic1.jpg"
+                    }
+                    // alt={user.name}
+                    className="CPM-user-photo"
+                  />
                 </td>
                 {view === "patients" && (
                   <>
@@ -324,46 +298,22 @@ const ConsultantPatientInfo = () => {
                     <td>{user.email}</td>
                   </>
                 )}
-                {view === "admins" && (
+                {view === "specialist" && (
                   <>
                     <td>{user.fullName}</td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
+                    <td>{user.status === "Verified" || user.status === "On Process" ? (<span>{user.status}</span>) : null} </td>
+                  </>
+                )}
+                {view === "admins" && (
+                  <>
+                    <td>{user.name}</td>
+                    <td>{user.mobile}</td>
+                    <td>{user.email}</td>
                     <td>{user.role}</td>
                   </>
                 )}
-                <td>
-                  {editingUserId === user._id ? (
-                    <button
-                      className="CPM-operation-btn"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleSaveClick();
-                      }}
-                    >
-                      <IoSave />
-                    </button>
-                  ) : (
-                    <button
-                      className="CPM-operation-btn"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        handleEditClick(user._id);
-                      }}
-                    >
-                      <IoPencil />
-                    </button>
-                  )}
-                  <button
-                    className="CPM-operation-btn CPM-delete-btn"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      handleDeleteClick(user._id);
-                    }}
-                  >
-                    <IoTrash />
-                  </button>
-                </td>
               </tr>
             ))}
           </tbody>
