@@ -53,25 +53,47 @@ export default function Login() {
     setAuthMessage("");
     let userID = getCookie("userID");
 
-    if (verifyToken === verificationCode.toUpperCase()) {
-      setAuthMessage("Verification Successful!");
+    if (verificationCode.length !== 6) {
+        setAuthMessage("Verification code must be 6 digits long.");
+        return; 
+    }
 
-      if (rememberDevice) {
-        const userTrustedDeviceArray = [...userTrustedDevice, userID];
-        setCookie("userTrustedDevice", JSON.stringify(userTrustedDeviceArray), {
-          path: "/",
-          maxAge: 30 * 24 * 60 * 60,
-        });
-      }
-      handleRedirectToApp();
+    if (userTrustedDevice.includes(userID)) {
+        setAuthMessage("This verification code has already been used.");
+        return; 
+    }
+
+
+    const expiryTimestamp = parseInt(getCookie("expiryTimestamp"), 10);
+    const currentTimestamp = Date.now();
+
+
+    if (currentTimestamp > expiryTimestamp) {
+        setAuthMessage("Verification code has expired.");
+        return; 
+    }
+
+
+    if (verifyToken === verificationCode.toUpperCase()) {
+        setAuthMessage("Verification Successful!");
+
+        if (rememberDevice) {
+            const userTrustedDeviceArray = [...userTrustedDevice, userID];
+            setCookie("userTrustedDevice", JSON.stringify(userTrustedDeviceArray), {
+                path: "/",
+                maxAge: 30 * 24 * 60 * 60,
+            });
+        }
+        handleRedirectToApp();
     } else {
-      setAuthMessage("Invalid verification code. Please try again.");
+        setAuthMessage("Invalid verification code. Please try again.");
     }
 
     setTimeout(() => {
-      setAuthMessage("");
+        setAuthMessage("");
     }, 3000);
-  };
+};
+
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
@@ -134,7 +156,7 @@ export default function Login() {
       if (err.response && err.response.status === 401) {
         setError("Invalid credentials. Please try again.");
       } else if (err.response && err.response.status === 404) {
-        setError("Username or Email not found. Please register first.");
+        setError("Username or Password not found. Please register first.");
       } else {
         setError("Failed to login. Please try again.");
       }
