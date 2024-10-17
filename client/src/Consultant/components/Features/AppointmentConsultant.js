@@ -3,7 +3,6 @@ import "../../styles/features/appointmentconsultant.css";
 import { IoAddCircleOutline, IoNotifications } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
-import { CookiesProvider, useCookies } from "react-cookie";
 
 const initialAppointments = [
   {
@@ -13,21 +12,7 @@ const initialAppointments = [
     category: "Advice by the Doctor",
     status: "pending",
   },
-  {
-    date: "Sept 22, 1 pm",
-    patientName: "Mary Andres",
-    location: "Grace Medical Center",
-    category: "Monthly Check-up",
-    status: "pending",
-  },
-  {
-    date: "Sept 24, 3 pm",
-    patientName: "Sarah Smith",
-    location: "Family Care Tungko",
-    category: "Monthly Check-up",
-    status: "confirmed",
-  },
-];
+]
 
 const AppointmentConsultant = () => {
   const [appointments, setAppointments] = useState(initialAppointments);
@@ -43,6 +28,70 @@ const AppointmentConsultant = () => {
     status: "Pending",
   });
   const [user, setUser] = useState({});
+  
+
+  const availableTimes = {
+    'Mary Chiles, Sampaloc': {
+      Monday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM'],
+      Saturday: ['02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'],
+    },
+    'Grace Medical Center': {
+      Tuesday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
+      Friday: ['03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'],
+      Sunday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
+    },
+    'Family Care Tungko': {
+      Friday: ['01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM'],
+      Saturday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
+    },
+  };
+
+  // Function to get the day of the week from the selected date
+  const getDayOfWeek = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', { weekday: 'long' });
+  };
+
+  // Get available time options based on selected location and date
+  const getAvailableTimes = () => {
+    const { location, date } = newAppointment;
+    const dayOfWeek = getDayOfWeek(date);
+    if (location && dayOfWeek) {
+      return availableTimes[location]?.[dayOfWeek] || [];
+    }
+    return [];
+  };
+  
+  const [timeOptions, setTimeOptions] = useState([]);
+
+  // Handle form changes
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setNewAppointment((prev) => ({ ...prev, [name]: value }));
+
+    // Check if location or date is changed
+    if (name === 'location' || name === 'date') {
+      checkAvailability(newAppointment.location, name === 'date' ? value : newAppointment.date);
+    }
+  };
+
+  // Function to check availability based on location and selected date
+  const checkAvailability = (location, date) => {
+    if (location && date) {
+      const selectedDay = new Date(date).toLocaleString('en-US', { weekday: 'long' });
+      const availableDays = availableTimes[location];
+
+      // Check if the selected date's day is in the available days for the selected location
+      if (!availableDays || !availableDays[selectedDay]) {
+        alert("There's no available schedule.");
+        setTimeOptions([]); // Clear time options if no availability
+      } else {
+        // Set available times for the selected day
+        setTimeOptions(availableDays[selectedDay]);
+      }
+    }
+  };
+
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
@@ -57,31 +106,6 @@ const AppointmentConsultant = () => {
       setUser(parsedUserData);
     }
   }, []);
-
-  const timeOptions = [
-    "10:00 AM",
-    "10:30 AM",
-    "11:00 AM",
-    "11:30 AM",
-    "12:00 PM",
-    "12:30 PM",
-    "1:00 PM",
-    "1:30 PM",
-    "2:00 PM",
-    "2:30 PM",
-    "3:00 PM",
-    "3:30 PM",
-    "4:00 PM",
-    "4:30 PM",
-    "5:00 PM",
-    "5:30 PM",
-  ];
-
-  const locationOptions = [
-    "Mary Chiles, Sampaloc",
-    "Grace Medical Center",
-    "Family Care Tungko",
-  ];
 
   const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
 
@@ -120,10 +144,6 @@ const AppointmentConsultant = () => {
     (appointment) => appointment.status === "Confirmed"
   );
 
-  const handleFormChange = (e) => {
-    const { name, value } = e.target;
-    setNewAppointment({ ...newAppointment, [name]: value });
-  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -155,15 +175,6 @@ const AppointmentConsultant = () => {
       } catch (error) {
         console.error("Resend email error:", error);
       }
-      // setNewAppointment({
-      //   date: "",
-      //   time: "",
-      //   patientName: "",
-      //   email: "",
-      //   location: "",
-      //   category: "",
-      //   status: "Pending",
-      // });
       setIsFormVisible(false);
     } else {
       alert("Please fill in all fields");
@@ -285,45 +296,6 @@ const AppointmentConsultant = () => {
                   onChange={handleFormChange}
                   required
                 />
-                <input
-                  type="date"
-                  name="date"
-                  value={newAppointment.date}
-                  onChange={handleFormChange}
-                  required
-                />
-                <select
-                  className="appointment-select"
-                  name="time"
-                  value={newAppointment.time}
-                  onChange={handleFormChange}
-                  required
-                >
-                  <option value="">Select Time</option>
-                  {timeOptions.map((time, index) => (
-                    <option key={index} value={time}>
-                      {time}
-                    </option>
-                  ))}
-                </select>
-
-                <select
-                  className="appointment-select"
-                  name="location"
-                  value={newAppointment.location}
-                  onChange={handleFormChange}
-                  required
-                >
-                  <option value="" disabled>
-                    Select Location
-                  </option>
-                  {locationOptions.map((location, index) => (
-                    <option key={index} value={location}>
-                      {location}
-                    </option>
-                  ))}
-                </select>
-
                 <select
                   className="appointment-select"
                   name="category"
@@ -340,6 +312,47 @@ const AppointmentConsultant = () => {
                     </option>
                   ))}
                 </select>
+
+                <select
+                  className="appointment-select"
+                  name="location"
+                  value={newAppointment.location}
+                  onChange={handleFormChange}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Location
+                  </option>
+                  {Object.keys(availableTimes).map((location, index) => (
+                    <option key={index} value={location}>
+                      {location}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  type="date"
+                  name="date"
+                  value={newAppointment.date}
+                  onChange={handleFormChange}
+                  required
+                />
+
+                <select
+                  className="appointment-select"
+                  name="time"
+                  value={newAppointment.time}
+                  onChange={handleFormChange}
+                  required
+                >
+                  <option value="">Select Time</option>
+                  {timeOptions.map((time, index) => (
+                    <option key={index} value={time}>
+                      {time}
+                    </option>
+                  ))}
+                </select>
+
 
                 <button
                   type="button"
