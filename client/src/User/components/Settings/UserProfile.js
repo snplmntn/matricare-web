@@ -191,22 +191,24 @@ const UserProfile = ({ user }) => {
     } else {
       const updatedUserForm = {};
       if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
+      if (profilePicture !== user.profilePicture)
+        updatedUserForm.profilePicture = profilePicture;
+
+      if (birthday !== user.birthdate) {
+        const birthdate = new Date(birthday);
+        updatedUserForm.birthdate = birthdate;
+      }
       if (email !== user.email) updatedUserForm.email = email;
       if (phoneNumber !== user.phoneNumber)
         updatedUserForm.phoneNumber = phoneNumber;
       if (address !== user.address) updatedUserForm.address = address;
       if (partner !== user.husband) updatedUserForm.husband = partner;
       if (number !== user.husbandNumber) updatedUserForm.husbandNumber = number;
-      if (profilePicture !== user.profilePicture)
-        updatedUserForm.profilePicture = profilePicture;
+
       if (babyName !== user.babyName) updatedUserForm.babyName = babyName;
       if (lastMenstrualPeriod !== user.pregnancyStartDate) {
         const pregnancyStartDate = new Date(lastMenstrualPeriod);
         updatedUserForm.pregnancyStartDate = pregnancyStartDate;
-      }
-      if (birthday !== user.birthdate) {
-        const birthdate = new Date(birthday);
-        updatedUserForm.birthdate = birthdate;
       }
 
       try {
@@ -219,6 +221,21 @@ const UserProfile = ({ user }) => {
             },
           }
         );
+        if (fullname || birthday || profilePicture) {
+          const userData = localStorage.getItem("userData");
+          const parsedData = JSON.parse(userData);
+
+          if (fullname) {
+            parsedData.fullName = fullname;
+          }
+
+          if (profilePicture) {
+            parsedData.profilePicture = profilePicture;
+          }
+
+          localStorage.removeItem("userData");
+          localStorage.setItem("userData", JSON.stringify(parsedData));
+        }
         setIsEditing(false);
       } catch (error) {
         console.error(error);
