@@ -7,6 +7,7 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
+import { FcPrint, FcDownload } from "react-icons/fc";
 
 const PatientRecords = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -25,6 +26,18 @@ const PatientRecords = () => {
   const [modalData, setModalData] = useState({ type: '', date: '', text: '', diagnosis: '', status: '', duration: '', file: null });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
+  const [documents, setDocuments] = useState([
+    {
+      name: "ECG Test Report",
+      date: "2024-02-25",
+      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
+    },
+    {
+      name: "Medical History",
+      date: "2024-03-15",
+      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
+    },
+  ]);
 
   const handleAddTask = async () => {
     if (taskName.trim()) {
@@ -51,208 +64,245 @@ const PatientRecords = () => {
       setFormVisible(false); // Hide form after adding
     }
   };
-  
+
   const conceptionDate =
-    patientInfo && patientInfo.userId && patientInfo.userId.pregnancyStartDate
-      ? moment(patientInfo.userId.pregnancyStartDate)
-      : moment.invalid();
+  patientInfo && patientInfo.userId && patientInfo.userId.pregnancyStartDate
+  ? moment(patientInfo.userId.pregnancyStartDate)
+  : moment.invalid();
 
-  // Calculate estimated due date (40 weeks later)
-  const dueDate = conceptionDate.clone().add(40, "weeks");
-
-  // Get current date and calculate weeks passed since conception
-  const currentDate = moment();
-  const weeksPassed = currentDate.diff(conceptionDate, "weeks");
-
-  const handleDocumentClick = (docName) => {
-    // Set selected document and its image URL
-    setSelectedDocument(docName);
-    // Example image URLs, replace with actual URLs
-    const images = {
-      "ECG Test Report": "path_to_ecg_test_report_image.jpg",
-      "Medical History": "path_to_medical_history_image.jpg",
-    };
-    setDocumentImage(images[docName] || null);
-    setDetailsVisible(true); // Show details view
-  };
-
-  const handleCloseDetails = () => {
-    setDetailsVisible(false);
-    setSelectedDocument(null);
-  };
-
-  //selected patient
-  useEffect(() => {
-    async function fetchCurrentPatient() {
-      try {
-        const response = await axios.get(`${API_URL}/user?userId=${userId}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setPatientInfo(response.data.other);
-      } catch (error) {
-        console.error(error);
+// Calculate estimated due date (40 weeks later)
+const dueDate = conceptionDate.clone().add(40, "weeks");
+// Get current date and calculate weeks passed since conception
+const currentDate = moment();
+const weeksPassed = currentDate.diff(conceptionDate, "weeks");
+const handleDocumentClick = (docName) => {
+// Set selected document and its image URL
+setSelectedDocument(docName);
+setDetailsVisible(true); // Show details view
+};
+const handleCloseDetails = () => {
+setDetailsVisible(false);
+setSelectedDocument(null);
+};
+//get task
+useEffect(() => {
+async function fetchPatient() {
+  try {
+    const response = await axios.get(
+      `${API_URL}/record/patient/u?id=${userId}`,
+      {
+        headers: {
+          Authorization: token,
+        },
       }
-    }
-    fetchCurrentPatient();
-  }, []);
-
-  //current doctor
-  useEffect(() => {
-    async function fetchCurrentDoctor() {
-      try {
-        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        setPrescribedBy(response.data.other.fullName);
-      } catch (error) {
-        console.error(error);
+    );
+    setPatientInfo(response.data);
+    // });
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function fetchTasks() {
+  try {
+    const response = await axios.get(
+      `${API_URL}/record/task/u?userId=${userId}`,
+      {
+        headers: {
+          Authorization: token,
+        },
       }
-    }
-    fetchCurrentDoctor();
-  }, []);
-
-  //get task
-  useEffect(() => {
-    async function fetchTasks() {
-      console.log("patient user Id: " + userId);
-
-      try {
-        const response = await axios.get(
-          `${API_URL}/record/task/u?userId=${userId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-
-        // response.data.map((i) => {
-        setTasks(response.data);
-        console.log(tasks);
-        // });
-      } catch (error) {
-        console.error(error);
+    );
+    // response.data.map((i) => {
+    setTasks(response.data);
+    // });
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function fetchCurrentDoctor() {
+  try {
+    const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
+      headers: {
+        Authorization: token,
+      },
+    });
+    setPrescribedBy(response.data.other.fullName);
+  } catch (error) {
+    console.error(error);
+  }
+}
+async function fetchDocuments() {
+  try {
+    const response = await axios.get(
+      `${API_URL}/record/document/u?userId=${userID}`,
+      {
+        headers: {
+          Authorization: token,
+        },
       }
-    }
-    fetchTasks();
-  }, []);
+    );
+    setDocuments(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+fetchPatient();
+fetchCurrentDoctor();
+fetchTasks();
+fetchDocuments();
+}, []);
+const handleClose = () => {
+setSelectedDocument(null);
+};
+const handleDownload = () => {
+const link = document.createElement("a");
+link.href = selectedDocument.documentLink; // Use the file URL from selectedDocument
+link.setAttribute("download", selectedDocument.name); // Set the download attribute with the filename
+link.setAttribute("target", "_blank"); // Open in a new tab
+document.body.appendChild(link); // Append the link to the body
+link.click(); // Simulate click to trigger download
+document.body.removeChild(link); // Remove the link from the document
+};
+const handlePrint = () => {
+const printWindow = window.open(selectedDocument.documentLink, "_blank");
+printWindow.onload = () => {
+  printWindow.print(); // Trigger print when the document is loaded
+};
+};
+const formatDate = (date) => {
+return new Date(date).toLocaleString("en-PH", {
+  year: "numeric",
+  month: "numeric",
+  day: "numeric",
+});
+};
+const calculateAge = (birthdate) => {
+const birthDate = new Date(birthdate);
+const today = new Date();
+let age = today.getFullYear() - birthDate.getFullYear();
+const monthDifference = today.getMonth() - birthDate.getMonth();
+if (
+  monthDifference < 0 ||
+  (monthDifference === 0 && today.getDate() < birthDate.getDate())
+) {
+  age--;
+}
+return age;
+};
 
-  const [obstetricHistory, setObstetricHistory] = useState([
-    { date: '01/15/2020', text: 'Miscarriage', file: null },
-    { date: '03/31/2020', text: 'Ectopic', file: null },
-  ]);
+const [obstetricHistory, setObstetricHistory] = useState([
+  { date: '01/15/2020', text: 'Miscarriage', file: null },
+  { date: '03/31/2020', text: 'Ectopic', file: null },
+]);
 
-  const [medicalHistory, setMedicalHistory] = useState([
-    { diagnosis: 'Asthma', status: 'Active', duration: 'From last 4 Months', file: null },
-    { diagnosis: 'Hypertension', status: 'Inactive', duration: 'From last 2 Years', file: null },
-  ]);
+const [medicalHistory, setMedicalHistory] = useState([
+  { diagnosis: 'Asthma', status: 'Active', duration: 'From last 4 Months', file: null },
+  { diagnosis: 'Hypertension', status: 'Inactive', duration: 'From last 2 Years', file: null },
+]);
 
-  const [surgicalHistory, setSurgicalHistory] = useState([
-    { date: '01/15/2020', text: 'Appendicitis', file: null },
-    { date: '03/31/2020', text: 'Tuberculosis', file: null },
-  ]);
+const [surgicalHistory, setSurgicalHistory] = useState([
+  { date: '01/15/2020', text: 'Appendicitis', file: null },
+  { date: '03/31/2020', text: 'Tuberculosis', file: null },
+]);
 
-  const addObstetricEntry = () => {
-    // Logic to add a new obstetric entry
-    const newEntry = { date: 'New Date', text: 'New Entry' }; // Replace with actual input values
-    setObstetricHistory([...obstetricHistory, newEntry]);
-  };
+const addObstetricEntry = () => {
+  // Logic to add a new obstetric entry
+  const newEntry = { date: 'New Date', text: 'New Entry' }; // Replace with actual input values
+  setObstetricHistory([...obstetricHistory, newEntry]);
+};
 
-  const addMedicalEntry = () => {
-    // Logic to add a new medical entry
-    const newEntry = { diagnosis: 'New Diagnosis', status: 'Active', duration: 'From last 1 Month' }; // Replace with actual input values
-    setMedicalHistory([...medicalHistory, newEntry]);
-  };
+const addMedicalEntry = () => {
+  // Logic to add a new medical entry
+  const newEntry = { diagnosis: 'New Diagnosis', status: 'Active', duration: 'From last 1 Month' }; // Replace with actual input values
+  setMedicalHistory([...medicalHistory, newEntry]);
+};
 
-  const addSurgicalEntry = () => {
-    // Logic to add a new surgical entry
-    const newEntry = { date: 'New Date', text: 'New Surgery' }; // Replace with actual input values
-    setSurgicalHistory([...surgicalHistory, newEntry]);
-  };
+const addSurgicalEntry = () => {
+  // Logic to add a new surgical entry
+  const newEntry = { date: 'New Date', text: 'New Surgery' }; // Replace with actual input values
+  setSurgicalHistory([...surgicalHistory, newEntry]);
+};
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setModalData({ ...modalData, [name]: value });
-  };
+const handleChange = (event) => {
+  const { name, value } = event.target;
+  setModalData({ ...modalData, [name]: value });
+};
 
-  const handleFileChange = (event) => {
-    setModalData({ ...modalData, file: event.target.files[0] });
-  };
+const handleFileChange = (event) => {
+  setModalData({ ...modalData, file: event.target.files[0] });
+};
 
-  const openModal = (type, index = null) => {
-    if (index !== null) {
-      const existingEntry = type === 'Obstetric' ? obstetricHistory[index] :
-                           type === 'Medical' ? medicalHistory[index] :
-                           surgicalHistory[index];
-      setModalData({ ...existingEntry, type });
-      setCurrentIndex(index);
-    } else {
-      setModalData({ type });
-      setCurrentIndex(null);
-    }
-    setIsModalOpen(true);
-  };
+const openModal = (type, index = null) => {
+  if (index !== null) {
+    const existingEntry = type === 'Obstetric' ? obstetricHistory[index] :
+                         type === 'Medical' ? medicalHistory[index] :
+                         surgicalHistory[index];
+    setModalData({ ...existingEntry, type });
+    setCurrentIndex(index);
+  } else {
+    setModalData({ type });
+    setCurrentIndex(null);
+  }
+  setIsModalOpen(true);
+};
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalData({ type: '', date: '', text: '', diagnosis: '', status: '', duration: '', file: null });
-  };
+const closeModal = () => {
+  setIsModalOpen(false);
+  setModalData({ type: '', date: '', text: '', diagnosis: '', status: '', duration: '', file: null });
+};
 
-  const saveEntry = () => {
-    const { type, file } = modalData;
+const saveEntry = () => {
+  const { type, file } = modalData;
 
-    if (type === 'Obstetric') {
-      const newEntry = { date: modalData.date, text: modalData.text, file };
-      const updatedHistory = currentIndex !== null 
-        ? obstetricHistory.map((entry, i) => (i === currentIndex ? newEntry : entry)) 
-        : [...obstetricHistory, newEntry];
-      setObstetricHistory(updatedHistory);
-    } else if (type === 'Medical') {
-      const newEntry = { diagnosis: modalData.diagnosis, status: modalData.status, duration: modalData.duration, file };
-      const updatedHistory = currentIndex !== null 
-        ? medicalHistory.map((entry, i) => (i === currentIndex ? newEntry : entry)) 
-        : [...medicalHistory, newEntry];
-      setMedicalHistory(updatedHistory);
-    } else if (type === 'Surgical') {
-      const newEntry = { date: modalData.date, text: modalData.text, file };
-      const updatedHistory = currentIndex !== null 
-        ? surgicalHistory.map((entry, i) => (i === currentIndex ? newEntry : entry)) 
-        : [...surgicalHistory, newEntry];
-      setSurgicalHistory(updatedHistory);
-    }
+  if (type === 'Obstetric') {
+    const newEntry = { date: modalData.date, text: modalData.text, file };
+    const updatedHistory = currentIndex !== null 
+      ? obstetricHistory.map((entry, i) => (i === currentIndex ? newEntry : entry)) 
+      : [...obstetricHistory, newEntry];
+    setObstetricHistory(updatedHistory);
+  } else if (type === 'Medical') {
+    const newEntry = { diagnosis: modalData.diagnosis, status: modalData.status, duration: modalData.duration, file };
+    const updatedHistory = currentIndex !== null 
+      ? medicalHistory.map((entry, i) => (i === currentIndex ? newEntry : entry)) 
+      : [...medicalHistory, newEntry];
+    setMedicalHistory(updatedHistory);
+  } else if (type === 'Surgical') {
+    const newEntry = { date: modalData.date, text: modalData.text, file };
+    const updatedHistory = currentIndex !== null 
+      ? surgicalHistory.map((entry, i) => (i === currentIndex ? newEntry : entry)) 
+      : [...surgicalHistory, newEntry];
+    setSurgicalHistory(updatedHistory);
+  }
 
-    closeModal();
-  };
+  closeModal();
+};
 
-  return (
-    <div className="patient-records-container">
-      <main className="patient-records-main-content">
-        <Link to="/consultant-patientsinfo" className="PR-back-button">
-          <IoMdArrowRoundBack />
-        </Link>
-        <div className="PR-label">
-          <h2>Patients</h2>
-        </div>
-        <div className="PR-top-section">
-          <div className="PR-patient-info">
-            <img
-              src={
-                patientInfo &&
-                patientInfo.userId &&
-                patientInfo.userId.profilePicture
-                  ? patientInfo.userId.profilePicture
-                  : "/img/profilePicture.jpg"
-              }
-              alt="Patient Photo"
-            />
-            <div className="PR-patient-details">
-              <h3>{patientInfo && patientInfo.fullName}</h3>
-              <p>
-                {patientInfo &&
+
+return (
+<div className="patient-records-container">
+  <main className="patient-records-main-content">
+    <Link to="/consultant-patientsinfo" className="PR-back-button">
+      <IoMdArrowRoundBack />
+    </Link>
+    <div className="PR-label">
+      <h2>Patients</h2>
+    </div>
+    <div className="PR-top-section">
+      <div className="PR-patient-info">
+        <img
+          src={
+            patientInfo &&
+            patientInfo.userId &&
+            patientInfo.userId.profilePicture
+              ? patientInfo.userId.profilePicture
+              : "/img/profilePicture.jpg"
+            }
+            alt="Patient Photo"
+          />
+          <div className="PR-patient-details">
+            <h3>{patientInfo && patientInfo.fullName}</h3>
+            <p>
+            {patientInfo &&
                 patientInfo.userId &&
                 patientInfo.userId.birthdate
                   ? `${formatDate(
@@ -297,7 +347,6 @@ const PatientRecords = () => {
             </div>
           </div>
         </div>
-
         <div className="PR-outstanding-tasks">
           <div className="PR-header">
             <h4>Outstanding Tasks</h4>
@@ -308,7 +357,6 @@ const PatientRecords = () => {
               {formVisible ? "- Cancel" : "+ Add"}
             </button>
           </div>
-
           {formVisible && (
             <div className="PR-form">
               <input
@@ -322,7 +370,6 @@ const PatientRecords = () => {
               </button>
             </div>
           )}
-
           <table>
             <thead>
               <tr>
@@ -351,10 +398,9 @@ const PatientRecords = () => {
             </tbody>
           </table>
         </div>
-
         <div className="PR-main-content">
           <div className="PR-panel PR-Obstetric">
-          <h4>Obstetric History</h4>
+            <h4>Obstetric History</h4>
             <ul>
             {obstetricHistory.map((entry, index) => (
               <li key={index}>
@@ -369,7 +415,7 @@ const PatientRecords = () => {
 
           <div className="PR-panel PR-Medical">
             <h4>Medical History</h4>
-              <ul>
+            <ul>
             {medicalHistory.map((entry, index) => (
               <li key={index}>
                 <div className="diagnosis-info">
@@ -385,8 +431,8 @@ const PatientRecords = () => {
           </div>
 
           <div className="PR-panel PR-Surgical">
-          <h4>Surgical History</h4>
-            <ul>
+            <h4>Surgical History</h4>
+             <ul>
             {surgicalHistory.map((entry, index) => (
               <li key={index}>
                 <span className="date">{entry.date}</span>
@@ -431,6 +477,7 @@ const PatientRecords = () => {
         </div>
       )}
 
+
         <div className="PR-right-panels">
           <div className="PR-weeks-count">
             <div className="PR-text-content">
@@ -438,52 +485,74 @@ const PatientRecords = () => {
               <p className="PR-due-date">
                 Estimated Pregnancy <br />
                 Due Date: <br />
-                <strong>{dueDate.format("MMMM D, YYYY")}</strong>
+                <strong>
+                  {dueDate.isValid() ? dueDate.format("MMMM D, YYYY") : "N/A"}
+                </strong>
               </p>
             </div>
-            <div className="PR-circle">{weeksPassed}</div>
+            <div className="PR-circle">
+              {dueDate.isValid() ? weeksPassed : "N/A"}
+            </div>
           </div>
         </div>
-
         <div className="PR-patient-docu">
           <div className="PR-documents">
             <h4>Documents</h4>
-            <div
-              className="PR-docu-item"
-              onClick={() => handleDocumentClick("ECG Test Report")}
-            >
-              <span className="docu-icon">
-                <FaFilePdf />
-              </span>{" "}
-              ECG Test Report
-              <span className="docu-date">02/25/2024</span>
-            </div>
-            <div
-              className="PR-docu-item"
-              onClick={() => handleDocumentClick("Medical History")}
-            >
-              <span className="docu-icon">
-                <FaFilePdf />
-              </span>{" "}
-              Medical History
-              <span className="docu-date">03/15/2024</span>
-            </div>
+            {documents.map((doc, index) => (
+              <div
+                key={doc._id}
+                className="PR-docu-item"
+                onClick={() => handleDocumentClick(doc)}
+              >
+                <span className="docu-icon">
+                  <FaFilePdf />
+                </span>
+                {doc.name}
+                <span className="docu-date">{formatDate(doc.date)}</span>
+              </div>
+            ))}
           </div>
         </div>
-
         {/* Document Details View */}
-        {detailsVisible && selectedDocument && (
-          <div className="document-details">
-            <div className="document-details-content">
-              <h4>{selectedDocument}</h4>
-              <button onClick={handleCloseDetails}>x</button>
-              <img
-                src="img/History.png"
-                alt={`Detailed view of ${selectedDocument}`}
+        {selectedDocument ? (
+          <div className="modal-overlay">
+            <div className="selected-docu">
+              <button
+                className="selected-docu-close"
+                onClick={handleClose}
+                aria-label="Close Modal"
+              >
+                &times;
+              </button>
+              <div className="document-info">
+                <p>{formatDate(selectedDocument.date)}</p>
+                <p>{selectedDocument.name}</p>
+                <div className="docu-button">
+                  <button
+                    onClick={handleDownload}
+                    aria-label="Download Document"
+                    className="docu-icon"
+                  >
+                    <FcDownload />
+                  </button>
+                  <button
+                    onClick={handlePrint}
+                    aria-label="Print Document"
+                    className="docu-icon"
+                  >
+                    <FcPrint />
+                  </button>
+                </div>
+              </div>
+              <embed
+                src={selectedDocument.documentLink}
+                type="application/pdf"
+                width="100%"
+                height="600px"
               />
             </div>
           </div>
-        )}
+        ) : null}
       </main>
     </div>
   );
