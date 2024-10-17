@@ -63,3 +63,8 @@
     margin-bottom: 15px;
     margin-top: 70px; 
   }
+
+  .logout-button svg {
+    margin-right: 10px; 
+    color: #ffffff;
+  }
