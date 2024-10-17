@@ -170,6 +170,9 @@ const PatientUserManagement = () => {
             <h1>{`${user.name}`}</h1>
             <p>Assistant</p>
             <img src="img/LOGO.png" alt="Profile" />
+            <button className="UM-logs-btn" onClick={() => navigate("/user-logs")}>
+              View Logs
+            </button>
             <button className="UM-add-btn" onClick={handleAddPatientClick}>
               + Add Patients
             </button>
