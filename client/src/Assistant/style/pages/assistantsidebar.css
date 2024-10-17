@@ -41,3 +41,23 @@
   .landingpage-assistant-sidebar-item:hover {
     color: #7c459c;
   }
+
+  .assistant-logout-button {
+    display: inline-flex; 
+    align-items: center;
+    background-color: transparent; 
+    border: none;
+    color: #ffffff; 
+    cursor: pointer;
+    padding: 15px 30px; 
+    font-size: 18px;
+    margin-left: 10px;
+    border-radius: 25px;
+    margin-bottom: 15px;
+    margin-top: 70px; 
+  }
+
+  .assistant-logout-button svg {
+    margin-right: 10px; 
+    color: #ffffff;
+  }

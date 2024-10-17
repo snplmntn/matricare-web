@@ -8,6 +8,7 @@ import {
   IoLibrary,
   IoBarChart,
   IoClipboard ,
+  IoLogOutOutline ,
 } from "react-icons/io5";
 import "../../styles/pages/consultantsidebar.css";
 
@@ -68,7 +69,8 @@ const ConsultantSidebar = () => {
         </Link>
       </div>
         <button className="logout-button" onClick={handleLogout}>
-          Log Out
+        <IoLogOutOutline/>
+          Logout
         </button>
     </aside>
   );
