@@ -34,7 +34,6 @@ import LibrarySidebar from "./User/components/Features/LibrarySidebar";
 import LandingPageAssistant from "./Assistant/components/Pages/LandingPageAssistant";
 import AssistantSidebar from "./Assistant/components/Pages/AssistantSidebar";
 import LibraryAssistant from "./Assistant/components/Features/LibraryAssistant";
-import NotificationAssistant from "./Assistant/components/Pages/NotificationAssistant";
 import PatientUserManagement from "./Assistant/components/Pages/PatientUserManagement";
 import AppointmentAssistant from "./Assistant/components/Features/AppointmentAssistant";
 
@@ -46,11 +45,11 @@ import LibraryConsultant from "./Consultant/components/Features/LibraryConsultan
 import ConsultantRecord from "./Consultant/components/Settings/ConsultantRecord";
 import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
-import ConsultantNotifications from "./Consultant/components/Pages/ConsultantNotifications";
+import ManageBellyTalk from "./Consultant/components/Settings/ManageBellyTalk";
+import UserLogs from "./Assistant/components/Pages/UserLogs";
 
 // Verify
 import Verify from "./User/components/Pages/Verify";
-import ConsultantLogs from "./Consultant/components/Settings/ConsultantLogs";
 
 function AppContent() {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -284,6 +283,17 @@ function AppContent() {
             </>
           }
         />
+        <Route
+          path="/manageBellytalk"
+          element={
+            <>
+              {" "}
+              <ConsultantSidebar /> <ManageBellyTalk
+                user={parsedUser}
+              />{" "}
+            </>
+          }
+        />
         <Route path="/consultant-records" element={<ConsultantRecord />} />
         <Route
           path="/consultant-patientsinfo"
@@ -300,15 +310,6 @@ function AppContent() {
             <>
               {" "}
               <ConsultantSidebar /> <AppointmentConsultant />{" "}
-            </>
-          }
-        />
-         <Route
-          path="/consultant-logs"
-          element={
-            <>
-              {" "}
-              <ConsultantSidebar /> <ConsultantLogs />{" "}
             </>
           }
         />
@@ -333,6 +334,16 @@ function AppContent() {
               <AssistantSidebar /> <LandingPageAssistant
                 user={parsedUser}
               />{" "}
+            </>
+          }
+        />
+
+        <Route
+          path="/user-logs"
+          element={
+            <>
+              {" "}
+              <AssistantSidebar /> <UserLogs />{" "}
             </>
           }
         />
