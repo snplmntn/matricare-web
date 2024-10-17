@@ -120,7 +120,9 @@ const appointment_put = catchAsync(async (req, res, next) => {
       senderId: user._id,
       senderName: `${user.fullName}`,
       senderPhoneNumber: `${user.phoneNumber}`,
-      message: `Requests to reschedule your appointment dated on ${updatedAppointment.date}.`,
+      message: `Requests to reschedule your appointment dated on ${formatAppointmentDate(
+        updatedAppointment.date
+      )}.`,
       recipientUserId: updatedAppointment.userId,
     });
 

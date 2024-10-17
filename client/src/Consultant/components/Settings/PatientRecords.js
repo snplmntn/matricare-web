@@ -43,17 +43,19 @@ const PatientRecords = () => {
           },
         });
         setStatus("On Progress");
-        console.log(response);
+        setTasks([...tasks, response.data.newTask]);
       } catch (e) {
         console.error(e);
       }
-      setTasks([...tasks, newTask]);
       setTaskName("");
       setFormVisible(false); // Hide form after adding
     }
   };
-
-  const conceptionDate = moment("2024-02-14");
+  
+  const conceptionDate =
+    patientInfo && patientInfo.userId && patientInfo.userId.pregnancyStartDate
+      ? moment(patientInfo.userId.pregnancyStartDate)
+      : moment.invalid();
 
   // Calculate estimated due date (40 weeks later)
   const dueDate = conceptionDate.clone().add(40, "weeks");
@@ -238,12 +240,26 @@ const PatientRecords = () => {
         <div className="PR-top-section">
           <div className="PR-patient-info">
             <img
-              src={patientInfo ? patientInfo.profilePicture : "img/topic2.jpg"}
+              src={
+                patientInfo &&
+                patientInfo.userId &&
+                patientInfo.userId.profilePicture
+                  ? patientInfo.userId.profilePicture
+                  : "/img/profilePicture.jpg"
+              }
               alt="Patient Photo"
             />
             <div className="PR-patient-details">
               <h3>{patientInfo && patientInfo.fullName}</h3>
-              <p>02/21/1996 (28 yrs old), F</p>
+              <p>
+                {patientInfo &&
+                patientInfo.userId &&
+                patientInfo.userId.birthdate
+                  ? `${formatDate(
+                      patientInfo.userId.birthdate
+                    )} : ${calculateAge(patientInfo.userId.birthdate)} yrs old`
+                  : "Birthdate not set"}
+              </p>
               <div className="PR-phone-info">
                 <FaMobileAlt className="PR-phone-icon" />
                 <p>{patientInfo && patientInfo.phoneNumber}</p>
@@ -253,7 +269,11 @@ const PatientRecords = () => {
           <div className="PR-info-columns">
             <div className="PR-address-info">
               <h4>Home Address:</h4>
-              <p>{patientInfo && patientInfo.address}</p>
+              <p>
+                {patientInfo &&
+                  patientInfo.userId &&
+                  patientInfo.userId.address}
+              </p>
             </div>
             <div className="PR-email-info">
               <h4>Email Address:</h4>
@@ -261,10 +281,18 @@ const PatientRecords = () => {
             </div>
             <div className="PR-partner-info">
               <h4>Husband/Partner:</h4>
-              <p>John Doe</p>
+              <p>
+                {patientInfo &&
+                  patientInfo.userId &&
+                  patientInfo.userId.husband}
+              </p>
               <div className="PR-partner-contact">
                 <FaMobileAlt className="PR-phone-icon" />
-                <p>+63 905 4562 702</p>
+                <p>
+                  {patientInfo &&
+                    patientInfo.userId &&
+                    patientInfo.userId.husbandNumber}
+                </p>
               </div>
             </div>
           </div>

@@ -63,7 +63,11 @@ const LibrarySidebar = () => {
     <nav className="library-sidebar">
       <div className="library-profile-section">
         <img
-          src="img/topic4.jpg"
+          src={
+            user && user.profilePicture
+              ? user.profilePicture
+              : "img/profilePicture.jpg"
+          }
           alt="Profile Picture"
           className="library-profile-picture"
         />

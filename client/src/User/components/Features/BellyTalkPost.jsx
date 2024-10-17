@@ -284,7 +284,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         src={`${
           post.userId && post.userId.profilePicture
             ? `${post.userId.profilePicture}`
-            : "img/topic1.jpg"
+            : "img/profilePicture.jpg"
         }`}
         alt="Avatar"
         className="bellytalk-avatar-overlay"
@@ -379,7 +379,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
                   src={
                     comment.userId && comment.userId.profilePicture
                       ? comment.userId.profilePicture
-                      : "img/LOGO.png"
+                      : "img/profilePicture.jpg"
                   }
                   alt="User Avatar"
                   className="comment-avatar"

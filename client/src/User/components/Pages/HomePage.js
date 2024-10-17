@@ -24,7 +24,7 @@ import { CookiesProvider, useCookies } from "react-cookie";
 
 function HomePage({ user }) {
   const userID = getCookie("userID");
-  let { name, username, role } = user.current;
+  let { name, username, role, profilePicture } = user.current;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
   const [activeBellyTalkTab, setActiveBellyTalkTab] = useState("new");
@@ -225,7 +225,9 @@ function HomePage({ user }) {
             <div className="homepage-profile-info" onClick={toggleDropdown}>
               <div className="homepage-profile-circle">
                 <img
-                  src="img/logo3.png"
+                  src={
+                    profilePicture ? profilePicture : "img/profilePicture.jpg"
+                  }
                   alt="Profile"
                   className="homepage-profile-picture-small"
                 />
@@ -410,7 +412,11 @@ function HomePage({ user }) {
                             <div key={post._id} className="bellytalk-item">
                               <div className="profile-icon">
                                 <img
-                                  src="img/logo.png"
+                                  src={
+                                    post.userId && post.userId.profilePicture
+                                      ? post.userId.profilePicture
+                                      : "img/profilePicture.jpg"
+                                  }
                                   alt="Profile"
                                   className="profile-icon-image"
                                 />

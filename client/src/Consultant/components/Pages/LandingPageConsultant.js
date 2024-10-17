@@ -94,14 +94,12 @@ const LandingPageConsultant = ({}) => {
 
     const fetchAppointment = async () => {
       try {
-        const response = await axios.get(
-          `${API_URL}/appointment/u?userId=${userID}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/appointment/u`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        console.log(response.data);
         const today = new Date().toISOString().split("T")[0];
         const todaysAppointments = response.data.filter(
           (appt) => appt.date.split("T")[0] === today

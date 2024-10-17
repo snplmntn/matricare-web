@@ -113,7 +113,8 @@ const AppointmentConsultant = () => {
   };
 
   const upcomingAppointments = appointments.filter(
-    (appointment) => appointment.status === "Pending"
+    (appointment) =>
+      appointment.status === "Pending" || appointment.status === "Rescheduled"
   );
   const postAppointments = appointments.filter(
     (appointment) => appointment.status === "Confirmed"
@@ -219,7 +220,11 @@ const AppointmentConsultant = () => {
           </div>
           <div className="appointmentConsultant-headerUser">
             <h1>{`Dr. ${user.name}`}</h1>
-            <p>Obstetrician-gynecologist</p>
+            <p>
+              {user && user.role === "Obgyne"
+                ? "Obstetrician - gynecologist"
+                : user.role}
+            </p>
           </div>
           <div className="appointmentConsultant-headerImage">
             <img src="img/LOGO.png" alt="Profile" />
