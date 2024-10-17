@@ -252,25 +252,15 @@
   width: 250px;
 }
 
-/* Style for table headers and cells */
-.CPM-user-table th,
-.CPM-user-table td {
-  padding: 8px;
-  text-align: left;
-  background-color: #ffffff;
-}
-
-/* Set column widths */
-.CPM-user-table th:nth-child(1),
-.CPM-user-table td:nth-child(1) {
-  text-align: center;
-  width: 100px;
-}
-
-.CPM-user-table th:nth-child(2),
-.CPM-user-table td:nth-child(2) {
+.CPM-user-table th:nth-child(1), 
+.CPM-user-table td:nth-child(1),
+.CPM-user-table th:nth-child(2), 
+.CPM-user-table td:nth-child(2),
+.CPM-user-table th:nth-child(3), 
+.CPM-user-table td:nth-child(3) {
   text-align: center;
 }
+
 
 /* Modal Overlay */
 .modal-overlay {
