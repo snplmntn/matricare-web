@@ -242,8 +242,14 @@ const LandingPageConsultant = ({}) => {
             <h1>{`Doctor ${user.name?.split(" ")[0]}`}</h1>
             <p>{`${user.role}`}</p>
           </div>
-          <img src="img/LOGO.png" alt="Profile" className="consultant-profile-image" />
-        </div>
+          <img
+            src={
+              user.profilePicture
+                ? user.profilePicture
+                : "img/profilePicture.jpg"
+            }
+            alt="Profile"
+          />
         </div>
 
         <div className="consultant-schedule-calendar">

@@ -238,7 +238,14 @@ const AppointmentConsultant = () => {
             </p>
           </div>
           <div className="appointmentConsultant-headerImage">
-            <img src="img/LOGO.png" alt="Profile" />
+            <img
+              src={
+                user.profilePicture
+                  ? user.profilePicture
+                  : "img/profilePicture.jpg"
+              }
+              alt="Profile"
+            />
           </div>
         </header>
 
