@@ -421,7 +421,7 @@ const UserProfile = ({ user }) => {
                   <input
                     type="date"
                     id="birthday"
-                    value={JSON.stringify(formatDate(birthday))}
+                    value={new Date(birthday).toISOString().split("T")[0]}
                     onChange={(e) => setBirthday(e.target.value)}
                     placeholder="Select your birthday"
                     className="user-profile-input"

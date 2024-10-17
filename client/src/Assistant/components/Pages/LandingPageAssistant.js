@@ -317,7 +317,7 @@ const LandingPageAssistant = ({}) => {
               src={
                 user && user.profilePicture
                   ? user.profilePicture
-                  : "img/LOGO.png"
+                  : "img/profilePicture.jpg"
               }
               alt="Profile"
             />
@@ -410,7 +410,7 @@ const LandingPageAssistant = ({}) => {
                               appointment.userId &&
                               appointment.userId.profilePicture
                                 ? appointment.userId.profilePicture
-                                : "img/LOGO.png"
+                                : "img/profilePicture.jpg"
                             }
                             alt={appointment.patientName}
                           />
