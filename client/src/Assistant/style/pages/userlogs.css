@@ -1,0 +1,613 @@
+/* Container */
+.CPL-container {
+    display: flex;
+    height: 100vh;
+    width: 90%;
+    margin-left: 200px;
+    background-color: #9a6cb4;
+    font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+      "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  }
+  
+  /* Main Section */
+  .CPL-main-section {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffffe5;
+    border-radius: 50px 0 0 50px;
+  }
+  
+  .CPL-add-btn {
+    background-color: #9a6cb4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    margin-right: 350px;
+    margin-top: -40px;
+    margin-left: -200px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .CPL-add-btn:hover {
+    background-color: #7c459c;
+  }
+  
+  .CPL-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    margin-left: 1280px;
+    margin-top: -20px;
+  }
+  
+  .CPL-user-profile {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    margin-top: 30px;
+  }
+  
+  .CPL-user-profile h1 {
+    margin: 0; /* Remove default margin */
+    font-size: 18px; /* Adjust the size as needed */
+    margin-right: 70px;
+  }
+  
+  .CPL-user-profile p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+    margin-right: 70px;
+  }
+  
+  .CPL-user-profile img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    margin-left: 290px;
+    margin-top: -45px;
+  }
+  
+  /* Filter Options */
+  .CPL-filter-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .CPL-filter-container {
+    display: flex;
+    align-items: center;
+    margin-top: -50px;
+    margin-right: 40px;
+  }
+  
+  .CPL-filter-container label {
+    margin-right: 8px; /* Adjust the spacing between the label and select */
+    margin-top: 8px;
+  }
+  
+  .CPL-filter-container select {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 150px;
+  }
+  
+  .CPL-toggle-select {
+    display: flex;
+    align-items: center;
+    margin-left: 250px;
+    margin-top: -50px;
+  }
+  
+  .CPL-toggle-select label {
+    margin-left: 5px;
+    font-size: 16px;
+    margin-top: 5px;
+  }
+  
+  .CPL-total-users {
+    font-weight: bold;
+    color: #ccc;
+    font-size: 14px;
+    margin-left: 10px;
+    margin-top: 3px;
+  }
+  
+  .CPL-select {
+    width: 150px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+  }
+  
+  /*Filter Admin*/  
+  .CPL-admin-filter-section {
+    display: flex;
+    align-items: center;
+    margin-top: -50px;
+    margin-right: 40px;
+  }
+  
+  .CPL-admin-filter-container {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+  }
+  
+  .CPL-admin-filter-container select {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    width: 150px;
+    margin-left: 10px; /* Added margin for spacing */
+  }
+  
+  
+  /* User Table */
+  .CPL-user-table {
+    width: 95%;
+    border-collapse: separate;
+    margin-top: 10px;
+    margin-left: 40px;
+    border-radius: 8px;
+    border-spacing: 0 15px;
+  }
+  
+  .CPL-user-table thead {
+    background-color: #ffffff;
+  }
+  
+  
+  .CPL-user-table th {
+    background-color: #9a6cb4 !important;
+    font-weight: bold;
+    color: #ffffff;
+    padding: 12px 15px;
+    text-align: left;
+  }
+  
+  .CPL-user-table td {
+    padding: 12px 15px;
+    color: #333;
+    text-align: left;
+    background-color: #fff; 
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .CPL-user-photo {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    object-fit: cover; /* Ensures the image covers the area without stretching */
+  }
+  
+  /* Operation Buttons */
+  .CPL-operation-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 25px; /* Adjust icon size */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .CPL-delete-btn {
+    color: #7c459c;
+  }
+  
+  .CPL-operation-btn {
+    color: #7c459c;
+  }
+  
+  /* Type Buttons */
+  .CPL-type-buttons {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    margin-left: 40px;
+  }
+  
+  .CPL-type-button {
+    padding: 20px 70px;
+    margin-right: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background-color: #fff;
+    color: #040404;
+    font-size: 18px;
+  }
+  
+  .CPL-type-button.active {
+    border-bottom: 3px solid #e39fa9; 
+    color: #040404; 
+  }
+  
+  .CPL-type-button:hover {
+    background-color: #7c459c;
+    color: #ffffff;
+  }
+  
+  /* View Label */
+  .CPL-view-label {
+    margin-bottom: 10px;
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 40px;
+  }
+  
+  .CPL-view-label h2 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #4a4a4a;
+    margin-top: 10px;
+  }
+  
+  .CPL-status-select {
+    padding: 5px;
+    width: 100px;
+    border-radius: 4px;
+    font-size: 16px;
+    background-color: #fff;
+    color: #333;
+  }
+  
+  .CPL-status-select:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  .CPL-status-select option {
+    padding: 5px;
+    background-color: #fff;
+    color: #333;
+    width: 250px;
+  }
+
+  /*pdf style*/
+  .CPL-download-button{
+        background-color: #fff; 
+        color: black; 
+        border: none;
+        padding: 10px 15px; 
+        text-align: center; 
+        text-decoration: none; 
+        display: inline-block;
+        font-size: 16px; 
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: -45px;
+        margin-left: 650px;
+        margin-bottom: 10px;
+  }
+  .CPL-admin-download-button {
+    background-color: #fff;
+    color: black; 
+    border: none; 
+    padding: 10px 15px; 
+    text-align: center;
+    text-decoration: none; 
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer; 
+    border-radius: 5px; 
+    margin-top: -40px;
+    margin-left: 1150px;
+  }
+  
+  .CPL-download-button:hover,
+  .CPL-admin-download-button:hover {
+    background-color: #7c459c;
+    color: #ffffff; 
+  }
+
+  /* Style for table headers and cells */
+  .CPL-user-table th,
+  .CPL-user-table td {
+    padding: 8px;
+    text-align: left;
+    background-color: #ffffff;
+  }
+  
+  /* Set column widths */
+  .CPL-user-table th:nth-child(1),
+  .CPL-user-table td:nth-child(1) {
+    text-align: center;
+    width: 100px;
+  }
+  
+  .CPL-user-table th:nth-child(2),
+  .CPL-user-table td:nth-child(2) {
+    text-align: center;
+  }
+  
+  /* Modal Overlay */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  /* Modal Content */
+  .modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    position: relative;
+  }
+  
+  /* Close Button */
+  .modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  /* Modal Photo */
+  .modal-photo {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%;
+  }
+  
+  /* General Body and Font Styles */
+  body {
+    font-family: "Lucida Sans", "Lucida Grande", sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .Pi-container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* Sidebar */
+  .Pi-sidebar {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Top Section: Patient Info and Vitals */
+  .Pi-top-section {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Pi-patient-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .Pi-patient-info img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+  }
+  
+  .Pi-vital-signs {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+  }
+  
+  .Pi-vital-signs .Pi-vital {
+    text-align: center;
+  }
+  
+  .Pi-vital-signs .Pi-vital h3 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .Pi-vital-signs .Pi-vital p {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* Main Content: Grid Layout for Panels */
+  .Pi-main {
+    flex: 3; /* Takes up 3/4 of the space */
+    margin-right: 20px; /* Space between main content and right panels */
+  }
+  
+  /* Task Section (Full Width) */
+  .Pi-outstanding-tasks {
+    grid-column: 1 / span 3;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Pi-outstanding-tasks table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .Pi-outstanding-tasks th,
+  .Pi-outstanding-tasks td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .Pi-outstanding-tasks th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+  }
+  
+  /* Panels: Encounters, Documents, Problem List */
+  .Pi-panel {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Pi-past-encounters,
+  .Pi-documents,
+  .Pi-problem-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .Pi-past-encounters h4,
+  .Pi-documents h4,
+  .Pi-problem-list h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+  }
+  
+  .Pi-past-encounters ul,
+  .Pi-documents ul,
+  .Pi-problem-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .Pi-past-encounters li,
+  .Pi-documents li,
+  .Pi-problem-list li {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+  }
+  
+  /* Right-Side Panels: Readmission Risk, Allergies, Medication */
+  .Pi-right-panels {
+    flex: 1; /* Takes up 1/4 of the space */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Pi-readmission-risk,
+  .Pi-allergies,
+  .Pi-medication {
+    background-color: #fafafa;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+  }
+  
+  .Pi-risk-level,
+  .Pi-allergy-item,
+  .Pi-med-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .Pi-risk-level:last-child,
+  .Pi-allergy-item:last-child,
+  .Pi-med-item:last-child {
+    border-bottom: none;
+  }
+  
+  /* add patient form */
+  
+  .CPL-patient {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .CPL-add-patient-form {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .CPL-add-form {
+    margin-bottom: 1rem;
+  }
+  
+  .CPL-add-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .CPL-add-form input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .CPL-add-submit {
+    margin: 10px 0;
+    padding: 10px;
+    width: 150px;
+    background-color: #9a6cb4;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 70px;
+  }
+  
+  .CPL-add-cancel {
+    margin: 10px 0;
+    padding: 10px;
+    width: 100px;
+    background-color: #e39fa9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-left: 20px;
+  }
+  
