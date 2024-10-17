@@ -191,6 +191,23 @@
   color: #333;
 }
 
+.UM-logs-btn{
+  background-color: #9a6cb4;
+  color: white;
+  width: 150px;
+  height: 40px;
+  border-radius: 30px;
+  border: none;
+  margin-top: -40px;
+  margin-left: -170px;
+}
+
+.UM-logs-btn:hover{
+  background-color: #e39fa9;
+  color: #333;
+}
+
+
 
 /* Type Buttons */
 .UM-type-buttons {
