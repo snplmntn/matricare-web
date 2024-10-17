@@ -192,7 +192,14 @@ const ConsultantPatientInfo = () => {
           <div className="CPM-user-profile">
             <h1>{`Dr. ${user.name}`}</h1>
             <p>Obstetrician-gynecologist</p>
-            <img src="img/LOGO.png" alt="Profile" />
+            <img
+              src={
+                user.profilePicture
+                  ? user.profilePicture
+                  : "img/profilePicture.jpg"
+              }
+              alt="Profile"
+            />
             <button className="CPM-add-btn" onClick={handleAddPatientClick}>
               + Add Patients
             </button>
@@ -284,14 +291,31 @@ const ConsultantPatientInfo = () => {
                 )}
                 <td>{user.seq}</td>
                 <td>
-                  <img
-                    src={
-                      user && user.userId && user.userId.profilePicture
-                        ? user.userId.profilePicture
-                        : "img/topic2.jpg"
-                    }
-                    className="CPM-user-photo"
-                  />
+                  {view === "patients" ? (
+                    <>
+                      <img
+                        src={
+                          user.userId.profilePicture
+                            ? user.userId.profilePicture
+                            : "img/profilePicture.jpg"
+                        }
+                        // alt={user.name}
+                        className="CPM-user-photo"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        src={
+                          user.profilePicture
+                            ? user.profilePicture
+                            : "img/profilePicture.jpg"
+                        }
+                        // alt={user.name}
+                        className="CPM-user-photo"
+                      />
+                    </>
+                  )}
                 </td>
                 {view === "patients" && (
                   <>
