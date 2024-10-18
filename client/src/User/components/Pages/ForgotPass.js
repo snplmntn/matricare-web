@@ -57,16 +57,20 @@ export default function ForgotPassword() {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
+    setError("");
+
     try {
       const response = await axios.get(`${API_URL}/auth/find?account=${email}`);
-      setUserId(response.data.userId);
-      setEmailCode(response.data.email);
+
       if (response.data.userId) {
+        setUserId(response.data.userId);
+      setEmailCode(response.data.email);
+
         try {
           const emailResponse = await axios.put(
             `${API_URL}/verify?userId=${response.data.userId}`
           );
-          setSuccessMessage("Verification code sent successfully!");
+          setSuccessMessage("We have e-mailed your password reset link!");
           setVerifyToken(emailResponse.data.verificationToken);
 
           setTimeout(() => {
@@ -76,41 +80,66 @@ export default function ForgotPassword() {
           console.error("Send email error:", error);
           setError("Failed to send verification code.");
         }
-      }
-    } catch (error) {
-      console.error("Send email error:", error);
-      setError("Failed to send verification code.");
-      setShowVerificationModal(false);
+    } else {
+      // If the userId is not found, set an error message
+      setError("Email is not registered. Please check and try again.");
     }
+  } catch (error) {
+    console.error("Send email error:", error);
+    setError("Failed to send verification code.");
+    setShowVerificationModal(false);
+  }
+};
+
+const handleChangePassword = async (e) => {
+  e.preventDefault();
+  
+  // Clear previous error messages
+  setPasswordError("");
+  setError("");
+
+  // Password validation checks
+  const passwordValidation = (password) => {
+    const minLength = password.length >= 8;
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+    return minLength && hasUppercase && hasNumber && hasSpecialChar;
   };
 
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      setPasswordError("Passwords do not match.");
-      return;
-    }
+  if (newPassword !== confirmPassword) {
+    setPasswordError("Passwords do not match.");
+    return;
+  }
 
-    try {
-      const passwordObj = {
-        password: newPassword,
-      };
-      console.log(passwordObj);
-      const response = await axios.put(
-        `${API_URL}/auth/recover?userId=${userId}`,
-        passwordObj
-      );
-      setPasswordError("Password changed successfully! Please Login.");
+  if (!passwordValidation(newPassword)) {
+    setPasswordError(
+      "Password must contain at least 8 characters, one uppercase letter, one number, and one special character."
+    );
+    return;
+  }
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 3000);
-    } catch (error) {
-      console.error("Resend email error:", error);
-      setError("Failed to send verification code.");
-      // Here you would typically call an API to change the password
-    }
-  };
+  try {
+    const passwordObj = {
+      password: newPassword,
+    };
+    console.log(passwordObj);
+    const response = await axios.put(
+      `${API_URL}/auth/recover?userId=${userId}`,
+      passwordObj
+    );
+    setPasswordError("Password changed successfully! Please Login.");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 3000);
+  } catch (error) {
+    console.error("Password change error:", error);
+    setError("Failed to change the password. Please try again.");
+  }
+};
+
 
   return (
     <div className="FP-outer-container FP-background">
@@ -143,12 +172,12 @@ export default function ForgotPassword() {
                 Email:
               </label>
             </div>
-            {error && <div className="FP-error-message">{error}</div>}
             <button type="submit" className="FP-button">
               RESET PASSWORD
             </button>
+            {error && <div className="FP-error-message">{error}</div>}
             {successMessage && (
-              <div className="success-message">{successMessage}</div>
+              <div className="FP-success-message">{successMessage}</div>
             )}
           </form>
         ) : (
