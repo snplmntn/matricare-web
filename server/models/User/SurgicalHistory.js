@@ -11,6 +11,10 @@ const surgicalHistorySchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    documentLink: {
+      type: String,
+      required: true,
+    },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {

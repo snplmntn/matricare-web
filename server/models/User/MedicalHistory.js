@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const medicalHistorySchema = new mongoose.Schema(
   {
-    condition: {
+    diagnosis: {
       type: String,
       required: true,
       index: "text",
@@ -11,10 +11,13 @@ const medicalHistorySchema = new mongoose.Schema(
       type: String,
       enum: ["Active", "Inactive"],
       default: "Active",
+    },
+    duration: {
+      type: String,
       required: true,
     },
-    date: {
-      type: Date,
+    documentLink: {
+      type: String,
       required: true,
     },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },

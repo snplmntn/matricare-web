@@ -161,7 +161,6 @@ const PatientUserManagement = () => {
     // You could update state or send the new status to the backend here
   };
 
-
   return (
     <div className="UM-container">
       <div className="UM-main-section">
@@ -170,7 +169,10 @@ const PatientUserManagement = () => {
             <h1>{`${user.name}`}</h1>
             <p>Assistant</p>
             <img src="img/LOGO.png" alt="Profile" />
-            <button className="UM-logs-btn" onClick={() => navigate("/user-logs")}>
+            <button
+              className="UM-logs-btn"
+              onClick={() => navigate("/user-logs")}
+            >
               View Logs
             </button>
             <button className="UM-add-btn" onClick={handleAddPatientClick}>
@@ -187,7 +189,9 @@ const PatientUserManagement = () => {
             Patients
           </button>
           <button
-            className={`UM-type-button ${view === "specialist" ? "active" : ""}`}
+            className={`UM-type-button ${
+              view === "specialist" ? "active" : ""
+            }`}
             onClick={() => setView("specialist")}
           >
             Ob-Gyne Specialist
@@ -201,16 +205,15 @@ const PatientUserManagement = () => {
         </div>
 
         <div className="UM-view-label">
-        {view === "patients" ? (
-          <h2>Patients</h2>
-        ) : view === "admins" ? (
-          <h2>Admins</h2>
-        ) : view === "specialist" ? (
-          <h2>Ob-Gyne Specialists</h2>
-        ) : (
-          <h2>Default Title</h2>
-        )}
-
+          {view === "patients" ? (
+            <h2>Patients</h2>
+          ) : view === "admins" ? (
+            <h2>Admins</h2>
+          ) : view === "specialist" ? (
+            <h2>Ob-Gyne Specialists</h2>
+          ) : (
+            <h2>Default Title</h2>
+          )}
         </div>
 
         <div className="UM-filter-options">
@@ -287,15 +290,31 @@ const PatientUserManagement = () => {
                 )}
                 <td>{user.seq}</td>
                 <td>
-                  <img
-                    src={
-                      user.profilePicture
-                        ? user.profilePicture
-                        : "img//topic1.jpg"
-                    }
-                    // alt={user.name}
-                    className="UM-user-photo"
-                  />
+                  {view === "patients" ? (
+                    <>
+                      <img
+                        src={
+                          user.userId.profilePicture
+                            ? user.userId.profilePicture
+                            : "img/profilePicture.jpg"
+                        }
+                        // alt={user.name}
+                        className="CPM-user-photo"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        src={
+                          user.profilePicture
+                            ? user.profilePicture
+                            : "img/profilePicture.jpg"
+                        }
+                        // alt={user.name}
+                        className="CPM-user-photo"
+                      />
+                    </>
+                  )}
                 </td>
                 {view === "patients" && (
                   <>
@@ -313,13 +332,14 @@ const PatientUserManagement = () => {
                     <td>
                       <select
                         value={user.status}
-                        onChange={(e) => handleStatusChange(user.id, e.target.value)} // Function to handle status change
+                        onChange={(e) =>
+                          handleStatusChange(user.id, e.target.value)
+                        } // Function to handle status change
                       >
                         <option value="Verified">Verified</option>
                         <option value="On Process">On Process</option>
                       </select>
                     </td>
-
                   </>
                 )}
                 {view === "admins" && (
