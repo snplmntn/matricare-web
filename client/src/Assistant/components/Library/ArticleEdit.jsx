@@ -12,6 +12,7 @@ const Library1 = ({ article }) => {
   const [content, setContent] = useState(
     article.content && JSON.parse(article.content)
   );
+  const [isEditing, setIsEditing] = useState(true);
   const API_URL = process.env.REACT_APP_API_URL;
 
   const handleReload = (e) => {
@@ -40,7 +41,7 @@ const Library1 = ({ article }) => {
         }
       );
 
-      console.log(response);
+      setIsEditing(false);
     } catch (error) {
       console.error(error);
     }
@@ -80,15 +81,33 @@ const Library1 = ({ article }) => {
           {article.createdAt && formatDate(article.createdAt)}
         </p>
         <div className="library-content-news-description">
-          <ReactQuill
-            theme="snow"
-            value={content}
-            onChange={handleChange}
-            modules={modules}
-          />
-          <button className="library-content-save-btn" onClick={saveToDb}>
-            Save
-          </button>
+          {isEditing ? (
+            <>
+              <ReactQuill
+                theme="snow"
+                value={content}
+                onChange={handleChange}
+                modules={modules}
+              />
+              <button className="library-content-save-btn" onClick={saveToDb}>
+                Save
+              </button>
+            </>
+          ) : (
+            <>
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: content && content,
+                }}
+              />
+              <button
+                className="library-content-save-btn"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
