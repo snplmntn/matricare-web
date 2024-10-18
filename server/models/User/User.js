@@ -58,7 +58,7 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["Patient", "Assistant", "Obgyne"],
+      enum: ["Patient", "Assistant", "Obgyne", "Ob-gyne Specialist"],
       default: "Patient",
     },
     assignedTask: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],

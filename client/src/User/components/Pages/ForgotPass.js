@@ -64,13 +64,13 @@ export default function ForgotPassword() {
 
       if (response.data.userId) {
         setUserId(response.data.userId);
-      setEmailCode(response.data.email);
+        setEmailCode(response.data.email);
 
         try {
           const emailResponse = await axios.put(
             `${API_URL}/verify?userId=${response.data.userId}`
           );
-          setSuccessMessage("We have e-mailed your password reset link!");
+          setSuccessMessage("We have e-mailed your password reset code!");
           setVerifyToken(emailResponse.data.verificationToken);
 
           setTimeout(() => {
@@ -80,66 +80,65 @@ export default function ForgotPassword() {
           console.error("Send email error:", error);
           setError("Failed to send verification code.");
         }
-    } else {
-      // If the userId is not found, set an error message
-      setError("Email is not registered. Please check and try again.");
+      } else {
+        // If the userId is not found, set an error message
+        setError("Email is not registered. Please check and try again.");
+      }
+    } catch (error) {
+      console.error("Send email error:", error);
+      setError("Failed to send verification code.");
+      setShowVerificationModal(false);
     }
-  } catch (error) {
-    console.error("Send email error:", error);
-    setError("Failed to send verification code.");
-    setShowVerificationModal(false);
-  }
-};
-
-const handleChangePassword = async (e) => {
-  e.preventDefault();
-  
-  // Clear previous error messages
-  setPasswordError("");
-  setError("");
-
-  // Password validation checks
-  const passwordValidation = (password) => {
-    const minLength = password.length >= 8;
-    const hasUppercase = /[A-Z]/.test(password);
-    const hasNumber = /[0-9]/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-    return minLength && hasUppercase && hasNumber && hasSpecialChar;
   };
 
-  if (newPassword !== confirmPassword) {
-    setPasswordError("Passwords do not match.");
-    return;
-  }
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
 
-  if (!passwordValidation(newPassword)) {
-    setPasswordError(
-      "Password must contain at least 8 characters, one uppercase letter, one number, and one special character."
-    );
-    return;
-  }
+    // Clear previous error messages
+    setPasswordError("");
+    setError("");
 
-  try {
-    const passwordObj = {
-      password: newPassword,
+    // Password validation checks
+    const passwordValidation = (password) => {
+      const minLength = password.length >= 8;
+      const hasUppercase = /[A-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+      return minLength && hasUppercase && hasNumber && hasSpecialChar;
     };
-    console.log(passwordObj);
-    const response = await axios.put(
-      `${API_URL}/auth/recover?userId=${userId}`,
-      passwordObj
-    );
-    setPasswordError("Password changed successfully! Please Login.");
 
-    setTimeout(() => {
-      navigate("/login");
-    }, 3000);
-  } catch (error) {
-    console.error("Password change error:", error);
-    setError("Failed to change the password. Please try again.");
-  }
-};
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Passwords do not match.");
+      return;
+    }
 
+    if (!passwordValidation(newPassword)) {
+      setPasswordError(
+        "Password must contain at least 8 characters, one uppercase letter, one number, and one special character."
+      );
+      return;
+    }
+
+    try {
+      const passwordObj = {
+        password: newPassword,
+      };
+      console.log(passwordObj);
+      const response = await axios.put(
+        `${API_URL}/auth/recover?userId=${userId}`,
+        passwordObj
+      );
+      setPasswordError("Password changed successfully! Please Login.");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 3000);
+    } catch (error) {
+      console.error("Password change error:", error);
+      setError("Failed to change the password. Please try again.");
+    }
+  };
 
   return (
     <div className="FP-outer-container FP-background">
