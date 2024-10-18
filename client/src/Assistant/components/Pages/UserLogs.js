@@ -199,9 +199,18 @@ const ConsultantLogs = () => {
         return [
           index + 1,
           row.fullName,
-          row.date ? new Date(row.date).toLocaleDateString() : "N/A", // Date
-          row.logInTime, // Log In Time
-          row.logOutTime, // Log Out Time
+          row.phoneNumber,
+          row.userId && row.userId.logInTime
+            ? formatDate(row.userId.logInTime)
+            : "N/A",
+          row.userId && row.userId.logInTime
+            ? formatTime(row.userId.logInTime)
+            : "N/A",
+          row.userId && row.userId.logOutTime && row.userId.logInTime
+            ? new Date(row.userId.logOutTime) > new Date(row.userId.logInTime)
+              ? formatTime(row.userId.logOutTime)
+              : "N/A"
+            : "N/A",
         ];
       } else {
         return [
@@ -209,6 +218,13 @@ const ConsultantLogs = () => {
           row.fullName,
           row.phoneNumber,
           row.email,
+          row && row.logInTime ? formatDate(row.logInTime) : "N/A",
+          row && row.logInTime ? formatTime(row.logInTime) : "N/A",
+          row && row.logOutTime && row.logInTime
+            ? new Date(row.logOutTime) > new Date(row.logInTime)
+              ? formatTime(row.logOutTime)
+              : "N/A"
+            : "N/A",
           row.role, // Role for admins
         ];
       }
@@ -232,6 +248,7 @@ const ConsultantLogs = () => {
               "No.",
               "Name",
               "Phone Number",
+              "Email",
               "Date",
               "Log In Time",
               "Log Out Time",
