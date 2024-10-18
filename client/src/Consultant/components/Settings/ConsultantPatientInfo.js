@@ -93,7 +93,6 @@ const ConsultantPatientInfo = () => {
     }
   };
 
-
   const handleSaveClick = () => {
     setEditingUserId(null);
   };
@@ -103,7 +102,6 @@ const ConsultantPatientInfo = () => {
       navigate(`/patient-records/${userId}`);
     }
   };
-  
 
   const handleAddPatientClick = () => {
     setShowForm(true); // Show the form when the button is clicked
@@ -157,7 +155,25 @@ const ConsultantPatientInfo = () => {
         console.error();
       }
     }
+
+    async function fetchAdmins() {
+      try {
+        const response = await axios.get(`${API_URL}/user/a`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const filteredAdmins = response.data.filter(
+          (admin) => admin.role === "Assistant" || admin.role === "Obgyne"
+        );
+        setAdmins(filteredAdmins);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchPatients();
+    fetchAdmins();
   }, []);
 
   return (
@@ -166,8 +182,17 @@ const ConsultantPatientInfo = () => {
         <header className="CPM-header">
           <div className="CPM-user-profile">
             <h1>{`Dr. ${user.name}`}</h1>
-            <p>Obstetrician-gynecologist</p>
-            <img src="img/LOGO.png" alt="Profile" />
+            <p>
+              {user.role === "Obgyne" ? "Obstetrician-gynecologist" : user.role}
+            </p>
+            <img
+              src={
+                user.profilePicture
+                  ? user.profilePicture
+                  : "img/profilePicture.jpg"
+              }
+              alt="Profile"
+            />
             <button className="CPM-add-btn" onClick={handleAddPatientClick}>
               + Add Patients
             </button>
@@ -182,7 +207,9 @@ const ConsultantPatientInfo = () => {
             Patients
           </button>
           <button
-            className={`CPM-type-button ${view === "specialist" ? "active" : ""}`}
+            className={`CPM-type-button ${
+              view === "specialist" ? "active" : ""
+            }`}
             onClick={() => setView("specialist")}
           >
             Ob-Gyne Specialist
@@ -196,16 +223,15 @@ const ConsultantPatientInfo = () => {
         </div>
 
         <div className="CPM-view-label">
-        {view === "patients" ? (
-          <h2>Patients</h2>
-        ) : view === "admins" ? (
-          <h2>Admins</h2>
-        ) : view === "specialist" ? (
-          <h2>Ob-Gyne Specialists</h2>
-        ) : (
-          <h2>Default Title</h2>
-        )}
-
+          {view === "patients" ? (
+            <h2>Patients</h2>
+          ) : view === "admins" ? (
+            <h2>Admins</h2>
+          ) : view === "specialist" ? (
+            <h2>Ob-Gyne Specialists</h2>
+          ) : (
+            <h2>Default Title</h2>
+          )}
         </div>
 
         <div className="CPM-filter-options">
@@ -281,15 +307,31 @@ const ConsultantPatientInfo = () => {
                 )}
                 <td>{user.seq}</td>
                 <td>
-                  <img
-                    src={
-                      user.profilePicture
-                        ? user.profilePicture
-                        : "img//topic1.jpg"
-                    }
-                    // alt={user.name}
-                    className="CPM-user-photo"
-                  />
+                  {view === "patients" ? (
+                    <>
+                      <img
+                        src={
+                          user.userId.profilePicture
+                            ? user.userId.profilePicture
+                            : "img/profilePicture.jpg"
+                        }
+                        // alt={user.name}
+                        className="CPM-user-photo"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <img
+                        src={
+                          user.profilePicture
+                            ? user.profilePicture
+                            : "img/profilePicture.jpg"
+                        }
+                        // alt={user.name}
+                        className="CPM-user-photo"
+                      />
+                    </>
+                  )}
                 </td>
                 {view === "patients" && (
                   <>
@@ -303,13 +345,18 @@ const ConsultantPatientInfo = () => {
                     <td>{user.fullName}</td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
-                    <td>{user.status === "Verified" || user.status === "On Process" ? (<span>{user.status}</span>) : null} </td>
+                    <td>
+                      {user.status === "Verified" ||
+                      user.status === "On Process" ? (
+                        <span>{user.status}</span>
+                      ) : null}{" "}
+                    </td>
                   </>
                 )}
                 {view === "admins" && (
                   <>
-                    <td>{user.name}</td>
-                    <td>{user.mobile}</td>
+                    <td>{user.fullName}</td>
+                    <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>{user.role}</td>
                   </>
