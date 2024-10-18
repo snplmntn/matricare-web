@@ -90,7 +90,7 @@ const user_signup = catchAsync(async (req, res, next) => {
     expiresIn: "30d",
   });
 
-  return res.status(201).json({
+  return res.status(200).json({
     user,
     token,
   });
