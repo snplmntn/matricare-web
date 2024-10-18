@@ -28,6 +28,7 @@ const LandingPageConsultant = ({}) => {
   const [notification, setNotification] = useState([]);
   const [unreadNotification, setUnreadNotification] = useState(0);
   const [appointment, setAppointment] = useState([]);
+  const [allAppointment, setAllAppointment] = useState([]);
   const [appointmentNum, setAppointmentNum] = useState(0);
 
   const token = getCookie("token");
@@ -70,6 +71,20 @@ const LandingPageConsultant = ({}) => {
     setNewPatient((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); // Format as YYYY-MM-DD
+  };
+
+  useEffect(() => {
+    const formattedDate = formatDate(date); // Apply the new formatting
+    const todaysAppointments = allAppointment.filter(
+      (appt) => formatDate(appt.date) === formattedDate
+    );
+    setAppointment(todaysAppointments);
+    setAppointmentNum(todaysAppointments.length);
+  }, [date, allAppointment]);
+
   useEffect(() => {
     const userData = localStorage.getItem("userData");
     if (userData) setUser(JSON.parse(userData));
@@ -99,13 +114,9 @@ const LandingPageConsultant = ({}) => {
             Authorization: token,
           },
         });
-        console.log(response.data);
-        const today = new Date().toISOString().split("T")[0];
-        const todaysAppointments = response.data.filter(
-          (appt) => appt.date.split("T")[0] === today
-        );
-        setAppointment(todaysAppointments);
-        setAppointmentNum(todaysAppointments.length);
+        // console.log(response.data);
+
+        setAllAppointment(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -252,33 +263,34 @@ const LandingPageConsultant = ({}) => {
             </div>
             <img
               src={
-                user.profilePicture
+                user && user.profilePicture
                   ? user.profilePicture
                   : "img/profilePicture.jpg"
               }
               alt="Profile"
+              className="consultant-profile-image"
             />
           </div>
+        </div>
 
-          <div className="consultant-schedule-calendar">
-            <h3>Schedule Calendar</h3>
-            <Calendar
-              onChange={setDate}
-              value={date}
-              className="consul-custom-calendar"
-            />
-          </div>
+        <div className="consultant-schedule-calendar">
+          <h3>Schedule Calendar</h3>
+          <Calendar
+            onChange={setDate}
+            value={date}
+            className="consul-custom-calendar"
+          />
+        </div>
 
-          <div className="consultant-notifications">
-            <h3>Notifications</h3>
-            <div className="notifications-list">
-              {notification &&
-                notification.map((notif, index) => (
-                  <div key={index} className="notification-item">
-                    {notif.message}
-                  </div>
-                ))}
-            </div>
+        <div className="consultant-notifications">
+          <h3>Notifications</h3>
+          <div className="notifications-list">
+            {notification &&
+              notification.map((notif, index) => (
+                <div key={index} className="notification-item">
+                  {notif.message}
+                </div>
+              ))}
           </div>
         </div>
       </aside>
