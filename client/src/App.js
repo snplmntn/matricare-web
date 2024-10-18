@@ -46,7 +46,7 @@ import ConsultantRecord from "./Consultant/components/Settings/ConsultantRecord"
 import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ManageBellyTalk from "./Consultant/components/Settings/ManageBellyTalk";
-import UserLogs from "./Assistant/components/Pages/UserLogs";
+import UserLogs from "./Assistant/components/Pages/UserLogs.js";
 
 // Verify
 import Verify from "./User/components/Pages/Verify";
@@ -211,45 +211,90 @@ function AppContent() {
         />
         <Route
           path="/medicalrecords"
-          element={<MedicalRec user={parsedUser} />}
+          element={
+            token ? (
+              <MedicalRec user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
         />
-        <Route path="/saved-posts" element={<SavedPosts />} />
+        <Route
+          path="/saved-posts"
+          element={
+            token ? (
+              <SavedPosts />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
         <Route path="/duedate-calculator" element={<DateCalculator />} />
         <Route
           path="/book/:bookId"
           element={
-            <>
-              {" "}
-              <LibrarySidebar /> <Article />{" "}
-            </>
+            token ? (
+              <>
+                <LibrarySidebar /> <Article />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
         <Route
           path="/library"
           element={
-            <>
-              {" "}
-              <LibrarySidebar /> <Library />{" "}
-            </>
+            token ? (
+              <>
+                <LibrarySidebar /> <Library />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
         <Route
           path="/book"
           element={
-            <>
-              {" "}
-              <LibrarySidebar /> <Article />{" "}
-            </>
+            token ? (
+              <>
+                <LibrarySidebar /> <Article />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
         <Route
           path="/savedarticle"
           element={
-            <>
-              {" "}
-              <LibrarySidebar /> <SavedArticle />{" "}
-            </>
+            token ? (
+              <>
+                <LibrarySidebar /> <SavedArticle />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
 
@@ -275,107 +320,221 @@ function AppContent() {
         <Route
           path="/consultant-landing"
           element={
-            <>
-              {" "}
-              <ConsultantSidebar /> <LandingPageConsultant
-                user={parsedUser}
-              />{" "}
-            </>
+            token ? (
+              <>
+                <ConsultantSidebar />{" "}
+                <LandingPageConsultant user={parsedUser} />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
         <Route
           path="/manageBellytalk"
           element={
-            <>
-              {" "}
-              <ConsultantSidebar /> <ManageBellyTalk
-                user={parsedUser}
-              />{" "}
-            </>
+            token ? (
+              <>
+                <ConsultantSidebar /> <ManageBellyTalk user={parsedUser} />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
-        <Route path="/consultant-records" element={<ConsultantRecord />} />
+        <Route
+          path="/consultant-records"
+          element={
+            token ? (
+              <ConsultantRecord />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
         <Route
           path="/consultant-patientsinfo"
           element={
-            <>
-              {" "}
-              <ConsultantSidebar /> <ConsultantPatientInfo />{" "}
-            </>
+            token ? (
+              <>
+                <ConsultantSidebar /> <ConsultantPatientInfo />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
         <Route
           path="/consultant-appointment"
           element={
-            <>
-              {" "}
-              <ConsultantSidebar /> <AppointmentConsultant />{" "}
-            </>
+            token ? (
+              <>
+                <ConsultantSidebar /> <AppointmentConsultant />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
-        <Route path="/consultant-notification" element={<Notifications />} />
-        <Route path="/patient-records/:userId" element={<PatientRecords />} />
+        <Route
+          path="/consultant-notification"
+          element={
+            token ? (
+              <Notifications />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/patient-records/:userId"
+          element={
+            token ? (
+              <PatientRecords />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
         <Route
           path="/library-consultant"
           element={
-            <>
-              {" "}
-              <ConsultantSidebar /> <LibraryConsultant />{" "}
-            </>
+            token ? (
+              <>
+                <ConsultantSidebar /> <LibraryConsultant />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
 
-        {/* ASSISTANT */}
         <Route
           path="/assistant-landing"
           element={
-            <>
-              {" "}
-              <AssistantSidebar /> <LandingPageAssistant
-                user={parsedUser}
-              />{" "}
-            </>
+            token ? (
+              <>
+                <AssistantSidebar /> <LandingPageAssistant user={parsedUser} />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
 
         <Route
           path="/user-logs"
           element={
-            <>
-              {" "}
-              <AssistantSidebar /> <UserLogs />{" "}
-            </>
+            token ? (
+              <>
+                <AssistantSidebar /> <UserLogs />{" "}
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
         <Route
           path="/library-assistant"
           element={
-            <>
-              {" "}
-              <AssistantSidebar /> <LibraryAssistant />{" "}
-            </>
+            token ? (
+              <>
+                <AssistantSidebar /> <LibraryAssistant />{" "}
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
-        <Route path="/assistant-notification" element={<Notifications />} />
+        <Route
+          path="/assistant-notification"
+          element={
+            token ? (
+              <Notifications />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
         <Route
           path="/admin-profile"
           element={
-            <>
-              {" "}
-              <AssistantSidebar /> <PatientUserManagement />{" "}
-            </>
+            token ? (
+              <>
+                <AssistantSidebar /> <PatientUserManagement />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
         <Route
           path="/appointment-assistant"
           element={
-            <>
-              {" "}
-              <AssistantSidebar /> <AppointmentAssistant />{" "}
-            </>
+            token ? (
+              <>
+                <AssistantSidebar /> <AppointmentAssistant />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
           }
         />
-        <Route path="/patient-records/:userId" element={<PatientRecords />} />
+        <Route
+          path="/patient-records/:userId"
+          element={
+            token ? (
+              <PatientRecords />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
       </Routes>
       <Footer />
     </div>

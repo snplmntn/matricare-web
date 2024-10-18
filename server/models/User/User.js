@@ -64,6 +64,12 @@ const userSchema = new mongoose.Schema(
     assignedTask: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     savedArticle: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],
+    logInTime: {
+      type: Date,
+    },
+    logOutTime: {
+      type: Date,
+    },
   },
   {
     timestamps: true,

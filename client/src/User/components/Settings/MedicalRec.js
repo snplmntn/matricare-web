@@ -264,7 +264,7 @@ const MedicalRec = ({ user }) => {
                 src={
                   patient && patient.profilePicture
                     ? patient.profilePicture
-                    : "img/topic2.jpg"
+                    : "img/profilePicture.jpg"
                 }
                 alt="Patient Photo"
               />
