@@ -209,8 +209,8 @@ const ConsultantLogs = () => {
           row.userId && row.userId.logOutTime && row.userId.logInTime
             ? new Date(row.userId.logOutTime) > new Date(row.userId.logInTime)
               ? formatTime(row.userId.logOutTime)
-              : "N/A"
-            : "N/A",
+              : " - - : - -"
+            : " - - : - -",
         ];
       } else {
         return [
@@ -223,8 +223,8 @@ const ConsultantLogs = () => {
           row && row.logOutTime && row.logInTime
             ? new Date(row.logOutTime) > new Date(row.logInTime)
               ? formatTime(row.logOutTime)
-              : "N/A"
-            : "N/A",
+              : " - - : - -"
+            : " - - : - -",
           row.role, // Role for admins
         ];
       }
@@ -472,8 +472,8 @@ const ConsultantLogs = () => {
                         ? new Date(user.userId.logOutTime) >
                           new Date(user.userId.logInTime)
                           ? formatTime(user.userId.logOutTime)
-                          : "N/A"
-                        : "N/A"}
+                          : " - - : - -"
+                        : " - - : - -"}
                     </td>
                   </>
                 )}
@@ -496,8 +496,8 @@ const ConsultantLogs = () => {
                       {user && user.logOutTime && user.logInTime
                         ? new Date(user.logOutTime) > new Date(user.logInTime)
                           ? formatTime(user.logOutTime)
-                          : "N/A"
-                        : "N/A"}
+                          : " - - : - -"
+                        : " - - : - -"}
                     </td>
 
                     <td>{user.role}</td>
