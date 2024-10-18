@@ -207,7 +207,58 @@ const MedicalRec = ({ user }) => {
         console.error(error);
       }
     }
+
+    async function fetchObstetricHistory() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/record/obstetric/u?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setObstetricHistory(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function fetchMedicalHistory() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/record/medical/u?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setMedicalHistory(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function fetchSurgicalHistory() {
+      try {
+        const response = await axios.get(
+          `${API_URL}/record/surgical/u?userId=${userID}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setSurgicalHistory(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
     fetchTasks();
+    fetchObstetricHistory();
+    fetchMedicalHistory();
+    fetchSurgicalHistory();
   }, []);
 
   //fetch current user
@@ -264,7 +315,7 @@ const MedicalRec = ({ user }) => {
                 src={
                   patient && patient.profilePicture
                     ? patient.profilePicture
-                    : "img/topic2.jpg"
+                    : "img/profilePicture.jpg"
                 }
                 alt="Patient Photo"
               />
@@ -358,18 +409,18 @@ const MedicalRec = ({ user }) => {
                         <input
                           type="date"
                           className="MR-input"
-                          value={item.date}
+                          value={formatDate(item.date)}
                         />
                         <input
                           type="text"
                           className="MR-input"
-                          value={item.text}
+                          value={item.content}
                         />
                       </>
                     ) : (
                       <>
-                        <span className="date">{item.date}</span>
-                        <span className="text">{item.text}</span>
+                        <span className="date">{formatDate(item.date)}</span>
+                        <span className="text">{item.content}</span>
                       </>
                     )}
                   </li>
@@ -432,18 +483,18 @@ const MedicalRec = ({ user }) => {
                         <input
                           type="date"
                           className="MR-input"
-                          value={item.date}
+                          value={formatDate(item.date)}
                         />
                         <input
                           type="text"
                           className="MR-input"
-                          value={item.text}
+                          value={item.content}
                         />
                       </>
                     ) : (
                       <>
-                        <span className="date">{item.date}</span>
-                        <span className="text">{item.text}</span>
+                        <span className="date">{formatDate(item.date)}</span>
+                        <span className="text">{item.content}</span>
                       </>
                     )}
                   </li>

@@ -24,6 +24,8 @@ const user_login = catchAsync(async (req, res, next) => {
     return next(new AppError("Invalid credentials", 401));
   }
 
+  await User.findByIdAndUpdate(user._id, { logInTime: Date.now() });
+
   const token = jwt.sign({ user: user }, process.env.JWT_KEY, {
     expiresIn: "30d",
   });
@@ -105,6 +107,10 @@ const user_logout = catchAsync(async (req, res, next) => {
   });
 
   await invalidToken.save();
+
+  const decoded = jwt.verify(token, process.env.JWT_KEY);
+  const userId = decoded.user._id;
+  await User.findByIdAndUpdate(userId, { logOutTime: Date.now() });
 
   return res
     .status(200)

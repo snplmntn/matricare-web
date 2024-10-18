@@ -94,39 +94,35 @@ const UserProfile = ({ user }) => {
     if (showPasswordSettings) {
       // Password validation logic
       if (newPassword !== confirmPassword) {
-        setError("New passwords do not match");
+        alert("New passwords do not match");
         return;
       }
 
       if (newPassword.length < 8) {
-        setError("New password must be at least 8 characters long");
+        alert("New password must be at least 8 characters long");
         return;
       }
 
       if (!hasUpperCase.test(newPassword)) {
-        setError("New password must contain at least one uppercase letter");
+        alert("New password must contain at least one uppercase letter");
         return;
       }
 
       if (!hasNumber.test(newPassword)) {
-        setError("New password must contain at least one number");
+        alert("New password must contain at least one number");
         return;
       }
 
       if (!hasSpecialChar.test(newPassword)) {
-        setError("New password must contain at least one special character");
+        alert("New password must contain at least one special character");
         return;
       }
 
       if (newPassword === oldPassword) {
-        setError("New password cannot be the same as the old password");
+        alert("New password cannot be the same as the old password");
         return;
       }
 
-      // Mock API call for password update
-      // console.log("Updating password...");
-      // console.log(`Old Password: ${oldPassword}`);
-      // console.log(`New Password: ${newPassword}`);
       try {
         const response = await axios.put(
           `${API_URL}/user?userId=${userID}`,
@@ -140,7 +136,7 @@ const UserProfile = ({ user }) => {
             },
           }
         );
-        console.log(response);
+        alert("Password updated successfully");
       } catch (error) {
         console.error(error);
       }
@@ -186,8 +182,7 @@ const UserProfile = ({ user }) => {
     }
 
     if (!profilePicture && selectedImage) {
-      alert("Image upload failed. Please try again.");
-      return;
+      return alert("Image upload failed. Please try again.");
     } else {
       const updatedUserForm = {};
       if (fullname !== user.fullName) updatedUserForm.fullName = fullname;

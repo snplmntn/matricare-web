@@ -168,7 +168,14 @@ const PatientUserManagement = () => {
           <div className="UM-user-profile">
             <h1>{`${user.name}`}</h1>
             <p>Assistant</p>
-            <img src="img/LOGO.png" alt="Profile" />
+            <img
+              src={
+                user.profilePicture
+                  ? user.profilePicture
+                  : "img/profilePicture.jpg"
+              }
+              alt="Profile"
+            />
             <button
               className="UM-logs-btn"
               onClick={() => navigate("/user-logs")}
