@@ -229,47 +229,56 @@ const LandingPageConsultant = ({}) => {
 
       <aside className="consultant-right-sidebar">
         <div className="consultant-profile">
-        <div className="consultant-profile-icons">
-            <a href="/userprofile" className="consul-profile-icon" title="Profile">
+          <div className="consultant-profile-icons">
+            <a
+              href="/userprofile"
+              className="consul-profile-icon"
+              title="Profile"
+            >
               <IoPersonCircleOutline />
             </a>
-            <a href="/consultant-notification" className="consul-notification-icon" title="Notifications">
+            <a
+              href="/consultant-notification"
+              className="consul-notification-icon"
+              title="Notifications"
+            >
               <IoNotificationsSharp />
             </a>
           </div>
           <div className="consultant-profile-info">
-          <div className="consultant-profile-text">
-            <h1>{`Doctor ${user.name?.split(" ")[0]}`}</h1>
-            <p>{`${user.role}`}</p>
+            <div className="consultant-profile-text">
+              <h1>{`Doctor ${user.name?.split(" ")[0]}`}</h1>
+              <p>{`${user.role}`}</p>
+            </div>
+            <img
+              src={
+                user.profilePicture
+                  ? user.profilePicture
+                  : "img/profilePicture.jpg"
+              }
+              alt="Profile"
+            />
           </div>
-          <img
-            src={
-              user.profilePicture
-                ? user.profilePicture
-                : "img/profilePicture.jpg"
-            }
-            alt="Profile"
-          />
-        </div>
 
-        <div className="consultant-schedule-calendar">
-          <h3>Schedule Calendar</h3>
-          <Calendar
-            onChange={setDate}
-            value={date}
-            className="consul-custom-calendar"
-          />
-        </div>
+          <div className="consultant-schedule-calendar">
+            <h3>Schedule Calendar</h3>
+            <Calendar
+              onChange={setDate}
+              value={date}
+              className="consul-custom-calendar"
+            />
+          </div>
 
-        <div className="consultant-notifications">
-          <h3>Notifications</h3>
-          <div className="notifications-list">
-            {notification &&
-              notification.map((notif, index) => (
-                <div key={index} className="notification-item">
-                  {notif.message}
-                </div>
-              ))}
+          <div className="consultant-notifications">
+            <h3>Notifications</h3>
+            <div className="notifications-list">
+              {notification &&
+                notification.map((notif, index) => (
+                  <div key={index} className="notification-item">
+                    {notif.message}
+                  </div>
+                ))}
+            </div>
           </div>
         </div>
       </aside>
