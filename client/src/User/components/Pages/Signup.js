@@ -106,138 +106,138 @@ export default function Signup() {
       console.error(
         "Signup error:",
         err.response
-          ? err.response.data.message
-          : "Signup error. Please try again."
-      );
-    } finally {
-      setLoading(false); // End loading state
-    }
-  };
+        ? err.response.data.message
+        : "Signup error. Please try again."
+    );
+  } finally {
+    setLoading(false); // End loading state
+  }
+};
 
-  return (
-    <div className="signup-outer-container signup-background">
-      <div
-        className="background-image"
-        style={{ backgroundImage: `url(/img/login.jpg)` }}
-      ></div>
-      <div className="signup-overlay"></div>
-      <h2 className="signup-welcome-message">Create New Account!</h2>
-      <p className="sign-up-text">
-        Already have an Account? <Link to="/login">Log in here!</Link>
-      </p>
+return (
+  <div className="signup-outer-container signup-background">
+  <div
+    className="background-image"
+    style={{ backgroundImage: `url(/img/login.jpg)` }}
+  ></div>
+  <div className="signup-overlay"></div>
+  <h2 className="signup-welcome-message">Create New Account!</h2>
+  <p className="sign-up-text">
+    Already have an Account? <Link to="/login">Log in here!</Link>
+  </p>
 
-      {error && <p className="signup-error-message">{error}</p>}
+  {error && <p className="signup-error-message">{error}</p>}
 
-      {success && <p className="signup-success-message">{success}</p>}
+  {success && <p className="signup-success-message">{success}</p>}
 
-      <div className="signup-container">
-        <form onSubmit={handleSignup}>
-          <div className="SU-form-group">
-            <input
-              className="SU-form-input"
-              type="text"
-              id="fullName"
-              name="fullName"
-              placeholder=" "
-              value={fullName}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="fullName" className="SU-form-label">
-              Full Name:
-            </label>
-          </div>
-          <div className="SU-form-group">
-            <input
-              className="SU-form-input"
-              type="email"
-              name="email"
-              id="email"
-              placeholder=" "
-              value={email}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="email" className="SU-form-label">
-              Email:
-            </label>
-          </div>
-          <div className="SU-form-group">
-            <input
-              className="SU-form-input"
-              type="text"
-              id="username"
-              name="username"
-              placeholder=" "
-              value={username}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="username" className="SU-form-label">
-              Username:
-            </label>
-          </div>
-
-          <div className="SU-form-group">
-            <input
-              className="SU-form-input"
-              type="password"
-              id="password"
-              name="password"
-              placeholder=" "
-              value={password}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="password" className="SU-form-label">
-              Password:
-            </label>
-          </div>
-
-          <div className="SU-form-group">
-            <input
-              className="SU-form-input"
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              placeholder=" "
-              value={confirmPassword}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="confirmPassword" className="SU-form-label">
-              Confirm Password:
-            </label>
-          </div>
-
-          <div className="SU-form-group">
-            <input
-              className="SU-form-input"
-              type="text"
-              id="phoneNumber"
-              name="phoneNumber"
-              placeholder=" "
-              value={phoneNumber}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="phoneNumber" className="SU-form-label">
-              Phone Number:
-            </label>
-          </div>
-          <div className="SU-form-group">
-            <button type="submit" className="SU-button" disabled={loading}>
-              SIGN UP
-            </button>
-          </div>
-        </form>
+  <div className="signup-container">
+    <form onSubmit={handleSignup}>
+      <div className="SU-form-group">
+        <input
+          className="SU-form-input"
+          type="text"
+          id="fullName"
+          name="fullName"
+          placeholder=" "
+          value={fullName}
+          onChange={handleChange}
+          style={{ padding: "15px", width: "400px" }}
+          required
+        />
+        <label htmlFor="fullName" className="SU-form-label">
+          Full Name:
+        </label>
       </div>
-    </div>
-  );
+      <div className="SU-form-group">
+        <input
+          className="SU-form-input"
+          type="email"
+          name="email"
+          id="email"
+          placeholder=" "
+          value={email}
+          onChange={handleChange}
+          style={{ padding: "15px", width: "400px" }}
+          required
+        />
+        <label htmlFor="email" className="SU-form-label">
+          Email:
+        </label>
+      </div>
+      <div className="SU-form-group">
+        <input
+          className="SU-form-input"
+          type="text"
+          id="username"
+          name="username"
+          placeholder=" "
+          value={username}
+          onChange={handleChange}
+          style={{ padding: "15px", width: "400px" }}
+          required
+        />
+        <label htmlFor="username" className="SU-form-label">
+          Username:
+        </label>
+      </div>
+
+      <div className="SU-form-group">
+        <input
+          className="SU-form-input"
+          type="password"
+          id="password"
+          name="password"
+          placeholder=" "
+          value={password}
+          onChange={handleChange}
+          style={{ padding: "15px", width: "400px" }}
+          required
+        />
+        <label htmlFor="password" className="SU-form-label">
+          Password:
+        </label>
+      </div>
+
+      <div className="SU-form-group">
+        <input
+          className="SU-form-input"
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          placeholder=" "
+          value={confirmPassword}
+          onChange={handleChange}
+          style={{ padding: "15px", width: "400px" }}
+          required
+        />
+        <label htmlFor="confirmPassword" className="SU-form-label">
+          Confirm Password:
+        </label>
+      </div>
+
+      <div className="SU-form-group">
+        <input
+          className="SU-form-input"
+          type="text"
+          id="phoneNumber"
+          name="phoneNumber"
+          placeholder=" "
+          value={phoneNumber}
+          onChange={handleChange}
+          style={{ padding: "15px", width: "400px" }}
+          required
+        />
+        <label htmlFor="phoneNumber" className="SU-form-label">
+          Phone Number:
+        </label>
+      </div>
+      <div className="SU-form-group">
+        <button type="submit" className="SU-button" disabled={loading}>
+          SIGN UP
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+);
 }
