@@ -54,46 +54,43 @@ export default function Login() {
     let userID = getCookie("userID");
 
     if (verificationCode.length !== 6) {
-        setAuthMessage("Verification code must be 6 digits long.");
-        return; 
+      setAuthMessage("Verification code must be 6 digits long.");
+      return;
     }
 
     if (userTrustedDevice.includes(userID)) {
-        setAuthMessage("This verification code has already been used.");
-        return; 
+      setAuthMessage("This verification code has already been used.");
+      return;
     }
-
 
     const expiryTimestamp = parseInt(getCookie("expiryTimestamp"), 10);
     const currentTimestamp = Date.now();
 
-
     if (currentTimestamp > expiryTimestamp) {
-        setAuthMessage("Verification code has expired.");
-        return; 
+      setAuthMessage("Verification code has expired.");
+      return;
     }
 
-
     if (verifyToken === verificationCode.toUpperCase()) {
-        setAuthMessage("Verification Successful!");
+      setAuthMessage("Verification Successful!");
 
-        if (rememberDevice) {
-            const userTrustedDeviceArray = [...userTrustedDevice, userID];
-            setCookie("userTrustedDevice", JSON.stringify(userTrustedDeviceArray), {
-                path: "/",
-                maxAge: 30 * 24 * 60 * 60,
-            });
-        }
-        handleRedirectToApp();
+      if (rememberDevice) {
+        const userTrustedDeviceArray = [...userTrustedDevice, userID];
+        setCookie("userTrustedDevice", JSON.stringify(userTrustedDeviceArray), {
+          path: "/",
+          maxAge: 30 * 24 * 60 * 60,
+        });
+      }
+      handleRedirectToApp();
     } else {
-        setAuthMessage("Invalid verification code. Please try again.");
+      setAuthMessage("Invalid verification code. Please try again.");
+      // console.log(verifyToken);
     }
 
     setTimeout(() => {
-        setAuthMessage("");
+      setAuthMessage("");
     }, 3000);
-};
-
+  };
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);

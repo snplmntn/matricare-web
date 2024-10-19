@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import BellyTalkPost from "./BellyTalkPost";
 import { IoSearch, IoBookmark, IoPencil, IoArrowBack } from "react-icons/io5";
 import { FcPicture } from "react-icons/fc";
+import PostSkeleton from "./PostSkeleton";
 
 import axios from "axios";
 
@@ -300,15 +301,17 @@ const BellyTalk = ({ user }) => {
         <section className="bellytalk-feed">
           {posts ? (
             posts.map((post) => (
-              <BellyTalkPost
-                key={post._id}
-                post={post}
-                user={user}
-                onDeletePost={onDeletePost}
-              />
+              <>
+                <BellyTalkPost
+                  key={post._id}
+                  post={post}
+                  user={user}
+                  onDeletePost={onDeletePost}
+                />
+              </>
             ))
           ) : (
-            <p>NO POSTS</p>
+            <PostSkeleton cards={2} />
           )}
         </section>
         <div className="filter-section">
