@@ -235,7 +235,7 @@ const LibraryConsultant = () => {
             Authorization: token,
           },
         });
-        setBooks(response.data);
+        setBooks(response.data.article);
       } catch (error) {
         console.error(error);
       }

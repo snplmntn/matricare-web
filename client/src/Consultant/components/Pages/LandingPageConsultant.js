@@ -145,6 +145,19 @@ const LandingPageConsultant = ({}) => {
     fetchPatients();
   }, []);
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const filteredAppointments = appointment.filter(
+    (appt) =>
+      appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appt.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      appt.status.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="consultant-dashboard-container">
       <main className="consultant-main-content">
@@ -155,6 +168,8 @@ const LandingPageConsultant = ({}) => {
               type="text"
               className="consultant-search-input"
               placeholder="Search Appointments..."
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
           </div>
         </header>
@@ -218,8 +233,8 @@ const LandingPageConsultant = ({}) => {
               </tr>
             </thead>
             <tbody>
-              {appointment &&
-                appointment.map((appt, index) => (
+              {filteredAppointments &&
+                filteredAppointments.map((appt, index) => (
                   <tr key={index}>
                     <td>{appt.patientName}</td>
                     <td>{appt.location}</td>

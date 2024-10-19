@@ -86,8 +86,22 @@ const LandingPageAssistant = ({}) => {
       }
     };
 
+    async function fetchBooks() {
+      try {
+        const response = await axios.get(`${API_URL}/article?status=Approved`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        setLibraryItems(response.data.article);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchPatients();
     fetchAppointment();
+    fetchBooks();
   }, []);
 
   const lineData = {
@@ -249,13 +263,13 @@ const LandingPageAssistant = ({}) => {
   }, {});
 
   // Sample library items
-  const libraryItems = [
-    { id: 1, title: "Trimesters", image: "img/topic1.jpg" },
-    { id: 2, title: "Weekly Pregnancy", image: "img/topic2.jpg" },
-    { id: 3, title: "Pregnancy Discharge", image: "img/topic3.jpg" },
-    { id: 4, title: "Pregnancy Symptoms", image: "img/topic4.jpg" },
-    { id: 5, title: "Dietary Planning", image: "img/topic5.jpg" },
-  ];
+  const [libraryItems, setLibraryItems] = useState([
+    { id: 1, title: "Trimesters", picture: "img/topic1.jpg" },
+    { id: 2, title: "Weekly Pregnancy", picture: "img/topic2.jpg" },
+    { id: 3, title: "Pregnancy Discharge", picture: "img/topic3.jpg" },
+    { id: 4, title: "Pregnancy Symptoms", picture: "img/topic4.jpg" },
+    { id: 5, title: "Dietary Planning", picture: "img/topic5.jpg" },
+  ]);
 
   const sliderSettings = {
     dots: true,
@@ -339,19 +353,20 @@ const LandingPageAssistant = ({}) => {
             <h2>Resource Library</h2>
             <div className="landingpage-assistant-library-slider">
               <Slider {...sliderSettings}>
-                {libraryItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="landingpage-assistant-library-box"
-                  >
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="landingpage-assistant-library-box-image"
-                    />
-                    <h3>{item.title}</h3>
-                  </div>
-                ))}
+                {libraryItems.length > 0 &&
+                  libraryItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="landingpage-assistant-library-box"
+                    >
+                      <img
+                        src={item.picture}
+                        alt={item.title}
+                        className="landingpage-assistant-library-box-image"
+                      />
+                      <h3>{item.title}</h3>
+                    </div>
+                  ))}
               </Slider>
             </div>
           </div>
