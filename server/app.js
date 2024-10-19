@@ -37,7 +37,7 @@ const app = express(); // Initialization
 app.set("trust proxy", 1); // Enable proxy trust to allow express-rate-limit to read X-Forwarded-For header
 const limiter = rateLimit({
   max: 1000,
-  windowMs: 10 * 60 * 1000, // 10 minutes
+  windowMs: 10 * 60, // 10 minutes
   message: "Too many requests, please try again later.",
 });
 
