@@ -12,6 +12,7 @@ export default function Signup() {
     password: "",
     confirmPassword: "",
     phoneNumber: "",
+    obGyneSpecialist: false,
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -231,6 +232,17 @@ return (
           Phone Number:
         </label>
       </div>
+      <div className="SU-form-group">
+      <label>
+        <input
+          type="checkbox"
+          id="obGyneSpecialist"
+          name="obGyneSpecialist"
+          onChange={handleChange} 
+        />
+        Ob-Gyne Specialist
+      </label>
+    </div>
       <div className="SU-form-group">
         <button type="submit" className="SU-button" disabled={loading}>
           SIGN UP
