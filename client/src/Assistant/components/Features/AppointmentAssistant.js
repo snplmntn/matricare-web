@@ -59,7 +59,7 @@ const AppointmentAssistant = () => {
         const sortedAppointments = await response.data.sort(
           (a, b) => new Date(a.date) - new Date(b.date)
         );
-        setUpcomingAppointments(sortedAppointments.reverse());
+        // setUpcomingAppointments(sortedAppointments.reverse());
       } catch (error) {
         console.error(error);
       }
@@ -121,7 +121,8 @@ const AppointmentAssistant = () => {
             appt.patientName
               .toLowerCase()
               .includes(searchTerm.toLowerCase())) ||
-          (appt.userId.phoneNumber &&
+          (appt.userId &&
+            appt.userId.phoneNumber &&
             appt.userId.phoneNumber.includes(searchTerm)) ||
           (appt.location &&
             appt.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
