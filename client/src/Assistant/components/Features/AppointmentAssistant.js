@@ -65,7 +65,6 @@ const AppointmentAssistant = () => {
       }
     };
     fetchAppointment();
-    // setUpcomingAppointments(savedUpcomingAppointments);
   }, []);
 
   const handleSortChange = (e) => {
@@ -75,23 +74,6 @@ const AppointmentAssistant = () => {
 
   const handleBranchLocationChange = (e) => {
     setBranchLocation(e.target.value);
-  };
-
-  const filterAppointments = () => {
-    const today = moment().format("MMMM DD, YYYY");
-
-    if (sortBy === "today") {
-      return upcomingAppointments.filter(
-        (appt) => appt.appointmentDate === today
-      );
-    } else if (sortBy === "branchLocation" && branchLocation) {
-      return upcomingAppointments.filter(
-        (appt) => appt.branchLocation === branchLocation
-      );
-    }
-
-    // Default: show all appointments
-    return upcomingAppointments;
   };
 
   // Load events from localStorage on component mount
@@ -112,6 +94,45 @@ const AppointmentAssistant = () => {
     console.log("Details clicked for appointment:", appointment);
   };
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filterAppointments = () => {
+    let filteredAppointments = upcomingAppointments;
+    const today = new Date().toISOString().split("T")[0];
+
+    if (sortBy === "today") {
+      filteredAppointments = filteredAppointments.filter(
+        (appt) => appt.date && appt.date.split("T")[0] === today
+      );
+    } else if (sortBy === "branchLocation" && branchLocation) {
+      filteredAppointments = filteredAppointments.filter(
+        (appt) => appt.location === branchLocation
+      );
+    }
+
+    if (searchTerm) {
+      filteredAppointments = filteredAppointments.filter(
+        (appt) =>
+          (appt.patientName &&
+            appt.patientName
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())) ||
+          (appt.userId.phoneNumber &&
+            appt.userId.phoneNumber.includes(searchTerm)) ||
+          (appt.location &&
+            appt.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (appt.category &&
+            appt.category.toLowerCase().includes(searchTerm.toLowerCase()))
+      );
+    }
+
+    return filteredAppointments;
+  };
+
   return (
     <div className="appointment-assistant-container">
       <div className="appointment-main-container">
@@ -121,6 +142,8 @@ const AppointmentAssistant = () => {
             type="text"
             placeholder="Search..."
             className="appointment-assistant-search-input"
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
         </div>
         <div className="appointment-assistant-content-container">
@@ -141,13 +164,13 @@ const AppointmentAssistant = () => {
                     onChange={handleBranchLocationChange}
                   >
                     <option value="">Select Branch</option>
-                    <option value="Mary Chiles, Sampaloc Manila">
+                    <option value="Mary Chiles, Sampaloc">
                       Mary Chiles, Sampaloc Manila
                     </option>
-                    <option value="Grace Medical Center, Bulacan">
+                    <option value="Grace Medical Center">
                       Grace Medical Center, Bulacan
                     </option>
-                    <option value="Family Care Tungko, Bulacan">
+                    <option value="Family Care Tungko">
                       Family Care Tungko, Bulacan
                     </option>
                   </select>
