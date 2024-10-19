@@ -44,6 +44,8 @@ const LandingPageAssistant = ({}) => {
   const [totalPatients, setTotalPatients] = useState(0);
   const [patient, setPatients] = useState([]);
   const [appointment, setAppointment] = useState([]);
+  const [allAppointment, setAllAppointment] = useState([]);
+
   let dateToday = new Date().toLocaleDateString("en-GB", {
     day: "2-digit",
   });
@@ -81,6 +83,7 @@ const LandingPageAssistant = ({}) => {
           .filter((appt) => new Date(appt.date) < new Date())
           .sort((a, b) => new Date(a.date) - new Date(b.date));
         setAppointment(sortedAppointments.reverse());
+        setAllAppointment(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -111,7 +114,7 @@ const LandingPageAssistant = ({}) => {
         label: "Appointments",
         data: Array.from({ length: dateToday }, (_, i) => {
           const day = (i + 1).toString().padStart(2, "0");
-          const count = appointment.filter(
+          const count = allAppointment.filter(
             (p) => new Date(p.date).getDate() === parseInt(day)
           ).length;
           return count;

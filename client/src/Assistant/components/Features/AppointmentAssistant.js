@@ -59,7 +59,7 @@ const AppointmentAssistant = () => {
         const sortedAppointments = await response.data.sort(
           (a, b) => new Date(a.date) - new Date(b.date)
         );
-        // setUpcomingAppointments(sortedAppointments.reverse());
+        setUpcomingAppointments(sortedAppointments.reverse());
       } catch (error) {
         console.error(error);
       }
@@ -206,7 +206,7 @@ const AppointmentAssistant = () => {
                           })}
                       </td>
                       <td>{appointment.patientName}</td>
-                      <td>{appointment.userId.phoneNumber}</td>
+                      <td>{appointment.userId?.phoneNumber || "N/A"}</td>
                       <td>{appointment.location}</td>
                       <td>{appointment.category}</td>
                       <td>
