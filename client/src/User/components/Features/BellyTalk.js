@@ -6,16 +6,18 @@ import BellyTalkPost from "./BellyTalkPost";
 import { IoSearch, IoBookmark, IoPencil, IoArrowBack } from "react-icons/io5";
 import { FcPicture } from "react-icons/fc";
 import PostSkeleton from "./PostSkeleton";
+import { useInView } from "react-intersection-observer";
 
 import axios from "axios";
 
 const BellyTalk = ({ user }) => {
+  const { ref: myRef, inView: fetchPost } = useInView();
   const navigate = useNavigate();
   // const { name, username, role } = user.current;
   const token = getCookie("token");
   const userID = getCookie("userID");
-  const [posts, setPosts] = useState();
-  const [allPost, setAllPost] = useState();
+  const [posts, setPosts] = useState([]);
+  const [allPost, setAllPost] = useState([]);
   const API_URL = process.env.REACT_APP_API_URL;
   const [newPostText, setNewPostText] = useState("");
   const [imgLink, setImgLink] = useState("");
@@ -29,8 +31,11 @@ const BellyTalk = ({ user }) => {
   const [imagePreview, setImagePreview] = useState(null);
 
   const [isPosting, setIsPosting] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
   const [changeFilter, setChangeFilter] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
+  const [fetchAgain, setFetchAgain] = useState(false);
 
   const openModal = () => {
     if (!token) {
@@ -137,25 +142,33 @@ const BellyTalk = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const response = await axios.get(
-          `${API_URL}/${token ? "post" : "bellytalk"}/i`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        setPosts(response.data);
-        setAllPost(response.data);
-      } catch (error) {
-        console.error(error);
-      }
+  async function fetchPosts() {
+    if (loading) return;
+    setLoading(true);
+
+    const lastPostId = posts.length > 0 ? posts[posts.length - 1]._id : null;
+    try {
+      const response = await axios.get(
+        `${API_URL}/${token ? "post" : "bellytalk"}/i${
+          lastPostId ? `?postId=${lastPostId}` : ""
+        }`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setPosts((prevPosts) => [...prevPosts, ...response.data]);
+      setAllPost((prevPosts) => [...prevPosts, ...response.data]);
+
+      if (fetchAgain) setFetchAgain(false);
+      if (response.data.length === 0) setShowLoading(false);
+      else CheckToFetchMore();
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
     }
-    fetchPosts();
-  }, [isFetching]);
+  }
 
   const [activeFilters, setActiveFilters] = useState([]);
 
@@ -199,6 +212,17 @@ const BellyTalk = ({ user }) => {
     setPosts(posts.filter((post) => post._id !== postId));
     setAllPost(allPost.filter((post) => post._id !== postId));
   };
+
+  const CheckToFetchMore = () => {
+    if (fetchPost)
+      setTimeout(() => {
+        if (!fetchAgain) setFetchAgain(true);
+      }, 3000);
+  };
+
+  useEffect(() => {
+    if (fetchPost && !loading) fetchPosts();
+  }, [fetchPost, fetchAgain]);
 
   return (
     <div className="bellytalk-container">
@@ -299,7 +323,7 @@ const BellyTalk = ({ user }) => {
         </div>
 
         <section className="bellytalk-feed">
-          {posts ? (
+          {posts.length > 0 &&
             posts.map((post) => (
               <>
                 <BellyTalkPost
@@ -309,10 +333,13 @@ const BellyTalk = ({ user }) => {
                   onDeletePost={onDeletePost}
                 />
               </>
-            ))
-          ) : (
-            <PostSkeleton cards={2} />
-          )}
+            ))}
+
+          {showLoading ? (
+            <div ref={myRef}>
+              <PostSkeleton cards={2} />
+            </div>
+          ) : null}
         </section>
         <div className="filter-section">
           <h3>Filters</h3>
