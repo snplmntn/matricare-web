@@ -301,7 +301,7 @@ const PatientUserManagement = () => {
                     <>
                       <img
                         src={
-                          user.userId.profilePicture
+                          user.userId && user.userId.profilePicture
                             ? user.userId.profilePicture
                             : "img/profilePicture.jpg"
                         }

@@ -121,7 +121,8 @@ const AppointmentAssistant = () => {
             appt.patientName
               .toLowerCase()
               .includes(searchTerm.toLowerCase())) ||
-          (appt.userId.phoneNumber &&
+          (appt.userId &&
+            appt.userId.phoneNumber &&
             appt.userId.phoneNumber.includes(searchTerm)) ||
           (appt.location &&
             appt.location.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -205,7 +206,7 @@ const AppointmentAssistant = () => {
                           })}
                       </td>
                       <td>{appointment.patientName}</td>
-                      <td>{appointment.userId.phoneNumber}</td>
+                      <td>{appointment.userId?.phoneNumber || "N/A"}</td>
                       <td>{appointment.location}</td>
                       <td>{appointment.category}</td>
                       <td>
