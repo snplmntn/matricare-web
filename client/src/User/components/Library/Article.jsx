@@ -11,6 +11,7 @@ const Article = () => {
   const userID = getCookie("userID");
   const [article, setArticle] = useState();
   const [savedArticles, setSavedArticles] = useState([]);
+  const [relatedArticles, setRelatedArticles] = useState([]);
   const [isSavedComponent, setIsSaved] = useState();
 
   const handleBack = (e) => {
@@ -73,6 +74,7 @@ const Article = () => {
           }
         );
         setArticle(response.data);
+        setRelatedArticles();
       } catch (error) {
         console.error(error);
       }
