@@ -93,7 +93,7 @@ const LandingPageAssistant = ({}) => {
             Authorization: token,
           },
         });
-        setLibraryItems(response.data);
+        setLibraryItems(response.data.article);
       } catch (error) {
         console.error(error);
       }
@@ -353,19 +353,20 @@ const LandingPageAssistant = ({}) => {
             <h2>Resource Library</h2>
             <div className="landingpage-assistant-library-slider">
               <Slider {...sliderSettings}>
-                {libraryItems.map((item) => (
-                  <div
-                    key={item.id}
-                    className="landingpage-assistant-library-box"
-                  >
-                    <img
-                      src={item.picture}
-                      alt={item.title}
-                      className="landingpage-assistant-library-box-image"
-                    />
-                    <h3>{item.title}</h3>
-                  </div>
-                ))}
+                {libraryItems.length > 0 &&
+                  libraryItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="landingpage-assistant-library-box"
+                    >
+                      <img
+                        src={item.picture}
+                        alt={item.title}
+                        className="landingpage-assistant-library-box-image"
+                      />
+                      <h3>{item.title}</h3>
+                    </div>
+                  ))}
               </Slider>
             </div>
           </div>

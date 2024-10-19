@@ -8,11 +8,19 @@ const catchAsync = require("../../Utilities/catchAsync");
 const article_get = catchAsync(async (req, res, next) => {
   const { id, status } = req.query;
 
-  let article;
+  let article,
+    relatedArticles = [];
   if (id) {
     article = await Article.findOne({
       _id: req.query.id,
     });
+
+    if (article && article.category) {
+      relatedArticles = await Article.find({
+        category: article.category,
+        _id: { $ne: article._id },
+      }).limit(3); // Limit to 5 related articles
+    }
   } else if (status) {
     article = await Article.find({
       status: req.query.status,
@@ -23,7 +31,7 @@ const article_get = catchAsync(async (req, res, next) => {
 
   if (!article) return next(new AppError("Article not found", 404));
 
-  return res.status(200).json(article);
+  return res.status(200).json({ article, relatedArticles });
 });
 
 // Create Article

@@ -13,6 +13,7 @@ const Article = () => {
   const [savedArticles, setSavedArticles] = useState([]);
   const [relatedArticles, setRelatedArticles] = useState([]);
   const [isSavedComponent, setIsSaved] = useState();
+  const [lastRead, setLastRead] = useState([]);
 
   const handleBack = (e) => {
     navigate(-1);
@@ -62,6 +63,9 @@ const Article = () => {
   };
 
   useEffect(() => {
+    const savedLastRead = JSON.parse(localStorage.getItem("lastRead")) || [];
+    setLastRead(savedLastRead);
+
     async function fetchArticle() {
       try {
         const response = await axios.get(
@@ -73,8 +77,11 @@ const Article = () => {
             },
           }
         );
-        setArticle(response.data);
-        setRelatedArticles();
+        setArticle(response.data.article);
+        const approvedRelatedArticles = response.data.relatedArticles.filter(
+          (relatedArticle) => relatedArticle.status === "Approved"
+        );
+        setRelatedArticles(approvedRelatedArticles);
       } catch (error) {
         console.error(error);
       }
@@ -104,7 +111,20 @@ const Article = () => {
 
     fetchArticle();
     fetchSavedArticle();
-  }, []);
+  }, [bookId]);
+
+  const handleBookClick = (book) => {
+    const updatedLastRead = [
+      book,
+      ...lastRead.filter((b) => b._id !== book._id),
+    ];
+    setLastRead(updatedLastRead);
+
+    // Save the updated last read list to local storage
+    localStorage.setItem("lastRead", JSON.stringify(updatedLastRead));
+
+    navigate(`/book/${book._id}`);
+  };
 
   return (
     <div className="library-content-container">
@@ -151,32 +171,24 @@ const Article = () => {
       {/* Related News Section */}
       <div className="library-content-related-news">
         <div className="library-content-related-header">
-          <h2>Related News</h2>
+          <h2>Related Articles</h2>
         </div>
 
-        <div className="library-content-news-card">
-          <img src="img/bg2.jpg" alt="Related news" />
-          <div className="library-content-news-card-content">
-            <div className="library-content-news-tag">Physical Health</div>
-            <h3>Physical Changes in Each Trimester</h3>
+        {relatedArticles.map((relatedArticle) => (
+          <div
+            key={relatedArticle._id}
+            className="library-content-news-card"
+            onClick={() => handleBookClick(relatedArticle)}
+          >
+            <img src={relatedArticle.picture} alt="Related news" />
+            <div className="library-content-news-card-content">
+              <div className="library-content-news-tag">
+                {relatedArticle.category}
+              </div>
+              <h3>{relatedArticle.title}</h3>
+            </div>
           </div>
-        </div>
-
-        <div className="library-content-news-card">
-          <img src="img/bg5.jpg" alt="Related news" />
-          <div className="library-content-news-card-content">
-            <div className="library-content-news-tag">First-time Moms</div>
-            <h3>Lifestyle Adjustments and Self-Care</h3>
-          </div>
-        </div>
-
-        <div className="library-content-news-card">
-          <img src="img/bg6.jpg" alt="Related news" />
-          <div className="library-content-news-card-content">
-            <div className="library-content-news-tag">Healthcare</div>
-            <h3>Nutritional Needs and Diet</h3>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
   );

@@ -62,7 +62,7 @@ const Library = () => {
             Authorization: token,
           },
         });
-        setArticles(response.data);
+        setArticles(response.data.article);
       } catch (error) {
         console.error(error);
       }

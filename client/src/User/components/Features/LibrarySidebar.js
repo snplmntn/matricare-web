@@ -66,7 +66,7 @@ const LibrarySidebar = () => {
           src={
             user && user.profilePicture
               ? user.profilePicture
-              : "img/profilePicture.jpg"
+              : "/img/profilePicture.jpg"
           }
           alt="Profile Picture"
           className="library-profile-picture"
