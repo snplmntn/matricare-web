@@ -29,7 +29,10 @@ function HomePage({ user }) {
   const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
   const [activeBellyTalkTab, setActiveBellyTalkTab] = useState("new");
   const [newPost, setNewPost] = useState();
+  const [libraryItems, setLibraryItems] = useState([]);
+
   const [cookies, setCookie, removeCookie] = useCookies();
+
   const token = cookies.token;
 
   const API_URL = process.env.REACT_APP_API_URL;
@@ -124,9 +127,28 @@ function HomePage({ user }) {
         console.error(error);
       }
     };
+
+    async function fetchBooks() {
+      try {
+        const response = await axios.get(`${API_URL}/article?status=Approved`, {
+          headers: {
+            Authorization: token,
+          },
+        });
+        const articles = response.data.article;
+        const randomArticles = articles
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 2);
+        setLibraryItems(randomArticles);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
     fetchPost();
     fetchNotification();
     fetchAppointment();
+    fetchBooks();
   }, []);
 
   const handleLogout = async () => {
@@ -343,40 +365,25 @@ function HomePage({ user }) {
                   </button>
                 </Link>
                 <div className="homepage-library-container">
-                  <div className="homepage-library-column">
-                    <img
-                      src="img/topic1.jpg"
-                      alt="Library Resource 1"
-                      className="library-image"
-                    />
-                    <h2>Stages of Pregnancy</h2>
-                    <p>First, Second, and Third Trimester</p>
-                    <Link to="/library-item1">
-                      <button
-                        className="view-button"
-                        onClick={() => handleViewResource("Resource 1")}
-                      >
-                        View <span>&gt;</span>
-                      </button>
-                    </Link>
-                  </div>
-                  <div className="homepage-library-column">
-                    <img
-                      src="img/topic2.jpg"
-                      alt="Library Resource 2"
-                      className="library-image"
-                    />
-                    <h2>Weekly Pregnancy</h2>
-                    <p>Week 1 - Week 42</p>
-                    <Link to="/library-item4">
-                      <button
-                        className="view-button"
-                        onClick={() => handleViewResource("Resource 2")}
-                      >
-                        View <span>&gt;</span>
-                      </button>
-                    </Link>
-                  </div>
+                  {libraryItems.map((item) => (
+                    <div key={item._id} className="homepage-library-column">
+                      <img
+                        src={item.picture}
+                        alt={item.title}
+                        className="library-image"
+                      />
+                      <h2>{item.title}</h2>
+                      <p>{item.fullTitle}</p>
+                      <Link to={`/book/${item._id}`}>
+                        <button
+                          className="view-button"
+                          onClick={() => handleViewResource(item.title)}
+                        >
+                          View <span>&gt;</span>
+                        </button>
+                      </Link>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div className="homepage-bellytalk">
