@@ -3,12 +3,7 @@ import "../../styles/features/bellytalk.css";
 import { getCookie } from "../../../utils/getCookie";
 import { useNavigate } from "react-router-dom";
 import BellyTalkPost from "./BellyTalkPost";
-import {
-  IoSearch,
-  IoBookmark,
-  IoPencil,
-  IoArrowBack,
-} from "react-icons/io5";
+import { IoSearch, IoBookmark, IoPencil, IoArrowBack } from "react-icons/io5";
 import { FcPicture } from "react-icons/fc";
 
 import axios from "axios";
@@ -173,20 +168,31 @@ const BellyTalk = ({ user }) => {
     });
   };
 
-  const handleSavedButtonClick = () => {
-    navigate("/saved-posts");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   useEffect(() => {
-    if (activeFilters.length === 0 || activeFilters.includes("All")) {
-      setPosts(allPost);
-    } else {
-      const filteredPosts = allPost.filter((post) =>
-        activeFilters.some((filter) => post.category.includes(filter))
-      );
-      setPosts(filteredPosts);
-    }
-  }, [activeFilters, allPost]);
+    if (!allPost) return;
+
+    const filteredPosts = allPost.filter((post) => {
+      const matchesSearchTerm =
+        post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        post.fullname.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        activeFilters.length === 0 ||
+        activeFilters.includes("All") ||
+        activeFilters.some((filter) => post.category.includes(filter));
+      return matchesSearchTerm && matchesCategory;
+    });
+    setPosts(filteredPosts);
+  }, [searchTerm, activeFilters, allPost]);
+
+  const handleSavedButtonClick = () => {
+    navigate("/saved-posts");
+  };
 
   const onDeletePost = async (postId) => {
     setPosts(posts.filter((post) => post._id !== postId));
@@ -213,6 +219,8 @@ const BellyTalk = ({ user }) => {
             type="text"
             className="bellytalk-search"
             placeholder="Search for people, insights and more..."
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
         </div>
       </div>
@@ -254,7 +262,7 @@ const BellyTalk = ({ user }) => {
                         htmlFor="file-upload"
                         className="custom-file-upload"
                       >
-                        <FcPicture  />
+                        <FcPicture />
                       </label>
                       <input
                         id="file-upload"
