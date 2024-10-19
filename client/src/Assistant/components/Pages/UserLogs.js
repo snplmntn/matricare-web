@@ -300,7 +300,7 @@ const ConsultantLogs = () => {
         <header className="CPL-header">
           <div className="CPL-user-profile">
             <h1>{`${user.name}`}</h1>
-            <p>Assistant</p>
+            <p>{user.role}</p>
             <img src="img/LOGO.png" alt="Profile" />
           </div>
         </header>
@@ -428,7 +428,7 @@ const ConsultantLogs = () => {
                     <>
                       <img
                         src={
-                          user.userId.profilePicture
+                          user.userId && user.userId.profilePicture
                             ? user.userId.profilePicture
                             : "img/profilePicture.jpg"
                         }
