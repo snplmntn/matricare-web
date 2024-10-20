@@ -534,3 +534,12 @@ input:checked + .slider:before {
 .toggle-label {
   white-space: nowrap; 
 }
+
+.user-profile-input.verified-status {
+  padding: 15px 15px;
+  border-radius: 0px !important;
+  border: 1px solid #042440 !important;
+  background-color: #ffffff !important;
+  width: 400px;
+  margin-left: 0;
+}
