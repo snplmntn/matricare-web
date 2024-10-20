@@ -21,6 +21,8 @@ router.post(
   uploadController.article_picture_post
 );
 
+router.post("/id", upload.single("document"), uploadController.prcId_post);
+
 // Upload Document
 router.post("/d", upload.single("document"), uploadController.document_post);
 

@@ -31,6 +31,7 @@ const UserProfile = ({ user }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [prcIdFile, setPrcIdFile] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
 
   //user password
@@ -68,6 +69,29 @@ const UserProfile = ({ user }) => {
     if (file) {
       const fileUrl = URL.createObjectURL(file); // Generates a temporary URL for viewing the file
       setUploadedFile(fileUrl);
+    }
+  };
+
+  const handleUploadPrcId = async () => {
+    if (uploadedFile) {
+      const formData = new FormData();
+      formData.append("document", uploadedFile);
+
+      try {
+        const response = await axios.post(
+          `${API_URL}/upload/id?userId=${userID}`,
+          formData,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setPrcIdFile(response.data.documentLink);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -188,64 +212,71 @@ const UserProfile = ({ user }) => {
   const handleUserUpdate = async (e) => {
     e.preventDefault();
 
-    if (selectedImage) {
+    if (selectedImage && !profilePicture) {
       await handleUploadProfilePicture();
     }
 
-    if (!profilePicture && selectedImage) {
+    if (uploadedFile && !prcIdFile) await handleUploadPrcId();
+
+    if (!prcIdFile && uploadedFile) {
+      return alert("ID upload failed. Please try again.");
+    }
+
+    if (!profilePicture && selectedImage)
       return alert("Image upload failed. Please try again.");
-    } else {
-      const updatedUserForm = {};
-      if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
-      if (profilePicture !== user.profilePicture)
-        updatedUserForm.profilePicture = profilePicture;
 
-      if (birthday !== user.birthdate) {
-        const birthdate = new Date(birthday);
-        updatedUserForm.birthdate = birthdate;
-      }
-      if (email !== user.email) updatedUserForm.email = email;
-      if (phoneNumber !== user.phoneNumber)
-        updatedUserForm.phoneNumber = phoneNumber;
-      if (address !== user.address) updatedUserForm.address = address;
-      if (partner !== user.husband) updatedUserForm.husband = partner;
-      if (number !== user.husbandNumber) updatedUserForm.husbandNumber = number;
+    const updatedUserForm = {};
+    if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
+    if (profilePicture !== user.profilePicture)
+      updatedUserForm.profilePicture = profilePicture;
 
-      if (babyName !== user.babyName) updatedUserForm.babyName = babyName;
-      if (lastMenstrualPeriod !== user.pregnancyStartDate) {
-        const pregnancyStartDate = new Date(lastMenstrualPeriod);
-        updatedUserForm.pregnancyStartDate = pregnancyStartDate;
-      }
+    if (prcIdFile !== user.prcId) updatedUserForm.prcId = prcIdFile;
 
-      try {
-        const response = await axios.put(
-          `${API_URL}/user?userId=${userID}`,
-          updatedUserForm,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        if (fullname || birthday || profilePicture) {
-          const userData = localStorage.getItem("userData");
-          const parsedData = JSON.parse(userData);
+    if (birthday !== user.birthdate) {
+      const birthdate = new Date(birthday);
+      updatedUserForm.birthdate = birthdate;
+    }
+    if (email !== user.email) updatedUserForm.email = email;
+    if (phoneNumber !== user.phoneNumber)
+      updatedUserForm.phoneNumber = phoneNumber;
+    if (address !== user.address) updatedUserForm.address = address;
+    if (partner !== user.husband) updatedUserForm.husband = partner;
+    if (number !== user.husbandNumber) updatedUserForm.husbandNumber = number;
 
-          if (fullname) {
-            parsedData.fullName = fullname;
-          }
+    if (babyName !== user.babyName) updatedUserForm.babyName = babyName;
+    if (lastMenstrualPeriod !== user.pregnancyStartDate) {
+      const pregnancyStartDate = new Date(lastMenstrualPeriod);
+      updatedUserForm.pregnancyStartDate = pregnancyStartDate;
+    }
 
-          if (profilePicture) {
-            parsedData.profilePicture = profilePicture;
-          }
-
-          localStorage.removeItem("userData");
-          localStorage.setItem("userData", JSON.stringify(parsedData));
+    try {
+      const response = await axios.put(
+        `${API_URL}/user?userId=${userID}`,
+        updatedUserForm,
+        {
+          headers: {
+            Authorization: token,
+          },
         }
-        setIsEditing(false);
-      } catch (error) {
-        console.error(error);
+      );
+      if (fullname || birthday || profilePicture) {
+        const userData = localStorage.getItem("userData");
+        const parsedData = JSON.parse(userData);
+
+        if (fullname) {
+          parsedData.fullName = fullname;
+        }
+
+        if (profilePicture) {
+          parsedData.profilePicture = profilePicture;
+        }
+
+        localStorage.removeItem("userData");
+        localStorage.setItem("userData", JSON.stringify(parsedData));
       }
+      setIsEditing(false);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -506,10 +537,16 @@ const UserProfile = ({ user }) => {
                       <input
                         type="file"
                         id="prcId"
-                        accept="image/*,.pdf"
-                        onChange={handleFileUpload}
+                        accept="image/*,application/pdf"
+                        onChange={(e) => handleFileUpload(e)}
                         className="user-profile-input"
                       />
+                      {uploadedFile && (
+                        <>
+                          {" "}
+                          <p>{uploadedFile.name}</p>
+                        </>
+                      )}
                     </div>
                   </>
                 )}
