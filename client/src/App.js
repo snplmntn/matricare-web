@@ -120,6 +120,8 @@ function AppContent() {
               <LandingPageConsultant user={parsedUser} />
             </Fragment>
           );
+        case "Ob-gyne Specialist":
+          return <BellyTalk user={parsedUser} />;
         default:
           return <HomePage user={parsedUser} />;
       }
