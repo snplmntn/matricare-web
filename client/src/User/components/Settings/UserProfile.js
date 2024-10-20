@@ -13,6 +13,7 @@ import { getCookie } from "../../../utils/getCookie";
 import "../../styles/settings/userprofile.css";
 
 const UserProfile = ({ user }) => {
+  let { name, username, role } = user.current;
   const API_URL = process.env.REACT_APP_API_URL;
   // const [userId, setUserId] = useState("1");
   const token = getCookie("token");
@@ -322,18 +323,20 @@ const UserProfile = ({ user }) => {
             <FcLock className="UP-icon" />
             Password & Security
           </button>
-          <button
-            className="settings-btn"
-            onClick={() => {
-              setShowBabyDetails(true);
-              setIsEditing(false);
-              setShowPasswordSettings(false);
-              setShowNotifications(false);
-            }}
-          >
-            <FcDecision className="UP-icon" />
-            Set Baby's Details
-          </button>
+          {role === "Patient" && (
+            <button
+              className="settings-btn"
+              onClick={() => {
+                setShowBabyDetails(true);
+                setIsEditing(false);
+                setShowPasswordSettings(false);
+                setShowNotifications(false);
+              }}
+            >
+              <FcDecision className="UP-icon" />
+              Set Baby's Details
+            </button>
+          )}
         </div>
       </div>
 
@@ -375,16 +378,22 @@ const UserProfile = ({ user }) => {
                   {address ? address : "N/A"}
                 </p>
               </div>
-              <div className="user-profile-item">
-                <label>Husband / Partner :</label>
-                <p className="user-profile-detail">
-                  {partner ? partner : "N/A"}
-                </p>
-              </div>
-              <div className="user-profile-item">
-                <label>Phone Number:</label>
-                <p className="user-profile-detail">{number ? number : "N/A"}</p>
-              </div>
+              {role === "Patient" && (
+                <>
+                  <div className="user-profile-item">
+                    <label>Husband / Partner :</label>
+                    <p className="user-profile-detail">
+                      {partner ? partner : "N/A"}
+                    </p>
+                  </div>
+                  <div className="user-profile-item">
+                    <label>Phone Number:</label>
+                    <p className="user-profile-detail">
+                      {number ? number : "N/A"}
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
           )}
 
@@ -433,7 +442,9 @@ const UserProfile = ({ user }) => {
                   <input
                     type="date"
                     id="birthday"
-                    value={new Date(birthday).toISOString().split("T")[0]}
+                    value={
+                      birthday && new Date(birthday).toISOString().split("T")[0]
+                    }
                     onChange={(e) => setBirthday(e.target.value)}
                     placeholder="Select your birthday"
                     className="user-profile-input"
@@ -450,28 +461,32 @@ const UserProfile = ({ user }) => {
                     className="user-profile-input"
                   />
                 </div>
-                <div className="user-profile-input-group">
-                  <label htmlFor="address">Husband / Partner:</label>
-                  <input
-                    type="text"
-                    id="partner"
-                    value={partner}
-                    onChange={(e) => setPartner(e.target.value)}
-                    placeholder="Partner"
-                    className="user-profile-input"
-                  />
-                </div>
-                <div className="user-profile-input-group">
-                  <label htmlFor="phoneNumber">Phone Number:</label>
-                  <input
-                    type="text"
-                    id="number"
-                    value={number}
-                    onChange={(e) => setNumber(e.target.value)}
-                    placeholder="Number"
-                    className="user-profile-input"
-                  />
-                </div>
+                {role === "Patient" && (
+                  <>
+                    <div className="user-profile-input-group">
+                      <label htmlFor="address">Husband / Partner:</label>
+                      <input
+                        type="text"
+                        id="partner"
+                        value={partner}
+                        onChange={(e) => setPartner(e.target.value)}
+                        placeholder="Partner"
+                        className="user-profile-input"
+                      />
+                    </div>
+                    <div className="user-profile-input-group">
+                      <label htmlFor="phoneNumber">Phone Number:</label>
+                      <input
+                        type="text"
+                        id="number"
+                        value={number}
+                        onChange={(e) => setNumber(e.target.value)}
+                        placeholder="Number"
+                        className="user-profile-input"
+                      />
+                    </div>
+                  </>
+                )}
 
                 <div className="user-profile-button-group">
                   <button type="submit" className="user-profile-save-btn">
