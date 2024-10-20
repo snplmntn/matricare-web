@@ -64,13 +64,13 @@ const UserProfile = ({ user }) => {
     }
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fileUrl = URL.createObjectURL(file); // Generates a temporary URL for viewing the file
-      setUploadedFile(fileUrl);
-    }
-  };
+  // const handleFileUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const fileUrl = URL.createObjectURL(file); // Generates a temporary URL for viewing the file
+  //     setUploadedFile(fileUrl);
+  //   }
+  // };
 
   const handleUploadPrcId = async () => {
     if (uploadedFile) {
@@ -311,6 +311,9 @@ const UserProfile = ({ user }) => {
         setLastMenstrualPeriod(
           data.pregnancyStartDate ? data.pregnancyStartDate : ""
         );
+        setIsVerified(data.verified);
+        setPrcIdFile(data.prcId ? data.prcId : null);
+
         console.log(data);
       } catch (error) {
         console.error(error);
@@ -424,15 +427,19 @@ const UserProfile = ({ user }) => {
                   <div className="user-profile-item">
                     <label>Verified Status:</label>
                     <p className="user-profile-detail">
-                      {isVerified ? "Verified" : "In Progress"}
+                      {!prcIdFile
+                        ? "No ID Found"
+                        : isVerified
+                        ? "Verified"
+                        : "In Progress"}
                     </p>
                   </div>
                   <div className="user-profile-item">
                     <label>PRC ID:</label>
-                    {uploadedFile && (
+                    {prcIdFile && (
                       <p className="user-profile-detail">
                         <a
-                          href={uploadedFile}
+                          href={prcIdFile}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -529,7 +536,11 @@ const UserProfile = ({ user }) => {
                         id="verifiedStatus"
                         className="user-profile-input verified-status"
                       >
-                        {isVerified ? "Verified" : "In Progress"}
+                        {!prcIdFile
+                          ? "No ID Found"
+                          : isVerified
+                          ? "Verified"
+                          : "In Progress"}
                       </p>
                     </div>
                     <div className="user-profile-input-group">
@@ -538,12 +549,11 @@ const UserProfile = ({ user }) => {
                         type="file"
                         id="prcId"
                         accept="image/*,application/pdf"
-                        onChange={(e) => handleFileUpload(e)}
+                        onChange={(e) => setUploadedFile(e.target.files[0])}
                         className="user-profile-input"
                       />
                       {uploadedFile && (
                         <>
-                          {" "}
                           <p>{uploadedFile.name}</p>
                         </>
                       )}
