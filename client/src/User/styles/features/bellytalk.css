@@ -481,6 +481,7 @@
 .comment-user-info h4 {
   margin: 0;
   font-size: 16px;
+  display: inline;
 }
 
 .comment-user-info p {
@@ -596,6 +597,11 @@
   padding: 10px 50px;
   font-size: 14px;
   border-radius: 5px;
+}
+
+.verified-icon {
+  color: #6b95e5; /* Green color for the verified icon */
+  margin-left: 4px; /* Space between name and icon */
 }
 
 
