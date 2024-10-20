@@ -61,6 +61,10 @@ const userSchema = new mongoose.Schema(
       enum: ["Patient", "Assistant", "Obgyne", "Ob-gyne Specialist"],
       default: "Patient",
     },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
     assignedTask: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     savedArticle: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],

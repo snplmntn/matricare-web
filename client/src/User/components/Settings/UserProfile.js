@@ -388,23 +388,29 @@ const UserProfile = ({ user }) => {
                   {address ? address : "N/A"}
                 </p>
               </div>
-              {role === "Specialist" && (
+              {role === "Ob-gyne Specialist" && (
                 <>
-              <div className="user-profile-item">
-                <label>Verified Status:</label>
-                <p className="user-profile-detail">
-                  {isVerified ? "Verified" : "In Progress"}
-                </p>
-              </div>
-              <div className="user-profile-item">
-                <label>PRC ID:</label>
-                {uploadedFile && (
-                  <p className="user-profile-detail">
-                  <a href={uploadedFile} target="_blank" rel="noopener noreferrer">View File</a>
-                  </p>
-                )}
-              </div>
-              </>
+                  <div className="user-profile-item">
+                    <label>Verified Status:</label>
+                    <p className="user-profile-detail">
+                      {isVerified ? "Verified" : "In Progress"}
+                    </p>
+                  </div>
+                  <div className="user-profile-item">
+                    <label>PRC ID:</label>
+                    {uploadedFile && (
+                      <p className="user-profile-detail">
+                        <a
+                          href={uploadedFile}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View File
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </>
               )}
               {role === "Patient" && (
                 <>
@@ -434,14 +440,9 @@ const UserProfile = ({ user }) => {
               <form onSubmit={handleUserUpdate}>
                 <div className="user-profile-input-group">
                   <label htmlFor="userName">Full Name:</label>
-                  <input
-                    type="text"
-                    id="userName"
-                    value={fullname}
-                    onChange={(e) => setFullname(e.target.value)}
-                    placeholder="UserName"
-                    className="user-profile-input"
-                  />
+                  <p className="user-profile-input verified-status">
+                    {fullname}
+                  </p>
                 </div>
                 <div className="user-profile-input-group">
                   <label htmlFor="email">Email:</label>
@@ -489,26 +490,29 @@ const UserProfile = ({ user }) => {
                     className="user-profile-input"
                   />
                 </div>
-              {role === "Specialist" && (
+                {role === "Ob-gyne Specialist" && (
                   <>
-                <div className="user-profile-input-group">
-                  <label htmlFor="verifiedStatus">Verified Status:</label>
-                  <p id="verifiedStatus" className="user-profile-input verified-status">
-                    {isVerified ? "Verified" : "In Progress"}
-                  </p>
-                </div>
-                <div className="user-profile-input-group">
-                  <label htmlFor="prcId">PRC ID:</label>
-                  <input
-                    type="file"
-                    id="prcId"
-                    accept="image/*,.pdf"
-                    onChange={handleFileUpload}
-                    className="user-profile-input"
-                  />
-                </div>
-                </>
-              )}
+                    <div className="user-profile-input-group">
+                      <label htmlFor="verifiedStatus">Verified Status:</label>
+                      <p
+                        id="verifiedStatus"
+                        className="user-profile-input verified-status"
+                      >
+                        {isVerified ? "Verified" : "In Progress"}
+                      </p>
+                    </div>
+                    <div className="user-profile-input-group">
+                      <label htmlFor="prcId">PRC ID:</label>
+                      <input
+                        type="file"
+                        id="prcId"
+                        accept="image/*,.pdf"
+                        onChange={handleFileUpload}
+                        className="user-profile-input"
+                      />
+                    </div>
+                  </>
+                )}
                 {role === "Patient" && (
                   <>
                     <div className="user-profile-input-group">

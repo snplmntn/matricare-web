@@ -30,9 +30,13 @@ const comment_post = catchAsync(async (req, res, next) => {
     return next(new AppError("Post not found", 404));
   }
 
+  const commentPopulated = await PostComment.findById(comment._id).populate(
+    "userId"
+  );
+
   return res.status(200).json({
     message: "Post commented Successfully",
-    comment,
+    comment: commentPopulated,
   });
 });
 
