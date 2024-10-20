@@ -52,11 +52,6 @@ function HomePage({ user }) {
     setActiveBellyTalkTab(tab);
   };
 
-  const handleViewResource = (resource) => {
-    // Handle view resource action, e.g., navigate to resource details page
-    console.log(`Viewing resource: ${resource}`);
-  };
-
   useEffect(() => {
     if (!user) window.location.href = "/";
 
@@ -375,10 +370,7 @@ function HomePage({ user }) {
                       <h2>{item.title}</h2>
                       <p>{item.fullTitle}</p>
                       <Link to={`/book/${item._id}`}>
-                        <button
-                          className="view-button"
-                          onClick={() => handleViewResource(item.title)}
-                        >
+                        <button className="view-button">
                           View <span>&gt;</span>
                         </button>
                       </Link>

@@ -43,7 +43,9 @@ export default function Login() {
           ? "/app"
           : role === "Assistant"
           ? "/assistant-landing"
-          : role === "Obgyne" && "/consultant-landing"
+          : role === "Obgyne"
+          ? "/consultant-landing"
+          : role === "Ob-gyne Specialist" && "/belly-talk"
       );
     }, 3000);
   };
