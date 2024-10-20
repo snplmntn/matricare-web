@@ -163,8 +163,6 @@ const PatientUserManagement = () => {
   }, []);
 
   const handleStatusChange = async (userId, newStatus) => {
-    console.log(`User ID: ${userId}, New Status: ${newStatus}`);
-
     const isVerified = newStatus === "Verified" ? true : false;
     try {
       await axios.put(
@@ -377,15 +375,19 @@ const PatientUserManagement = () => {
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>
-                      <select
-                        value={user.verified ? "Verified" : "On Process"}
-                        onChange={(e) =>
-                          handleStatusChange(user._id, e.target.value)
-                        } // Function to handle status change
-                      >
-                        <option value="Verified">Verified</option>
-                        <option value="On Process">On Process</option>
-                      </select>
+                      {user.prcId ? (
+                        <select
+                          value={user.verified ? "Verified" : "On Process"}
+                          onChange={(e) =>
+                            handleStatusChange(user._id, e.target.value)
+                          } // Function to handle status change
+                        >
+                          <option value="Verified">Verified</option>
+                          <option value="On Process">On Process</option>
+                        </select>
+                      ) : (
+                        "No ID Found"
+                      )}
                     </td>
                   </>
                 )}
