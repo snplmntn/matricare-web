@@ -30,6 +30,8 @@ const UserProfile = ({ user }) => {
   const [profileImage, setProfileImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [isVerified, setIsVerified] = useState(false);
 
   //user password
   const [oldPassword, setOldPassword] = useState("");
@@ -58,6 +60,14 @@ const UserProfile = ({ user }) => {
     if (file) {
       const imageUrl = URL.createObjectURL(file);
       setProfileImage(imageUrl);
+    }
+  };
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileUrl = URL.createObjectURL(file); // Generates a temporary URL for viewing the file
+      setUploadedFile(fileUrl);
     }
   };
 
@@ -378,6 +388,24 @@ const UserProfile = ({ user }) => {
                   {address ? address : "N/A"}
                 </p>
               </div>
+              {role === "Specialist" && (
+                <>
+              <div className="user-profile-item">
+                <label>Verified Status:</label>
+                <p className="user-profile-detail">
+                  {isVerified ? "Verified" : "In Progress"}
+                </p>
+              </div>
+              <div className="user-profile-item">
+                <label>PRC ID:</label>
+                {uploadedFile && (
+                  <p className="user-profile-detail">
+                  <a href={uploadedFile} target="_blank" rel="noopener noreferrer">View File</a>
+                  </p>
+                )}
+              </div>
+              </>
+              )}
               {role === "Patient" && (
                 <>
                   <div className="user-profile-item">
@@ -461,6 +489,26 @@ const UserProfile = ({ user }) => {
                     className="user-profile-input"
                   />
                 </div>
+              {role === "Specialist" && (
+                  <>
+                <div className="user-profile-input-group">
+                  <label htmlFor="verifiedStatus">Verified Status:</label>
+                  <p id="verifiedStatus" className="user-profile-input verified-status">
+                    {isVerified ? "Verified" : "In Progress"}
+                  </p>
+                </div>
+                <div className="user-profile-input-group">
+                  <label htmlFor="prcId">PRC ID:</label>
+                  <input
+                    type="file"
+                    id="prcId"
+                    accept="image/*,.pdf"
+                    onChange={handleFileUpload}
+                    className="user-profile-input"
+                  />
+                </div>
+                </>
+              )}
                 {role === "Patient" && (
                   <>
                     <div className="user-profile-input-group">
