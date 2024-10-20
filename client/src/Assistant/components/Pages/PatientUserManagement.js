@@ -340,7 +340,19 @@ const PatientUserManagement = () => {
                 {view === "specialist" && (
                   <>
                     <td>{user.fullName}</td>
-                    <td>{user.prcID}</td>
+                    <td>
+                      {user.prcId ? (
+                        <a
+                          href={user.prcId}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View File
+                        </a>
+                      ) : (
+                        "No ID Found"
+                      )}
+                    </td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>
