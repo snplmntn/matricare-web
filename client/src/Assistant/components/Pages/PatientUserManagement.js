@@ -33,6 +33,7 @@ const PatientUserManagement = () => {
     }
   }, []);
 
+  const [obGyneSpecialist, setObGyneSpecialist] = useState([]);
   const [admins, setAdmins] = useState([
     {
       id: 3,
@@ -58,6 +59,8 @@ const PatientUserManagement = () => {
   const filteredUsers =
     view === "patients"
       ? patients.filter((user) => filter === "all" || user.status === filter)
+      : view === "specialist"
+      ? obGyneSpecialist
       : admins;
 
   const toggleSelectAll = () => {
@@ -145,7 +148,11 @@ const PatientUserManagement = () => {
         const filteredAdmins = response.data.filter(
           (admin) => admin.role === "Assistant" || admin.role === "Obgyne"
         );
+        const filteredObgyneSpecialist = response.data.filter(
+          (user) => user.role === "Ob-gyne Specialist"
+        );
         setAdmins(filteredAdmins);
+        setObGyneSpecialist(filteredObgyneSpecialist);
       } catch (error) {
         console.error(error);
       }

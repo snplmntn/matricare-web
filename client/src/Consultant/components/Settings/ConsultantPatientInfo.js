@@ -22,6 +22,7 @@ const ConsultantPatientInfo = () => {
     phoneNumber: "",
     email: "",
   });
+  const [obGyneSpecialist, setObGyneSpecialist] = useState([]);
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -59,6 +60,8 @@ const ConsultantPatientInfo = () => {
   const filteredUsers =
     view === "patients"
       ? patients.filter((user) => filter === "all" || user.status === filter)
+      : view === "specialist"
+      ? obGyneSpecialist
       : admins;
 
   const toggleSelectAll = () => {
@@ -76,25 +79,6 @@ const ConsultantPatientInfo = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-  };
-
-  const handleEditClick = (userId) => {
-    setEditingUserId(userId);
-  };
-
-  const handleDeleteClick = (userId) => {
-    if (window.confirm("Are you sure you want to delete this user?")) {
-      if (view === "patients") {
-        setPatients(patients.filter((user) => user.id !== userId));
-      } else {
-        setAdmins(admins.filter((user) => user.id !== userId));
-      }
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
-    }
-  };
-
-  const handleSaveClick = () => {
-    setEditingUserId(null);
   };
 
   const handleRowClick = (userId) => {
@@ -166,7 +150,11 @@ const ConsultantPatientInfo = () => {
         const filteredAdmins = response.data.filter(
           (admin) => admin.role === "Assistant" || admin.role === "Obgyne"
         );
+        const filteredObgyneSpecialist = response.data.filter(
+          (user) => user.role === "Ob-gyne Specialist"
+        );
         setAdmins(filteredAdmins);
+        setObGyneSpecialist(filteredObgyneSpecialist);
       } catch (error) {
         console.error(error);
       }
