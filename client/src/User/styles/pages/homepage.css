@@ -575,6 +575,7 @@
 .homepage-library-column p{
   margin-top: 10px;
   font-size: 16px;
+  text-align: center;
 }
 
 .homepage-library-column h2{
@@ -616,7 +617,7 @@
 
 
 .homepage-library-column .view-button {
-  margin-top: 20px;
+  margin-top: 10px;
   padding: 8px 12px;
   margin-left: 270px;
   background-color: transparent;
