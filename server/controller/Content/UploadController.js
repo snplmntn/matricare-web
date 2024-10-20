@@ -107,6 +107,39 @@ const article_picture_post = catchAsync(async (req, res, next) => {
   });
 });
 
+// Upload Profile Picture
+const prcId_post = catchAsync(async (req, res, next) => {
+  const firebaseConfig = {
+    storageBucket: process.env.FIREBASE_STORAGEBUCKET,
+  };
+
+  initializeApp(firebaseConfig);
+  const storage = getStorage();
+
+  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+  const storageRef = ref(
+    storage,
+    `prcId/${req.query.userId}/${req.file.originalname}-${uniqueSuffix}`
+  );
+
+  const metadata = {
+    contentType: req.file.mimetype,
+  };
+
+  const snapshot = await uploadBytesResumable(
+    storageRef,
+    req.file.buffer,
+    metadata
+  );
+
+  const downloadURL = await getDownloadURL(snapshot.ref);
+
+  return res.status(200).json({
+    message: "Profile Picture Successfully Uploaded!",
+    documentLink: downloadURL,
+  });
+});
+
 // Upload Document
 const document_post = catchAsync(async (req, res, next) => {
   const firebaseConfig = {
@@ -144,5 +177,6 @@ module.exports = {
   picture_post,
   belly_talk_picture_post,
   article_picture_post,
+  prcId_post,
   document_post,
 };

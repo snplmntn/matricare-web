@@ -25,19 +25,17 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [menuVisible, setMenuVisible] = useState(true);
   const [commentsCount, setCommentsCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
-  const [savesCount, setSavesCount] = useState(0);  
+  const [savesCount, setSavesCount] = useState(0);
   const API_URL = process.env.REACT_APP_API_URL;
 
   //will enable user to open the input in reply
   const [openReply, setOpenReply] = useState(false);
 
-
   const handleItemClick = () => {
-  setIsMenuOpen(false);
-  console.log("Menu closed:", !isMenuOpen); 
-};
+    setIsMenuOpen(false);
+    console.log("Menu closed:", !isMenuOpen);
+  };
 
-  
   const handlePostLike = async () => {
     if (!token) {
       navigate("/login");
@@ -56,8 +54,8 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           },
         });
         console.log(response);
-        setLikesCount((prevCount) => prevCount + 1); 
-            setIsLikedByMe(true);
+        setLikesCount((prevCount) => prevCount + 1);
+        setIsLikedByMe(true);
       } catch (error) {
         console.error(error);
       }
@@ -74,7 +72,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         );
         console.log(response);
         setLikesCount((prevCount) => prevCount - 1); // Decrement likes count
-            setIsLikedByMe(false);
+        setIsLikedByMe(false);
       } catch (error) {
         console.error(error);
       }
@@ -161,7 +159,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           },
         }
       );
-      setComments([commentForm, ...comments]);
+      setComments([response.data.comment, ...comments]);
     } catch (error) {
       console.error(error);
     }
@@ -211,7 +209,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             },
           }
         );
-        const fetchedComments = response.data.comments.map(comment => ({
+        const fetchedComments = response.data.comments.map((comment) => ({
           ...comment,
           isVerified: comment.userId ? comment.userId.isVerified : false, // Add verification status here
         }));
@@ -221,7 +219,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         console.error(error);
       }
     }
-    
 
     async function fetchSavedPost() {
       try {
@@ -248,7 +245,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
 
   const handleEditPost = () => {
     setIsEditing(true);
-    setNewCaption(post.content); 
+    setNewCaption(post.content);
   };
 
   const handleSaveEdit = async () => {
@@ -291,7 +288,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         src={`${
           post.userId && post.userId.profilePicture
             ? `${post.userId.profilePicture}`
-             : "img/profilePicture.jpg"
+            : "img/profilePicture.jpg"
         }`}
         alt="Avatar"
         className="bellytalk-avatar-overlay"
@@ -300,20 +297,36 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         <div className="bellytalk-post-header">
           <h4>
             {post.fullname}
-            {true && <MdVerified  className="verified-icon" />}
+            {post.userId && post.userId.verified && (
+              <MdVerified className="verified-icon" />
+            )}
           </h4>
           {post.userId && post.userId._id === userID && (
             <>
               <IoEllipsisVertical
                 className="bellytalk-menu-icon"
-                onClick={toggleMenu} 
+                onClick={toggleMenu}
               />
             </>
           )}
           {isMenuOpen && (
             <ul className="bellytalk-meatball-menu">
-              <li onClick={() => { handleEditPost(); handleItemClick(); }}>Edit Post</li>
-              <li onClick={() => { handleDeletePost(); handleItemClick(); }}>Delete Post</li>
+              <li
+                onClick={() => {
+                  handleEditPost();
+                  handleItemClick();
+                }}
+              >
+                Edit Post
+              </li>
+              <li
+                onClick={() => {
+                  handleDeletePost();
+                  handleItemClick();
+                }}
+              >
+                Delete Post
+              </li>
             </ul>
           )}
         </div>
@@ -331,8 +344,15 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
               onChange={(e) => setNewCaption(e.target.value)}
               className="bellytalk-edit-input"
             />
-            <button  className="bellytalk-edit-save" onClick={handleSaveEdit}>Save</button>
-            <button  className="bellytalk-edit-cancel" onClick={() => setIsEditing(false)}>Cancel</button>
+            <button className="bellytalk-edit-save" onClick={handleSaveEdit}>
+              Save
+            </button>
+            <button
+              className="bellytalk-edit-cancel"
+              onClick={() => setIsEditing(false)}
+            >
+              Cancel
+            </button>
           </div>
         ) : (
           <p>{post.content}</p>
@@ -343,27 +363,33 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         )}
         <hr className="bellytalk-divider" />
         <div className="bellytalk-actions">
-            <button className="bellytalk-action-button" onClick={handleReply}>
-                <IoChatbubbleSharp />
-            </button>
-            {commentsCount > 0 && <span className="bellytalk-action-count">{commentsCount}</span>}
-            
-            <IoHeart
-                className={`bellytalk-action-icon`}
-                style={{ color: isLikedByMe ? "#e39fa9" : "#9a6cb4" }}
-                onClick={() => {
-                    setIsLikedByMe(!isLikedByMe);
-                    handlePostLike();
-                }}
-            />
-             {likesCount > 0 && <span className="bellytalk-action-count">{likesCount}</span>}
-            
-            <IoBookmark
-                className={`bellytalk-action-icon`}
-                style={{ color: isSavedByMe ? "#e39fa9" : "#9a6cb4" }}
-                onClick={() => handleSave(post.id)}
-            />
-             {savesCount > 0 && <span className="bellytalk-action-count">{savesCount}</span>}
+          <button className="bellytalk-action-button" onClick={handleReply}>
+            <IoChatbubbleSharp />
+          </button>
+          {commentsCount > 0 && (
+            <span className="bellytalk-action-count">{commentsCount}</span>
+          )}
+
+          <IoHeart
+            className={`bellytalk-action-icon`}
+            style={{ color: isLikedByMe ? "#e39fa9" : "#9a6cb4" }}
+            onClick={() => {
+              setIsLikedByMe(!isLikedByMe);
+              handlePostLike();
+            }}
+          />
+          {likesCount > 0 && (
+            <span className="bellytalk-action-count">{likesCount}</span>
+          )}
+
+          <IoBookmark
+            className={`bellytalk-action-icon`}
+            style={{ color: isSavedByMe ? "#e39fa9" : "#9a6cb4" }}
+            onClick={() => handleSave(post.id)}
+          />
+          {savesCount > 0 && (
+            <span className="bellytalk-action-count">{savesCount}</span>
+          )}
         </div>
 
         {openReply && (
@@ -396,7 +422,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
                 />
                 <div>
                   <h4>{comment.fullName}</h4>
-                  {true && <MdVerified  className="verified-icon" />}
+                  {comment.userId && comment.userId.verified && (
+                    <MdVerified className="verified-icon" />
+                  )}
                   <p>{comment.content}</p>
                 </div>
               </div>

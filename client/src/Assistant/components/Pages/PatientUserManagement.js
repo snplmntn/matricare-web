@@ -162,10 +162,31 @@ const PatientUserManagement = () => {
     fetchAdmins();
   }, []);
 
-  const handleStatusChange = (userId, newStatus) => {
-    // Logic to update the user's status, e.g., via API call or state update
+  const handleStatusChange = async (userId, newStatus) => {
     console.log(`User ID: ${userId}, New Status: ${newStatus}`);
-    // You could update state or send the new status to the backend here
+
+    const isVerified = newStatus === "Verified" ? true : false;
+    try {
+      await axios.put(
+        `${API_URL}/user?userId=${userId}`,
+        {
+          verified: isVerified,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      const updatedSetObgyneSpecialist = obGyneSpecialist.map((specialist) =>
+        specialist._id === userId
+          ? { ...specialist, verified: isVerified }
+          : specialist
+      );
+      setObGyneSpecialist(updatedSetObgyneSpecialist);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -340,14 +361,26 @@ const PatientUserManagement = () => {
                 {view === "specialist" && (
                   <>
                     <td>{user.fullName}</td>
-                    <td>{user.prcID}</td>
+                    <td>
+                      {user.prcId ? (
+                        <a
+                          href={user.prcId}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View File
+                        </a>
+                      ) : (
+                        "No ID Found"
+                      )}
+                    </td>
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>
                       <select
-                        value={user.status}
+                        value={user.verified ? "Verified" : "On Process"}
                         onChange={(e) =>
-                          handleStatusChange(user.id, e.target.value)
+                          handleStatusChange(user._id, e.target.value)
                         } // Function to handle status change
                       >
                         <option value="Verified">Verified</option>

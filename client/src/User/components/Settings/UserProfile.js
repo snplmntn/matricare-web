@@ -31,6 +31,7 @@ const UserProfile = ({ user }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
+  const [prcIdFile, setPrcIdFile] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
 
   //user password
@@ -63,11 +64,34 @@ const UserProfile = ({ user }) => {
     }
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const fileUrl = URL.createObjectURL(file); // Generates a temporary URL for viewing the file
-      setUploadedFile(fileUrl);
+  // const handleFileUpload = (e) => {
+  //   const file = e.target.files[0];
+  //   if (file) {
+  //     const fileUrl = URL.createObjectURL(file); // Generates a temporary URL for viewing the file
+  //     setUploadedFile(fileUrl);
+  //   }
+  // };
+
+  const handleUploadPrcId = async () => {
+    if (uploadedFile) {
+      const formData = new FormData();
+      formData.append("document", uploadedFile);
+
+      try {
+        const response = await axios.post(
+          `${API_URL}/upload/id?userId=${userID}`,
+          formData,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setPrcIdFile(response.data.documentLink);
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
@@ -188,64 +212,71 @@ const UserProfile = ({ user }) => {
   const handleUserUpdate = async (e) => {
     e.preventDefault();
 
-    if (selectedImage) {
+    if (selectedImage && !profilePicture) {
       await handleUploadProfilePicture();
     }
 
-    if (!profilePicture && selectedImage) {
+    if (uploadedFile && !prcIdFile) await handleUploadPrcId();
+
+    if (!prcIdFile && uploadedFile) {
+      return alert("ID upload failed. Please try again.");
+    }
+
+    if (!profilePicture && selectedImage)
       return alert("Image upload failed. Please try again.");
-    } else {
-      const updatedUserForm = {};
-      if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
-      if (profilePicture !== user.profilePicture)
-        updatedUserForm.profilePicture = profilePicture;
 
-      if (birthday !== user.birthdate) {
-        const birthdate = new Date(birthday);
-        updatedUserForm.birthdate = birthdate;
-      }
-      if (email !== user.email) updatedUserForm.email = email;
-      if (phoneNumber !== user.phoneNumber)
-        updatedUserForm.phoneNumber = phoneNumber;
-      if (address !== user.address) updatedUserForm.address = address;
-      if (partner !== user.husband) updatedUserForm.husband = partner;
-      if (number !== user.husbandNumber) updatedUserForm.husbandNumber = number;
+    const updatedUserForm = {};
+    if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
+    if (profilePicture !== user.profilePicture)
+      updatedUserForm.profilePicture = profilePicture;
 
-      if (babyName !== user.babyName) updatedUserForm.babyName = babyName;
-      if (lastMenstrualPeriod !== user.pregnancyStartDate) {
-        const pregnancyStartDate = new Date(lastMenstrualPeriod);
-        updatedUserForm.pregnancyStartDate = pregnancyStartDate;
-      }
+    if (prcIdFile !== user.prcId) updatedUserForm.prcId = prcIdFile;
 
-      try {
-        const response = await axios.put(
-          `${API_URL}/user?userId=${userID}`,
-          updatedUserForm,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        if (fullname || birthday || profilePicture) {
-          const userData = localStorage.getItem("userData");
-          const parsedData = JSON.parse(userData);
+    if (birthday !== user.birthdate) {
+      const birthdate = new Date(birthday);
+      updatedUserForm.birthdate = birthdate;
+    }
+    if (email !== user.email) updatedUserForm.email = email;
+    if (phoneNumber !== user.phoneNumber)
+      updatedUserForm.phoneNumber = phoneNumber;
+    if (address !== user.address) updatedUserForm.address = address;
+    if (partner !== user.husband) updatedUserForm.husband = partner;
+    if (number !== user.husbandNumber) updatedUserForm.husbandNumber = number;
 
-          if (fullname) {
-            parsedData.fullName = fullname;
-          }
+    if (babyName !== user.babyName) updatedUserForm.babyName = babyName;
+    if (lastMenstrualPeriod !== user.pregnancyStartDate) {
+      const pregnancyStartDate = new Date(lastMenstrualPeriod);
+      updatedUserForm.pregnancyStartDate = pregnancyStartDate;
+    }
 
-          if (profilePicture) {
-            parsedData.profilePicture = profilePicture;
-          }
-
-          localStorage.removeItem("userData");
-          localStorage.setItem("userData", JSON.stringify(parsedData));
+    try {
+      const response = await axios.put(
+        `${API_URL}/user?userId=${userID}`,
+        updatedUserForm,
+        {
+          headers: {
+            Authorization: token,
+          },
         }
-        setIsEditing(false);
-      } catch (error) {
-        console.error(error);
+      );
+      if (fullname || birthday || profilePicture) {
+        const userData = localStorage.getItem("userData");
+        const parsedData = JSON.parse(userData);
+
+        if (fullname) {
+          parsedData.fullName = fullname;
+        }
+
+        if (profilePicture) {
+          parsedData.profilePicture = profilePicture;
+        }
+
+        localStorage.removeItem("userData");
+        localStorage.setItem("userData", JSON.stringify(parsedData));
       }
+      setIsEditing(false);
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -280,6 +311,9 @@ const UserProfile = ({ user }) => {
         setLastMenstrualPeriod(
           data.pregnancyStartDate ? data.pregnancyStartDate : ""
         );
+        setIsVerified(data.verified);
+        setPrcIdFile(data.prcId ? data.prcId : null);
+
         console.log(data);
       } catch (error) {
         console.error(error);
@@ -388,23 +422,33 @@ const UserProfile = ({ user }) => {
                   {address ? address : "N/A"}
                 </p>
               </div>
-              {role === "Specialist" && (
+              {role === "Ob-gyne Specialist" && (
                 <>
-              <div className="user-profile-item">
-                <label>Verified Status:</label>
-                <p className="user-profile-detail">
-                  {isVerified ? "Verified" : "In Progress"}
-                </p>
-              </div>
-              <div className="user-profile-item">
-                <label>PRC ID:</label>
-                {uploadedFile && (
-                  <p className="user-profile-detail">
-                  <a href={uploadedFile} target="_blank" rel="noopener noreferrer">View File</a>
-                  </p>
-                )}
-              </div>
-              </>
+                  <div className="user-profile-item">
+                    <label>Verified Status:</label>
+                    <p className="user-profile-detail">
+                      {!prcIdFile
+                        ? "No ID Found"
+                        : isVerified
+                        ? "Verified"
+                        : "In Progress"}
+                    </p>
+                  </div>
+                  <div className="user-profile-item">
+                    <label>PRC ID:</label>
+                    {prcIdFile && (
+                      <p className="user-profile-detail">
+                        <a
+                          href={prcIdFile}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View File
+                        </a>
+                      </p>
+                    )}
+                  </div>
+                </>
               )}
               {role === "Patient" && (
                 <>
@@ -434,14 +478,9 @@ const UserProfile = ({ user }) => {
               <form onSubmit={handleUserUpdate}>
                 <div className="user-profile-input-group">
                   <label htmlFor="userName">Full Name:</label>
-                  <input
-                    type="text"
-                    id="userName"
-                    value={fullname}
-                    onChange={(e) => setFullname(e.target.value)}
-                    placeholder="UserName"
-                    className="user-profile-input"
-                  />
+                  <p className="user-profile-input verified-status">
+                    {fullname}
+                  </p>
                 </div>
                 <div className="user-profile-input-group">
                   <label htmlFor="email">Email:</label>
@@ -489,26 +528,38 @@ const UserProfile = ({ user }) => {
                     className="user-profile-input"
                   />
                 </div>
-              {role === "Specialist" && (
+                {role === "Ob-gyne Specialist" && (
                   <>
-                <div className="user-profile-input-group">
-                  <label htmlFor="verifiedStatus">Verified Status:</label>
-                  <p id="verifiedStatus" className="user-profile-input verified-status">
-                    {isVerified ? "Verified" : "In Progress"}
-                  </p>
-                </div>
-                <div className="user-profile-input-group">
-                  <label htmlFor="prcId">PRC ID:</label>
-                  <input
-                    type="file"
-                    id="prcId"
-                    accept="image/*,.pdf"
-                    onChange={handleFileUpload}
-                    className="user-profile-input"
-                  />
-                </div>
-                </>
-              )}
+                    <div className="user-profile-input-group">
+                      <label htmlFor="verifiedStatus">Verified Status:</label>
+                      <p
+                        id="verifiedStatus"
+                        className="user-profile-input verified-status"
+                      >
+                        {!prcIdFile
+                          ? "No ID Found"
+                          : isVerified
+                          ? "Verified"
+                          : "In Progress"}
+                      </p>
+                    </div>
+                    <div className="user-profile-input-group">
+                      <label htmlFor="prcId">PRC ID:</label>
+                      <input
+                        type="file"
+                        id="prcId"
+                        accept="image/*,application/pdf"
+                        onChange={(e) => setUploadedFile(e.target.files[0])}
+                        className="user-profile-input"
+                      />
+                      {uploadedFile && (
+                        <>
+                          <p>{uploadedFile.name}</p>
+                        </>
+                      )}
+                    </div>
+                  </>
+                )}
                 {role === "Patient" && (
                   <>
                     <div className="user-profile-input-group">
