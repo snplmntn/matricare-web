@@ -29,6 +29,7 @@ import Article from "./User/components/Library/Article";
 import SavedArticle from "./User/components/Pages/SavedArticle";
 import Library from "./User/components/Features/Library";
 import LibrarySidebar from "./User/components/Features/LibrarySidebar";
+import Undefined from "./User/components/Pages/Undefined";
 
 // Assistant Components
 import LandingPageAssistant from "./Assistant/components/Pages/LandingPageAssistant";
@@ -537,6 +538,7 @@ function AppContent() {
             )
           }
         />
+        <Route path="*" element={<Undefined />} />
       </Routes>
       <Footer />
     </div>
