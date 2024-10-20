@@ -1,24 +1,22 @@
 .bellytalk-container {
   display: flex;
-  background-color: #f2eeee !important;
+  background-color: #9a6cb4cd !important;
   height: 100vh;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.bellytalk-divider {
-  border: 0;
-  height: 1px;
-  background: #ccc;
-  margin: 20px 10px;
-}
-
 .bellytalk-main-content {
   flex: 1;
-  padding: 20px;
   overflow-y: auto;
   position: relative;
+  margin: 0;
+  background-color: #ffffff;
+  margin-top: -20px;
+  width: 85%;
+  margin-left: 140px;
 }
+
 
 .bellytalk-main-content::-webkit-scrollbar {
   display: none;
@@ -40,6 +38,26 @@
   color: #7c459c;
   margin-left: 200px;
 }
+
+.BT-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 100px;
+  margin-right: -150px;
+  color: #7c459c;
+}
+
+.BT-profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7c459c;
+  position: absolute; /* Ensure positioning is set */
+  right: 120px;        /* Use right for positioning */
+  font-size: 40px;
+}
+
 
 .bellytalk-icons {
   display: flex;
@@ -112,9 +130,9 @@
 
 .sharebox {
   position: relative;
-  margin-top: 30px;
+  margin-top: 70px;
   margin-bottom: 20px;
-  margin-left: 250px;
+  margin-left: 100px;
 }
 
 .sharebox-container {
@@ -288,7 +306,7 @@
   max-width: 100%;
   height: auto;
   border-radius: 5px;
-  width: 800px;
+  width: 500px;
 }
 
 /* feed */
@@ -300,7 +318,7 @@
   gap: 40px;
   margin-top: 50px;
   width: 50% !important;
-  margin-left: 250px !important;
+  margin-left: 150px !important;
 }
 
 .bellytalk-feed-item {
@@ -395,7 +413,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 700px;
+  margin-left: 600px;
 }
 
 .bellytalk-action-button {
@@ -476,12 +494,12 @@
 .filter-section {
   position: absolute;
   width: 420px;
-  left: 1220px;
+  left: 1100px;
   top: 0px;
 }
 
 .filter-container {
-  background-color: #f9f9f9;
+  background-color: #ffffff;
   height: 400px;
   padding: 10px;
   border-radius: 5px;
@@ -546,7 +564,7 @@
 /* edit post */
 
 .bellytalk-edit-input {
-  width: 100%;
+  width: 80%;
   padding: 12px;
   border: none;
   border-radius: 4px;
@@ -566,7 +584,8 @@
   padding: 10px 50px;
   font-size: 14px;
   border-radius: 5px;
-  margin-left: 550px;
+  margin-left: 380px;
+  margin-bottom: 20px;
 }
 
 .bellytalk-edit-cancel {
