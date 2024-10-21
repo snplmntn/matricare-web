@@ -14,41 +14,6 @@ const AppointmentAssistant = () => {
   const [branchLocation, setBranchLocation] = useState("");
 
   useEffect(() => {
-    const savedUpcomingAppointments = [
-      {
-        appointmentDate: "October 01, 2024",
-        appointmentTime: "2:00 PM",
-        name: "John Doe",
-        phoneNumber: "123-456-7890",
-        branchLocation: "Mary Chiles, Sampaloc Manila",
-        appointmentType: "Advise by the Doctor",
-      },
-      {
-        appointmentDate: "October 11, 2024",
-        appointmentTime: "12:00 PM",
-        name: "Bea Rosal",
-        phoneNumber: "987-654-3210",
-        branchLocation: "Mary Chiles, Sampaloc Manila",
-        appointmentType: "Monthly Check up",
-      },
-      {
-        appointmentDate: "October 12, 2024",
-        appointmentTime: "5:00 PM",
-        name: "Johanna Tulalian",
-        phoneNumber: "987-654-3210",
-        branchLocation: "Grace Medical Center, Bulacan",
-        appointmentType: "Advise by the Doctor",
-      },
-      {
-        appointmentDate: "October 01, 2024",
-        appointmentTime: "10:00 AM",
-        name: "Nathaniel MAtias",
-        phoneNumber: "987-654-3210",
-        branchLocation: "Family Care Tungko, Bulacan",
-        appointmentType: "Monthly Check up",
-      },
-    ];
-
     const fetchAppointment = async () => {
       try {
         const response = await axios.get(`${API_URL}/appointment`, {

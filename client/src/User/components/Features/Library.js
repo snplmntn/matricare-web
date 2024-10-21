@@ -89,17 +89,6 @@ const Library = () => {
     fetchSavedArticle();
   }, []);
 
-  // const handleBookClick = (book) => {
-  //   const updatedLastRead = [
-  //     book,
-  //     ...lastRead.filter((b) => b._id !== book._id),
-  //   ];
-  //   setLastRead(updatedLastRead);
-
-  //   // Save the updated last read list to local storage
-  //   localStorage.setItem("lastRead", JSON.stringify(updatedLastRead));
-  // };
-
   const handleBookClick = (book) => {
     const updatedLastRead = [
       book,

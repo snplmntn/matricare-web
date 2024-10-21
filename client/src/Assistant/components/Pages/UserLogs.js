@@ -36,25 +36,7 @@ const ConsultantLogs = () => {
     }
   }, []);
 
-  const [admins, setAdmins] = useState([
-    {
-      id: 3,
-      photo: "img/topic1.jpg",
-      name: "Dra. Donna Jill A. Tungol",
-      mobile: "123-456-7890",
-      email: "john@example.com",
-      role: "Doctor",
-    },
-    {
-      id: 4,
-      photo: "img/topic1.jpg",
-      name: "Anna Taylor",
-      mobile: "123-456-7890",
-      email: "john@example.com",
-      role: "Assistant",
-    },
-    // Add more admins here
-  ]);
+  const [admins, setAdmins] = useState([]);
 
   const [showForm, setShowForm] = useState(false); // State for form visibility
 

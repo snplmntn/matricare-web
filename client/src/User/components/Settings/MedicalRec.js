@@ -30,37 +30,13 @@ const MedicalRec = ({ user }) => {
   const [newDocFile, setNewDocFile] = useState(null);
 
   //STATE FOR STORING DATAS
-  const [documents, setDocuments] = useState([
-    {
-      name: "ECG Test Report",
-      date: "2024-02-25",
-      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
-    },
-    {
-      name: "Medical History",
-      date: "2024-03-15",
-      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
-    },
-  ]);
+  const [documents, setDocuments] = useState([]);
 
-  const [obstetricHistory, setObstetricHistory] = useState([
-    { date: "2024-02-25", text: "Miscarriage" },
-    { date: "2024-02-25", text: "Ectopic" },
-  ]);
+  const [obstetricHistory, setObstetricHistory] = useState([]);
 
-  const [medicalHistory, setMedicalHistory] = useState([
-    { diagnosis: "Asthma", status: "Active", duration: "From last 4 Months" },
-    {
-      diagnosis: "Hypertension",
-      status: "Inactive",
-      duration: "From last 2 Years",
-    },
-  ]);
+  const [medicalHistory, setMedicalHistory] = useState([]);
 
-  const [surgicalHistory, setSurgicalHistory] = useState([
-    { date: "2024-02-25", text: "Appendicitis" },
-    { date: "2024-02-25", text: "Tuberculosis" },
-  ]);
+  const [surgicalHistory, setSurgicalHistory] = useState([]);
   const conceptionDate =
     patient && patient.pregnancyStartDate
       ? moment(patient.pregnancyStartDate)

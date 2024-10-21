@@ -4,18 +4,8 @@ import { IoAddCircleOutline, IoNotifications } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 
-const initialAppointments = [
-  {
-    date: "Sept 4, 10 am",
-    patientName: "Ella Cruz",
-    location: "Mary Chiles",
-    category: "Advice by the Doctor",
-    status: "pending",
-  },
-]
-
 const AppointmentConsultant = () => {
-  const [appointments, setAppointments] = useState(initialAppointments);
+  const [appointments, setAppointments] = useState([]);
   const [activeTab, setActiveTab] = useState("upcoming");
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [newAppointment, setNewAppointment] = useState({
@@ -28,28 +18,68 @@ const AppointmentConsultant = () => {
     status: "Pending",
   });
   const [user, setUser] = useState({});
-  
 
   const availableTimes = {
-    'Mary Chiles, Sampaloc': {
-      Monday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM', '12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM'],
-      Saturday: ['02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'],
+    "Mary Chiles, Sampaloc": {
+      Monday: [
+        "09:00 AM",
+        "09:30 AM",
+        "10:00 AM",
+        "10:30 AM",
+        "11:00 AM",
+        "11:30 AM",
+        "12:00 PM",
+        "12:30 PM",
+        "01:00 PM",
+        "01:30 PM",
+        "02:00 PM",
+        "02:30 PM",
+      ],
+      Saturday: [
+        "02:00 PM",
+        "02:30 PM",
+        "03:00 PM",
+        "03:30 PM",
+        "04:00 PM",
+        "04:30 PM",
+      ],
     },
-    'Grace Medical Center': {
-      Tuesday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
-      Friday: ['03:00 PM', '03:30 PM', '04:00 PM', '04:30 PM'],
-      Sunday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
+    "Grace Medical Center": {
+      Tuesday: [
+        "09:00 AM",
+        "09:30 AM",
+        "10:00 AM",
+        "10:30 AM",
+        "11:00 AM",
+        "11:30 AM",
+      ],
+      Friday: ["03:00 PM", "03:30 PM", "04:00 PM", "04:30 PM"],
+      Sunday: [
+        "09:00 AM",
+        "09:30 AM",
+        "10:00 AM",
+        "10:30 AM",
+        "11:00 AM",
+        "11:30 AM",
+      ],
     },
-    'Family Care Tungko': {
-      Friday: ['01:00 PM', '01:30 PM', '02:00 PM', '02:30 PM'],
-      Saturday: ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM'],
+    "Family Care Tungko": {
+      Friday: ["01:00 PM", "01:30 PM", "02:00 PM", "02:30 PM"],
+      Saturday: [
+        "09:00 AM",
+        "09:30 AM",
+        "10:00 AM",
+        "10:30 AM",
+        "11:00 AM",
+        "11:30 AM",
+      ],
     },
   };
 
   // Function to get the day of the week from the selected date
   const getDayOfWeek = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleString('en-US', { weekday: 'long' });
+    return date.toLocaleString("en-US", { weekday: "long" });
   };
 
   // Get available time options based on selected location and date
@@ -61,7 +91,7 @@ const AppointmentConsultant = () => {
     }
     return [];
   };
-  
+
   const [timeOptions, setTimeOptions] = useState([]);
 
   // Handle form changes
@@ -70,15 +100,20 @@ const AppointmentConsultant = () => {
     setNewAppointment((prev) => ({ ...prev, [name]: value }));
 
     // Check if location or date is changed
-    if (name === 'location' || name === 'date') {
-      checkAvailability(newAppointment.location, name === 'date' ? value : newAppointment.date);
+    if (name === "location" || name === "date") {
+      checkAvailability(
+        newAppointment.location,
+        name === "date" ? value : newAppointment.date
+      );
     }
   };
 
   // Function to check availability based on location and selected date
   const checkAvailability = (location, date) => {
     if (location && date) {
-      const selectedDay = new Date(date).toLocaleString('en-US', { weekday: 'long' });
+      const selectedDay = new Date(date).toLocaleString("en-US", {
+        weekday: "long",
+      });
       const availableDays = availableTimes[location];
 
       // Check if the selected date's day is in the available days for the selected location
@@ -91,7 +126,6 @@ const AppointmentConsultant = () => {
       }
     }
   };
-
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
@@ -143,7 +177,6 @@ const AppointmentConsultant = () => {
   const postAppointments = appointments.filter(
     (appointment) => appointment.status === "Confirmed"
   );
-
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -359,7 +392,6 @@ const AppointmentConsultant = () => {
                     </option>
                   ))}
                 </select>
-
 
                 <button
                   type="button"

@@ -6,31 +6,6 @@ import "../../styles/pages/notification.css"; // Import the CSS file
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 
-const sampleNotifications = [
-  {
-    sender: "MatriCare",
-    message: "New Article has been uploaded. Check It Out!",
-    timestamp: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
-    type: "info",
-    photo: "img/LOGO.png",
-  },
-  {
-    sender: "Dra. Donna",
-    phonenumber: "+63 901 2345 678",
-    message: "You have new test results available.",
-    timestamp: new Date().toISOString(),
-    type: "info",
-    photo: "img/topic1.jpg",
-  },
-  {
-    sender: "MatriCare",
-    message: "Your laboratory result is ready for pick up.",
-    timestamp: new Date(Date.now() - 7200000).toISOString(), // 2 hours ago
-    type: "info",
-    photo: "img/LOGO.png",
-  },
-];
-
 function Notifications() {
   const userID = getCookie("userID");
   const token = getCookie("token");
