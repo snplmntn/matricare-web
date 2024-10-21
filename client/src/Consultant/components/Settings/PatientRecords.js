@@ -4,13 +4,14 @@ import "../../styles/settings/patientrecords.css";
 import { FaMobileAlt, FaFileAlt, FaFilePdf } from "react-icons/fa";
 import moment from "moment";
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
 import { FcPrint, FcDownload } from "react-icons/fc";
 
 const PatientRecords = () => {
   const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
   const { userId } = useParams();
   const token = getCookie("token");
   const userID = getCookie("userID");
@@ -474,12 +475,16 @@ const PatientRecords = () => {
     closeModal();
   };
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="patient-records-container">
       <main className="patient-records-main-content">
-        <Link to="/consultant-patientsinfo" className="PR-back-button">
+        <div onClick={handleBack} className="PR-back-button">
           <IoMdArrowRoundBack />
-        </Link>
+        </div>
         <div className="PR-label">
           <h2>Patients</h2>
         </div>

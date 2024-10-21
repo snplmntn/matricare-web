@@ -234,11 +234,15 @@ const BellyTalk = ({ user }) => {
     navigate("/userprofile");
   };
 
+  const handleBackButton = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="bellytalk-container">
       <div className="bellytalk-top-bar">
         {user.current && user.current.role !== "Ob-gyne Specialist" && (
-          <button className="BT-back-button">
+          <button onClick={handleBackButton} className="BT-back-button">
             <IoArrowBack size={30} />
           </button>
         )}
