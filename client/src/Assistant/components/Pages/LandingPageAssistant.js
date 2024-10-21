@@ -204,38 +204,6 @@ const LandingPageAssistant = ({}) => {
     "December",
   ];
 
-  const patients = [
-    {
-      id: 1,
-      name: "Jane Doe",
-      branch: "Manila",
-      appointmentDate: "September 12, 2024",
-      profilePic: "img/LOGO.png",
-    },
-    {
-      id: 2,
-      name: "Bella Smith",
-      branch: "Bulacan 1",
-      appointmentDate: "September 12, 2024",
-      profilePic: "img/LOGO.png",
-    },
-    {
-      id: 3,
-      name: "Ella Cruz",
-      branch: "Bulacan 2",
-      appointmentDate: "September 22, 2024",
-      profilePic: "img/LOGO.png",
-    },
-    {
-      id: 4,
-      name: "Ella Cruz",
-      branch: "Bulacan 2",
-      appointmentDate: "September 28, 2024",
-      profilePic: "img/LOGO.png",
-    },
-    // Add more patients as needed
-  ];
-
   const today = new Date();
   const todayStr = today.toLocaleDateString("en-GB", {
     day: "2-digit",
@@ -266,13 +234,7 @@ const LandingPageAssistant = ({}) => {
   }, {});
 
   // Sample library items
-  const [libraryItems, setLibraryItems] = useState([
-    { id: 1, title: "Trimesters", picture: "img/topic1.jpg" },
-    { id: 2, title: "Weekly Pregnancy", picture: "img/topic2.jpg" },
-    { id: 3, title: "Pregnancy Discharge", picture: "img/topic3.jpg" },
-    { id: 4, title: "Pregnancy Symptoms", picture: "img/topic4.jpg" },
-    { id: 5, title: "Dietary Planning", picture: "img/topic5.jpg" },
-  ]);
+  const [libraryItems, setLibraryItems] = useState([]);
 
   const sliderSettings = {
     dots: true,
