@@ -237,9 +237,11 @@ const BellyTalk = ({ user }) => {
   return (
     <div className="bellytalk-container">
       <div className="bellytalk-top-bar">
-        <button className="BT-back-button">
-          <IoArrowBack size={30} />
-        </button>
+        {user.current && user.current.role !== "Ob-gyne Specialist" && (
+          <button className="BT-back-button">
+            <IoArrowBack size={30} />
+          </button>
+        )}
         <div className="bellytalk-title-logo">BellyTalk</div>
         <div className="bellytalk-icons">
           <button
@@ -262,7 +264,9 @@ const BellyTalk = ({ user }) => {
           />
         </div>
         <div onClick={handleOpenUserProfile} className="BT-profile-button">
-          <IoPersonCircle />
+          {user.current && user.current.role === "Ob-gyne Specialist" && (
+            <IoPersonCircle />
+          )}
         </div>
       </div>
 
