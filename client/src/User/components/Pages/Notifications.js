@@ -113,7 +113,7 @@ function Notifications() {
                         : notification.senderId &&
                           notification.senderId.profilePicture
                         ? notification.senderId.profilePicture
-                        : "img/topic1.jpg"
+                        : "img/profilePicture.jpg"
                     }
                     alt={notification.senderName}
                     className="sender-photo"
@@ -161,7 +161,7 @@ function Notifications() {
                   : selectedNotification.senderId &&
                     selectedNotification.senderId.profilePicture
                   ? selectedNotification.senderId.profilePicture
-                  : "img/topic1.jpg"
+                  : "img/profilePicture.jpg"
               }
               alt={selectedNotification.senderName}
               className="modal-sender-photo"
