@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../../styles/pages/login.css";
@@ -17,7 +17,9 @@ export default function Login() {
   const [email, setEmail] = useState(""); // Store the user's email
   const [resendMessage, setResendMessage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCode, setVerificationCode] = useState(
+    new Array(6).fill("")
+  );
   const [authMessage, setAuthMessage] = useState("");
   const [loginToken, setLoginToken] = useState("");
   const [verifyToken, setVerifyToken] = useState("");
@@ -27,6 +29,41 @@ export default function Login() {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies();
+
+  const inputRefs = useRef([]); // Array to store input references
+
+  const handleInputChange = (e, index) => {
+    const { value } = e.target;
+    const newCode = [...verificationCode];
+
+    // Allow only valid hexadecimal characters (0-9, A-F)
+    if (/^[0-9A-Fa-f]$/.test(value)) {
+      newCode[index] = value.toUpperCase(); // Store uppercase for consistency
+      setVerificationCode(newCode);
+
+      // Move to the next input if not the last input
+      if (index < inputRefs.current.length - 1 && value) {
+        inputRefs.current[index + 1].focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    const newCode = [...verificationCode];
+
+    if (e.key === "Backspace") {
+      if (newCode[index]) {
+        // Clear the current input
+        newCode[index] = "";
+        setVerificationCode(newCode);
+      } else if (index > 0) {
+        // Move to the previous input and clear that input
+        inputRefs.current[index - 1].focus();
+        newCode[index - 1] = "";
+        setVerificationCode(newCode);
+      }
+    }
+  };
 
   const { username, password } = formData;
 
@@ -60,11 +97,6 @@ export default function Login() {
       return;
     }
 
-    if (userTrustedDevice.includes(userID)) {
-      setAuthMessage("This verification code has already been used.");
-      return;
-    }
-
     const expiryTimestamp = parseInt(getCookie("expiryTimestamp"), 10);
     const currentTimestamp = Date.now();
 
@@ -73,7 +105,9 @@ export default function Login() {
       return;
     }
 
-    if (verifyToken === verificationCode.toUpperCase()) {
+    const joinedCode = verificationCode.join("");
+
+    if (verifyToken === joinedCode.toUpperCase()) {
       setAuthMessage("Verification Successful!");
 
       if (rememberDevice) {
@@ -186,9 +220,9 @@ export default function Login() {
   const censorEmail = (email) => {
     const [name, domain] = email.split("@");
     const visibleNamePart = name.slice(0, 3);
-    const censoredNamePart = "*".repeat(Math.max(name.length - 3, 0)); // Ensure the repeat count is not negative
+    const censoredNamePart = "*".repeat(Math.max(name.length - 3, 0));
     const visibleDomainPart = domain.slice(0, 1);
-    const censoredDomainPart = "*".repeat(Math.max(domain.length - 1, 0)); // Ensure the repeat count is not negative
+    const censoredDomainPart = "*".repeat(Math.max(domain.length - 1, 0));
     return `${visibleNamePart}${censoredNamePart}@${visibleDomainPart}${censoredDomainPart}`;
   };
 
@@ -298,11 +332,9 @@ export default function Login() {
                 className="Authentication__CodeInput"
                 maxLength={1}
                 value={verificationCode[index] || ""}
-                onChange={(e) => {
-                  const newCode = (verificationCode || "").toString().split("");
-                  newCode[index] = e.target.value; // Allow any character input
-                  setVerificationCode(newCode.join(""));
-                }}
+                onChange={(e) => handleInputChange(e, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                ref={(input) => (inputRefs.current[index] = input)}
               />
             ))}
           </div>
