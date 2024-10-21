@@ -211,9 +211,9 @@ function AppContent() {
         <Route
           path="/medicalrecords"
           element={
-            token && role === "User" ? (
+            token && role === "Patient" ? (
               <MedicalRec user={parsedUser} />
-            ) : role !== "User" ? (
+            ) : role !== "Patient" ? (
               <Undefined />
             ) : (
               <>
@@ -240,9 +240,9 @@ function AppContent() {
         <Route
           path="/duedate-calculator"
           element={
-            token && role === "User" ? (
+            token && role === "Patient" ? (
               <DateCalculator />
-            ) : role !== "User" ? (
+            ) : role !== "Patient" ? (
               <Undefined />
             ) : (
               <>
