@@ -188,16 +188,12 @@ function AppContent() {
         {/* User Routes */}
         <Route
           path="/app"
-          element={
-            token ? (
-              <HomePage user={parsedUser} />
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
-          }
+          element={getPage(
+            <>
+              <Header1 />
+              <Login />
+            </>
+          )}
         />
         <Route
           path="/userprofile"
@@ -215,8 +211,10 @@ function AppContent() {
         <Route
           path="/medicalrecords"
           element={
-            token ? (
+            token && role === "User" ? (
               <MedicalRec user={parsedUser} />
+            ) : role !== "User" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -239,7 +237,21 @@ function AppContent() {
           }
         />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
-        <Route path="/duedate-calculator" element={<DateCalculator />} />
+        <Route
+          path="/duedate-calculator"
+          element={
+            token && role === "User" ? (
+              <DateCalculator />
+            ) : role !== "User" ? (
+              <Undefined />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
         <Route
           path="/book/:bookId"
           element={
@@ -323,11 +335,13 @@ function AppContent() {
         <Route
           path="/consultant-landing"
           element={
-            token ? (
+            token && role === "Obgyne" ? (
               <>
                 <ConsultantSidebar />{" "}
                 <LandingPageConsultant user={parsedUser} />
               </>
+            ) : role !== "Obgyne" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -339,10 +353,12 @@ function AppContent() {
         <Route
           path="/manageBellytalk"
           element={
-            token ? (
+            token && role === "Obgyne" ? (
               <>
                 <ConsultantSidebar /> <ManageBellyTalk user={parsedUser} />
               </>
+            ) : role !== "Obgyne" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -354,8 +370,10 @@ function AppContent() {
         <Route
           path="/consultant-records"
           element={
-            token ? (
+            token && role === "Obgyne" ? (
               <ConsultantRecord />
+            ) : role !== "Obgyne" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -367,10 +385,12 @@ function AppContent() {
         <Route
           path="/consultant-patientsinfo"
           element={
-            token ? (
+            token && role === "Obgyne" ? (
               <>
                 <ConsultantSidebar /> <ConsultantPatientInfo />
               </>
+            ) : role !== "Obgyne" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -382,10 +402,12 @@ function AppContent() {
         <Route
           path="/consultant-appointment"
           element={
-            token ? (
+            token && role === "Obgyne" ? (
               <>
                 <ConsultantSidebar /> <AppointmentConsultant />
               </>
+            ) : role !== "Obgyne" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -397,8 +419,10 @@ function AppContent() {
         <Route
           path="/consultant-notification"
           element={
-            token ? (
+            token && role === "Obgyne" ? (
               <Notifications />
+            ) : role !== "Obgyne" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -407,11 +431,14 @@ function AppContent() {
             )
           }
         />
+        {/* Consultant and Assistant  */}
         <Route
           path="/patient-records/:userId"
           element={
-            token ? (
+            token && (role !== "Obgyne" || role !== "Assistant") ? (
               <PatientRecords />
+            ) : role !== "Obgyne" || role !== "Assistant" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -423,10 +450,12 @@ function AppContent() {
         <Route
           path="/library-consultant"
           element={
-            token ? (
+            token && role === "Obgyne" ? (
               <>
                 <ConsultantSidebar /> <LibraryConsultant />
               </>
+            ) : role !== "Obgyne" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -436,13 +465,16 @@ function AppContent() {
           }
         />
 
+        {/* Assistant Routes  */}
         <Route
           path="/assistant-landing"
           element={
-            token ? (
+            token && role === "Assistant" ? (
               <>
                 <AssistantSidebar /> <LandingPageAssistant user={parsedUser} />
               </>
+            ) : role !== "Assistant" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -455,10 +487,12 @@ function AppContent() {
         <Route
           path="/user-logs"
           element={
-            token ? (
+            token && role === "Assistant" ? (
               <>
                 <AssistantSidebar /> <UserLogs />{" "}
               </>
+            ) : role !== "Assistant" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -470,10 +504,12 @@ function AppContent() {
         <Route
           path="/library-assistant"
           element={
-            token ? (
+            token && role === "Assistant" ? (
               <>
                 <AssistantSidebar /> <LibraryAssistant />{" "}
               </>
+            ) : role !== "Assistant" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -485,8 +521,10 @@ function AppContent() {
         <Route
           path="/assistant-notification"
           element={
-            token ? (
+            token && role === "Assistant" ? (
               <Notifications />
+            ) : role !== "Assistant" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -498,10 +536,12 @@ function AppContent() {
         <Route
           path="/admin-profile"
           element={
-            token ? (
+            token && role === "Assistant" ? (
               <>
                 <AssistantSidebar /> <PatientUserManagement />
               </>
+            ) : role !== "Assistant" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
@@ -513,23 +553,12 @@ function AppContent() {
         <Route
           path="/appointment-assistant"
           element={
-            token ? (
+            token && role === "Assistant" ? (
               <>
                 <AssistantSidebar /> <AppointmentAssistant />
               </>
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
-          }
-        />
-        <Route
-          path="/patient-records/:userId"
-          element={
-            token ? (
-              <PatientRecords />
+            ) : role !== "Assistant" ? (
+              <Undefined />
             ) : (
               <>
                 <Header1 />
