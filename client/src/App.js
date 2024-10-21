@@ -313,24 +313,6 @@ function AppContent() {
           }
         />
 
-        {/* Specific Library Items */}
-        {Array.from({ length: 11 }, (_, index) => (
-          <Route
-            key={index}
-            path={`/library-item${index + 1}`}
-            element={
-              <>
-                {" "}
-                <LibrarySidebar />{" "}
-                {React.createElement(
-                  require(`./User/components/Library/Library${index + 1}`)
-                    .default
-                )}{" "}
-              </>
-            }
-          />
-        ))}
-
         {/* CONSULTANT Routes */}
         <Route
           path="/consultant-landing"
