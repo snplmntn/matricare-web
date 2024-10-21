@@ -26,7 +26,7 @@ const BellyTalk = ({ user }) => {
   const [allPost, setAllPost] = useState([]);
   const API_URL = process.env.REACT_APP_API_URL;
   const [newPostText, setNewPostText] = useState("");
-  const [imgLink, setImgLink] = useState("");
+  // const [imgLink, setImgLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
@@ -66,7 +66,6 @@ const BellyTalk = ({ user }) => {
   };
 
   const handleNextStep = async () => {
-    setImgLink("");
     if (selectedImage) {
       const formData = new FormData();
       formData.append("picture", selectedImage);
@@ -81,7 +80,7 @@ const BellyTalk = ({ user }) => {
             },
           }
         );
-        setImgLink(response.data.pictureLink);
+        return response.data.pictureLink;
       } catch (error) {
         console.error(error);
       }
@@ -96,40 +95,43 @@ const BellyTalk = ({ user }) => {
       return;
     }
 
+    let imgLink;
+
     if (selectedImage) {
-      await handleNextStep();
-    }
-
-    if (!imgLink && selectedImage) {
-      setIsPosting(false);
-      alert("Image upload failed. Please try again.");
-      return;
-    } else {
-      const newPost = {
-        userId: userID,
-        fullname: user.current.name,
-        content: newPostText,
-        address: "Manila City",
-        picture: imgLink,
-      };
-
-      try {
-        setIsPosting(true);
-        const response = await axios.post(`${API_URL}/post/`, newPost, {
-          headers: {
-            Authorization: token,
-          },
-        });
-
-        setPosts([response.data.savedPost, ...posts]);
-        setAllPost([response.data.savedPost, ...allPost]);
-        setIsModalOpen(false);
-      } catch (error) {
-        console.error(error);
+      // Wait for handleNextStep to complete and get the image link
+      imgLink = await handleNextStep();
+      if (!imgLink) {
+        setIsPosting(false);
+        alert("Image upload failed. Please try again.");
+        return;
       }
     }
 
+    const newPost = {
+      userId: userID,
+      fullname: user.current.name,
+      content: newPostText,
+      address: "Manila City",
+      picture: imgLink,
+    };
+
+    try {
+      setIsPosting(true);
+      const response = await axios.post(`${API_URL}/post/`, newPost, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setPosts([response.data.savedPost, ...posts]);
+      setAllPost([response.data.savedPost, ...allPost]);
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error(error);
+    }
+
     setNewPostText("");
+    // setImgLink("");
     setSelectedImage(null);
     setImagePreview(null);
     setSuccessMessage("Post Submitted");
@@ -234,11 +236,15 @@ const BellyTalk = ({ user }) => {
     navigate("/userprofile");
   };
 
+  const handleBackButton = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="bellytalk-container">
       <div className="bellytalk-top-bar">
         {user.current && user.current.role !== "Ob-gyne Specialist" && (
-          <button className="BT-back-button">
+          <button onClick={handleBackButton} className="BT-back-button">
             <IoArrowBack size={30} />
           </button>
         )}

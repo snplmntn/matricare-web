@@ -29,7 +29,7 @@ const UserProfile = ({ user }) => {
   const [number, setNumber] = useState("");
   const [profileImage, setProfileImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [profilePicture, setProfilePicture] = useState(null);
+  // const [profilePicture, setProfilePicture] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
   const [prcIdFile, setPrcIdFile] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
@@ -88,7 +88,7 @@ const UserProfile = ({ user }) => {
             },
           }
         );
-        setPrcIdFile(response.data.documentLink);
+        return response.data.documentLink;
       } catch (err) {
         console.error(err);
       }
@@ -111,7 +111,7 @@ const UserProfile = ({ user }) => {
             },
           }
         );
-        setProfilePicture(response.data.pictureLink);
+        return response.data.pictureLink;
       } catch (err) {
         console.error(err);
       }
@@ -212,18 +212,19 @@ const UserProfile = ({ user }) => {
   const handleUserUpdate = async (e) => {
     e.preventDefault();
 
+    let profilePicture, prcIdFile;
     if (selectedImage && !profilePicture) {
-      await handleUploadProfilePicture();
-    }
-
-    if (uploadedFile && !prcIdFile) await handleUploadPrcId();
-
-    if (!prcIdFile && uploadedFile) {
-      return alert("ID upload failed. Please try again.");
+      profilePicture = await handleUploadProfilePicture();
     }
 
     if (!profilePicture && selectedImage)
       return alert("Image upload failed. Please try again.");
+
+    if (uploadedFile && !prcIdFile) prcIdFile = await handleUploadPrcId();
+
+    if (!prcIdFile && uploadedFile) {
+      return alert("ID upload failed. Please try again.");
+    }
 
     const updatedUserForm = {};
     if (fullname !== user.fullName) updatedUserForm.fullName = fullname;
