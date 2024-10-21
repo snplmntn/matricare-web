@@ -7,7 +7,7 @@ import {
   FcOldTimeCamera,
   FcDecision,
 } from "react-icons/fc";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 import "../../styles/settings/userprofile.css";
@@ -15,7 +15,7 @@ import "../../styles/settings/userprofile.css";
 const UserProfile = ({ user }) => {
   let { name, username, role } = user.current;
   const API_URL = process.env.REACT_APP_API_URL;
-  // const [userId, setUserId] = useState("1");
+  const navigate = useNavigate();
   const token = getCookie("token");
   const userID = getCookie("userID");
 
@@ -322,12 +322,16 @@ const UserProfile = ({ user }) => {
     fetchUser();
   }, []);
 
+  const handleBackButton = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="user-profile-container">
       <div className="left-section">
-        <Link to="/app" className="user-profile-back-btn">
+        <div onClick={handleBackButton} className="user-profile-back-btn">
           <FaArrowLeft className="user-profile-back-icon" />
-        </Link>
+        </div>
         <h2>Settings</h2>
         <p>Customize view</p>
         <div className="settings-button-container">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoArrowBackSharp, IoArrowBack } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../styles/pages/notification.css"; // Import the CSS file
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
@@ -35,6 +35,7 @@ function Notifications() {
   const userID = getCookie("userID");
   const token = getCookie("token");
   const API_URL = process.env.REACT_APP_API_URL;
+  const navigate = useNavigate();
 
   const [notification, setNotification] = useState();
   const [selectedNotification, setSelectedNotification] = useState(null);
@@ -109,11 +110,15 @@ function Notifications() {
     });
   };
 
+  const handleBackButton = () => {
+    navigate(-1);
+  };
+
   return (
     <div className="PatientDashboard">
-      <Link to="/app" className="notif-back-button">
+      <div onClick={handleBackButton} className="notif-back-button">
         <IoArrowBackSharp />
-      </Link>
+      </div>
       <div className="NotificationsSection">
         <h2 className="section-title">Notifications</h2>
         <hr className="section-divider" />
