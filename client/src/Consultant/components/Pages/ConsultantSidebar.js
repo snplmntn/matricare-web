@@ -7,17 +7,46 @@ import {
   IoChatbubbles,
   IoLibrary,
   IoBarChart,
-  IoLogOutOutline ,
+  IoLogOutOutline,
 } from "react-icons/io5";
 import "../../styles/pages/consultantsidebar.css";
+import axios from "axios";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 const ConsultantSidebar = () => {
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const token = cookies.token;
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate("/login");
-  };
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/auth/logout`, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
+      removeCookie("userID");
+      removeCookie("verifyToken");
+      removeCookie("role");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("address");
+      localStorage.removeItem("email");
+      localStorage.removeItem("events");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("phoneNumber");
+      localStorage.removeItem("profileImageUrl");
+      localStorage.removeItem("savedArticles");
+      localStorage.removeItem("userName");
+      removeCookie("token");
+    } catch (err) {
+      console.error(
+        "Something went wrong!",
+        err.response ? err.response.data : err.message
+      );
+    }
+  };
   return (
     <aside className="consultant-sidebar">
       <div className="consultant-sidebar-logo">
@@ -57,20 +86,20 @@ const ConsultantSidebar = () => {
           className="consultant-sidebar-item bellytalk"
           title="Manage BellyTalk"
         >
-          <IoBarChart  />
+          <IoBarChart />
         </Link>
         <Link
           to="/consultant-patientsinfo"
           className="consultant-sidebar-item records"
           title="Patient Records"
         >
-          <IoFolderOpen   />
+          <IoFolderOpen />
         </Link>
       </div>
-        <button className="logout-button" onClick={handleLogout}>
-        <IoLogOutOutline/>
-          Logout
-        </button>
+      <button className="logout-button" onClick={handleLogout}>
+        <IoLogOutOutline />
+        Logout
+      </button>
     </aside>
   );
 };

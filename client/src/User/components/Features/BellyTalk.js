@@ -154,8 +154,12 @@ const BellyTalk = ({ user }) => {
   async function fetchPosts() {
     if (loading) return;
     setLoading(true);
+    console.log(
+      `${allPost.length > 0 ? allPost[allPost.length - 1]._id : ""} fetching`
+    );
 
-    const lastPostId = posts.length > 0 ? posts[posts.length - 1]._id : null;
+    const lastPostId =
+      allPost.length > 0 ? allPost[allPost.length - 1]._id : null;
     try {
       const response = await axios.get(
         `${API_URL}/${token ? "post" : "bellytalk"}/i${
@@ -174,6 +178,8 @@ const BellyTalk = ({ user }) => {
       if (response.data.length === 0) setShowLoading(false);
       else CheckToFetchMore();
       setLoading(false);
+
+      console.log(`done fetching`);
     } catch (error) {
       console.error(error);
     }
@@ -207,7 +213,8 @@ const BellyTalk = ({ user }) => {
       const matchesCategory =
         activeFilters.length === 0 ||
         activeFilters.includes("All") ||
-        activeFilters.some((filter) => post.category.includes(filter));
+        (post.category &&
+          activeFilters.some((filter) => post.category.includes(filter)));
       return matchesSearchTerm && matchesCategory;
     });
     setPosts(filteredPosts);
@@ -380,51 +387,44 @@ const BellyTalk = ({ user }) => {
             <input
               type="checkbox"
               id="first-time"
-              onChange={() => handleFilterChange("First-Time Moms")}
+              onChange={() => handleFilterChange("Health & Wellness")}
             />
-            <label htmlFor="first-time">First-Time Moms</label>
+            <label htmlFor="first-time">Health & Wellness</label>
 
             <input
               type="checkbox"
               id="baby-essentials"
-              onChange={() => handleFilterChange("Baby Essentials")}
+              onChange={() => handleFilterChange("Finance & Budgeting")}
             />
-            <label htmlFor="baby-essentials">Baby Essentials</label>
+            <label htmlFor="baby-essentials">Finance & Budgeting</label>
 
             <input
               type="checkbox"
               id="maternity-style"
-              onChange={() => handleFilterChange("Maternity Style")}
+              onChange={() => handleFilterChange("Parenting & Family")}
             />
-            <label htmlFor="maternity-style">Maternity Style</label>
+            <label htmlFor="maternity-style">Parenting & Family</label>
 
             <input
               type="checkbox"
               id="breast-feeding"
-              onChange={() => handleFilterChange("Breast Feeding")}
+              onChange={() => handleFilterChange("Baby’s Essentials")}
             />
-            <label htmlFor="breast-feeding">Breast Feeding</label>
+            <label htmlFor="breast-feeding">Baby’s Essentials</label>
 
             <input
               type="checkbox"
               id="gender-reveal"
-              onChange={() => handleFilterChange("Gender Reveal")}
+              onChange={() => handleFilterChange("Exercise & Fitness")}
             />
-            <label htmlFor="gender-reveal">Gender Reveal</label>
+            <label htmlFor="gender-reveal">Exercise & Fitness</label>
 
             <input
               type="checkbox"
               id="parenting-tips"
-              onChange={() => handleFilterChange("Parenting Tips")}
+              onChange={() => handleFilterChange("Labor & Delivery")}
             />
-            <label htmlFor="parenting-tips">Parenting Tips</label>
-
-            <input
-              type="checkbox"
-              id="labor"
-              onChange={() => handleFilterChange("Labor")}
-            />
-            <label htmlFor="labor">Labor</label>
+            <label htmlFor="parenting-tips">Labor & Delivery</label>
           </div>
         </div>
       </main>
