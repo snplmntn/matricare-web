@@ -163,20 +163,25 @@ const AppointmentConsultant = () => {
         }
         return appointment;
       });
-      console.log(response.data);
       setAppointments(updatedAppointments);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const upcomingAppointments = appointments.filter(
-    (appointment) =>
-      appointment.status === "Pending" || appointment.status === "Rescheduled"
-  );
-  const postAppointments = appointments.filter(
-    (appointment) => appointment.status === "Confirmed"
-  );
+  const upcomingAppointments = appointments.filter((appointment) => {
+    const appointmentDate = new Date(appointment.date);
+    const now = new Date();
+    return appointmentDate >= now;
+  });
+
+  const postAppointments = appointments
+    .filter((appointment) => {
+      const appointmentDate = new Date(appointment.date);
+      const now = new Date();
+      return appointmentDate < now;
+    })
+    .reverse();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
