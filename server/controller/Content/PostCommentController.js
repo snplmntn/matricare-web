@@ -36,8 +36,6 @@ const comment_post = catchAsync(async (req, res, next) => {
     .populate("postId");
 
   // if verified add to post analytics
-
-  // if already in post analytics, push comments to post analytics
   if (commentPopulated.userId.verified) {
     if (!commentPopulated.postId.postAnalytics) {
       await PostAnalytics.create({
@@ -46,6 +44,7 @@ const comment_post = catchAsync(async (req, res, next) => {
         likes: commentPopulated.postId.likes,
         comments: commentPopulated.postId.comments,
       });
+      // if already in post analytics, push comments to post analytics
     } else {
       await PostAnalytics.findByIdAndUpdate(
         commentPopulated.postId.postAnalytics,

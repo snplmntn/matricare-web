@@ -29,6 +29,7 @@ const surgicalHistoryRoute = require("./routes/User/Records/surgicalHistory");
 
 // content
 const postRoute = require("./routes/Content/post");
+const postAnalyticsRoute = require("./routes/Content/postAnalytics");
 const articleRoute = require("./routes/Content/article");
 const uploadRoute = require("./routes/Content/upload");
 const bellytalk = require("./routes/Content/bellytalk");
@@ -73,6 +74,7 @@ app.use("/api/record/surgical", checkAuth, surgicalHistoryRoute);
 
 // content
 app.use("/api/post", checkAuth, postRoute);
+app.use("/api/analytics", checkAuth, postAnalyticsRoute);
 app.use("/api/article", articleRoute);
 app.use("/api/upload", checkAuth, uploadRoute);
 app.use("/api/bellytalk", bellytalk); //public belly talk route
