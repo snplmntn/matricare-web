@@ -1,5 +1,6 @@
 const PostComment = require("../../models/Content/PostComment");
 const Post = require("../../models/Content/Post");
+const PostAnalytics = require("../../models/Content/PostAnalytics");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
@@ -30,9 +31,34 @@ const comment_post = catchAsync(async (req, res, next) => {
     return next(new AppError("Post not found", 404));
   }
 
-  const commentPopulated = await PostComment.findById(comment._id).populate(
-    "userId"
-  );
+  const commentPopulated = await PostComment.findById(comment._id)
+    .populate("userId")
+    .populate("postId");
+
+  // if verified add to post analytics
+  if (commentPopulated.userId.verified) {
+    if (!commentPopulated.postId.postAnalytics) {
+      const post = await PostAnalytics.create({
+        content: commentPopulated.postId.content,
+        category: commentPopulated.postId.category,
+        likes: commentPopulated.postId.likes,
+        comments: commentPopulated.postId.comments,
+      });
+
+      await Post.findByIdAndUpdate(
+        commentPopulated.postId._id,
+        { postAnalytics: post._id },
+        { new: true }
+      );
+      // if already in post analytics, push comments to post analytics
+    } else {
+      await PostAnalytics.findByIdAndUpdate(
+        commentPopulated.postId.postAnalytics,
+        { $push: { comments: comment._id } },
+        { new: true }
+      );
+    }
+  }
 
   return res.status(200).json({
     message: "Post commented Successfully",

@@ -8,6 +8,7 @@ const PostCommentSchema = new mongoose.Schema(
     postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
     content: String,
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }],
+    forAnalysis: Boolean,
   },
   {
     timestamps: true,

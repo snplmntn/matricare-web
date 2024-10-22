@@ -1,5 +1,6 @@
 const axios = require("axios");
 const Post = require("../../models/Content/Post");
+const PostAnalytics = require("../../models/Content/PostAnalytics");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
@@ -52,10 +53,22 @@ const post_post = catchAsync(async (req, res, next) => {
 
   req.body.category = response.data.category;
 
-  console.log(req.body);
   const newPost = await Post.create(req.body);
 
   const savedPost = await Post.findById(newPost._id).populate("userId");
+
+  if (savedPost.userId.verified) {
+    const post = await PostAnalytics.create({
+      content: newPost.content,
+      category: newPost.category,
+    });
+
+    await Post.findByIdAndUpdate(
+      savedPost._id,
+      { postAnalytics: post._id },
+      { new: true }
+    );
+  }
 
   return res
     .status(200)
