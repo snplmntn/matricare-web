@@ -143,47 +143,43 @@ function AppContent() {
             </>
           )}
         />
+
         <Route
           path="/signup"
-          element={
-            !token ? (
+          element={getPage(
+            <>
               <>
                 <Header1 />
                 <Signup />
               </>
-            ) : (
-              <HomePage user={parsedUser} />
-            )
-          }
+            </>
+          )}
         />
+
         <Route
           path="/login"
-          element={
-            !token ? (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            ) : (
-              <HomePage user={parsedUser} />
-            )
-          }
+          element={getPage(
+            <>
+              <Header1 />
+              <Login />
+            </>
+          )}
         />
-        <Route path="/verify" element={<Verify />} />
+
         <Route
           path="/forgot-password"
-          element={
-            token ? (
-              <HomePage user={parsedUser} />
-            ) : (
-              <>
-                <Header1 />
-                <ForgotPass />
-              </>
-            )
-          }
+          element={getPage(
+            <>
+              <Header1 />
+              <ForgotPass />
+            </>
+          )}
         />
-        <Route path="/notification" element={<Notifications />} />
+
+        <Route
+          path="/notification"
+          element={token ? <Notifications /> : <Undefined />}
+        />
 
         {/* User Routes */}
         <Route
@@ -272,7 +268,8 @@ function AppContent() {
           element={
             token ? (
               <>
-                <LibrarySidebar /> <Library />
+                <LibrarySidebar />
+                <Library />
               </>
             ) : (
               <>
@@ -287,7 +284,8 @@ function AppContent() {
           element={
             token ? (
               <>
-                <LibrarySidebar /> <Article />
+                <LibrarySidebar />
+                <Library />
               </>
             ) : (
               <>
@@ -302,7 +300,8 @@ function AppContent() {
           element={
             token ? (
               <>
-                <LibrarySidebar /> <SavedArticle />
+                <LibrarySidebar />
+                <SavedArticle />
               </>
             ) : (
               <>
