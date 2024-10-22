@@ -48,16 +48,6 @@
   color: #7c459c;
 }
 
-.BT-profile-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #7c459c;
-  position: absolute; /* Ensure positioning is set */
-  right: 120px;        /* Use right for positioning */
-  font-size: 40px;
-}
-
 
 .bellytalk-icons {
   display: flex;
@@ -602,6 +592,60 @@
 .verified-icon {
   color: #6b95e5; /* Green color for the verified icon */
   margin-left: 4px; /* Space between name and icon */
+}
+
+
+.bt-dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.BT-profile-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #7c459c;
+  position: absolute; 
+  right: 120px;        
+  font-size: 40px;
+  top: -20px;
+}
+
+.bt-dropdown-menu {
+  position: absolute;
+  top: 35px; 
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 150px;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.bt-dropdown-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.bt-dropdown-menu li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.bt-dropdown-menu li:last-child {
+  border-bottom: none;
+}
+
+.bt-dropdown-menu li a {
+  text-decoration: none;
+  color: #333;
+  display: block;
+}
+
+.bt-dropdown-menu li a:hover {
+  background-color: #f2f2f2;
 }
 
 
