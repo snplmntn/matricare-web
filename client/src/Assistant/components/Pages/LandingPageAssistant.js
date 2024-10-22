@@ -18,19 +18,6 @@ import {
   PointElement,
 } from "chart.js";
 import "../../style/pages/landingpageassistant.css";
-import Slider from "react-slick";
-import { Line, Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-} from "chart.js";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 
