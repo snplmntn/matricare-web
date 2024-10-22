@@ -1,3 +1,4 @@
+const axios = require("axios");
 const Post = require("../../models/Content/Post");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
@@ -45,6 +46,13 @@ const post_user_get = catchAsync(async (req, res, next) => {
 
 // Create Post
 const post_post = catchAsync(async (req, res, next) => {
+  const response = await axios.post(`${process.env.OPEN_API_LINK}/classify`, {
+    content: req.body.content,
+  });
+
+  req.body.category = response.data.category;
+
+  console.log(req.body);
   const newPost = await Post.create(req.body);
 
   const savedPost = await Post.findById(newPost._id).populate("userId");
