@@ -1,15 +1,24 @@
 import React, { useEffect, useState } from "react";
 import {
-  IoHome,
-  IoCalendar,
-  IoChatbubbles,
-  IoLibrary,
-  IoPerson,
+  IoPersonCircleOutline,
   IoNotificationsSharp,
 } from "react-icons/io5";
 import "../../style/pages/landingpageassistant.css";
 import Slider from "react-slick";
-import { Link } from "react-router-dom";
+import { Line, Pie } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+} from "chart.js";
+import "../../style/pages/landingpageassistant.css";
+import Slider from "react-slick";
 import { Line, Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -282,13 +291,22 @@ const LandingPageAssistant = ({}) => {
       <main className="landingpage-assistant-main-content">
         <header className="landingpage-assistant-header">
           <h1>Dashboard</h1>
+          <div className="assistant-profile-icons">
+          <a
+              href="/userprofile"
+              className="assistant-profile-icon"
+              title="Profile"
+            >
+              <IoPersonCircleOutline />
+            </a>
           <a
             href="/assistant-notification"
-            className="assistant-notification-button"
+            className="assistant-notification-icon"
             title="Notifications"
           >
             <IoNotificationsSharp />
           </a>
+          </div>
           <div className="landingpage-assistant-user-profile">
             <h1>{user.name}</h1>
             <p>{user.role}</p>
