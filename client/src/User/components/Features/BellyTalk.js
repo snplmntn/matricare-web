@@ -31,6 +31,7 @@ const BellyTalk = ({ user }) => {
   const [step, setStep] = useState(1);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
   //image -> firebase
   const [selectedImage, setSelectedImage] = useState(null);
@@ -85,6 +86,10 @@ const BellyTalk = ({ user }) => {
         console.error(error);
       }
     }
+  };
+
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
   };
 
   const handlePostSubmit = async () => {
@@ -247,6 +252,8 @@ const BellyTalk = ({ user }) => {
     navigate(-1);
   };
 
+  
+
   return (
     <div className="bellytalk-container">
       <div className="bellytalk-top-bar">
@@ -276,9 +283,24 @@ const BellyTalk = ({ user }) => {
             onChange={handleSearchChange}
           />
         </div>
-        <div onClick={handleOpenUserProfile} className="BT-profile-button">
-          {user.current && user.current.role === "Ob-gyne Specialist" && (
-            <IoPersonCircle />
+        <div className="bt-dropdown-container">
+      <div onClick={toggleDropdown} className="BT-profile-button">
+        {user.current && user.current.role === "Ob-gyne Specialist" && (
+          <IoPersonCircle/> 
+        )}
+      </div>
+
+          {isOpen && (
+            <div className="bt-dropdown-menu">
+              <ul>
+                <li onClick={handleOpenUserProfile}>
+                  <a href="/userprofile">User Profile</a>
+                </li>
+                <li>
+                  <a href="/logout">Logout</a>
+                </li>
+              </ul>
+            </div>
           )}
         </div>
       </div>
