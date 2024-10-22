@@ -10,8 +10,13 @@ import {
   IoLogOutOutline,
 } from "react-icons/io5";
 import "../../styles/pages/consultantsidebar.css";
+import axios from "axios";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 const ConsultantSidebar = () => {
+  const [cookies, setCookie, removeCookie] = useCookies();
+  const token = cookies.token;
+  const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
 
   const handleLogout = async () => {
