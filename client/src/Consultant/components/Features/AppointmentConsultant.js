@@ -163,7 +163,6 @@ const AppointmentConsultant = () => {
         }
         return appointment;
       });
-      console.log(response.data);
       setAppointments(updatedAppointments);
     } catch (error) {
       console.error(error);
@@ -176,11 +175,13 @@ const AppointmentConsultant = () => {
     return appointmentDate >= now;
   });
 
-  const postAppointments = appointments.filter((appointment) => {
-    const appointmentDate = new Date(appointment.date);
-    const now = new Date();
-    return appointmentDate < now;
-  });
+  const postAppointments = appointments
+    .filter((appointment) => {
+      const appointmentDate = new Date(appointment.date);
+      const now = new Date();
+      return appointmentDate < now;
+    })
+    .reverse();
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();

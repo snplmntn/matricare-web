@@ -182,7 +182,11 @@ const ConsultantLogs = () => {
 
     // Center the title based on the view
     const title =
-      view === "patients" ? "Patient Logs Report" : "Admin Logs Report"; // Change title based on view
+      view === "patients"
+        ? "Patient Logs Report"
+        : view === "admins"
+        ? "Admin Logs Report"
+        : "OB Specialist Logs Report"; // Change title based on view
     const titleWidth = doc.getTextWidth(title);
     const pageWidth = doc.internal.pageSize.getWidth();
     const titleX = (pageWidth - titleWidth) / 2;
@@ -227,7 +231,7 @@ const ConsultantLogs = () => {
                 )}`
             : " - - : - -",
         ];
-      } else {
+      } else if (view === "admins") {
         return [
           index + 1,
           row.fullName,
@@ -242,6 +246,22 @@ const ConsultantLogs = () => {
               : `${formatDate(row.logOutTime)} ${formatTime(row.logOutTime)}`
             : " - - : - -",
           row.role, // Role for admins
+        ];
+      } else if (view === "specialist") {
+        return [
+          index + 1,
+          row.fullName,
+          row.phoneNumber,
+          row.email,
+          row && row.logInTime ? formatDate(row.logInTime) : "N/A",
+          row && row.logInTime ? formatTime(row.logInTime) : "N/A",
+          row && row.logOutTime && row.logInTime
+            ? new Date(row.logOutTime).toDateString() ===
+              new Date(row.logInTime).toDateString()
+              ? formatTime(row.logOutTime)
+              : `${formatDate(row.logOutTime)} ${formatTime(row.logOutTime)}`
+            : " - - : - -",
+          row.role, // Role for specialists
         ];
       }
     });
@@ -417,6 +437,13 @@ const ConsultantLogs = () => {
                 </div>
               </div>
             </>
+          )}
+
+          {view === "specialist" && (
+            <button className="CPL-admin-download-button" onClick={generatePDF}>
+              Download All &nbsp;
+              <IoPrint />
+            </button>
           )}
         </div>
 
