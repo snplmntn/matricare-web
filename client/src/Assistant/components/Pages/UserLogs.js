@@ -36,14 +36,40 @@ const ConsultantLogs = () => {
     }
   }, []);
 
+  const [obGyneSpecialist, setObGyneSpecialist] = useState([]);
   const [admins, setAdmins] = useState([]);
 
   const [showForm, setShowForm] = useState(false); // State for form visibility
 
-  const filteredUsers =
-    view === "patients"
-      ? patients.filter((user) => filter === "all" || user.status === filter)
-      : admins;
+  const [filteredUsers, setFilteredUsers] = useState([]);
+
+  useEffect(() => {
+    const filterUsers = () => {
+      if (view === "patients") {
+        setFilteredUsers(
+          patients.filter((user) => filter === "all" || user.status === filter)
+        );
+      } else if (view === "admins") {
+        setFilteredUsers(
+          admins.filter((admin) => filter === "all" || admin.role === filter)
+        );
+      } else if (view === "specialist") {
+        setFilteredUsers(obGyneSpecialist);
+      }
+    };
+
+    filterUsers();
+  }, [view, filter, patients, admins]);
+
+  useEffect(() => {
+    if (view === "patients") {
+      setFilteredUsers(patients);
+    } else if (view === "admins") {
+      setFilteredUsers(admins);
+    } else if (view === "specialist") {
+      setFilteredUsers(obGyneSpecialist);
+    }
+  }, [view, patients, admins]);
 
   const toggleSelectAll = () => {
     setSelectAll(!selectAll);
@@ -132,7 +158,11 @@ const ConsultantLogs = () => {
         const filteredAdmins = response.data.filter(
           (admin) => admin.role === "Assistant" || admin.role === "Obgyne"
         );
+        const filteredObgyneSpecialist = response.data.filter(
+          (user) => user.role === "Ob-gyne Specialist"
+        );
         setAdmins(filteredAdmins);
+        setObGyneSpecialist(filteredObgyneSpecialist);
       } catch (error) {
         console.error(error);
       }
@@ -189,9 +219,12 @@ const ConsultantLogs = () => {
             ? formatTime(row.userId.logInTime)
             : "N/A",
           row.userId && row.userId.logOutTime && row.userId.logInTime
-            ? new Date(row.userId.logOutTime) > new Date(row.userId.logInTime)
+            ? new Date(row.userId.logOutTime).toDateString() ===
+              new Date(row.userId.logInTime).toDateString()
               ? formatTime(row.userId.logOutTime)
-              : " - - : - -"
+              : `${formatDate(row.userId.logOutTime)} ${formatTime(
+                  row.userId.logOutTime
+                )}`
             : " - - : - -",
         ];
       } else {
@@ -203,9 +236,10 @@ const ConsultantLogs = () => {
           row && row.logInTime ? formatDate(row.logInTime) : "N/A",
           row && row.logInTime ? formatTime(row.logInTime) : "N/A",
           row && row.logOutTime && row.logInTime
-            ? new Date(row.logOutTime) > new Date(row.logInTime)
+            ? new Date(row.logOutTime).toDateString() ===
+              new Date(row.logInTime).toDateString()
               ? formatTime(row.logOutTime)
-              : " - - : - -"
+              : `${formatDate(row.logOutTime)} ${formatTime(row.logOutTime)}`
             : " - - : - -",
           row.role, // Role for admins
         ];
@@ -308,7 +342,9 @@ const ConsultantLogs = () => {
             Admin Logs
           </button>
           <button
-            className={`CPL-type-button ${view === "specialist" ? "active" : ""}`}
+            className={`CPL-type-button ${
+              view === "specialist" ? "active" : ""
+            }`}
             onClick={() => setView("specialist")}
           >
             OB Specialists
@@ -324,7 +360,6 @@ const ConsultantLogs = () => {
             <h2>OB Specialist</h2>
           )}
         </div>
-
 
         <div className="CPL-filter-options">
           {view === "patients" && (
@@ -376,7 +411,7 @@ const ConsultantLogs = () => {
                   <label htmlFor="admin-filter">Filter by Role:</label>
                   <select id="admin-filter" onChange={handleFilterChange}>
                     <option value="all">All</option>
-                    <option value="Doctor">Obgyne</option>
+                    <option value="Obgyne">Obgyne</option>
                     <option value="Assistant">Assistant</option>
                   </select>
                 </div>
