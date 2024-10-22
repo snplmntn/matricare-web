@@ -13,10 +13,12 @@ import {
 import { FcPicture } from "react-icons/fc";
 import PostSkeleton from "./PostSkeleton";
 import { useInView } from "react-intersection-observer";
+import { CookiesProvider, useCookies } from "react-cookie";
 
 import axios from "axios";
 
 const BellyTalk = ({ user }) => {
+  const [cookies, setCookie, removeCookie] = useCookies();
   const { ref: myRef, inView: fetchPost } = useInView();
   const navigate = useNavigate();
   // const { name, username, role } = user.current;
@@ -252,7 +254,34 @@ const BellyTalk = ({ user }) => {
     navigate(-1);
   };
 
-  
+  const handleLogout = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/auth/logout`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      removeCookie("userID");
+      removeCookie("verifyToken");
+      removeCookie("role");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("address");
+      localStorage.removeItem("email");
+      localStorage.removeItem("events");
+      localStorage.removeItem("userData");
+      localStorage.removeItem("phoneNumber");
+      localStorage.removeItem("profileImageUrl");
+      localStorage.removeItem("savedArticles");
+      localStorage.removeItem("userName");
+      removeCookie("token");
+    } catch (err) {
+      console.error(
+        "Something went wrong!",
+        err.response ? err.response.data : err.message
+      );
+    }
+  };
 
   return (
     <div className="bellytalk-container">
@@ -284,11 +313,11 @@ const BellyTalk = ({ user }) => {
           />
         </div>
         <div className="bt-dropdown-container">
-      <div onClick={toggleDropdown} className="BT-profile-button">
-        {user.current && user.current.role === "Ob-gyne Specialist" && (
-          <IoPersonCircle/> 
-        )}
-      </div>
+          <div onClick={toggleDropdown} className="BT-profile-button">
+            {user.current && user.current.role === "Ob-gyne Specialist" && (
+              <IoPersonCircle />
+            )}
+          </div>
 
           {isOpen && (
             <div className="bt-dropdown-menu">
@@ -297,7 +326,7 @@ const BellyTalk = ({ user }) => {
                   <a href="/userprofile">User Profile</a>
                 </li>
                 <li>
-                  <a href="/logout">Logout</a>
+                  <span onClick={handleLogout}>Logout</span>
                 </li>
               </ul>
             </div>
