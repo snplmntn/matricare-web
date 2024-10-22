@@ -307,11 +307,24 @@ const ConsultantLogs = () => {
           >
             Admin Logs
           </button>
+          <button
+            className={`CPL-type-button ${view === "specialist" ? "active" : ""}`}
+            onClick={() => setView("specialist")}
+          >
+            OB Specialists
+          </button>
         </div>
 
         <div className="CPL-view-label">
-          {view === "patients" ? <h2>Patient Logs</h2> : <h2>Admin Logs</h2>}
+          {view === "patients" ? (
+            <h2>Patient Logs</h2>
+          ) : view === "admin" ? (
+            <h2>Admin Logs</h2>
+          ) : (
+            <h2>OB Specialist</h2>
+          )}
         </div>
+
 
         <div className="CPL-filter-options">
           {view === "patients" && (
@@ -397,6 +410,16 @@ const ConsultantLogs = () => {
                   <th>Role</th>
                 </>
               )}
+              {view === "specialist" && (
+                <>
+                  <th>Name</th>
+                  <th>Phone Number</th> {/* New Phone Number Column */}
+                  <th>Date</th> {/* New Date Column */}
+                  <th>Log In Time</th>
+                  <th>Log Out Time</th>
+                  <th>Role</th>
+                </>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -467,6 +490,32 @@ const ConsultantLogs = () => {
                   </>
                 )}
                 {view === "admins" && (
+                  <>
+                    <td>{user.fullName}</td>
+                    <td>{user.phoneNumber}</td>
+                    <td>
+                      {user && user.logInTime
+                        ? formatDate(user.logInTime)
+                        : "N/A"}
+                    </td>
+                    {/* New Date Column */}
+                    <td>
+                      {user && user.logInTime
+                        ? formatTime(user.logInTime)
+                        : "N/A"}
+                    </td>
+                    <td>
+                      {user && user.logOutTime && user.logInTime
+                        ? new Date(user.logOutTime) > new Date(user.logInTime)
+                          ? formatTime(user.logOutTime)
+                          : " - - : - -"
+                        : " - - : - -"}
+                    </td>
+
+                    <td>{user.role}</td>
+                  </>
+                )}
+                {view === "specialist" && (
                   <>
                     <td>{user.fullName}</td>
                     <td>{user.phoneNumber}</td>
