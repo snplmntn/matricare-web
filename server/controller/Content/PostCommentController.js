@@ -38,12 +38,18 @@ const comment_post = catchAsync(async (req, res, next) => {
   // if verified add to post analytics
   if (commentPopulated.userId.verified) {
     if (!commentPopulated.postId.postAnalytics) {
-      await PostAnalytics.create({
+      const post = await PostAnalytics.create({
         content: commentPopulated.postId.content,
         category: commentPopulated.postId.category,
         likes: commentPopulated.postId.likes,
         comments: commentPopulated.postId.comments,
       });
+
+      await Post.findByIdAndUpdate(
+        commentPopulated.postId._id,
+        { postAnalytics: post._id },
+        { new: true }
+      );
       // if already in post analytics, push comments to post analytics
     } else {
       await PostAnalytics.findByIdAndUpdate(
