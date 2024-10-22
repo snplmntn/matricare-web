@@ -209,7 +209,7 @@ const ConsultantLogs = () => {
     doc.line(10, lineY, pageWidth - 10, lineY);
 
     // Prepare data for the table
-    const rows = view === "patients" ? patients : admins;
+    const rows = filteredUsers;
     const tableData = rows.map((row, index) => {
       if (view === "patients") {
         return [
