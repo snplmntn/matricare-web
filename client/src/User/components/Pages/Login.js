@@ -88,6 +88,7 @@ export default function Login() {
   };
 
   const handleCodeSubmission = () => {
+    setAuthMessage("");
     console.log(userTrustedDevice);
     setAuthMessage("");
     let userID = getCookie("userID");
@@ -101,7 +102,7 @@ export default function Login() {
 
     console.log(expiryTimestamp);
     if (!expiryTimestamp) {
-      setAuthMessage("Verification code has expired.");
+      setAuthMessage("Verification code has expired. Please Login again.");
       return;
     }
 

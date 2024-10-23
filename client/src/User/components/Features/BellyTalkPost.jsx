@@ -170,6 +170,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         }
       );
       setComments([response.data.comment, ...comments]);
+      setCommentsCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error(error);
     }
