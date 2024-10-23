@@ -16,6 +16,7 @@ import { getCookie } from "../../../utils/getCookie";
 import { Link } from "react-router-dom";
 
 const MedicalRec = ({ user }) => {
+  const { username } = user.current;
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
   const userID = getCookie("userID");
@@ -129,13 +130,23 @@ const MedicalRec = ({ user }) => {
     };
   };
 
-  const handlePasswordSubmit = (e) => {
+  const handlePasswordSubmit = async (e) => {
     e.preventDefault();
-    if (password === "123") {
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        username: username,
+        password: password,
+      });
       setIsAuthenticated(true);
       setError("");
-    } else {
-      setError("Incorrect password");
+    } catch (error) {
+      if (error.response.status === 401) {
+        console.error(error);
+        setError("Incorrect password");
+      } else {
+        setError("An error occurred. Please try again later.");
+      }
     }
   };
 
