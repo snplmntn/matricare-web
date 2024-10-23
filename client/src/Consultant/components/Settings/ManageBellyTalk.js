@@ -37,6 +37,7 @@ import axios from "axios";
 
 const ManageBellyTalk = () => {
   const API_URL = process.env.REACT_APP_API_URL;
+  const OPENAI_URL = process.env.REACT_APP_OPENAI_URL;
   const token = getCookie("token");
 
   // State for the fetched data
@@ -70,9 +71,26 @@ const ManageBellyTalk = () => {
     );
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     const categoryData = data.find((item) => item.name === selectedCategory);
     if (!categoryData) return;
+
+    // Start the `toSummarize` structure
+    const toSummarize = {
+      category: selectedCategory, // Selected category (e.g., Health & Wellness)
+      posts: categoryData.PostContent.map((content, index) => {
+        return {
+          content, // Post content
+          comments: categoryData.PostComments[index], // Associated comments
+        };
+      }),
+    };
+
+    const response = await axios.post(`${OPENAI_URL}/summarize`, toSummarize, {
+      headers: {
+        Authorization: token,
+      },
+    });
 
     // Create a new jsPDF instance
     const doc = new jsPDF();
@@ -84,6 +102,13 @@ const ManageBellyTalk = () => {
     doc.text(`Posts: ${categoryData.Posts}`, 20, 40);
     doc.text(`Engagement: ${categoryData.Engagement}`, 20, 50);
     doc.text(`Discussions: ${categoryData.Discussions}`, 20, 60);
+    doc.setFontSize(12);
+    // Use splitTextToSize to wrap the summary text
+    const summaryLines = doc.splitTextToSize(
+      `\n\nSummary: \n${response.data.summary}`,
+      180
+    ); // 180 is the max width in mm
+    doc.text(summaryLines, 20, 80); // Adjust vertical position as needed
 
     // Save the PDF
     doc.save(`${selectedCategory}_data.pdf`);
@@ -96,24 +121,42 @@ const ManageBellyTalk = () => {
           Authorization: token,
         },
       });
+
       const formattedData = {};
+
+      // Define the categories you want to initialize
+      const categoriesList = [
+        "Health & Wellness",
+        "Finance & Budgeting",
+        "Parenting & Family",
+        "Baby’s Essentials",
+        "Exercise & Fitness",
+        "Labor & Delivery",
+      ];
+
+      // Initialize all categories to zero counts
+      categoriesList.forEach((category) => {
+        formattedData[category] = {
+          name: category,
+          Posts: 0,
+          Engagement: 0,
+          Discussions: 0,
+          PostContent: [],
+          PostComments: [],
+        };
+      });
 
       // Check if posts data exists
       if (response.data && response.data.post) {
         // Process each post in the response
         response.data.post.forEach((post) => {
-          if (Array.isArray(post.category)) {
-            post.category.forEach((category) => {
-              // If the category doesn't exist, initialize it
-              if (!formattedData[category]) {
-                formattedData[category] = {
-                  name: category,
-                  Posts: 0,
-                  Engagement: 0,
-                  Discussions: 0,
-                };
-              }
+          const categories = Array.isArray(post.category)
+            ? post.category
+            : [post.category];
 
+          categories.forEach((category) => {
+            // If the category exists in formattedData, update its values
+            if (formattedData[category]) {
               // Increment counts for the category
               formattedData[category].Posts += 1;
               formattedData[category].Engagement += post.likes
@@ -122,10 +165,20 @@ const ManageBellyTalk = () => {
               formattedData[category].Discussions += post.comments
                 ? post.comments.length
                 : 0;
-            });
-          } else {
-            console.warn("No categories found for post:", post);
-          }
+
+              // Append the content of the post to the array
+              formattedData[category].PostContent.push(post.content);
+
+              // Append the comments if any, otherwise push an empty array
+              if (post.comments && Array.isArray(post.comments)) {
+                formattedData[category].PostComments.push(
+                  post.comments.map((comment) => comment.content)
+                );
+              } else {
+                formattedData[category].PostComments.push([]);
+              }
+            }
+          });
         });
       }
 
