@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../styles/settings/medicalrec.css";
 import moment from "moment";
-import {
-  IoArrowBackSharp,
-  IoCalendarOutline,
-  IoDocumentAttachOutline,
-  IoFolderOpenOutline,
-  IoFileTrayStackedOutline,
-  IoPhonePortraitOutline,
-} from "react-icons/io5";
-import { FcPrint, FcDownload } from "react-icons/fc";
+import {IoArrowBackSharp, IoCalendarOutline, IoDocumentAttachOutline, IoFolderOpenOutline, IoFileTrayStackedOutline, IoPhonePortraitOutline, IoChevronBackCircle, IoLockClosed,} from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
 import { Link } from "react-router-dom";
@@ -18,9 +10,8 @@ const MedicalRec = ({ user }) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
   const userID = getCookie("userID");
+
   const [patient, setPatient] = useState();
-  const [status] = useState("In-Process");
-  const prescribedBy = "Dra. Donna Jill A. Tungol";
   const [isEditing, setIsEditing] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [newDocName, setNewDocName] = useState("");
@@ -28,6 +19,11 @@ const MedicalRec = ({ user }) => {
   const [isAddingDocument, setIsAddingDocument] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [newDocFile, setNewDocFile] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   //STATE FOR STORING DATAS
   const [documents, setDocuments] = useState([]);
@@ -51,6 +47,7 @@ const MedicalRec = ({ user }) => {
     setNewDocDate("");
     setNewDocFile(null);
     setSelectedDocument(null);
+    setSelectedItem(null);
   };
 
   const handleAddDocument = async () => {
@@ -102,6 +99,10 @@ const MedicalRec = ({ user }) => {
     setSelectedDocument(doc);
   };
 
+  const handleItemClick = (item) => {
+    setSelectedItem(item);
+  };
+
   const handleDownload = () => {
     const link = document.createElement("a");
     link.href = selectedDocument.documentLink; // Use the file URL from selectedDocument
@@ -118,6 +119,18 @@ const MedicalRec = ({ user }) => {
       printWindow.print(); // Trigger print when the document is loaded
     };
   };
+
+  
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (password === "securePassword123") {
+      setIsAuthenticated(true);
+      setError("");
+    } else {
+      setError("Incorrect password");
+    }
+  };
+
 
   // Handle document name and date changes
   const handleDocumentChange = (index, field, value) => {
@@ -280,6 +293,38 @@ const MedicalRec = ({ user }) => {
 
   return (
     <>
+    {!isAuthenticated ? (
+        <div className="MR-pass-container">
+          <div
+            className="MR-pass-background-image"
+            style={{ backgroundImage: `url('img/bg6.jpg')` }}>
+            </div>
+          <div className="MR-pass-overlay"></div>
+          <Link to="/app" className="MR-pass-back-button">
+            <IoChevronBackCircle />
+          </Link>
+          <div className="MR-pass-left-section">
+            <div className="MR-pass-lock-icon">
+              <IoLockClosed />
+              <p>MatriCare</p>
+            </div>
+          </div>
+          <h3 className="MR-pass-title">Enter Password</h3>
+          <form onSubmit={handlePasswordSubmit} className="MR-pass-form">
+            <div className="MR-pass-input-container">
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button type="submit" className="MR-pass-button">Submit</button>
+            </div>
+          </form>
+          {error && <p className="MR-pass-error">{error}</p>}
+        </div>
+      ) : (
       <div className="MR-patient-records-container">
         <main className="MR-patient-records-main-content">
           <Link to="/app" className="MR-back-button">
@@ -375,107 +420,102 @@ const MedicalRec = ({ user }) => {
           </div>
 
           <div className="MR-main-content">
-            <div className="MR-panel MR-Obstetric">
-              <h4>Obstetric History</h4>
-              <ul>
-                {obstetricHistory.map((item, index) => (
-                  <li key={index}>
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="date"
-                          className="MR-input"
-                          value={formatDate(item.date)}
-                        />
-                        <input
-                          type="text"
-                          className="MR-input"
-                          value={item.content}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <span className="date">{formatDate(item.date)}</span>
-                        <span className="text">{item.content}</span>
-                      </>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div className="MR-panel MR-Medical">
-              <h4>Medical History</h4>
-              <ul>
-                {medicalHistory.map((item, index) => (
-                  <li key={index}>
-                    <div className="diagnosis-info">
-                      {isEditing ? (
-                        <>
-                          <input
-                            type="text"
-                            className="MR-input"
-                            value={item.diagnosis}
-                          />
-                          <input
-                            type="text"
-                            className="MR-input"
-                            value={item.status}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <span className="diagnosis">{item.diagnosis}</span>
-                          <span
-                            className={`status ${
-                              item.status === "Active" ? "active" : "inactive"
-                            }`}
-                          >
-                            {item.status}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        className="MR-input"
-                        value={item.duration}
-                      />
-                    ) : (
-                      <div className="diagnosis-duration">{item.duration}</div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <div className="MR-panel MR-Obstetric">
+            <h4>Obstetric History</h4>
+            <ul>
+              {obstetricHistory.map((item, index) => (
+                <li key={index} onClick={() => handleItemClick(item)}>
+                  <span className="date">{formatDate(item.date)}</span>
+                  <span className="text">{item.content}</span>
+                </li>
+              ))}
+            </ul>
+
+            {selectedItem && (
+              <div className="modal-overlay">
+                <div className="selected-docu">
+                  <button onClick={handleClose} className="selected-docu-close">&times;</button>
+                  <div className="document-info">
+                    <p>Date: {formatDate(selectedItem.date)}</p>
+                    <p>Details: {selectedItem.content}</p>
+                  </div>
+                  <embed
+                      src={selectedItem.selectedItem}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="MR-panel MR-Medical">
+            <h4>Medical History</h4>
+            <ul>
+              {medicalHistory.map((item, index) => (
+               <li key={index} onClick={() => handleItemClick(item)}>
+                  <div className="diagnosis-info">
+                    <span className="diagnosis">{item.diagnosis}</span>
+                    <span
+                      className={`status ${
+                        item.status === "Active" ? "active" : "inactive"
+                      }`}
+                    >
+                      {item.status}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            {selectedItem && (
+              <div className="modal-overlay">
+                <div className="selected-docu">
+                  <button onClick={handleClose} className="selected-docu-close">&times;</button>
+                  <div className="document-info">
+                    <p>Date: {formatDate(selectedItem.date)}</p>
+                    <p>Diagnosis: {selectedItem.diagnosis}</p>
+                    <p>Status: {selectedItem.status}</p>
+                  </div>
+                  <embed
+                      src={selectedItem.selectedItem}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                </div>
+              </div>
+            )}
+          </div>
 
             <div className="MR-panel MR-Surgical">
               <h4>Surgical History</h4>
               <ul>
                 {surgicalHistory.map((item, index) => (
-                  <li key={index}>
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="date"
-                          className="MR-input"
-                          value={formatDate(item.date)}
-                        />
-                        <input
-                          type="text"
-                          className="MR-input"
-                          value={item.content}
-                        />
-                      </>
-                    ) : (
-                      <>
+                  <li key={index} onClick={() => handleItemClick(item)}>
                         <span className="date">{formatDate(item.date)}</span>
                         <span className="text">{item.content}</span>
-                      </>
-                    )}
                   </li>
                 ))}
               </ul>
+              {selectedItem && (
+              <div className="modal-overlay">
+                <div className="selected-docu">
+                  <button onClick={handleClose} className="selected-docu-close">&times;</button>
+                  <div className="document-info">
+                    <p>Date: {formatDate(selectedItem.date)}</p>
+                    <p>Details: {selectedItem.content}</p>
+                  </div>
+                  <embed
+                      src={selectedItem.selectedItem}
+                      type="application/pdf"
+                      width="100%"
+                      height="600px"
+                    />
+                </div>
+              </div>
+            )}
             </div>
           </div>
 
@@ -606,22 +646,6 @@ const MedicalRec = ({ user }) => {
                     <div className="document-info">
                       <p>{formatDate(selectedDocument.date)}</p>
                       <p>{selectedDocument.name}</p>
-                      <div className="docu-button">
-                        <button
-                          onClick={handleDownload}
-                          aria-label="Download Document"
-                          className="docu-icon"
-                        >
-                          <FcDownload />
-                        </button>
-                        <button
-                          onClick={handlePrint}
-                          aria-label="Print Document"
-                          className="docu-icon"
-                        >
-                          <FcPrint />
-                        </button>
-                      </div>
                     </div>
                     <embed
                       src={selectedDocument.documentLink}
@@ -636,8 +660,9 @@ const MedicalRec = ({ user }) => {
           </div>
         </main>
       </div>
-    </>
-  );
-};
+     )}
+     </>
+   );
+ };
 
 export default MedicalRec;
