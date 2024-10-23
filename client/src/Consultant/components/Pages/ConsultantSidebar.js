@@ -40,6 +40,7 @@ const ConsultantSidebar = () => {
       localStorage.removeItem("savedArticles");
       localStorage.removeItem("userName");
       removeCookie("token");
+      navigate("/");
     } catch (err) {
       console.error(
         "Something went wrong!",
