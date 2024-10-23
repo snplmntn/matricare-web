@@ -17,6 +17,7 @@
   margin-left: 140px;
 }
 
+
 .bellytalk-main-content::-webkit-scrollbar {
   display: none;
 }
@@ -47,6 +48,7 @@
   color: #7c459c;
 }
 
+
 .bellytalk-icons {
   display: flex;
   flex-direction: row;
@@ -70,6 +72,7 @@
   cursor: pointer;
   color: #e39fa9 !important;
 }
+
 
 .bellytalk-label {
   font-size: 16px;
@@ -123,8 +126,8 @@
 }
 
 .sharebox-container {
-  position: relative;
-  width: 925px;
+  position: relative; 
+  width: 925px; 
 }
 
 .sharebox .bellytalk-share-box-input {
@@ -133,7 +136,7 @@
   background-color: #9a6cb4 !important;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   border: none !important;
-  margin-top: -40px;
+  margin-top: -40px; 
   height: 70px;
   width: 100%;
   text-indent: 30px;
@@ -143,8 +146,8 @@
 }
 
 .sharebox input::placeholder {
-  color: #ffffff;
-  font-size: 15px;
+  color: #ffffff; 
+  font-size: 15px; 
 }
 
 .pen-icon {
@@ -175,9 +178,9 @@
   width: 100%;
   max-width: 500px;
   position: relative;
-  margin-top: 0px;
-  height: 500px;
-  margin-left: 0;
+  height: auto; 
+  max-height: 90vh; 
+  overflow-y: auto;
   font-size: 16px;
 }
 
@@ -214,26 +217,6 @@
   color: #042440;
   cursor: pointer;
   border-radius: 5px;
-}
-
-.category-options {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-
-.category-option {
-  padding: 10px 15px;
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  margin: 5px 0;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.category-option.selected {
-  background-color: #7c459c;
-  color: #fff;
 }
 
 .sharebox-title {
@@ -275,14 +258,39 @@
 }
 
 .image-preview {
-  margin-top: -40px;
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
 }
 
 .preview-image {
   max-width: 100%;
-  height: auto;
-  border-radius: 5px;
-  width: 200px;
+  max-height: 250px;
+  object-fit: contain;
+  border-radius: 10px;
+  display: block;
+}
+
+.remove-image {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  color: #040404;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1; /* Ensures the button is on top of the image */
+}
+
+.remove-image:hover {
+  background-color: rgba(255, 255, 255, 1);
 }
 
 .post {
@@ -358,7 +366,7 @@
 
 .bellytalk-meatball-menu {
   position: absolute;
-  top: 30px;
+  top: 30px; 
   right: 0;
   background-color: #fff;
   border: 1px solid #ddd;
@@ -400,7 +408,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 600px;
+  margin-left: 550px;
 }
 
 .bellytalk-action-button {
@@ -450,12 +458,12 @@
 }
 
 .bellytalk-comment {
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 }
 
 .comment-user-info {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-start; 
 }
 
 .comment-avatar {
@@ -558,11 +566,11 @@
   border-radius: 4px;
   font-size: 14px;
   margin-bottom: 16px;
-  resize: vertical;
+  resize: vertical; 
 }
 
 .bellytalk-edit-input:focus {
-  outline: none;
+  outline: none; 
 }
 
 .bellytalk-edit-save {
@@ -591,6 +599,7 @@
   margin-left: 4px; /* Space between name and icon */
 }
 
+
 .bt-dropdown-container {
   position: relative;
   display: inline-block;
@@ -601,15 +610,15 @@
   border: none;
   cursor: pointer;
   color: #7c459c;
-  position: absolute;
-  right: 120px;
+  position: absolute; 
+  right: 120px;        
   font-size: 40px;
   top: -20px;
 }
 
 .bt-dropdown-menu {
   position: absolute;
-  top: 35px;
+  top: 35px; 
   right: 0;
   background-color: white;
   border: 1px solid #ccc;
@@ -644,6 +653,4 @@
   background-color: #f2f2f2;
 }
 
-.bt-dropdown-menu li span:hover {
-  cursor: pointer;
-}
+
