@@ -132,6 +132,7 @@ const MedicalRec = ({ user }) => {
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
       const response = await axios.post(`${API_URL}/auth/login`, {

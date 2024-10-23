@@ -417,7 +417,7 @@ function AppContent() {
           path="/patient-records/:userId"
           element={
             token && (role !== "Obgyne" || role !== "Assistant") ? (
-              <PatientRecords />
+              <PatientRecords user={parsedUser} />
             ) : role !== "Obgyne" || role !== "Assistant" ? (
               <Undefined />
             ) : (
