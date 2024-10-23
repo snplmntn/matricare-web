@@ -98,9 +98,9 @@ export default function Login() {
     }
 
     const expiryTimestamp = parseInt(getCookie("expiryTimestamp"), 10);
-    const currentTimestamp = Date.now();
 
-    if (currentTimestamp > expiryTimestamp) {
+    console.log(expiryTimestamp);
+    if (!expiryTimestamp) {
       setAuthMessage("Verification code has expired.");
       return;
     }
@@ -206,6 +206,11 @@ export default function Login() {
     try {
       let userID = getCookie("userID");
       const response = await axios.put(`${API_URL}/verify?userId=${userID}`);
+
+      // Set expiry timestamp to 5 minutes from now
+      const expiryTime = Date.now() + 5 * 60 * 1000; // 5 minutes in milliseconds
+      setCookie("expiryTimestamp", expiryTime, { path: "/", maxAge: 5 * 60 }); // Setting cookie with maxAge
+
       resendMessage
         ? setSuccessMessage("Verification code resent successfully!")
         : setSuccessMessage("Verification code sent successfully!");

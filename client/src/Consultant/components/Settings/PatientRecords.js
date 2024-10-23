@@ -512,7 +512,7 @@ const PatientRecords = ({ user }) => {
         <div className="MR-pass-container">
           <div
             className="MR-pass-background-image"
-            style={{ backgroundImage: `url('img/bg6.jpg')` }}
+            style={{ backgroundImage: `url('/img/bg6.jpg')` }}
           ></div>
           <div className="MR-pass-overlay"></div>
           <Link to="/app" className="MR-pass-back-button">
