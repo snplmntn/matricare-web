@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../styles/settings/patientrecords.css";
 import { FaMobileAlt, FaFileAlt, FaFilePdf } from "react-icons/fa";
+import {IoChevronBackCircle, IoLockClosed} from "react-icons/io5";
 import moment from "moment";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -34,6 +35,10 @@ const PatientRecords = () => {
     duration: "",
     file: null,
   });
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [documents, setDocuments] = useState([
@@ -72,6 +77,16 @@ const PatientRecords = () => {
       }
       setTaskName("");
       setFormVisible(false); // Hide form after adding
+    }
+  };
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (password === "securePassword123") {
+      setIsAuthenticated(true);
+      setError("");
+    } else {
+      setError("Incorrect password");
     }
   };
 
@@ -480,6 +495,39 @@ const PatientRecords = () => {
   };
 
   return (
+    <>
+     {!isAuthenticated ? (
+        <div className="MR-pass-container">
+          <div
+            className="MR-pass-background-image"
+            style={{ backgroundImage: `url('img/bg6.jpg')` }}>
+            </div>
+          <div className="MR-pass-overlay"></div>
+          <Link to="/app" className="MR-pass-back-button">
+            <IoChevronBackCircle />
+          </Link>
+          <div className="MR-pass-left-section">
+            <div className="MR-pass-lock-icon">
+              <IoLockClosed />
+              <p>MatriCare</p>
+            </div>
+          </div>
+          <h3 className="MR-pass-title">Enter Password</h3>
+          <form onSubmit={handlePasswordSubmit} className="MR-pass-form">
+            <div className="MR-pass-input-container">
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button type="submit" className="MR-pass-button">Submit</button>
+            </div>
+          </form>
+          {error && <p className="MR-pass-error">{error}</p>}
+        </div>
+      ) : (
     <div className="patient-records-container">
       <main className="patient-records-main-content">
         <div onClick={handleBack} className="PR-back-button">
@@ -818,7 +866,9 @@ const PatientRecords = () => {
         ) : null}
       </main>
     </div>
-  );
+  )}
+  </>
+);
 };
 
 export default PatientRecords;
