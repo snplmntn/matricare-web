@@ -649,3 +649,157 @@
 .docu-icon:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+/* password */
+
+.MR-pass-background-image{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;               
+}
+
+.MR-pass-overlay{
+  background-color: #7c459cda;
+  z-index: 1;                                  
+  position: absolute;                       
+  top: 0;                                     
+  left: 0;                                  
+  right: 0;                                
+  bottom: 0;                                
+  display: flex;                             
+  justify-content: center;                   
+  align-items: center;  
+}
+
+.MR-pass-back-button{
+  position: absolute;  
+  top: 10px;     
+  left: 20px;         
+  color: #ffffff !important; 
+  font-size: 40px;    
+  text-decoration: none; 
+  z-index: 1000;      
+  padding: 10px;      
+  border-radius: 5px; 
+}
+
+.MR-pass-title {
+  position: relative;
+  padding-left: 200px; /* Adjust as needed */
+  z-index: 1000;
+}
+
+.MR-pass-left-section {
+  display: flex;
+  align-items: center;
+  margin-left: -100px;
+  z-index: 1000;
+  position: relative;
+}
+
+.MR-pass-lock-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px; /* Adjust spacing as needed */
+  z-index: 1000;
+}
+
+.MR-pass-lock-icon svg {
+  width: 40px; 
+  height: auto; 
+  color: #ffffff;
+  z-index: 1000;
+}
+
+.MR-pass-lock-icon p {
+  margin-top: 5px; 
+  color: #ffffff;
+  font-size: 50px;
+  font-weight: bold;
+  font-style: italic;
+  z-index: 1000;
+}
+
+.MR-pass-title::before {
+  content: "";
+  position: absolute;
+  left: 280px;
+  top: 50px;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 250px;
+  background-color: #ffffff;
+  z-index: 1000;
+}
+
+
+.MR-pass-container {
+  margin: 250px auto;
+  padding: 20px;
+  border-radius: 50px;
+  text-align: center;
+  width: 30%;
+  height: 20vh;
+  margin-top: 350px;
+  z-index: 1; 
+  margin-left: 720px;
+}
+
+.MR-pass-container h3 {
+  margin-top: -100px;
+  margin-bottom: 0px;
+  color: white;
+  font-size: 15px;
+  font-weight: lighter;
+  margin-left: -70px;
+}
+
+.MR-pass-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 280px;
+  position: relative;
+  z-index: 1000;
+}
+
+.MR-pass-form input {
+  padding: 15px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  width: 250px;
+  position: relative;
+  z-index: 1000;
+}
+
+.MR-pass-button {
+  padding: 10px 20px;
+  background-color: #E39FA9;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  width: 100px;
+  margin-top: 20px;
+  font-size: 16px;
+  position: relative;
+  z-index: 1000;
+}
+
+.MR-pass-button:hover {
+  background-color: #7c459c;
+}
+
+.MR-pass-error {
+  color: red;
+  margin-top: 10px;
+  position: relative;
+  z-index: 1000;
+}
