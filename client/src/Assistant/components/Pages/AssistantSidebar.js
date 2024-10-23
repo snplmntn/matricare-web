@@ -38,8 +38,8 @@ const AssistantSidebar = () => {
       localStorage.removeItem("profileImageUrl");
       localStorage.removeItem("savedArticles");
       localStorage.removeItem("userName");
-      removeCookie("token");
       navigate("/");
+      removeCookie("token");
     } catch (err) {
       console.error(
         "Something went wrong!",

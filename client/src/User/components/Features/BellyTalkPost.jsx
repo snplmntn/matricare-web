@@ -21,11 +21,12 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [commentText, setCommentText] = useState("");
   const [isLikedByMe, setIsLikedByMe] = useState(false);
   const [isSavedByMe, setIsSavedByMe] = useState(false);
+  const [isLiking, setIsLiking] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [comments, setComments] = useState([]);
   const [menuVisible, setMenuVisible] = useState(true);
   const [commentsCount, setCommentsCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
-  const [savesCount, setSavesCount] = useState(0);
   const API_URL = process.env.REACT_APP_API_URL;
 
   //will enable user to open the input in reply
@@ -41,7 +42,11 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       navigate("/login");
     }
 
+    if (isLiking) return;
+    setIsLiking(true);
+
     if (!isLikedByMe) {
+      setIsLikedByMe(!isLikedByMe);
       //like post
       try {
         const postLike = {
@@ -55,13 +60,14 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         });
         console.log(response);
         setLikesCount((prevCount) => prevCount + 1);
-        setIsLikedByMe(true);
+        setIsLiking(false);
       } catch (error) {
         console.error(error);
       }
     } else {
       //unlike posts
       try {
+        setIsLikedByMe(!isLikedByMe);
         const response = await axios.delete(
           `${API_URL}/post/like?userId=${userID}&postId=${post._id}`,
           {
@@ -72,7 +78,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         );
         console.log(response);
         setLikesCount((prevCount) => prevCount - 1); // Decrement likes count
-        setIsLikedByMe(false);
+        setIsLiking(false);
       } catch (error) {
         console.error(error);
       }
@@ -84,8 +90,12 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       navigate("/login");
     }
 
+    if (isSaving) return;
+    setIsSaving(true);
+
     if (!isSavedByMe) {
       try {
+        setIsSavedByMe(!isSavedByMe);
         const response = await axios.get(
           `${API_URL}/user/save?userId=${userID}&postId=${post._id}`,
           {
@@ -94,14 +104,14 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             },
           }
         );
-        setIsSavedByMe(!isSavedByMe);
-        setSavesCount((prevCount) => prevCount + 1);
         console.log(response.data);
+        setIsSaving(false);
       } catch (error) {
         console.error(error);
       }
     } else {
       try {
+        setIsSavedByMe(!isSavedByMe);
         const response = await axios.delete(
           `${API_URL}/user/unsave?userId=${userID}&postId=${post._id}`,
           {
@@ -110,9 +120,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             },
           }
         );
-        setIsSavedByMe(!isSavedByMe);
-        setSavesCount((prevCount) => prevCount - 1);
+
         console.log(response.data, !isSavedByMe);
+        setIsSaving(false);
       } catch (error) {
         console.error(error);
       }
@@ -160,6 +170,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         }
       );
       setComments([response.data.comment, ...comments]);
+      setCommentsCount((prevCount) => prevCount + 1);
     } catch (error) {
       console.error(error);
     }
@@ -188,6 +199,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           const liked = likedUserIDs.includes(userID);
           setIsLikedByMe(liked);
         }
+        setLikesCount(response.data.likes.length);
       } catch (error) {
         console.error(error);
       }
@@ -215,6 +227,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         }));
 
         setComments(fetchedComments);
+        setCommentsCount(response.data.comments.length);
       } catch (error) {
         console.error(error);
       }
@@ -387,9 +400,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             style={{ color: isSavedByMe ? "#e39fa9" : "#9a6cb4" }}
             onClick={() => handleSave(post.id)}
           />
-          {savesCount > 0 && (
-            <span className="bellytalk-action-count">{savesCount}</span>
-          )}
         </div>
 
         {openReply && (
