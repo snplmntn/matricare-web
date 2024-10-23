@@ -42,6 +42,7 @@ const PatientRecords = ({ user }) => {
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
+  const [selectedEntry, setSelectedEntry] = useState(null);
   const [documents, setDocuments] = useState([
     {
       name: "ECG Test Report",
@@ -250,6 +251,7 @@ const PatientRecords = ({ user }) => {
 
   const handleClose = () => {
     setSelectedDocument(null);
+    setSelectedEntry(null);
   };
 
   const handleDownload = () => {
@@ -506,13 +508,18 @@ const PatientRecords = ({ user }) => {
     navigate(-1);
   };
 
+  const handleEntryClick = (entry) => {
+    setSelectedEntry(entry);
+  };
+
+
   return (
     <>
-      {!isAuthenticated ? (
+       {!isAuthenticated ? (
         <div className="MR-pass-container">
           <div
             className="MR-pass-background-image"
-            style={{ backgroundImage: `url('img/bg6.jpg')` }}
+            style={{ backgroundImage: `url('/img/bg6.jpg')` }}
           ></div>
           <div className="MR-pass-overlay"></div>
           <Link to="/app" className="MR-pass-back-button">
@@ -671,7 +678,7 @@ const PatientRecords = ({ user }) => {
                 <h4>Obstetric History</h4>
                 <ul>
                   {obstetricHistory.map((entry, index) => (
-                    <li key={index}>
+                    <li key={index} onClick={() => handleEntryClick(entry)}>
                       <span className="date">{formatDate(entry.date)}</span>
                       <span className="text">{entry.content}</span>
                       {entry.file && (
@@ -680,6 +687,30 @@ const PatientRecords = ({ user }) => {
                     </li>
                   ))}
                 </ul>
+
+                {selectedEntry && (
+                  <div className="modal-overlay">
+                    <div className="selected-docu">
+                      <button
+                        onClick={handleClose}
+                        className="selected-docu-close"
+                      >
+                        &times;
+                      </button>
+                      <div className="document-info">
+                        <p>Date: {formatDate(selectedEntry.date)}</p>
+                        <p>Details: {selectedEntry.content}</p>
+                      </div>
+                      <embed
+                        src={selectedEntry.selectedEntry}
+                        type="application/pdf"
+                        width="100%"
+                        height="600px"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <button
                   className="PR-Add"
                   onClick={() => openModal("Obstetric")}
@@ -692,7 +723,7 @@ const PatientRecords = ({ user }) => {
                 <h4>Medical History</h4>
                 <ul>
                   {medicalHistory.map((entry, index) => (
-                    <li key={index}>
+                    <li key={index} onClick={() => handleEntryClick(entry)}>
                       <div className="diagnosis-info">
                         <span className="diagnosis">{entry.diagnosis}</span>
                         <span className="status">{entry.status}</span>
@@ -704,6 +735,30 @@ const PatientRecords = ({ user }) => {
                     </li>
                   ))}
                 </ul>
+                {selectedEntry && (
+                  <div className="modal-overlay">
+                    <div className="selected-docu">
+                      <button
+                        onClick={handleClose}
+                        className="selected-docu-close"
+                      >
+                        &times;
+                      </button>
+                      <div className="document-info">
+                        <p>Date: {formatDate(selectedEntry.date)}</p>
+                        <p>Diagnosis: {selectedEntry.diagnosis}</p>
+                        <p>Status: {selectedEntry.status}</p>
+                      </div>
+                      <embed
+                        src={selectedEntry.selectedEntry}
+                        type="application/pdf"
+                        width="100%"
+                        height="600px"
+                      />
+                    </div>
+                  </div>
+                )}
+
                 <button className="PR-Add" onClick={() => openModal("Medical")}>
                   Add
                 </button>
@@ -713,7 +768,7 @@ const PatientRecords = ({ user }) => {
                 <h4>Surgical History</h4>
                 <ul>
                   {surgicalHistory.map((entry, index) => (
-                    <li key={index}>
+                   <li key={index} onClick={() => handleEntryClick(entry)}>
                       <span className="date">{formatDate(entry.date)}</span>
                       <span className="text">{entry.content}</span>
                       {entry.file && (
@@ -722,6 +777,33 @@ const PatientRecords = ({ user }) => {
                     </li>
                   ))}
                 </ul>
+                {selectedEntry && (
+                  <div className="modal-overlay">
+                    <div className="selected-docu">
+                      <button
+                        onClick={handleClose}
+                        className="selected-docu-close"
+                      >
+                        &times;
+                      </button>
+                      <div className="document-info">
+                        <p>
+                          Date:{" "}
+                          {selectedEntry && selectedEntry.duration
+                            ? selectedEntry.duration
+                            : formatDate(selectedEntry.date)}
+                        </p>
+                        <p>Details: {selectedEntry.content}</p>
+                      </div>
+                      <embed
+                        src={selectedEntry.documentLink}
+                        type="application/pdf"
+                        width="100%"
+                        height="600px"
+                      />
+                    </div>
+                  </div>
+                )}
                 <button
                   className="PR-Add"
                   onClick={() => openModal("Surgical")}
