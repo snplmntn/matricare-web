@@ -62,12 +62,6 @@ const PatientUserManagement = () => {
     setFilter(event.target.value);
   };
 
-  const handleRowClick = (userId) => {
-    if (view === "patients") {
-      navigate(`/patient-records/${userId}`);
-    }
-  };
-
   const handleAddPatientClick = () => {
     setShowForm(true); // Show the form when the button is clicked
   };
@@ -293,7 +287,7 @@ const PatientUserManagement = () => {
           </thead>
           <tbody>
             {filteredUsers.map((user, index) => (
-              <tr key={user.id} onClick={() => handleRowClick(user._id)}>
+              <tr key={user.id}>
                 {view === "patients" && (
                   <td>
                     <input

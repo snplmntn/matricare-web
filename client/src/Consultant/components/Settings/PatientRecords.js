@@ -36,25 +36,13 @@ const PatientRecords = ({ user }) => {
     duration: "",
     file: null,
   });
-  const [isUnlocked, setIsUnlocked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [selectedEntry, setSelectedEntry] = useState(null);
-  const [documents, setDocuments] = useState([
-    {
-      name: "ECG Test Report",
-      date: "2024-02-25",
-      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
-    },
-    {
-      name: "Medical History",
-      date: "2024-03-15",
-      file: "C:\\Users\\Bea\\Documents\\Capstone\\Code\\ECG_Test_Report.pdf",
-    },
-  ]);
+  const [documents, setDocuments] = useState([]);
 
   const handleAddTask = async () => {
     if (taskName.trim()) {
@@ -122,6 +110,7 @@ const PatientRecords = ({ user }) => {
     setDetailsVisible(false);
     setSelectedDocument(null);
   };
+
   //get task
   useEffect(() => {
     let patientId;
@@ -293,51 +282,16 @@ const PatientRecords = ({ user }) => {
     return age;
   };
 
-  const [obstetricHistory, setObstetricHistory] = useState([
-    { date: "01/15/2020", content: "Miscarriage", file: null },
-    { date: "03/31/2020", content: "Ectopic", file: null },
-  ]);
+  const [obstetricHistory, setObstetricHistory] = useState([]);
 
-  const [medicalHistory, setMedicalHistory] = useState([
-    {
-      diagnosis: "Asthma",
-      status: "Active",
-      duration: "From last 4 Months",
-      file: null,
-    },
-    {
-      diagnosis: "Hypertension",
-      status: "Inactive",
-      duration: "From last 2 Years",
-      file: null,
-    },
-  ]);
+  const [medicalHistory, setMedicalHistory] = useState([]);
 
-  const [surgicalHistory, setSurgicalHistory] = useState([
-    { date: "01/15/2020", content: "Appendicitis", file: null },
-    { date: "03/31/2020", content: "Tuberculosis", file: null },
-  ]);
+  const [surgicalHistory, setSurgicalHistory] = useState([]);
 
   const addObstetricEntry = () => {
     // Logic to add a new obstetric entry
     const newEntry = { date: "New Date", text: "New Entry" }; // Replace with actual input values
     setObstetricHistory([...obstetricHistory, newEntry]);
-  };
-
-  const addMedicalEntry = () => {
-    // Logic to add a new medical entry
-    const newEntry = {
-      diagnosis: "New Diagnosis",
-      status: "Active",
-      duration: "From last 1 Month",
-    }; // Replace with actual input values
-    setMedicalHistory([...medicalHistory, newEntry]);
-  };
-
-  const addSurgicalEntry = () => {
-    // Logic to add a new surgical entry
-    const newEntry = { date: "New Date", text: "New Surgery" }; // Replace with actual input values
-    setSurgicalHistory([...surgicalHistory, newEntry]);
   };
 
   const handleChange = (event) => {
@@ -384,6 +338,17 @@ const PatientRecords = ({ user }) => {
   const saveEntry = async () => {
     const { type, file } = modalData;
     // const newDocument = { name: newDocName, date: newDocDate, userId: userID };
+
+    if (!file) return alert("Please select a file to upload.");
+
+    if (type === "Obstetric" || type === "Surgical") {
+      if (!modalData.date) return alert("Please select a date.");
+      if (!modalData.content) return alert("Please enter a description.");
+    } else if (type === "Medical") {
+      if (!modalData.diagnosis) return alert("Please enter a diagnosis.");
+      if (!modalData.status) return alert("Please enter the status.");
+      if (!modalData.duration) return alert("Please enter the duration.");
+    }
 
     const formData = new FormData();
     formData.append("document", file);
@@ -512,10 +477,9 @@ const PatientRecords = ({ user }) => {
     setSelectedEntry(entry);
   };
 
-
   return (
     <>
-       {!isAuthenticated ? (
+      {!isAuthenticated ? (
         <div className="MR-pass-container">
           <div
             className="MR-pass-background-image"
@@ -768,7 +732,7 @@ const PatientRecords = ({ user }) => {
                 <h4>Surgical History</h4>
                 <ul>
                   {surgicalHistory.map((entry, index) => (
-                   <li key={index} onClick={() => handleEntryClick(entry)}>
+                    <li key={index} onClick={() => handleEntryClick(entry)}>
                       <span className="date">{formatDate(entry.date)}</span>
                       <span className="text">{entry.content}</span>
                       {entry.file && (

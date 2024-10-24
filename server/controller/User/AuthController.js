@@ -78,15 +78,17 @@ const user_signup = catchAsync(async (req, res, next) => {
     babyName,
   });
 
-  const userCount = await Patient.find().countDocuments();
+  if (user.role === "Patient") {
+    const userCount = await Patient.find().countDocuments();
 
-  await Patient.create({
-    fullName,
-    email,
-    phoneNumber,
-    userId: user._id,
-    seq: userCount + 1,
-  });
+    await Patient.create({
+      fullName,
+      email,
+      phoneNumber,
+      userId: user._id,
+      seq: userCount + 1,
+    });
+  }
 
   const token = jwt.sign({ user: user }, process.env.JWT_KEY, {
     expiresIn: "30d",
