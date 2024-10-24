@@ -36,7 +36,7 @@ const PatientRecords = ({ user }) => {
     duration: "",
     file: null,
   });
-  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
