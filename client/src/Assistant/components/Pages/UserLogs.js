@@ -92,10 +92,6 @@ const ConsultantLogs = () => {
     setEditingUserId(null);
   };
 
-  const handleRowClick = (userId) => {
-    navigate(`/patient-records/${userId}`);
-  };
-
   const handleAddPatientClick = () => {
     setShowForm(true); // Show the form when the button is clicked
   };
@@ -486,7 +482,7 @@ const ConsultantLogs = () => {
           </thead>
           <tbody>
             {filteredUsers.map((user, index) => (
-              <tr key={user._id} onClick={() => handleRowClick(user._id)}>
+              <tr key={user._id}>
                 {view === "patients" && (
                   <td>
                     <input
