@@ -68,6 +68,10 @@ const BellyTalk = ({ user }) => {
     setIsPosting("");
   };
 
+  const handleRemoveImage = () => {
+    setImagePreview(null); // Reset the image preview to remove it
+  };
+
   const handleNextStep = async () => {
     if (selectedImage) {
       const formData = new FormData();
@@ -383,11 +387,8 @@ const BellyTalk = ({ user }) => {
                     </div>
                     {imagePreview && (
                       <div className="image-preview">
-                        <img
-                          src={imagePreview}
-                          alt="Selected"
-                          className="preview-image"
-                        />
+                        <img src={imagePreview} alt="Selected" className="preview-image" />
+                        <span className="remove-image" onClick={handleRemoveImage}>×</span>
                       </div>
                     )}
                     <button
