@@ -19,8 +19,8 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import DownloadIcon  from "@mui/icons-material/Download";
-import CloseIcon from '@mui/icons-material/Close';
+import DownloadIcon from "@mui/icons-material/Download";
+import CloseIcon from "@mui/icons-material/Close";
 import "../../styles/settings/managebellytalk.css";
 import { jsPDF } from "jspdf";
 import { getCookie } from "../../../utils/getCookie";
@@ -66,22 +66,30 @@ const ManageBellyTalk = () => {
     const categoryData = data.find((item) => item.name === selectedCategory);
     if (!categoryData) return;
 
-    // Start the `toSummarize` structure
-    const toSummarize = {
-      category: selectedCategory, // Selected category (e.g., Health & Wellness)
-      posts: categoryData.PostContent.map((content, index) => {
-        return {
-          content, // Post content
-          comments: categoryData.PostComments[index], // Associated comments
-        };
-      }),
-    };
+    let summary = "";
+    if (categoryData.PostContent.length !== 0) {
+      // Start the `toSummarize` structure
+      const toSummarize = {
+        category: selectedCategory, // Selected category (e.g., Health & Wellness)
+        posts: categoryData.PostContent.map((content, index) => {
+          return {
+            content, // Post content
+            comments: categoryData.PostComments[index], // Associated comments
+          };
+        }),
+      };
 
-    const response = await axios.post(`${OPENAI_URL}/summarize`, toSummarize, {
-      headers: {
-        Authorization: token,
-      },
-    });
+      const response = await axios.post(
+        `${OPENAI_URL}/summarize`,
+        toSummarize,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      summary = response.data.summary;
+    }
 
     // Create a new jsPDF instance
     const doc = new jsPDF();
@@ -89,13 +97,10 @@ const ManageBellyTalk = () => {
     // Set the title and add content
     doc.setFontSize(22);
     doc.text(`Data for ${selectedCategory}`, 20, 20);
-    doc.setFontSize(16);
+
     doc.setFontSize(12);
     // Use splitTextToSize to wrap the summary text
-    const summaryLines = doc.splitTextToSize(
-      `\n\nSummary: \n${response.data.summary}`,
-      180
-    ); // 180 is the max width in mm
+    const summaryLines = doc.splitTextToSize(`\n\nSummary: \n${summary}`, 180); // 180 is the max width in mm
     doc.text(summaryLines, 20, 80); // Adjust vertical position as needed
 
     // Save the PDF
@@ -246,10 +251,9 @@ const ManageBellyTalk = () => {
           </ResponsiveContainer>
         </Box>
       </Box>
-      
+
       <Dialog open={open} onClose={handleClose}>
-      <DialogActions>
-        </DialogActions>
+        <DialogActions></DialogActions>
         <DialogTitle>
           <Box
             sx={{
@@ -258,16 +262,18 @@ const ManageBellyTalk = () => {
               justifyContent: "space-between",
             }}
           >
-          <Typography className="dialog-title-text">{selectedCategory}</Typography>
-        <IconButton onClick={handleClose} className="dialog-close-button">
-          <CloseIcon />
-        </IconButton>
+            <Typography className="dialog-title-text">
+              {selectedCategory}
+            </Typography>
+            <IconButton onClick={handleClose} className="dialog-close-button">
+              <CloseIcon />
+            </IconButton>
           </Box>
         </DialogTitle>
         <DialogContent>{renderDetails()}</DialogContent>
-        <Button 
-          onClick={handleDownload} 
-          className="dialog-download-button" 
+        <Button
+          onClick={handleDownload}
+          className="dialog-download-button"
           startIcon={<DownloadIcon />}
         >
           Download
