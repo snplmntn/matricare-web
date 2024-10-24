@@ -19,21 +19,12 @@ import {
   Button,
   IconButton,
 } from "@mui/material";
-import SaveAlt from "@mui/icons-material/SaveAlt";
+import DownloadIcon  from "@mui/icons-material/Download";
+import CloseIcon from '@mui/icons-material/Close';
 import "../../styles/settings/managebellytalk.css";
 import { jsPDF } from "jspdf";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
-
-// Example data for the chart
-// const data = [
-//   { name: "Health & Wellness", Posts: 20, Engagement: 10, Discussions: 5 },
-//   { name: "Finance & Budgeting", Posts: 15, Engagement: 5, Discussions: 3 },
-//   { name: "Parenting & Family", Posts: 8, Engagement: 4, Discussions: 2 },
-//   { name: "Baby Essentials", Posts: 5, Engagement: 12, Discussions: 8 },
-//   { name: "Exercise & Fitness", Posts: 28, Engagement: 10, Discussions: 25 },
-//   { name: "Labor & Delivery", Posts: 25, Engagement: 15, Discussions: 7 },
-// ];
 
 const ManageBellyTalk = () => {
   const API_URL = process.env.REACT_APP_API_URL;
@@ -97,11 +88,8 @@ const ManageBellyTalk = () => {
 
     // Set the title and add content
     doc.setFontSize(22);
-    doc.text(`Download Data for ${selectedCategory}`, 20, 20);
+    doc.text(`Data for ${selectedCategory}`, 20, 20);
     doc.setFontSize(16);
-    doc.text(`Posts: ${categoryData.Posts}`, 20, 40);
-    doc.text(`Engagement: ${categoryData.Engagement}`, 20, 50);
-    doc.text(`Discussions: ${categoryData.Discussions}`, 20, 60);
     doc.setFontSize(12);
     // Use splitTextToSize to wrap the summary text
     const summaryLines = doc.splitTextToSize(
@@ -258,7 +246,10 @@ const ManageBellyTalk = () => {
           </ResponsiveContainer>
         </Box>
       </Box>
+      
       <Dialog open={open} onClose={handleClose}>
+      <DialogActions>
+        </DialogActions>
         <DialogTitle>
           <Box
             sx={{
@@ -267,21 +258,20 @@ const ManageBellyTalk = () => {
               justifyContent: "space-between",
             }}
           >
-            <Typography variant="h6">{selectedCategory}</Typography>
-            <IconButton onClick={handleDownload} sx={{ color: "#7c459c" }}>
-              <SaveAlt />
-            </IconButton>
+          <Typography className="dialog-title-text">{selectedCategory}</Typography>
+        <IconButton onClick={handleClose} className="dialog-close-button">
+          <CloseIcon />
+        </IconButton>
           </Box>
         </DialogTitle>
         <DialogContent>{renderDetails()}</DialogContent>
-        <DialogActions>
-          <Button
-            onClick={handleClose}
-            sx={{ color: "#7c459c", textAlign: "center" }}
-          >
-            Close
-          </Button>
-        </DialogActions>
+        <Button 
+          onClick={handleDownload} 
+          className="dialog-download-button" 
+          startIcon={<DownloadIcon />}
+        >
+          Download
+        </Button>
       </Dialog>
     </Box>
   );
