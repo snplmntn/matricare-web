@@ -220,7 +220,12 @@ const BellyTalk = ({ user }) => {
     const filteredPosts = allPost.filter((post) => {
       const matchesSearchTerm =
         post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.fullname.toLowerCase().includes(searchTerm.toLowerCase());
+        post.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (post &&
+          post.comments &&
+          post.comments.some((comment) =>
+            comment.content.toLowerCase().includes(searchTerm.toLowerCase())
+          ));
       const matchesCategory =
         activeFilters.length === 0 ||
         activeFilters.includes("All") ||
@@ -387,8 +392,17 @@ const BellyTalk = ({ user }) => {
                     </div>
                     {imagePreview && (
                       <div className="image-preview">
-                        <img src={imagePreview} alt="Selected" className="preview-image" />
-                        <span className="remove-image" onClick={handleRemoveImage}>×</span>
+                        <img
+                          src={imagePreview}
+                          alt="Selected"
+                          className="preview-image"
+                        />
+                        <span
+                          className="remove-image"
+                          onClick={handleRemoveImage}
+                        >
+                          ×
+                        </span>
                       </div>
                     )}
                     <button

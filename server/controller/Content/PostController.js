@@ -29,6 +29,7 @@ const post_index = catchAsync(async (req, res, next) => {
   const posts = await Post.find(query)
     .populate("userId")
     .populate("likes")
+    .populate("comments")
     .sort({ _id: -1 })
     .limit(20)
     .lean();
