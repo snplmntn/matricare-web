@@ -170,6 +170,14 @@ const like_delete = catchAsync(async (req, res, next) => {
       { $pull: { likes: existingLike._id } }, // Decrement the likes field by 1
       { new: true }
     );
+
+    if (updatedModel.postAnalytics) {
+      await PostAnalytics.findByIdAndUpdate(
+        updatedModel.postAnalytics,
+        { $pull: { likes: existingLike._id } },
+        { new: true }
+      );
+    }
   } else if (postCommentId) {
     updatedModel = await PostComment.findByIdAndUpdate(
       likeableId,
