@@ -11,7 +11,7 @@ router.post("/p", upload.single("picture"), uploadController.picture_post);
 // Upload Picture by Belly Talk
 router.post(
   "/b",
-  upload.single("picture"),
+  upload.array("picture", 16),
   uploadController.belly_talk_picture_post
 );
 

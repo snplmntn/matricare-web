@@ -371,9 +371,18 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           <p>{post.content}</p>
         )}
 
-        {post.picture && (
-          <img src={post.picture} alt="Post" className="bt-post-image" />
-        )}
+        {Array.isArray(post.picture)
+          ? post.picture.map((pic, index) => (
+              <img
+                key={index}
+                src={pic}
+                alt={`Post ${index}`}
+                className="bt-post-image"
+              />
+            ))
+          : post.picture && (
+              <img src={post.picture} alt="Post" className="bt-post-image" />
+            )}
         <hr className="bellytalk-divider" />
         <div className="bellytalk-actions">
           <button className="bellytalk-action-button" onClick={handleReply}>

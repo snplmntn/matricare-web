@@ -36,8 +36,8 @@ const BellyTalk = ({ user }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   //image -> firebase
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [selectedImage, setSelectedImage] = useState([]);
+  const [imagePreview, setImagePreview] = useState([]);
 
   const [isPosting, setIsPosting] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -68,14 +68,23 @@ const BellyTalk = ({ user }) => {
     setIsPosting("");
   };
 
-  const handleRemoveImage = () => {
-    setImagePreview(null); // Reset the image preview to remove it
+  const handleRemoveImage = (index) => {
+    setSelectedImage((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImagePreview((prevPreviews) =>
+      prevPreviews.filter((_, i) => i !== index)
+    );
   };
 
   const handleNextStep = async () => {
-    if (selectedImage) {
+    console.log(selectedImage);
+    if (selectedImage && selectedImage.length > 0) {
       const formData = new FormData();
-      formData.append("picture", selectedImage);
+
+      // Loop through each image in selectedImage array and append it to formData
+      selectedImage.forEach((image) => {
+        formData.append("picture", image);
+      });
+
       try {
         const response = await axios.post(
           `${API_URL}/upload/b?userId=${userID}`,
@@ -150,16 +159,13 @@ const BellyTalk = ({ user }) => {
   };
 
   const handleFileChange = (e) => {
-    //state that will be passed in backend
+    const files = Array.from(e.target.files); // Convert FileList to Array
 
-    const file = e.target.files[0];
-    setSelectedImage(file);
+    setSelectedImage(files);
 
-    //display image preview
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setImagePreview(imageUrl);
-    }
+    // Generate previews for each selected image
+    const previews = files.map((file) => URL.createObjectURL(file));
+    setImagePreview(previews);
   };
 
   async function fetchPosts() {
@@ -387,22 +393,27 @@ const BellyTalk = ({ user }) => {
                         type="file"
                         accept="image/*"
                         onChange={handleFileChange}
+                        multiple
                         style={{ display: "none" }} // Hide the default file input
                       />
                     </div>
-                    {imagePreview && (
-                      <div className="image-preview">
-                        <img
-                          src={imagePreview}
-                          alt="Selected"
-                          className="preview-image"
-                        />
-                        <span
-                          className="remove-image"
-                          onClick={handleRemoveImage}
-                        >
-                          ×
-                        </span>
+                    {imagePreview && imagePreview.length > 0 && (
+                      <div className="image-preview-container">
+                        {imagePreview.map((preview, index) => (
+                          <div key={index} className="image-preview">
+                            <img
+                              src={preview}
+                              alt={`Selected ${index}`}
+                              className="preview-image"
+                            />
+                            <span
+                              className="remove-image"
+                              onClick={() => handleRemoveImage(index)}
+                            >
+                              ×
+                            </span>
+                          </div>
+                        ))}
                       </div>
                     )}
                     <button

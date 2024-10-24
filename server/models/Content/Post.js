@@ -31,9 +31,11 @@ const PostSchema = new mongoose.Schema(
         ],
       },
     ],
-    picture: {
-      type: String,
-    },
+    picture: [
+      {
+        type: String,
+      },
+    ],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostComment" }],
     postAnalytics: {
