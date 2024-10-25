@@ -8,16 +8,17 @@ const catchAsync = require("../../../Utilities/catchAsync");
 const document_get = catchAsync(async (req, res, next) => {
   const { id, recent } = req.query;
 
+  let document;
   if (id) {
-    const document = await Document.findOne({
+    await Document.findOne({
       _id: id,
     });
 
     if (!document) return next(new AppError("Document not found", 404));
   } else if (recent) {
-    const documents = await Document.find().sort({ createdAt: -1 }).limit(10);
+    document = await Document.find().sort({ createdAt: -1 }).limit(10);
 
-    if (!documents || documents.length === 0) {
+    if (!document || document.length === 0) {
       return next(new AppError("No documents found", 404));
     }
   } else {
