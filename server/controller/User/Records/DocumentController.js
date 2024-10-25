@@ -6,11 +6,23 @@ const catchAsync = require("../../../Utilities/catchAsync");
 
 // Get Document by Id
 const document_get = catchAsync(async (req, res, next) => {
-  const document = await Document.findOne({
-    _id: req.query.id,
-  });
+  const { id, recent } = req.query;
 
-  if (!document) return next(new AppError("Document not found", 404));
+  if (id) {
+    const document = await Document.findOne({
+      _id: id,
+    });
+
+    if (!document) return next(new AppError("Document not found", 404));
+  } else if (recent) {
+    const documents = await Document.find().sort({ createdAt: -1 }).limit(10);
+
+    if (!documents || documents.length === 0) {
+      return next(new AppError("No documents found", 404));
+    }
+  } else {
+    return next(new AppError("Document identifier not found", 400));
+  }
 
   return res.status(200).json(document);
 });
