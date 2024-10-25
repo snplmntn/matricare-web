@@ -83,9 +83,9 @@ const PatientRecords = ({ user }) => {
       setError("");
     } catch (error) {
       if (error.response.status === 401) {
-        console.error(error);
         setError("Incorrect password");
       } else {
+        console.error(error);
         setError("An error occurred. Please try again later.");
       }
     }
