@@ -10,7 +10,7 @@ const document_get = catchAsync(async (req, res, next) => {
 
   let document;
   if (id) {
-    await Document.findOne({
+    document = await Document.findOne({
       _id: id,
     });
 
