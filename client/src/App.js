@@ -412,11 +412,11 @@ function AppContent() {
             )
           }
         />
-        {/* Consultant and Assistant  */}
+
         <Route
           path="/patient-records/:userId"
           element={
-            token && role !== "Obgyne" ? (
+            token && role === "Obgyne" ? (
               <PatientRecords user={parsedUser} />
             ) : role !== "Obgyne" ? (
               <Undefined />
