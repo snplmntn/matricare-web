@@ -229,7 +229,6 @@ const AppointmentConsultant = () => {
             Authorization: token,
           },
         });
-        console.log(response);
         setAppointments(response.data);
       } catch (error) {
         console.error(error);

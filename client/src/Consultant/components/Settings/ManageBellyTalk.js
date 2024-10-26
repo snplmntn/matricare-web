@@ -174,9 +174,6 @@ const ManageBellyTalk = () => {
           });
         });
       }
-
-      // Convert the object back to an array for Recharts
-      console.log("Formatted Data:", Object.values(formattedData));
       setData(Object.values(formattedData)); // Set the accumulated data for Recharts
     } catch (error) {
       console.error("Error fetching posts data: ", error);

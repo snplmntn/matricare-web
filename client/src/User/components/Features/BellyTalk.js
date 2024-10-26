@@ -73,7 +73,6 @@ const BellyTalk = ({ user }) => {
   };
 
   const handleNextStep = async () => {
-    console.log(selectedImage);
     if (selectedImage && selectedImage.length > 0) {
       const formData = new FormData();
 

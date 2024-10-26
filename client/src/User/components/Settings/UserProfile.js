@@ -312,8 +312,6 @@ const UserProfile = ({ user }) => {
         );
         setIsVerified(data.verified);
         setPrcIdFile(data.prcId ? data.prcId : null);
-
-        console.log(data);
       } catch (error) {
         console.error(error);
       }

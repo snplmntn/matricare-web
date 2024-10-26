@@ -73,7 +73,6 @@ function HomePage({ user }) {
             Authorization: token,
           },
         });
-        // console.log(response);
         const unreadNotifications = response.data.filter(
           (notification) => notification.status === "Unread"
         );

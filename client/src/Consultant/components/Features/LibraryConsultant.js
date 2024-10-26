@@ -187,7 +187,6 @@ const LibraryConsultant = () => {
           },
         }
       );
-      console.log(`Approved article with ID: ${id}`);
       setBooks((prevBooks) =>
         prevBooks.map((book) =>
           book._id === id ? { ...book, status: "Approved" } : book

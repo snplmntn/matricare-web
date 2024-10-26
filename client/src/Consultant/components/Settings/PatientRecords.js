@@ -173,7 +173,6 @@ const PatientRecords = ({ user }) => {
           }
         );
         setDocuments(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -284,8 +283,6 @@ const PatientRecords = ({ user }) => {
   const handleChange = (event) => {
     const { name, value } = event.target;
     setModalData({ ...modalData, [name]: value });
-
-    console.log(modalData);
   };
 
   const handleFileChange = (event) => {
@@ -366,7 +363,6 @@ const PatientRecords = ({ user }) => {
       };
 
       try {
-        console.log(newEntry);
         await axios.post(
           `${API_URL}/record/obstetric`,
           newEntry,

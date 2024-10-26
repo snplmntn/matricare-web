@@ -54,11 +54,6 @@ const AppointmentAssistant = () => {
     localStorage.setItem("events", JSON.stringify(events));
   }, [events]);
 
-  const handleDetailsClick = (appointment) => {
-    // Implement the logic to handle details click
-    console.log("Details clicked for appointment:", appointment);
-  };
-
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearchChange = (e) => {
@@ -175,9 +170,7 @@ const AppointmentAssistant = () => {
                       <td>{appointment.location}</td>
                       <td>{appointment.category}</td>
                       <td>
-                        <button onClick={() => handleDetailsClick(appointment)}>
-                          Details &gt;
-                        </button>
+                        <button>Details &gt;</button>
                       </td>
                     </tr>
                   ))}

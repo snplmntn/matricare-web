@@ -90,7 +90,6 @@ const MedicalRec = ({ user }) => {
           },
         }
       );
-      console.log(response);
     } catch (err) {
       console.error(err);
     }

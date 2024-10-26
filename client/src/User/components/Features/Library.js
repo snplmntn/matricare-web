@@ -158,7 +158,6 @@ const Library = () => {
                   key={book._id}
                   className="last-read-item"
                   onClick={() => {
-                    console.log(book._id); // Log the book id
                     handleBookClick(book);
                   }}
                 >
@@ -190,7 +189,6 @@ const Library = () => {
                   key={book._id}
                   className="library-item"
                   onClick={() => {
-                    console.log(book._id); // Log the book id
                     handleBookClick(book);
                   }}
                 >
