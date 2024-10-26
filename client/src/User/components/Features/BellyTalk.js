@@ -278,6 +278,7 @@ const BellyTalk = ({ user }) => {
       localStorage.removeItem("profileImageUrl");
       localStorage.removeItem("savedArticles");
       localStorage.removeItem("userName");
+      navigate("/");
       removeCookie("token");
     } catch (err) {
       console.error(
@@ -329,8 +330,8 @@ const BellyTalk = ({ user }) => {
                 <li onClick={handleOpenUserProfile}>
                   <a href="/userprofile">User Profile</a>
                 </li>
-                <li>
-                  <span onClick={handleLogout}>Logout</span>
+                <li onClick={handleLogout}>
+                  <span>Logout</span>
                 </li>
               </ul>
             </div>
