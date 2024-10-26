@@ -16,15 +16,9 @@ import axios from "axios";
 const LandingPageConsultant = ({}) => {
   const userID = getCookie("userID");
   const [date, setDate] = useState(new Date());
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [newPatients, setNewPatients] = useState(0);
   const [totalPatients, setTotalPatients] = useState(0);
   const [user, setUser] = useState({});
-  const [newPatient, setNewPatient] = useState({
-    fullName: "",
-    phoneNumber: "",
-    email: "",
-  });
   const [notification, setNotification] = useState([]);
   const [unreadNotification, setUnreadNotification] = useState(0);
   const [appointment, setAppointment] = useState([]);
@@ -33,43 +27,6 @@ const LandingPageConsultant = ({}) => {
 
   const token = getCookie("token");
   const API_URL = process.env.REACT_APP_API_URL;
-
-  const toggleForm = () => {
-    setIsFormOpen(!isFormOpen);
-  };
-
-  const handleCancelClick = () => {
-    setNewPatients(false);
-  };
-
-  const handleAddPatient = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        `${API_URL}/record/patient`,
-        {
-          email: newPatient.email,
-          fullName: newPatient.fullName,
-          phoneNumber: newPatient.phoneNumber,
-        },
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setTotalPatients(totalPatients + 1);
-      setNewPatients(newPatients + 1);
-    } catch (error) {
-      console.error(error);
-    }
-    toggleForm();
-  };
-
-  const handleFormChange = (event) => {
-    const { name, value } = event.target;
-    setNewPatient((prevState) => ({ ...prevState, [name]: value }));
-  };
 
   const formatDate = (date) => {
     const d = new Date(date);
@@ -96,7 +53,6 @@ const LandingPageConsultant = ({}) => {
             Authorization: token,
           },
         });
-        // console.log(response);
         const unreadNotifications = response.data.filter(
           (notification) => notification.status === "Unread"
         );
@@ -114,7 +70,6 @@ const LandingPageConsultant = ({}) => {
             Authorization: token,
           },
         });
-        // console.log(response.data);
 
         setAllAppointment(response.data);
       } catch (error) {

@@ -98,8 +98,6 @@ export default function Signup() {
       if (obGyneSpecialist) newUser.role = "Ob-gyne Specialist";
       const response = await axios.post(`${API_URL}/auth/signup`, newUser);
 
-      console.log("Signup response:", response.data);
-
       setSuccess("Registration successful! Redirecting to login...");
 
       setTimeout(() => {
@@ -108,7 +106,6 @@ export default function Signup() {
 
       // Handle response, such as redirecting the user
     } catch (err) {
-      console.log(err);
       if (err.response && err.response.status === 400) {
         setError(err.response.data.message);
       } else {

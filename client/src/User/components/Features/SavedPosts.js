@@ -45,7 +45,6 @@ const SavedPosts = () => {
           }
         );
         setSavedPosts(response.data.other.savedPost);
-        console.log(response.data.other.savedPost);
       } catch (error) {
         console.error(error);
       }

@@ -50,8 +50,6 @@ function Notifications() {
             Authorization: token,
           },
         });
-        // console.log(response);
-        console.log(response.data);
         setNotification(response.data.reverse());
       } catch (error) {
         console.error(error);

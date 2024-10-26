@@ -20,7 +20,7 @@ const AssistantSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(`${API_URL}/auth/logout`, {
+      await axios.get(`${API_URL}/auth/logout`, {
         headers: {
           Authorization: token,
         },

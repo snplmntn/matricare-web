@@ -21,9 +21,7 @@ const PatientRecords = ({ user }) => {
   const [patientInfo, setPatientInfo] = useState();
   const [taskName, setTaskName] = useState("");
   const [selectedDocument, setSelectedDocument] = useState(null);
-  const [documentImage, setDocumentImage] = useState(null);
   const [formVisible, setFormVisible] = useState(false);
-  const [detailsVisible, setDetailsVisible] = useState(false);
   const [status, setStatus] = useState("..."); // Default status
   const [prescribedBy, setPrescribedBy] = useState("");
   const [tasks, setTasks] = useState([]);
@@ -75,7 +73,7 @@ const PatientRecords = ({ user }) => {
     setError("");
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
+      await axios.post(`${API_URL}/auth/login`, {
         username: username,
         password: password,
       });
@@ -104,11 +102,6 @@ const PatientRecords = ({ user }) => {
   const handleDocumentClick = (docName) => {
     // Set selected document and its image URL
     setSelectedDocument(docName);
-    setDetailsVisible(true); // Show details view
-  };
-  const handleCloseDetails = () => {
-    setDetailsVisible(false);
-    setSelectedDocument(null);
   };
 
   //get task
@@ -180,7 +173,6 @@ const PatientRecords = ({ user }) => {
           }
         );
         setDocuments(response.data);
-        console.log(response.data);
       } catch (error) {
         console.error(error);
       }
@@ -288,17 +280,9 @@ const PatientRecords = ({ user }) => {
 
   const [surgicalHistory, setSurgicalHistory] = useState([]);
 
-  const addObstetricEntry = () => {
-    // Logic to add a new obstetric entry
-    const newEntry = { date: "New Date", text: "New Entry" }; // Replace with actual input values
-    setObstetricHistory([...obstetricHistory, newEntry]);
-  };
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setModalData({ ...modalData, [name]: value });
-
-    console.log(modalData);
   };
 
   const handleFileChange = (event) => {
@@ -379,8 +363,7 @@ const PatientRecords = ({ user }) => {
       };
 
       try {
-        console.log(newEntry);
-        const response = await axios.post(
+        await axios.post(
           `${API_URL}/record/obstetric`,
           newEntry,
           {
@@ -410,7 +393,7 @@ const PatientRecords = ({ user }) => {
       };
 
       try {
-        const response = await axios.post(
+        await axios.post(
           `${API_URL}/record/medical`,
           newEntry,
           {
@@ -445,7 +428,7 @@ const PatientRecords = ({ user }) => {
       setSurgicalHistory(updatedHistory);
 
       try {
-        const response = await axios.post(
+        await axios.post(
           `${API_URL}/record/surgical`,
           newEntry,
           {

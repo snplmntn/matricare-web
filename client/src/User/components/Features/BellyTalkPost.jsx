@@ -24,7 +24,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [isLiking, setIsLiking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [comments, setComments] = useState([]);
-  const [menuVisible, setMenuVisible] = useState(true);
   const [commentsCount, setCommentsCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
   const API_URL = process.env.REACT_APP_API_URL;
@@ -34,7 +33,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
 
   const handleItemClick = () => {
     setIsMenuOpen(false);
-    console.log("Menu closed:", !isMenuOpen);
   };
 
   const handlePostLike = async () => {
@@ -58,7 +56,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             Authorization: token,
           },
         });
-        console.log(response);
         setLikesCount((prevCount) => prevCount + 1);
         setIsLiking(false);
       } catch (error) {
@@ -76,7 +73,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             },
           }
         );
-        console.log(response);
         setLikesCount((prevCount) => prevCount - 1); // Decrement likes count
         setIsLiking(false);
       } catch (error) {
@@ -104,7 +100,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             },
           }
         );
-        console.log(response.data);
         setIsSaving(false);
       } catch (error) {
         console.error(error);
@@ -121,7 +116,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           }
         );
 
-        console.log(response.data, !isSavedByMe);
         setIsSaving(false);
       } catch (error) {
         console.error(error);

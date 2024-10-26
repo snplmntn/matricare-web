@@ -13,7 +13,6 @@ const PatientUserManagement = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [view, setView] = useState("patients");
-  const [editingUserId, setEditingUserId] = useState(null);
   const [patients, setPatients] = useState([]);
   const [newPatient, setNewPatient] = useState({
     assignedId: userID,

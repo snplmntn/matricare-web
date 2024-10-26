@@ -82,16 +82,6 @@ const AppointmentConsultant = () => {
     return date.toLocaleString("en-US", { weekday: "long" });
   };
 
-  // Get available time options based on selected location and date
-  const getAvailableTimes = () => {
-    const { location, date } = newAppointment;
-    const dayOfWeek = getDayOfWeek(date);
-    if (location && dayOfWeek) {
-      return availableTimes[location]?.[dayOfWeek] || [];
-    }
-    return [];
-  };
-
   const [timeOptions, setTimeOptions] = useState([]);
 
   // Handle form changes
@@ -145,7 +135,7 @@ const AppointmentConsultant = () => {
 
   const handleStatusChange = async (id, newStatus) => {
     try {
-      const response = await axios.put(
+      await axios.put(
         `${API_URL}/appointment?id=${id}&userId=${userID}`,
         {
           status: newStatus,
@@ -239,7 +229,6 @@ const AppointmentConsultant = () => {
             Authorization: token,
           },
         });
-        console.log(response);
         setAppointments(response.data);
       } catch (error) {
         console.error(error);

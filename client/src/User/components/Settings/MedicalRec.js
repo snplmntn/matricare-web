@@ -22,7 +22,6 @@ const MedicalRec = ({ user }) => {
   const userID = getCookie("userID");
 
   const [patient, setPatient] = useState();
-  const [isEditing, setIsEditing] = useState(false);
   const [tasks, setTasks] = useState([]);
   const [newDocName, setNewDocName] = useState("");
   const [newDocDate, setNewDocDate] = useState("");
@@ -30,7 +29,6 @@ const MedicalRec = ({ user }) => {
   const [selectedDocument, setSelectedDocument] = useState(null);
   const [newDocFile, setNewDocFile] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
-  const [isUnlocked, setIsUnlocked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -92,7 +90,6 @@ const MedicalRec = ({ user }) => {
           },
         }
       );
-      console.log(response);
     } catch (err) {
       console.error(err);
     }
@@ -111,23 +108,6 @@ const MedicalRec = ({ user }) => {
 
   const handleItemClick = (item) => {
     setSelectedItem(item);
-  };
-
-  const handleDownload = () => {
-    const link = document.createElement("a");
-    link.href = selectedDocument.documentLink; // Use the file URL from selectedDocument
-    link.setAttribute("download", selectedDocument.name); // Set the download attribute with the filename
-    link.setAttribute("target", "_blank"); // Open in a new tab
-    document.body.appendChild(link); // Append the link to the body
-    link.click(); // Simulate click to trigger download
-    document.body.removeChild(link); // Remove the link from the document
-  };
-
-  const handlePrint = () => {
-    const printWindow = window.open(selectedDocument.documentLink, "_blank");
-    printWindow.onload = () => {
-      printWindow.print(); // Trigger print when the document is loaded
-    };
   };
 
   const handlePasswordSubmit = async (e) => {
@@ -599,33 +579,8 @@ const MedicalRec = ({ user }) => {
                     className="MR-docu-item"
                     onClick={() => handleDocumentClick(doc)}
                   >
-                    {isEditing ? (
-                      <>
-                        <input
-                          type="text"
-                          className="MR-input"
-                          value={doc.name}
-                          onChange={(e) =>
-                            handleDocumentChange(index, "name", e.target.value)
-                          }
-                        />
-                        <input
-                          type="date"
-                          className="MR-input"
-                          value={doc.date}
-                          onChange={(e) =>
-                            handleDocumentChange(index, "date", e.target.value)
-                          }
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <span className="MR-doc-name">{doc.name}</span>
-                        <span className="MR-doc-date">
-                          {formatDate(doc.date)}
-                        </span>
-                      </>
-                    )}
+                    <span className="MR-doc-name">{doc.name}</span>
+                    <span className="MR-doc-date">{formatDate(doc.date)}</span>
                   </div>
                 ))}
 

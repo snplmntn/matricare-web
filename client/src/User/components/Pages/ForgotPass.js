@@ -8,7 +8,6 @@ import axios from "axios";
 
 export default function ForgotPassword() {
   const API_URL = process.env.REACT_APP_API_URL;
-  const [cookies, setCookie, removeCookie] = useCookies();
   const navigate = useNavigate();
 
   const [authMessage, setAuthMessage] = useState("");
@@ -124,8 +123,7 @@ export default function ForgotPassword() {
       const passwordObj = {
         password: newPassword,
       };
-      console.log(passwordObj);
-      const response = await axios.put(
+      await axios.put(
         `${API_URL}/auth/recover?userId=${userId}`,
         passwordObj
       );

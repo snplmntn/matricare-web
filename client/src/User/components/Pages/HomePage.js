@@ -24,9 +24,8 @@ import { CookiesProvider, useCookies } from "react-cookie";
 
 function HomePage({ user }) {
   const userID = getCookie("userID");
-  let { name, username, role, profilePicture } = user.current;
+  let { name, role, profilePicture } = user.current;
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showLibraryDropdown, setShowLibraryDropdown] = useState(false);
   const [activeBellyTalkTab, setActiveBellyTalkTab] = useState("new");
   const [newPost, setNewPost] = useState();
   const [libraryItems, setLibraryItems] = useState([]);
@@ -41,11 +40,6 @@ function HomePage({ user }) {
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleLibraryClick = (e) => {
-    e.preventDefault();
-    setShowLibraryDropdown(!showLibraryDropdown);
   };
 
   const handleBellyTalkTabClick = (tab) => {
@@ -79,7 +73,6 @@ function HomePage({ user }) {
             Authorization: token,
           },
         });
-        // console.log(response);
         const unreadNotifications = response.data.filter(
           (notification) => notification.status === "Unread"
         );
@@ -148,7 +141,7 @@ function HomePage({ user }) {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(`${API_URL}/auth/logout`, {
+      await axios.get(`${API_URL}/auth/logout`, {
         headers: {
           Authorization: token,
         },
