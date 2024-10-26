@@ -180,7 +180,6 @@ const UserProfile = ({ user }) => {
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      setError("");
       setShowPasswordSettings(false);
     } else {
       // Validate other fields if needed
@@ -199,7 +198,6 @@ const UserProfile = ({ user }) => {
 
       // Exit editing mode
       setIsEditing(false);
-      setError("");
     }
   };
 
@@ -661,7 +659,6 @@ const UserProfile = ({ user }) => {
                     className="user-profile-cancel-btn"
                     onClick={() => {
                       setShowPasswordSettings(false);
-                      setError("");
                     }}
                   >
                     Cancel

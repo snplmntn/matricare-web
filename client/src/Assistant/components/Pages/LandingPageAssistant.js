@@ -38,7 +38,6 @@ const LandingPageAssistant = ({}) => {
   const API_URL = process.env.REACT_APP_API_URL;
   const [user, setUser] = useState({});
   const [totalPatients, setTotalPatients] = useState(0);
-  const [patient, setPatients] = useState([]);
   const [appointment, setAppointment] = useState([]);
   const [allAppointment, setAllAppointment] = useState([]);
 
@@ -62,7 +61,6 @@ const LandingPageAssistant = ({}) => {
           },
         });
         setTotalPatients(response.data.length);
-        setPatients(response.data);
       } catch (error) {
         console.error();
       }

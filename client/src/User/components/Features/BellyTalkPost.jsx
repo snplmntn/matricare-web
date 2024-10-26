@@ -24,7 +24,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [isLiking, setIsLiking] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [comments, setComments] = useState([]);
-  const [menuVisible, setMenuVisible] = useState(true);
   const [commentsCount, setCommentsCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
   const API_URL = process.env.REACT_APP_API_URL;

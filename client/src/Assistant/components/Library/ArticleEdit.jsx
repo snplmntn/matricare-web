@@ -8,7 +8,6 @@ import { getCookie } from "../../../utils/getCookie";
 
 const Library1 = ({ article }) => {
   const token = getCookie("token");
-  const userID = getCookie("userID");
   const [content, setContent] = useState(
     article.content && JSON.parse(article.content)
   );
@@ -30,7 +29,7 @@ const Library1 = ({ article }) => {
     };
 
     try {
-      const response = await axios.put(
+      await axios.put(
         `${API_URL}/article?id=${article._id}`,
         updatedArticle,
         {

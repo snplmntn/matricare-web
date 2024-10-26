@@ -42,8 +42,6 @@ const Library = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All"); // State for selected filter
   const [article, setArticles] = useState();
-  const [articleNum, setArticleNum] = useState();
-  const [showArticle, setShowArticle] = useState(false);
 
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
@@ -161,9 +159,7 @@ const Library = () => {
                   className="last-read-item"
                   onClick={() => {
                     console.log(book._id); // Log the book id
-                    setArticleNum(index);
                     handleBookClick(book);
-                    setShowArticle(true);
                   }}
                 >
                   <div className="book-background">
@@ -195,9 +191,7 @@ const Library = () => {
                   className="library-item"
                   onClick={() => {
                     console.log(book._id); // Log the book id
-                    setArticleNum(index);
                     handleBookClick(book);
-                    setShowArticle(true);
                   }}
                 >
                   <img

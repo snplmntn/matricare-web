@@ -21,7 +21,7 @@ const ConsultantSidebar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(`${API_URL}/auth/logout`, {
+      await axios.get(`${API_URL}/auth/logout`, {
         headers: {
           Authorization: token,
         },
@@ -48,6 +48,7 @@ const ConsultantSidebar = () => {
       );
     }
   };
+  
   return (
     <aside className="consultant-sidebar">
       <div className="consultant-sidebar-logo">

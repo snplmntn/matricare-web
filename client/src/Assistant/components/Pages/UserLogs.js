@@ -9,21 +9,12 @@ import "jspdf-autotable";
 
 const ConsultantLogs = () => {
   const API_URL = process.env.REACT_APP_API_URL;
-  const navigate = useNavigate();
   const token = getCookie("token");
-  const userID = getCookie("userID");
   const [filter, setFilter] = useState("all");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [view, setView] = useState("patients");
-  const [editingUserId, setEditingUserId] = useState(null);
   const [patients, setPatients] = useState([]);
-  const [newPatient, setNewPatient] = useState({
-    assignedId: userID,
-    fullName: "",
-    phoneNumber: "",
-    email: "",
-  });
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -38,9 +29,6 @@ const ConsultantLogs = () => {
 
   const [obGyneSpecialist, setObGyneSpecialist] = useState([]);
   const [admins, setAdmins] = useState([]);
-
-  const [showForm, setShowForm] = useState(false); // State for form visibility
-
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
@@ -86,48 +74,6 @@ const ConsultantLogs = () => {
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
-  };
-
-  const handleSaveClick = () => {
-    setEditingUserId(null);
-  };
-
-  const handleAddPatientClick = () => {
-    setShowForm(true); // Show the form when the button is clicked
-  };
-
-  const handleFormChange = (event) => {
-    const { name, value } = event.target;
-    setNewPatient((prevState) => ({ ...prevState, [name]: value }));
-  };
-
-  const handleAddPatientSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const patientForm = {
-        assignedId: userID,
-        email: newPatient.email,
-        fullName: newPatient.fullName,
-        phoneNumber: newPatient.phoneNumber,
-      };
-      const response = await axios.post(
-        `${API_URL}/record/patient`,
-        patientForm,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      setPatients([...patients, response.data.newPatient]);
-    } catch (error) {
-      console.error(error);
-    }
-    setShowForm(false); // Hide the form
-  };
-
-  const handleCancelClick = () => {
-    setShowForm(false); // Hide the form
   };
 
   useEffect(() => {

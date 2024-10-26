@@ -31,7 +31,6 @@ const BellyTalk = ({ user }) => {
   // const [imgLink, setImgLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [step, setStep] = useState(1);
-  const [selectedCategories, setSelectedCategories] = useState([]);
   const [successMessage, setSuccessMessage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -40,8 +39,6 @@ const BellyTalk = ({ user }) => {
   const [imagePreview, setImagePreview] = useState([]);
 
   const [isPosting, setIsPosting] = useState(false);
-  const [isFetching, setIsFetching] = useState(false);
-  const [changeFilter, setChangeFilter] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
@@ -155,7 +152,6 @@ const BellyTalk = ({ user }) => {
     setSelectedImage(null);
     setImagePreview(null);
     setSuccessMessage("Post Submitted");
-    setSelectedCategories([]);
   };
 
   const handleFileChange = (e) => {
@@ -271,7 +267,7 @@ const BellyTalk = ({ user }) => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get(`${API_URL}/auth/logout`, {
+      await axios.get(`${API_URL}/auth/logout`, {
         headers: {
           Authorization: token,
         },

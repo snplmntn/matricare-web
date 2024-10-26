@@ -14,7 +14,6 @@ const ConsultantPatientInfo = () => {
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [view, setView] = useState("patients");
-  const [editingUserId, setEditingUserId] = useState(null);
   const [patients, setPatients] = useState([]);
   const [newPatient, setNewPatient] = useState({
     assignedId: userID,
@@ -87,7 +86,7 @@ const ConsultantPatientInfo = () => {
         fullName: newPatient.fullName,
         phoneNumber: newPatient.phoneNumber,
       };
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/record/patient`,
         patientForm,
         {

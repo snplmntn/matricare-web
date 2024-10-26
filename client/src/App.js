@@ -43,20 +43,14 @@ import LandingPageConsultant from "./Consultant/components/Pages/LandingPageCons
 import ConsultantSidebar from "./Consultant/components/Pages/ConsultantSidebar";
 import AppointmentConsultant from "./Consultant/components/Features/AppointmentConsultant";
 import LibraryConsultant from "./Consultant/components/Features/LibraryConsultant";
-import ConsultantRecord from "./Consultant/components/Settings/ConsultantRecord";
 import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ManageBellyTalk from "./Consultant/components/Settings/ManageBellyTalk";
 import UserLogs from "./Assistant/components/Pages/UserLogs.js";
 
-// Verify
-import Verify from "./User/components/Pages/Verify";
-
 function AppContent() {
   const API_URL = process.env.REACT_APP_API_URL;
-  const history = createHashHistory();
   const navigate = useNavigate();
-  const location = useLocation();
   const [cookies, setCookie, removeCookie] = useCookies();
   const parsedUser = useRef({});
   const token = cookies.token;
@@ -338,21 +332,6 @@ function AppContent() {
               <>
                 <ConsultantSidebar /> <ManageBellyTalk user={parsedUser} />
               </>
-            ) : role !== "Obgyne" ? (
-              <Undefined />
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
-          }
-        />
-        <Route
-          path="/consultant-records"
-          element={
-            token && role === "Obgyne" ? (
-              <ConsultantRecord />
             ) : role !== "Obgyne" ? (
               <Undefined />
             ) : (

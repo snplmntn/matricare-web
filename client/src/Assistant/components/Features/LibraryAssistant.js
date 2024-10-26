@@ -15,7 +15,6 @@ const LibraryAssistant = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [showForm, setShowForm] = useState(false);
-  const [books, setBooks] = useState();
   const [newArticle, setNewArticle] = useState({
     title: "",
     author: "",

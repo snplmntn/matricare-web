@@ -148,12 +148,10 @@ const LibraryConsultant = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const [user, setUser] = useState();
   const token = getCookie("token");
-  const userID = getCookie("userID");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("All");
   const [books, setBooks] = useState(initialBooks);
   const [hoveredBookId, setHoveredBookId] = useState(null);
-  const [articleNum, setArticleNum] = useState();
 
   const filteredBooks = books.filter((book) => {
     const matchesSearchTerm = book.title
@@ -283,7 +281,6 @@ const LibraryConsultant = () => {
                 onMouseEnter={() => setHoveredBookId(book._id)} // Track hovered book
                 onMouseLeave={() => setHoveredBookId(null)} // Clear on leave
                 onClick={() => {
-                  setArticleNum(index);
                   navigate(`/book/${book._id}`);
                 }}
               >
