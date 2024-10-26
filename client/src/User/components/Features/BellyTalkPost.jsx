@@ -92,7 +92,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     if (!isSavedByMe) {
       try {
         setIsSavedByMe(!isSavedByMe);
-        const response = await axios.get(
+        await axios.get(
           `${API_URL}/user/save?userId=${userID}&postId=${post._id}`,
           {
             headers: {
@@ -107,7 +107,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     } else {
       try {
         setIsSavedByMe(!isSavedByMe);
-        const response = await axios.delete(
+        await axios.delete(
           `${API_URL}/user/unsave?userId=${userID}&postId=${post._id}`,
           {
             headers: {

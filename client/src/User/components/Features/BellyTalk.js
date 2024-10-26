@@ -156,20 +156,16 @@ const BellyTalk = ({ user }) => {
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files); // Convert FileList to Array
 
-    setSelectedImage(files);
+    setSelectedImage((prev) => [...files, ...(prev || [])]);
 
     // Generate previews for each selected image
     const previews = files.map((file) => URL.createObjectURL(file));
-    setImagePreview(previews);
+    setImagePreview((prev) => [...previews, ...(prev || [])]);
   };
 
   async function fetchPosts() {
     if (loading) return;
     setLoading(true);
-    console.log(
-      `${allPost.length > 0 ? allPost[allPost.length - 1]._id : ""} fetching`
-    );
-
     const lastPostId =
       allPost.length > 0 ? allPost[allPost.length - 1]._id : null;
     try {
@@ -190,8 +186,6 @@ const BellyTalk = ({ user }) => {
       if (response.data.length === 0) setShowLoading(false);
       else CheckToFetchMore();
       setLoading(false);
-
-      console.log(`done fetching`);
     } catch (error) {
       console.error(error);
     }
