@@ -51,7 +51,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           userId: userID,
           postId: post._id,
         };
-        const response = await axios.post(`${API_URL}/post/like`, postLike, {
+        await axios.post(`${API_URL}/post/like`, postLike, {
           headers: {
             Authorization: token,
           },
@@ -65,7 +65,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       //unlike posts
       try {
         setIsLikedByMe(!isLikedByMe);
-        const response = await axios.delete(
+        await axios.delete(
           `${API_URL}/post/like?userId=${userID}&postId=${post._id}`,
           {
             headers: {
