@@ -74,7 +74,6 @@ const PatientUserManagement = () => {
     event.preventDefault();
     try {
       const patientForm = {
-        assignedId: userID,
         email: newPatient.email,
         fullName: newPatient.fullName,
         phoneNumber: newPatient.phoneNumber,

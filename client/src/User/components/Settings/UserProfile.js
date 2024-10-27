@@ -81,6 +81,7 @@ const UserProfile = ({ user }) => {
             },
           }
         );
+
         return response.data.documentLink;
       } catch (err) {
         console.error(err);
@@ -152,7 +153,7 @@ const UserProfile = ({ user }) => {
       }
 
       try {
-        const response = await axios.put(
+        await axios.put(
           `${API_URL}/user?userId=${userID}`,
           {
             password: oldPassword,
@@ -242,15 +243,11 @@ const UserProfile = ({ user }) => {
     }
 
     try {
-      const response = await axios.put(
-        `${API_URL}/user?userId=${userID}`,
-        updatedUserForm,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.put(`${API_URL}/user?userId=${userID}`, updatedUserForm, {
+        headers: {
+          Authorization: token,
+        },
+      });
       if (fullname || birthday || profilePicture) {
         const userData = localStorage.getItem("userData");
         const parsedData = JSON.parse(userData);
@@ -262,6 +259,8 @@ const UserProfile = ({ user }) => {
         if (profilePicture) {
           parsedData.profilePicture = profilePicture;
         }
+
+        if (updatedUserForm.prcId) setPrcIdFile(updatedUserForm.prcId);
 
         localStorage.removeItem("userData");
         localStorage.setItem("userData", JSON.stringify(parsedData));
@@ -541,13 +540,27 @@ const UserProfile = ({ user }) => {
                     </div>
                     <div className="user-profile-input-group">
                       <label htmlFor="prcId">PRC ID:</label>
-                      <input
-                        type="file"
-                        id="prcId"
-                        accept="image/*,application/pdf"
-                        onChange={(e) => setUploadedFile(e.target.files[0])}
-                        className="user-profile-input"
-                      />
+                      {!prcIdFile || !isVerified ? (
+                        <input
+                          type="file"
+                          id="prcId"
+                          accept="image/*,application/pdf"
+                          onChange={(e) => setUploadedFile(e.target.files[0])}
+                          className="user-profile-input"
+                        />
+                      ) : (
+                        isVerified && (
+                          <p className="user-profile-input verified-status">
+                            <a
+                              href={prcIdFile}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              View File
+                            </a>
+                          </p>
+                        )
+                      )}
                       {uploadedFile && (
                         <>
                           <p>{uploadedFile.name}</p>
