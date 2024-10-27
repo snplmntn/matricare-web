@@ -167,7 +167,7 @@ const MedicalRec = ({ user }) => {
   };
 
   useEffect(() => {
-    async function fetchRecords() {
+    async function fetchDocuments() {
       try {
         const response = await axios.get(
           `${API_URL}/record/document/u?userId=${userID}`,
@@ -177,12 +177,12 @@ const MedicalRec = ({ user }) => {
             },
           }
         );
-        setDocuments(response.data);
+        setDocuments(response.data.reverse());
       } catch (error) {
         console.error(error);
       }
     }
-    fetchRecords();
+    fetchDocuments();
   }, []);
 
   useEffect(() => {
@@ -212,7 +212,7 @@ const MedicalRec = ({ user }) => {
             },
           }
         );
-        setObstetricHistory(response.data);
+        setObstetricHistory(response.data.reverse());
       } catch (error) {
         console.error(error);
       }
@@ -228,7 +228,7 @@ const MedicalRec = ({ user }) => {
             },
           }
         );
-        setMedicalHistory(response.data);
+        setMedicalHistory(response.data.reverse());
       } catch (error) {
         console.error(error);
       }
@@ -244,7 +244,7 @@ const MedicalRec = ({ user }) => {
             },
           }
         );
-        setSurgicalHistory(response.data);
+        setSurgicalHistory(response.data.reverse());
       } catch (error) {
         console.error(error);
       }
