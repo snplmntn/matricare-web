@@ -777,7 +777,7 @@ const UserProfile = ({ user }) => {
                       type="button"
                       className="user-profile-cancel-btn"
                       onClick={() => {
-                        setShowBabyDetails(false);
+                        setIsEditingBabyDetails(false);
                       }}
                     >
                       Cancel
