@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../../styles/settings/patientrecords.css";
 import { FaMobileAlt, FaFileAlt, FaFilePdf } from "react-icons/fa";
-import { IoChevronBackCircle, IoLockClosed } from "react-icons/io5";
+import { IoChevronBackCircle, IoLockClosed, IoTrashOutline } from "react-icons/io5";
 import moment from "moment";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
@@ -41,6 +41,9 @@ const PatientRecords = ({ user }) => {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [documents, setDocuments] = useState([]);
+  const [documentToDelete, setDocumentToDelete] = useState(null);
+  const [issModalOpen, setModalOpen] = useState(false);
+
 
   const handleAddTask = async () => {
     if (taskName.trim()) {
@@ -66,6 +69,10 @@ const PatientRecords = ({ user }) => {
       setTaskName("");
       setFormVisible(false); // Hide form after adding
     }
+  };
+
+  const handleDeleteDocument = (docToDelete) => {
+    setDocuments(documents.filter(doc => doc !== docToDelete));
   };
 
   const handlePasswordSubmit = async (e) => {
@@ -631,6 +638,38 @@ const PatientRecords = ({ user }) => {
                       {entry.file && (
                         <span className="file">{entry.file.name}</span>
                       )}
+                      <button
+                      className="PRM-delete-docu-button"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the document click event
+                        setDocumentToDelete(entry); // Store the document to delete
+                        setModalOpen(true); // Open the modal
+                      }}
+                      aria-label="Delete Document" // Accessibility label
+                    >
+                      <IoTrashOutline className="PRM-delete-icon" />
+                    </button>
+                    {issModalOpen && (
+                    <div className="PRM-modal-overlay">
+                      <div className="PRM-modal-content">
+                      <IoTrashOutline className="PRM-delete-icon" />
+                      <h3 className="PRM-modal-header">Are you sure you want to delete this?</h3>
+                      <button 
+                        className="PRM-confirm-button" 
+                        onClick={() => {
+                          handleDeleteDocument(documentToDelete); // Call delete function
+                          setModalOpen(false); // Close the modal
+                        }}>
+                        Yes
+                      </button>
+                      <button 
+                        className="PRM-cancel-button" 
+                        onClick={() => setModalOpen(false)}>
+                        No
+                      </button>
+                      </div>
+                    </div>
+                  )}
                     </li>
                   ))}
                 </ul>
@@ -679,6 +718,38 @@ const PatientRecords = ({ user }) => {
                       {entry.file && (
                         <span className="file">{entry.file.name}</span>
                       )}
+                      <button
+                      className="PRM-delete-docu-button"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the document click event
+                        setDocumentToDelete(entry); // Store the document to delete
+                        setModalOpen(true); // Open the modal
+                      }}
+                      aria-label="Delete Document" // Accessibility label
+                    >
+                      <IoTrashOutline className="PRM-delete-icon" />
+                    </button>
+                    {issModalOpen && (
+                    <div className="PRM-modal-overlay">
+                      <div className="PRM-modal-content">
+                      <IoTrashOutline className="PRM-delete-icon" />
+                      <h3 className="PRM-modal-header">Are you sure you want to delete this?</h3>
+                      <button 
+                        className="PRM-confirm-button" 
+                        onClick={() => {
+                          handleDeleteDocument(documentToDelete); // Call delete function
+                          setModalOpen(false); // Close the modal
+                        }}>
+                        Yes
+                      </button>
+                      <button 
+                        className="PRM-cancel-button" 
+                        onClick={() => setModalOpen(false)}>
+                        No
+                      </button>
+                      </div>
+                    </div>
+                  )}
                     </li>
                   ))}
                 </ul>
@@ -721,6 +792,38 @@ const PatientRecords = ({ user }) => {
                       {entry.file && (
                         <span className="file">{entry.file.name}</span>
                       )}
+                      <button
+                      className="PRM-delete-docu-button"
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the document click event
+                        setDocumentToDelete(entry); // Store the document to delete
+                        setModalOpen(true); // Open the modal
+                      }}
+                      aria-label="Delete Document" // Accessibility label
+                    >
+                      <IoTrashOutline className="PRM-delete-icon" />
+                    </button>
+                    {issModalOpen && (
+                    <div className="PRM-modal-overlay">
+                      <div className="PRM-modal-content">
+                      <IoTrashOutline className="PRM-delete-icon" />
+                      <h3 className="PRM-modal-header">Are you sure you want to delete this?</h3>
+                      <button 
+                        className="PRM-confirm-button" 
+                        onClick={() => {
+                          handleDeleteDocument(documentToDelete); // Call delete function
+                          setModalOpen(false); // Close the modal
+                        }}>
+                        Yes
+                      </button>
+                      <button 
+                        className="PRM-cancel-button" 
+                        onClick={() => setModalOpen(false)}>
+                        No
+                      </button>
+                      </div>
+                    </div>
+                  )}
                     </li>
                   ))}
                 </ul>
