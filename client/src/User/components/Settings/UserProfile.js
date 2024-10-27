@@ -64,14 +64,6 @@ const UserProfile = ({ user }) => {
     }
   };
 
-  // const handleFileUpload = (e) => {
-  //   const file = e.target.files[0];
-  //   if (file) {
-  //     const fileUrl = URL.createObjectURL(file); // Generates a temporary URL for viewing the file
-  //     setUploadedFile(fileUrl);
-  //   }
-  // };
-
   const handleUploadPrcId = async () => {
     if (uploadedFile) {
       const formData = new FormData();

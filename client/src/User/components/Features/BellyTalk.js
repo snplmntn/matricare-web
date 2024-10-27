@@ -166,10 +166,6 @@ const BellyTalk = ({ user }) => {
   async function fetchPosts() {
     if (loading) return;
     setLoading(true);
-    console.log(
-      `${allPost.length > 0 ? allPost[allPost.length - 1]._id : ""} fetching`
-    );
-
     const lastPostId =
       allPost.length > 0 ? allPost[allPost.length - 1]._id : null;
     try {
@@ -190,8 +186,6 @@ const BellyTalk = ({ user }) => {
       if (response.data.length === 0) setShowLoading(false);
       else CheckToFetchMore();
       setLoading(false);
-
-      console.log(`done fetching`);
     } catch (error) {
       console.error(error);
     }
