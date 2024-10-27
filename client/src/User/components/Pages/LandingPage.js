@@ -183,7 +183,11 @@ export default function LandingPage() {
         <h2 className="contactLP-heading">CONTACT WITH US</h2>
         <div className="contactLP-box">
           <p className="contactLP-title">Write a Message</p>
-          <form>
+          <form
+            action="https://formsubmit.co/beabenella.rosal@gmail.com"
+            method="POST"
+            target="_blank"
+          >
             <div className="contactLP-form-group">
               <label htmlFor="fullName"></label>
               <input
