@@ -10,7 +10,7 @@ import {
   IoPhonePortraitOutline,
   IoChevronBackCircle,
   IoLockClosed,
-  IoTrashOutline ,
+  IoTrashOutline,
 } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
@@ -84,15 +84,11 @@ const MedicalRec = ({ user }) => {
     }
 
     try {
-      const response = await axios.post(
-        `${API_URL}/record/document`,
-        newDocument,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.post(`${API_URL}/record/document`, newDocument, {
+        headers: {
+          Authorization: token,
+        },
+      });
     } catch (err) {
       console.error(err);
     }
@@ -118,7 +114,7 @@ const MedicalRec = ({ user }) => {
     setError("");
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
+      await axios.post(`${API_URL}/auth/login`, {
         username: username,
         password: password,
       });
@@ -134,15 +130,18 @@ const MedicalRec = ({ user }) => {
     }
   };
 
-  // Handle document name and date changes
-  const handleDocumentChange = (index, field, value) => {
-    const updatedDocs = [...documents];
-    updatedDocs[index][field] = value;
-    setDocuments(updatedDocs);
-  };
+  const handleDeleteDocument = async (docToDelete) => {
+    setDocuments(documents.filter((doc) => doc !== docToDelete));
 
-  const handleDeleteDocument = (docToDelete) => {
-    setDocuments(documents.filter(doc => doc !== docToDelete));
+    try {
+      await axios.delete(`${API_URL}/record/document?id=${docToDelete._id}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleStatusChange = async (id, status) => {
@@ -600,26 +599,30 @@ const MedicalRec = ({ user }) => {
                       <IoTrashOutline className="delete-icon" />
                     </button>
                     {isModalOpen && (
-                    <div className="MR-modal-overlay">
-                      <div className="MR-modal-content">
-                      <IoTrashOutline className="MR-delete-icon" />
-                      <h3 className="MR-modal-header">Are you sure you want to delete this?</h3>
-                      <button 
-                        className="MR-confirm-button" 
-                        onClick={() => {
-                          handleDeleteDocument(documentToDelete); // Call delete function
-                          setModalOpen(false); // Close the modal
-                        }}>
-                        Yes
-                      </button>
-                      <button 
-                        className="MR-cancel-button" 
-                        onClick={() => setModalOpen(false)}>
-                        No
-                      </button>
+                      <div className="MR-modal-overlay">
+                        <div className="MR-modal-content">
+                          <IoTrashOutline className="MR-delete-icon" />
+                          <h3 className="MR-modal-header">
+                            Are you sure you want to delete this?
+                          </h3>
+                          <button
+                            className="MR-confirm-button"
+                            onClick={() => {
+                              handleDeleteDocument(documentToDelete); // Call delete function
+                              setModalOpen(false); // Close the modal
+                            }}
+                          >
+                            Yes
+                          </button>
+                          <button
+                            className="MR-cancel-button"
+                            onClick={() => setModalOpen(false)}
+                          >
+                            No
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
                   </div>
                 ))}
 
