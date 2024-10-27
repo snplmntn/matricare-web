@@ -51,6 +51,7 @@ const UserProfile = ({ user }) => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingBabyDetails, setIsEditingBabyDetails] = useState(false);
   const [showBabyDetails, setShowBabyDetails] = useState(false);
   const [babyName, setBabyName] = useState("");
   const [lastMenstrualPeriod, setLastMenstrualPeriod] = useState("");
@@ -266,6 +267,7 @@ const UserProfile = ({ user }) => {
         localStorage.setItem("userData", JSON.stringify(parsedData));
       }
       setIsEditing(false);
+      setIsEditingBabyDetails(false);
     } catch (error) {
       console.error(error);
     }
@@ -368,6 +370,7 @@ const UserProfile = ({ user }) => {
                 setIsEditing(false);
                 setShowPasswordSettings(false);
                 setShowNotifications(false);
+                setIsEditingBabyDetails(true);
               }}
             >
               <FcDecision className="UP-icon" />
@@ -752,30 +755,35 @@ const UserProfile = ({ user }) => {
                   <input
                     type="date"
                     id="lastMenstrualPeriod"
-                    value={lastMenstrualPeriod}
+                    value={
+                      lastMenstrualPeriod &&
+                      new Date(lastMenstrualPeriod).toISOString().split("T")[0]
+                    }
                     onChange={(e) => setLastMenstrualPeriod(e.target.value)}
                     className="user-profile-input"
                   />
                 </div>
 
-                <div className="user-profile-button-group">
-                  <button
-                    type="submit"
-                    className="user-profile-save-btn"
-                    onClick={handleUserUpdate}
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    className="user-profile-cancel-btn"
-                    onClick={() => {
-                      setShowBabyDetails(false);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                {isEditingBabyDetails && (
+                  <div className="user-profile-button-group">
+                    <button
+                      type="submit"
+                      className="user-profile-save-btn"
+                      onClick={handleUserUpdate}
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="user-profile-cancel-btn"
+                      onClick={() => {
+                        setShowBabyDetails(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           </>
