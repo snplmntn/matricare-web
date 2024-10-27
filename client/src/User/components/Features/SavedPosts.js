@@ -16,6 +16,7 @@ const SavedPosts = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const [selectedPost, setSelectedPost] = useState(null);
   const [savedPosts, setSavedPosts] = useState([]);
+  const [fetching, setIsFetching] = useState(false);
 
   const navigate = useNavigate();
 
@@ -31,27 +32,34 @@ const SavedPosts = () => {
     setSelectedPost(null); // Close the modal
   };
 
-  useEffect(() => {
-    // Fetch saved posts when the component loads
-    async function fetchSavedPost() {
-      try {
-        const response = await axios.get(
-          `${API_URL}/user?userId=${userID}`,
+  async function fetchSavedPost() {
+    if (fetching) return;
+    setIsFetching(true);
 
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        setSavedPosts(response.data.other.savedPost);
-      } catch (error) {
-        console.error(error);
-      }
+    try {
+      const response = await axios.get(
+        `${API_URL}/user?userId=${userID}`,
+
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setSavedPosts(response.data.other.savedPost);
+    } catch (error) {
+      console.error(error);
     }
+    setIsFetching(false);
+  }
 
+  useEffect(() => {
     fetchSavedPost();
   }, [API_URL, token, userID]);
+
+  useEffect(() => {
+    fetchSavedPost();
+  }, []);
 
   return (
     <div className="saved-posts-page">
@@ -91,7 +99,9 @@ const SavedPosts = () => {
                 <div className="post-details">
                   <h3>{post.fullname}</h3>
                   <div className="post-meta">
-                    <span className="news-category">{post.category}</span>
+                    <span className="news-category">
+                      {post.category?.join(", ")}
+                    </span>
                     <span className="post-time">
                       {post.createdAt &&
                         new Date(post.createdAt).toLocaleTimeString([], {
@@ -134,13 +144,22 @@ const SavedPosts = () => {
             </div>
             <div className="savedpost-post-content">
               <p>{selectedPost.content}</p>
-              {selectedPost.picture && (
-                <img
-                  src={selectedPost.picture}
-                  alt="Post"
-                  className="post-image"
-                />
-              )}
+              {Array.isArray(selectedPost.picture)
+                ? selectedPost.picture.map((pic, index) => (
+                    <img
+                      key={index}
+                      src={pic}
+                      alt={`Post ${index}`}
+                      className="post-image"
+                    />
+                  ))
+                : selectedPost.picture && (
+                    <img
+                      src={selectedPost.picture}
+                      alt="Post"
+                      className="post-image"
+                    />
+                  )}
               <hr className="savedpost-divider" />
               <div className="savedpost-actions"></div>
             </div>
