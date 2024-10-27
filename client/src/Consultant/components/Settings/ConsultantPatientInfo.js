@@ -81,12 +81,11 @@ const ConsultantPatientInfo = () => {
     event.preventDefault();
     try {
       const patientForm = {
-        assignedId: userID,
         email: newPatient.email,
         fullName: newPatient.fullName,
         phoneNumber: newPatient.phoneNumber,
       };
-      await axios.post(
+      const response = await axios.post(
         `${API_URL}/record/patient`,
         patientForm,
         {
@@ -95,9 +94,12 @@ const ConsultantPatientInfo = () => {
           },
         }
       );
-      setPatients([...patients, patientForm]);
-    } catch (error) {
-      console.error(error);
+      setPatients([...patients, response.data.newPatient]);
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        alert("Patient is not a registered user.");
+      }
+      console.error(err);
     }
     setShowForm(false); // Hide the form
   };
