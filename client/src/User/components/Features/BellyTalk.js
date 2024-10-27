@@ -166,7 +166,6 @@ const BellyTalk = ({ user }) => {
   async function fetchPosts() {
     if (loading) return;
     setLoading(true);
-
     const lastPostId =
       allPost.length > 0 ? allPost[allPost.length - 1]._id : null;
     try {
