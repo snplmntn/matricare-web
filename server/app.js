@@ -38,22 +38,21 @@ const app = express(); // Initialization
 app.set("trust proxy", 1); // Enable proxy trust to allow express-rate-limit to read X-Forwarded-For header
 const limiter = rateLimit({
   max: 1000,
-  windowMs: 10 * 60, // 10 minutes
+  windowMs: 10 * 60, // 1 minute
   message: "Too many requests, please try again later.",
 });
 
 // Middleware
-app.use(helmet());
+app.use(helmet()); // ensures secure web application by setting various HTTP headers
 app.use("/api", limiter); //Protection Against DDOS Attack
 app.use(
   express.json({
     limit: "10kb",
   })
 ); // Body Parser
-app.use(mongoSanitize());
-//Data sanization against NoSQL query injection
+app.use(mongoSanitize()); //Data sanization against NoSQL query injection
 app.use(hpp()); // prevent paramater pollution
-app.use(cors());
+app.use(cors()); // Cross Origin Resource Sharing
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
