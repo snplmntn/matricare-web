@@ -386,6 +386,74 @@
   overflow-y: auto;
 }
 
+.delete-icon {
+  color: red; 
+  cursor: pointer; 
+  font-size: 20px; 
+}
+
+.MR-delete-docu-button{
+  background-color: transparent !important;
+  border: none;
+}
+
+.MR-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MR-modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 250px;
+}
+
+.MR-modal-header {
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+.MR-delete-icon {
+  font-size: 50px;
+  color: #9a6cb4;
+  display: block;
+  margin: 0 auto;
+}
+
+.MR-confirm-button,
+.MR-cancel-button {
+  padding: 10px 15px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.MR-confirm-button {
+  background-color: #9a6cb4;
+  color: white;
+}
+
+.MR-cancel-button {
+  background-color: #ccc;
+  color: #333;
+}
+
+
 .MR-docu-item input {
   margin-right: 10px;
   padding: 5px;
@@ -628,6 +696,7 @@
   align-items: center; 
   margin-top: 20px; 
   margin-left: 20px;
+  margin-bottom: 20px;
 }
 
 .docu-button {
@@ -798,8 +867,9 @@
 }
 
 .MR-pass-error {
-  color: red;
+  color: #e39fa9;
   margin-top: 10px;
   position: relative;
   z-index: 1000;
+  margin-left: 100px;
 }
