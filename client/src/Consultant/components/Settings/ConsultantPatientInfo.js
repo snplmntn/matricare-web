@@ -317,10 +317,11 @@ const ConsultantPatientInfo = () => {
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>
-                      {user.status === "Verified" ||
-                      user.status === "On Process" ? (
-                        <span>{user.status}</span>
-                      ) : null}{" "}
+                      {user.prcId
+                        ? user.verified
+                          ? "Verified"
+                          : "On Process"
+                        : "No ID Found"}
                     </td>
                   </>
                 )}
