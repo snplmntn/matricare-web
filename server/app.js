@@ -55,6 +55,10 @@ app.use(hpp()); // prevent paramater pollution
 app.use(cors()); // Cross Origin Resource Sharing
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use((req, res, next) => {
+  res.setHeader("Permissions-Policy", "geolocation=(self), camera=()");
+  next();
+});
 
 // Routes
 // user
