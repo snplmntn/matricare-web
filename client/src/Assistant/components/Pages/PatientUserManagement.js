@@ -74,7 +74,6 @@ const PatientUserManagement = () => {
     event.preventDefault();
     try {
       const patientForm = {
-        assignedId: userID,
         email: newPatient.email,
         fullName: newPatient.fullName,
         phoneNumber: newPatient.phoneNumber,
@@ -89,8 +88,11 @@ const PatientUserManagement = () => {
         }
       );
       setPatients([...patients, response.data.newPatient]);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        alert("Patient is not a registered user.");
+      }
+      console.error(err);
     }
     setShowForm(false); // Hide the form
   };

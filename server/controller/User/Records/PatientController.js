@@ -37,9 +37,11 @@ const patient_post = catchAsync(async (req, res, next) => {
   req.body.userId = user._id;
   req.body.profilePicture = user.profilePicture;
 
-  const newPatient = new Patient(req.body);
+  let newPatient = new Patient(req.body);
 
   await newPatient.save();
+
+  newPatient = await newPatient.populate("userId");
 
   return res
     .status(200)

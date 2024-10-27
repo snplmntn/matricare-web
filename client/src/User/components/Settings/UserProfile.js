@@ -51,6 +51,7 @@ const UserProfile = ({ user }) => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isEditingBabyDetails, setIsEditingBabyDetails] = useState(false);
   const [showBabyDetails, setShowBabyDetails] = useState(false);
   const [babyName, setBabyName] = useState("");
   const [lastMenstrualPeriod, setLastMenstrualPeriod] = useState("");
@@ -80,6 +81,7 @@ const UserProfile = ({ user }) => {
             },
           }
         );
+
         return response.data.documentLink;
       } catch (err) {
         console.error(err);
@@ -151,7 +153,7 @@ const UserProfile = ({ user }) => {
       }
 
       try {
-        const response = await axios.put(
+        await axios.put(
           `${API_URL}/user?userId=${userID}`,
           {
             password: oldPassword,
@@ -241,15 +243,11 @@ const UserProfile = ({ user }) => {
     }
 
     try {
-      const response = await axios.put(
-        `${API_URL}/user?userId=${userID}`,
-        updatedUserForm,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.put(`${API_URL}/user?userId=${userID}`, updatedUserForm, {
+        headers: {
+          Authorization: token,
+        },
+      });
       if (fullname || birthday || profilePicture) {
         const userData = localStorage.getItem("userData");
         const parsedData = JSON.parse(userData);
@@ -262,10 +260,13 @@ const UserProfile = ({ user }) => {
           parsedData.profilePicture = profilePicture;
         }
 
+        if (updatedUserForm.prcId) setPrcIdFile(updatedUserForm.prcId);
+
         localStorage.removeItem("userData");
         localStorage.setItem("userData", JSON.stringify(parsedData));
       }
       setIsEditing(false);
+      setIsEditingBabyDetails(false);
     } catch (error) {
       console.error(error);
     }
@@ -368,6 +369,7 @@ const UserProfile = ({ user }) => {
                 setIsEditing(false);
                 setShowPasswordSettings(false);
                 setShowNotifications(false);
+                setIsEditingBabyDetails(true);
               }}
             >
               <FcDecision className="UP-icon" />
@@ -538,13 +540,27 @@ const UserProfile = ({ user }) => {
                     </div>
                     <div className="user-profile-input-group">
                       <label htmlFor="prcId">PRC ID:</label>
-                      <input
-                        type="file"
-                        id="prcId"
-                        accept="image/*,application/pdf"
-                        onChange={(e) => setUploadedFile(e.target.files[0])}
-                        className="user-profile-input"
-                      />
+                      {!prcIdFile || !isVerified ? (
+                        <input
+                          type="file"
+                          id="prcId"
+                          accept="image/*,application/pdf"
+                          onChange={(e) => setUploadedFile(e.target.files[0])}
+                          className="user-profile-input"
+                        />
+                      ) : (
+                        isVerified && (
+                          <p className="user-profile-input verified-status">
+                            <a
+                              href={prcIdFile}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              View File
+                            </a>
+                          </p>
+                        )
+                      )}
                       {uploadedFile && (
                         <>
                           <p>{uploadedFile.name}</p>
@@ -752,30 +768,35 @@ const UserProfile = ({ user }) => {
                   <input
                     type="date"
                     id="lastMenstrualPeriod"
-                    value={lastMenstrualPeriod}
+                    value={
+                      lastMenstrualPeriod &&
+                      new Date(lastMenstrualPeriod).toISOString().split("T")[0]
+                    }
                     onChange={(e) => setLastMenstrualPeriod(e.target.value)}
                     className="user-profile-input"
                   />
                 </div>
 
-                <div className="user-profile-button-group">
-                  <button
-                    type="submit"
-                    className="user-profile-save-btn"
-                    onClick={handleUserUpdate}
-                  >
-                    Save
-                  </button>
-                  <button
-                    type="button"
-                    className="user-profile-cancel-btn"
-                    onClick={() => {
-                      setShowBabyDetails(false);
-                    }}
-                  >
-                    Cancel
-                  </button>
-                </div>
+                {isEditingBabyDetails && (
+                  <div className="user-profile-button-group">
+                    <button
+                      type="submit"
+                      className="user-profile-save-btn"
+                      onClick={handleUserUpdate}
+                    >
+                      Save
+                    </button>
+                    <button
+                      type="button"
+                      className="user-profile-cancel-btn"
+                      onClick={() => {
+                        setIsEditingBabyDetails(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </form>
             </div>
           </>
