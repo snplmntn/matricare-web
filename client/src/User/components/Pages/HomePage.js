@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { FcOpenedFolder } from "react-icons/fc";
 import {
   faBell,
   faSignOutAlt,
@@ -8,7 +7,6 @@ import {
   faBook,
   faMessage,
   faChevronDown,
-  faSearch,
   faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -217,12 +215,7 @@ function HomePage({ user }) {
             <div className="homepage-search">
               <input
                 type="text"
-                placeholder="Search..."
                 className="homepage-search-input"
-              />
-              <FontAwesomeIcon
-                icon={faSearch}
-                className="homepage-search-icon"
               />
             </div>
             <Link
@@ -277,48 +270,6 @@ function HomePage({ user }) {
                           {" unread "}
                           notifications today!
                         </p>
-                      </div>
-                    </a>
-                    <a href="/" className="dashboard-appointment-link">
-                      <div className="dashboard-appointment-rectangle">
-                        <div className="dashboard-text-wrapper">
-                          {upcomingAppointment ? (
-                            <>
-                              <h2>Upcoming Appointment</h2>
-                              <div className="dashboard-appointment-details">
-                                <p>
-                                  <IoCalendarOutline className="dashboard-appointment-icon" />{" "}
-                                  Date:{" "}
-                                  {upcomingAppointment &&
-                                    new Date(
-                                      upcomingAppointment.date
-                                    ).toLocaleDateString()}
-                                </p>
-                                <p>
-                                  <IoTimeOutline className="dashboard-appointment-icon" />{" "}
-                                  Time:{" "}
-                                  {upcomingAppointment &&
-                                    new Date(
-                                      upcomingAppointment.date
-                                    ).toLocaleTimeString([], {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    })}
-                                </p>
-                                <p>
-                                  <IoLocationOutline className="dashboard-appointment-icon" />{" "}
-                                  Place:{" "}
-                                  {upcomingAppointment &&
-                                    upcomingAppointment.location}
-                                </p>
-                              </div>{" "}
-                            </>
-                          ) : (
-                            <>
-                              <h2>No Upcoming Appointment</h2>
-                            </>
-                          )}
-                        </div>
                       </div>
                     </a>
                   </div>
