@@ -7,6 +7,7 @@
   align-items: center;
   background-color: #FCFAF2;
   padding: 20px;
+  flex-wrap: wrap;
 }
 
 
@@ -29,6 +30,8 @@
   margin-right: 100px;
   font-size: 20px;
   color: #E39FA9;
+  display: flex;
+  align-items: center;
 }
 
 .header-right .nav-links li {
@@ -84,28 +87,6 @@
   border-radius: 50%; /* Make the logo circular */
 }
 
-.nav-links {
-  list-style-type: none;
-  margin: 0;
-  padding: 100;
-  text-align: left; /* Align links to the left */
-  margin-left: 100px;
-}
-
-.nav-links li {
-  display: inline;
-  margin-right: 100px;
-}
-
-.nav-links li a {
-  text-decoration: none;
-  color: #E39FA9;
-  font-weight: bold;
-}
-
-.nav-links li a:hover {
-  color: #603830;
-}
 /* What we do Section */
 
 .flower-icon1 {
@@ -113,7 +94,7 @@
   font-size: 24px; /* Adjust the size as needed */
   height: 100px;
   width: 100px;
-  margin-left: 880px;
+  margin-left: 900px;
   margin-top: -20px;
 }
 
@@ -591,8 +572,231 @@ background-color: #9a6cb4;
 color: #ffffff;
 }
 
+/* Responsive styles */
+@media (max-width: 1200px) {
+  .hero-content-left {
+    left: 10px; 
+    margin-top: -150px;
+  }
 
+  .hero-content h1 {
+    font-size: 2rem; 
+  }
 
+  .hero-content p {
+    font-size: 1rem; 
+  }
 
-/* Contact-Landing styles */
+  .download-button {
+    padding: 15px 30px; 
+    font-size: 0.9rem; 
+    margin-top: -50px;
 
+  }
+  .about-content{
+    margin-top: -300px;
+  }
+
+  .about-text h2 {
+    font-size: 4rem; /* Adjust font size for larger tablets */
+  }
+
+  .about-text h1 {
+    font-size: 1.8rem; /* Adjust font size */
+  }
+
+  .about-text p {
+    font-size: 1rem; /* Smaller font size for readability */
+    margin: 0 10px; /* Add some margin */
+  }
+
+  .flower-icon1 {
+    font-size: 6vw; 
+    margin-left: auto; 
+    margin-right: auto; 
+  }
+
+  .what-we-do h2 {
+    font-size: 4rem; /* Adjust font size for better readability */
+    margin-bottom: 30px; /* Reduce bottom margin for spacing */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .what-we-do .service, .what-we-do .service2 {
+    width: 90%; /* Use a percentage width to allow flexibility */
+    max-width: 500px; /* Limit max width for larger screens */
+    margin: 10px auto; /* Center services with automatic left and right margins */
+  }
+
+  .what-we-do .services-container {
+    flex-direction: column; /* Stack services vertically */
+    align-items: center; /* Center the services horizontally */
+  }
+
+  .what-we-do .row {
+    flex-direction: column;  /* Stack service items vertically */
+    align-items: center;      /* Center items horizontally */
+    width: 100%;             /* Use full width */
+  }
+
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 600px; /* Reduce height for smaller screens */
+  }
+
+  .hero-content-left {
+    left: 5px; /* Adjust left margin */
+  }
+
+  .hero-content h1 {
+    font-size: 2rem; /* Further adjust font size */
+  }
+
+  .hero-content p {
+    font-size: 1rem; /* Further adjust font size */
+  }
+
+  .download-button {
+    padding: 10px 20px; /* Adjust button padding */
+    font-size: 0.8rem; /* Adjust font size for smaller screens */
+  }
+  .about-text {
+    padding: 30px 15px; /* Adjust padding for smaller screens */
+  }
+
+  .about-us{
+    margin-top: -400px;
+  }
+
+  .about-text {
+    padding: 20px 15px; /* Adjust padding for smaller screens */
+    overflow: hidden; /* Prevent overflow */
+  }
+
+  .about-text h2 {
+    font-size: 2.5rem; /* Further reduce heading size */
+  }
+
+  .about-text h1 {
+    font-size: 2rem; /* Further reduce heading size */
+  }
+
+  .about-text p {
+    font-size: 0.8rem; 
+    width: 400px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .download-button1 {
+    display: none;
+  }
+
+  .flower-icon1 {
+    font-size: 2rem;
+    text-align: center;
+    align-items: center;
+    display: flex; /* Enable flexbox */
+    justify-content: center;
+  }
+
+  .what-we-do{
+    margin-top: -350px;
+  }
+
+  .what-we-do h2 {
+    font-size: 3rem; /* Increase font size for larger screens */
+  }
+
+  .what-we-do .service,
+  .what-we-do .service2 {
+    width: 400px; /* Increase width for tablets */
+  }
+
+  .topic-of-interest h2{
+    font-size: 3rem;
+  }
+
+  .contactLP-heading{
+    margin-top: -400px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 500px; /* Further reduce height for very small screens */
+  }
+
+  .hero-content-left {
+    left: 0; /* Center content */
+    padding: 10px; /* Add padding */
+  }
+
+  .hero-content h1 {
+    font-size: 1.2rem; /* Adjust font size for small screens */
+  }
+
+  .hero-content p {
+    font-size: 0.8rem; /* Adjust font size for small screens */
+  }
+
+  .download-button {
+    padding: 10px 15px; /* Adjust button padding */
+    font-size: 0.7rem; /* Adjust font size for small screens */
+    margin-left: 0; /* Center button */
+  }
+  .about-us {
+    padding: 40px 0; /* Further reduce padding */
+  }
+
+  .about-text h2 {
+    font-size: 2.5rem; /* Further reduce heading size */
+  }
+
+  .about-text h1 {
+    font-size: 1.3rem; /* Further reduce heading size */
+  }
+
+  .about-text p {
+    font-size: 0.8rem; /* Further reduce paragraph size */
+  }
+
+  .download-button1 {
+    padding: 10px 20px; /* Adjust button padding */
+    font-size: 12px; /* Adjust button font size */
+  }
+  .what-we-do h2 {
+    font-size: 3rem; /* Reduce font size for mobile */
+  }
+
+  .what-we-do .service,
+  .what-we-do .service2 {
+    width: 100%; /* Full width on mobile */
+    height: auto; /* Allow height to adjust */
+  }
+
+  .what-we-do .hover-image img {
+    width: 100%; /* Full width for hover images on mobile */
+  }
+
+  .flower-icon1 {
+    font-size: 10vw; 
+    text-align: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .what-we-do h2 {
+    font-size: 8vw; /* Increase size for mobile */
+  }
+}

@@ -8,7 +8,6 @@ import {
   IoPeople,
   IoMail,
   IoPersonCircleOutline,
-  IoSearch,
 } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
@@ -100,35 +99,10 @@ const LandingPageConsultant = ({}) => {
     fetchPatients();
   }, []);
 
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const filteredAppointments = appointment.filter(
-    (appt) =>
-      appt.patientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appt.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      appt.status.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   return (
     <div className="consultant-dashboard-container">
       <main className="consultant-main-content">
-        <header className="consultant-header">
-          <div className="consultant-search-bar">
-            <IoSearch className="consultant-search-icon" />
-            <input
-              type="text"
-              className="consultant-search-input"
-              placeholder="Search Appointments..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-          </div>
-        </header>
-
         <section className="consultant-greeting-section">
           <div className="consultant-greeting-text">
             <h2>Good Morning,</h2>
@@ -165,7 +139,7 @@ const LandingPageConsultant = ({}) => {
             <div className="consul-icon" style={{ color: "#9a6cb4" }}>
               <IoMail />
             </div>
-            <div className="consul-text">Unread Mails</div>
+            <div className="consul-text">Unread Notifications</div>
             <div className="consul-number">{unreadNotification}</div>
           </div>
         </section>
@@ -188,22 +162,22 @@ const LandingPageConsultant = ({}) => {
               </tr>
             </thead>
             <tbody>
-              {filteredAppointments &&
-                filteredAppointments.map((appt, index) => (
-                  <tr key={index}>
-                    <td>{appt.patientName}</td>
-                    <td>{appt.location}</td>
-                    <td>{new Date(appt.date).toLocaleDateString()}</td>
-                    <td>
-                      {new Date(appt.date).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    <td>{appt.status}</td>
-                  </tr>
-                ))}
-            </tbody>
+            {appointment &&
+              appointment.map((appt, index) => (
+                <tr key={index}>
+                  <td>{appt.patientName}</td>
+                  <td>{appt.location}</td>
+                  <td>{new Date(appt.date).toLocaleDateString()}</td>
+                  <td>
+                    {new Date(appt.date).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </td>
+                  <td>{appt.status}</td>
+                </tr>
+              ))}
+          </tbody>
           </table>
         </section>
       </main>

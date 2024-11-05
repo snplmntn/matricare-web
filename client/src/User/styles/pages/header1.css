@@ -83,3 +83,66 @@
 .download-icon:hover {
   color: #E39FA9;
 }
+
+@media (max-width: 768px) {
+  .header1 {
+    display: flex; /* Ensure header uses flexbox */
+    flex-direction: row; /* Align items in a single row */
+    justify-content: space-between; /* Space out the items */
+    align-items: center; /* Vertically center the items */
+    height: auto; /* Allow height to adjust based on content */
+    padding: 10px; /* Add padding for spacing */
+  }
+
+  .logo-header {
+    margin: 0; /* Remove margin for the logo */
+  }
+
+  .header-left1 {
+    display: none; /* Hide header-left1 on mobile */
+  }
+
+  .header-nav {
+    width: auto; /* Make nav take auto width */
+  }
+
+  .nav-links1 {
+    display: flex; /* Use flexbox to keep links in a row */
+    flex-direction: row; /* Ensure items are in a single row */
+    justify-content: center; /* Center the nav links */
+    margin: 0; /* Remove any margin */
+    padding: 0; /* Remove padding */
+  }
+
+  .nav-link {
+    margin: 0 5px; /* Adjust spacing for links */
+    font-size: 16px; /* Slightly smaller font size */
+    text-align: center; /* Center align nav links */
+  }
+
+  .header-right1 {
+    display: flex; /* Ensure it is a flex container */
+    justify-content: center; /* Center the login button */
+    align-items: center; /* Vertically center the login button */
+    margin-left: auto; /* Push the right section to the end */
+  }
+
+  .login-button {
+    padding: 5px 20px; /* Reduce padding */
+    margin: 0; /* Remove margins for better alignment */
+    width: auto; /* Set width to auto for content fitting */
+    max-width: 100px; /* Optional: limit max width for better layout */
+    font-size: 14px;
+    text-align: center; /* Center text in the button */
+    border-radius: 25px; /* Add some border radius for styling */
+    background-color: #E39FA9; /* Ensure background color */
+    color: white; /* Ensure text color */
+    border: none; /* Remove border */
+  }
+
+  .download-icon {
+    margin-right: 10px; /* Adjust spacing */
+    display: none; /* Hide download icon in mobile view if not needed */
+  }
+}
+

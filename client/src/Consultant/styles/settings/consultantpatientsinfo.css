@@ -138,10 +138,27 @@
   border-spacing: 0 15px;
 }
 
-.CPM-user-table thead {
-  background-color: #ffffff;
+.CPM-user-table-container {
+  width: 95%; 
+  height: 700px; 
+  overflow-y: auto; 
+  margin-top: 10px;
+  margin-left: 40px;
+  border-radius: 8px;
+  border-spacing: 0 15px;
 }
 
+.CPM-user-table-container::-webkit-scrollbar {
+  display: none; 
+}
+
+
+.CPM-user-table thead {
+  background-color: #ffffff;
+  position: sticky; /* Keeps header fixed */
+  top: 0;
+  z-index: 2; /* Ensures header stays above the body content */
+}
 
 .CPM-user-table th {
   background-color: #9a6cb4 !important;

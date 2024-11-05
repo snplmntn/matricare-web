@@ -81,10 +81,10 @@
   .saved-posts-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
-    width: 1500px;
-    margin-left: 180px;
-    margin-top: 20px;
+    justify-content: center; /* Aligns items to the center */
+    width: 100%;
+    padding: 0 20px;
+    gap: 20px; /* Controls the spacing between cards */
   }
   
   .saved-post-card {
@@ -92,11 +92,11 @@
     background-color: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    margin: 10px;
-    width: 30%;
+    width: calc(33.333% - 20px); /* Three cards per row with gap */
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
   }
+  
   
   .post-image {
     width: 150px;

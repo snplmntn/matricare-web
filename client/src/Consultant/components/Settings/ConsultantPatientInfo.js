@@ -81,11 +81,12 @@ const ConsultantPatientInfo = () => {
     event.preventDefault();
     try {
       const patientForm = {
+        assignedId: userID,
         email: newPatient.email,
         fullName: newPatient.fullName,
         phoneNumber: newPatient.phoneNumber,
       };
-      const response = await axios.post(
+      await axios.post(
         `${API_URL}/record/patient`,
         patientForm,
         {
@@ -94,12 +95,9 @@ const ConsultantPatientInfo = () => {
           },
         }
       );
-      setPatients([...patients, response.data.newPatient]);
-    } catch (err) {
-      if (err.response && err.response.status === 404) {
-        alert("Patient is not a registered user.");
-      }
-      console.error(err);
+      setPatients([...patients, patientForm]);
+    } catch (error) {
+      console.error(error);
     }
     setShowForm(false); // Hide the form
   };
@@ -317,11 +315,10 @@ const ConsultantPatientInfo = () => {
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>
-                      {user.prcId
-                        ? user.verified
-                          ? "Verified"
-                          : "On Process"
-                        : "No ID Found"}
+                      {user.status === "Verified" ||
+                      user.status === "On Process" ? (
+                        <span>{user.status}</span>
+                      ) : null}{" "}
                     </td>
                   </>
                 )}

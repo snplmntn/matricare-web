@@ -160,6 +160,20 @@
     border-radius: 8px;
     border-spacing: 0 15px;
   }
+
+  .CPL-user-table-container {
+    width: 95%; /* Matches your table width */
+    height: 700px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enables vertical scrolling */
+    margin-top: 10px;
+    margin-left: 40px;
+    border-radius: 8px;
+    border-spacing: 0 15px;
+  }
+  
+  .CPL-user-table-container::-webkit-scrollbar {
+    display: none; 
+  }
   
   .CPL-user-table thead {
     background-color: #ffffff;

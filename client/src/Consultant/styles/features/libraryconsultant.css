@@ -1,5 +1,5 @@
 
-.LC-library-layout{
+  .LC-library-layout{
     background-color: #9a6cb4;
   }
   
@@ -10,6 +10,7 @@
     overflow-y: auto; /* Allow scrolling if content overflows */
     background-color: #ffffffe5;
     border-radius: 50px 0 0 50px;
+    height: 94vh;
   }
   
   .LC-library-header {

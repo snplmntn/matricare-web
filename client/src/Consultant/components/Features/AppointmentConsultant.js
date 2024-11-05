@@ -101,7 +101,7 @@ const AppointmentConsultant = () => {
   // Function to check availability based on location and selected date
   const checkAvailability = (location, date) => {
     if (location && date) {
-      const selectedDay = new Date(date).toLocaleDateString("en-US", {
+      const selectedDay = new Date(date).toLocaleString("en-US", {
         weekday: "long",
       });
       const availableDays = availableTimes[location];
@@ -178,30 +178,17 @@ const AppointmentConsultant = () => {
     const { date, time, patientName, location, category, email } =
       newAppointment;
     if (date && time && patientName && location && category) {
+      const fullDateTime = `${date}, ${time}`;
+
+      const appointmentObj = {
+        email: email,
+        patientName: patientName,
+        location: location,
+        category: category,
+        date: new Date(fullDateTime),
+      };
+
       try {
-        // Convert 12-hour time to 24-hour time
-        const [timePart, period] = time.split(" ");
-        let [hours, minutes] = timePart.split(":");
-        hours = parseInt(hours, 10);
-        if (period === "PM" && hours !== 12) {
-          hours += 12;
-        } else if (period === "AM" && hours === 12) {
-          hours = 0;
-        }
-        const time24 = `${hours.toString().padStart(2, "0")}:${minutes}:00`;
-
-        // Combine date and time into a single string
-        const fullDateTime = `${date} ${time24}`;
-
-        const appointmentObj = {
-          email: email,
-          patientName: patientName,
-          location: location,
-          category: category,
-          date: fullDateTime, // Use the combined date and time string directly
-        };
-        console.log(appointmentObj);
-
         const response = await axios.post(
           `${API_URL}/appointment`,
           appointmentObj,
@@ -213,13 +200,10 @@ const AppointmentConsultant = () => {
         );
 
         setAppointments([...appointments, response.data.newAppointment]);
-        setIsFormVisible(false);
       } catch (error) {
-        console.error("Error creating appointment:", error);
-        alert(
-          "There was an error creating the appointment. Please check the date and time format."
-        );
+        console.error("Resend email error:", error);
       }
+      setIsFormVisible(false);
     } else {
       alert("Please fill in all fields");
     }
@@ -253,21 +237,14 @@ const AppointmentConsultant = () => {
     fetchAppointments();
   }, []);
 
-  const convertTo12HourFormat = (time) => {
-    const [hours, minutes] = time.split(":");
-    const hour = parseInt(hours, 10);
-    const period = hour >= 12 ? "PM" : "AM";
-    const adjustedHour = hour % 12 || 12; // Convert 0 to 12 for midnight
-    return `${adjustedHour}:${minutes} ${period}`;
-  };
-
   const formatDate = (date) => {
-    const dateObj = new Date(date);
-    const dateString = dateObj.toISOString().replace("T", " ").substring(0, 16);
-    const [datePart, timePart] = dateString.split(" ");
-    const formattedDatePart = datePart.replace(/-/g, "/");
-    const time12HourFormat = convertTo12HourFormat(timePart);
-    return `${formattedDatePart}, ${time12HourFormat}`;
+    return new Date(date).toLocaleString("en-PH", {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+    });
   };
 
   return (

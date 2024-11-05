@@ -10,6 +10,7 @@ import {
 } from "react-icons/fa"; // Import icons
 import "../../styles/pages/contact.css";
 
+
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -39,42 +40,42 @@ export default function ContactPage() {
 
   return (
     <div className="contact-1">
-      <div className="contact-page1">
-        <img
-          src="img/labor1.jpg"
-          alt="Contact Image"
-          className="contact-image"
-        />
-        <h2>Contact Us</h2>
-        <p>Feel free to reach out to us!</p>
-      </div>
-      <div className="contact-page2">
-        <h2>Contact Information</h2>
+    <div className="contact-page1">
+      <img
+        src="img/labor1.jpg"
+        alt="Contact Image"
+        className="contact-image"
+      />
+      <h2>Contact Us</h2>
+      <p>Feel free to reach out to us!</p>
+    </div>
+    <div className="contact-page2">
+      <h2>Contact Information</h2>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+        eiusmod <br></br>tempor incididunt ut labore et dolore magna aliqua.
+      </p>
+      <div className="contact-infos">
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod <br></br>tempor incididunt ut labore et dolore magna aliqua.
+          <span className="icon-circ">
+            <FaMapMarkerAlt className="icn-design" />
+          </span>{" "}
+          Address: 667 Dalupan Street Sampaloc 1008 Manila Metro Manila
         </p>
-        <div className="contact-infos">
-          <p>
-            <span className="icon-circ">
-              <FaMapMarkerAlt className="icn-design" />
-            </span>{" "}
-            Address: 667 Dalupan Street Sampaloc 1008 Manila Metro Manila
-          </p>
-          <p>
-            <span className="icon-circ">
-              <FaEnvelope className="icn-design" />
-            </span>{" "}
-            Email: no-reply@matricare.site
-          </p>
-          <p>
-            <span className="icon-circ">
-              <FaPhone className="icn-design" />
-            </span>{" "}
-            Contact: +1234567890
-          </p>
-        </div>
-        <div className="location-info">
+        <p>
+          <span className="icon-circ">
+            <FaEnvelope className="icn-design" />
+          </span>{" "}
+          Email: no-reply@matricare.site
+        </p>
+        <p>
+          <span className="icon-circ">
+            <FaPhone className="icn-design" />
+          </span>{" "}
+          Contact: +1234567890
+        </p>
+      </div>
+      <div className="location-info">
           <h2>Our Location</h2>
           <p>
             Mary Chiles Hospital - 667 Dalupan Street Sampaloc 1008 Manila Metro
@@ -82,6 +83,7 @@ export default function ContactPage() {
           </p>
           <img src="img/map.png" className="image" />
 
+              
           <div className="social-icons">
             <h3>Social Media</h3>
             <a
@@ -117,10 +119,10 @@ export default function ContactPage() {
               <FaYoutube className="social-icon" />
             </a>
           </div>
-        </div>
-      </div>
-
-      <div className="get-in-touch-container">
+            </div>
+          </div>
+          
+          <div className="get-in-touch-container">
         <div className="get-in-touch">
           <h2>Get in Touch!</h2>
           <p>Feel free to reach out to us.</p>
@@ -140,17 +142,17 @@ export default function ContactPage() {
               required
             />
           </div>
-          <div className="pt-0 mb-3">
-            <input
-              type="email"
-              placeholder="Email"
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="pt-0 mb-3">
+              <div className="pt-0 mb-3">
+                <input
+                  type="email"
+                  placeholder="Email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="pt-0 mb-3">
             <textarea
               placeholder="Your message"
               name="message"
