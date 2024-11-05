@@ -306,6 +306,16 @@ const LandingPageAssistant = ({}) => {
           </div>
         </header>
 
+        <section className="assistant-greeting-section">
+          <div className="assistant-greeting-text">
+            <h2>Good Day,</h2>
+            <h3>{` ${user.name?.split(" ")[0]}`}</h3>
+            <p>Have a nice day at work</p>
+          </div>
+          <div className="assistant-greeting-image">
+            <img src="img/assistant.png" alt="Good Morning" />
+          </div>
+        </section>
         <section className="landingpage-assistant-dashboard">
           <div className="landingpage-assistant-dashboard-item landingpage-assistant-patients">
             <h2>Patients</h2>
@@ -314,28 +324,6 @@ const LandingPageAssistant = ({}) => {
               <div className="landingpage-assistant-pie-chart-label">
                 {totalPatients}
               </div>
-            </div>
-          </div>
-
-          <div className="landingpage-assistant-dashboard-item landingpage-assistant-library">
-            <h2>Resource Library</h2>
-            <div className="landingpage-assistant-library-slider">
-              <Slider {...sliderSettings}>
-                {libraryItems.length > 0 &&
-                  libraryItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="landingpage-assistant-library-box"
-                    >
-                      <img
-                        src={item.picture}
-                        alt={item.title}
-                        className="landingpage-assistant-library-box-image"
-                      />
-                      <h3>{item.title}</h3>
-                    </div>
-                  ))}
-              </Slider>
             </div>
           </div>
 
