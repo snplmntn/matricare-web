@@ -29,12 +29,16 @@ const Library1 = ({ article }) => {
     };
 
     try {
-      await axios.put(`${API_URL}/article?id=${article._id}`, updatedArticle, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
+      await axios.put(
+        `${API_URL}/article?id=${article._id}`,
+        updatedArticle,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+        }
+      );
 
       setIsEditing(false);
     } catch (error) {

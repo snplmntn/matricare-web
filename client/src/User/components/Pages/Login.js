@@ -149,6 +149,12 @@ export default function Login() {
         username,
         password,
       });
+
+      if (response.data.user.role === "Patient") {
+        setLoading(false);
+        return alert("Please use the app.");
+      }
+
       const userDetails = {
         name: response.data.user.fullName,
         role: response.data.user.role,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../../styles/library/article.css";
+import "../../styles/library/library1.css";
 import { IoBookmark, IoArrowBack } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
