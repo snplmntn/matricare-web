@@ -1,5 +1,10 @@
 import React, { Fragment, useRef, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate,} from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { useCookies } from "react-cookie";
 import "./App.css";
 import axios from "axios";
@@ -94,10 +99,24 @@ function AppContent() {
   const getPage = (Component) => {
     if (role && token) {
       switch (role) {
-        case "Assistant": return <Fragment><AssistantSidebar /><LandingPageAssistant user={parsedUser} /></Fragment>;
-        case "Obgyne": return <Fragment><ConsultantSidebar /><LandingPageConsultant user={parsedUser} /></Fragment>;
-        case "Ob-gyne Specialist": return <BellyTalk user={parsedUser} />;
-        default: return <HomePage user={parsedUser} />;
+        case "Assistant":
+          return (
+            <Fragment>
+              <AssistantSidebar />
+              <LandingPageAssistant user={parsedUser} />
+            </Fragment>
+          );
+        case "Obgyne":
+          return (
+            <Fragment>
+              <ConsultantSidebar />
+              <LandingPageConsultant user={parsedUser} />
+            </Fragment>
+          );
+        case "Ob-gyne Specialist":
+          return <BellyTalk user={parsedUser} />;
+        default:
+          return <HomePage user={parsedUser} />;
       }
     } else {
       return Component;
@@ -107,40 +126,320 @@ function AppContent() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={getPage(<><Header1 /><LandingPage /></>)} />
-        <Route path="/signup" element={getPage(<><Header1 /><Signup /></>)} />
-        <Route path="/login" element={getPage(<><Header1 /><Login /></>)} />
-        <Route path="/forgot-password" element={getPage(<><Header1 /><ForgotPass /></>)} />
-        <Route path="/notification" element={token ? <Notifications /> : <Undefined />} />
+        <Route
+          path="/"
+          element={getPage(
+            <>
+              <Header1 />
+              <LandingPage />
+            </>
+          )}
+        />
+        <Route
+          path="/signup"
+          element={getPage(
+            <>
+              <Header1 />
+              <Signup />
+            </>
+          )}
+        />
+        <Route
+          path="/login"
+          element={getPage(
+            <>
+              <Header1 />
+              <Login />
+            </>
+          )}
+        />
+        <Route
+          path="/forgot-password"
+          element={getPage(
+            <>
+              <Header1 />
+              <ForgotPass />
+            </>
+          )}
+        />
+        <Route
+          path="/notification"
+          element={token ? <Notifications /> : <Undefined />}
+        />
 
         {/* User Routes */}
-        <Route path="/app" element={getPage(<><Header1 /><Login /></>)} />
-        <Route path="/userprofile" element={token ? <UserProfile user={parsedUser} /> : <><Header1 /><Login /></>} />
-        <Route path="/medicalrecords" element={token && role === "Patient" ? <MedicalRec user={parsedUser} /> : <Undefined />} />
-        <Route path="/saved-posts" element={token ? <SavedPosts /> : <><Header1 /><Login /></>} />
+        <Route
+          path="/app"
+          element={getPage(
+            <>
+              <Header1 />
+              <Login />
+            </>
+          )}
+        />
+        <Route
+          path="/userprofile"
+          element={
+            token ? (
+              <UserProfile user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/medicalrecords"
+          element={
+            token && role === "Patient" ? (
+              <MedicalRec user={parsedUser} />
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/saved-posts"
+          element={
+            token ? (
+              <SavedPosts />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
-        <Route path="/duedate-calculator" element={token && role === "Patient" ? <DateCalculator /> : <Undefined />} />
-        <Route path="/book/:bookId" element={token ? <><LibrarySidebar /><Article /></> : <><Header1 /><Login /></>} />
-        <Route path="/library" element={token ? <><LibrarySidebar /><Library /></> : <><Header1 /><Login /></>} />
-        <Route path="/book" element={token ? <><LibrarySidebar /><Library /></> : <><Header1 /><Login /></>} />
-        <Route path="/savedarticle" element={token ? <><LibrarySidebar /><SavedArticle /></> : <><Header1 /><Login /></>} />
+        <Route
+          path="/duedate-calculator"
+          element={
+            token && role === "Patient" ? <DateCalculator /> : <Undefined />
+          }
+        />
+        <Route
+          path="/book/:bookId"
+          element={
+            token ? (
+              <>
+                <LibrarySidebar />
+                <Article />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            token ? (
+              <>
+                <LibrarySidebar />
+                <Library />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/book"
+          element={
+            token ? (
+              <>
+                <LibrarySidebar />
+                <Library />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/savedarticle"
+          element={
+            token ? (
+              <>
+                <LibrarySidebar />
+                <SavedArticle />
+              </>
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
 
         {/* CONSULTANT Routes */}
-        <Route path="/consultant-landing" element={token && role === "Obgyne" ? <><ConsultantSidebar /><LandingPageConsultant user={parsedUser} /></> : <Undefined />} />
-        <Route path="/manageBellytalk" element={token && role === "Obgyne" ? <><ConsultantSidebar /><ManageBellyTalk user={parsedUser} /></> : <Undefined />} />
-        <Route path="/consultant-patientsinfo" element={token && role === "Obgyne" ? <><ConsultantSidebar /><ConsultantPatientInfo /></> : <Undefined />} />
-        <Route path="/consultant-appointment" element={token && role === "Obgyne" ? <><ConsultantSidebar /><AppointmentConsultant /></> : <Undefined />} />
-        <Route path="/consultant-notification" element={token && role === "Obgyne" ? <Notifications /> : <Undefined />} />
-        <Route path="/patient-records/:userId" element={token && role === "Obgyne" ? <PatientRecords user={parsedUser} /> : <Undefined />} />
-        <Route path="/library-consultant" element={token && role === "Obgyne" ? <><ConsultantSidebar /><LibraryConsultant /></> : <Undefined />} />
+        <Route
+          path="/consultant-landing"
+          element={
+            token && role === "Obgyne" ? (
+              <>
+                <ConsultantSidebar />
+                <LandingPageConsultant user={parsedUser} />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/manageBellytalk"
+          element={
+            token && role === "Obgyne" ? (
+              <>
+                <ConsultantSidebar />
+                <ManageBellyTalk user={parsedUser} />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/consultant-patientsinfo"
+          element={
+            token && role === "Obgyne" ? (
+              <>
+                <ConsultantSidebar />
+                <ConsultantPatientInfo />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/consultant-appointment"
+          element={
+            token && role === "Obgyne" ? (
+              <>
+                <ConsultantSidebar />
+                <AppointmentConsultant />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/consultant-notification"
+          element={
+            token && role === "Obgyne" ? <Notifications /> : <Undefined />
+          }
+        />
+        <Route
+          path="/patient-records/:userId"
+          element={
+            token && role === "Obgyne" ? (
+              <PatientRecords user={parsedUser} />
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/library-consultant"
+          element={
+            token && role === "Obgyne" ? (
+              <>
+                <ConsultantSidebar />
+                <LibraryConsultant />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
 
         {/* Assistant Routes  */}
-        <Route path="/assistant-landing" element={token && role === "Assistant" ? <><AssistantSidebar /><LandingPageAssistant user={parsedUser} /></> : <Undefined />} />
-        <Route path="/user-logs" element={token && role === "Assistant" ? <><AssistantSidebar /><UserLogs /></> : <Undefined />} />
-        <Route path="/library-assistant" element={token && role === "Assistant" ? <><AssistantSidebar /><LibraryAssistant /></> : <Undefined />} />
-        <Route path="/assistant-notification" element={token && role === "Assistant" ? <Notifications /> : <Undefined />} />
-        <Route path="/user-management" element={token && role === "Assistant" ? <><AssistantSidebar /><PatientUserManagement /></> : <Undefined />} />
-        <Route path="/appointment-assistant" element={token && role === "Assistant" ? <><AssistantSidebar /><AppointmentAssistant /></> : <Undefined />} />
+        <Route
+          path="/assistant-landing"
+          element={
+            token && role === "Assistant" ? (
+              <>
+                <AssistantSidebar />
+                <LandingPageAssistant user={parsedUser} />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/user-logs"
+          element={
+            token && role === "Assistant" ? (
+              <>
+                <AssistantSidebar />
+                <UserLogs />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/library-assistant"
+          element={
+            token && role === "Assistant" ? (
+              <>
+                <AssistantSidebar />
+                <LibraryAssistant />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/assistant-notification"
+          element={
+            token && role === "Assistant" ? <Notifications /> : <Undefined />
+          }
+        />
+        <Route
+          path="/user-management"
+          element={
+            token && role === "Assistant" ? (
+              <>
+                <AssistantSidebar />
+                <PatientUserManagement />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/appointment-assistant"
+          element={
+            token && role === "Assistant" ? (
+              <>
+                <AssistantSidebar />
+                <AppointmentAssistant />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
       </Routes>
       <Footer />
     </div>
