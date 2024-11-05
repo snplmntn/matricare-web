@@ -421,6 +421,9 @@ function AppContent() {
             )
           }
         />
+
+        {/* 404 Page  */}
+        <Route path="*" element={<Undefined />} />
       </Routes>
       <Footer />
     </div>
