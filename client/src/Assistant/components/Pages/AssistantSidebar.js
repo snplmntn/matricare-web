@@ -73,13 +73,6 @@ const AssistantSidebar = () => {
         >
           <IoCalendar className="landingpage-assistant-icon" />
         </Link>
-        <Link
-          to="/library-assistant"
-          className="landingpage-assistant-sidebar-item"
-          title="Library"
-        >
-          <IoLibrary className="landingpage-assistant-icon" />
-        </Link>
         <button className="assistant-logout-button" onClick={handleLogout}>
           <IoLogOutOutline />
           Logout
