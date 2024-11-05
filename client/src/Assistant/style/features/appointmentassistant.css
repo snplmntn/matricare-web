@@ -92,12 +92,16 @@
 /* upcoming */
 
 .upcoming-appointments-container {
-  margin-top: 20px;
-  border-radius: 20px; 
-  background-color: none;
-  overflow: hidden; 
-  margin-left: 10px;
-  box-shadow: none; 
+  width: 100%; 
+  height: 700px; 
+  overflow-y: auto; 
+  margin-top: 10px;
+  border-radius: 8px;
+  border-spacing: 0 15px;
+}
+
+.upcoming-appointments-container::-webkit-scrollbar {
+  display: none; 
 }
 
 .upcoming-appointments-table {

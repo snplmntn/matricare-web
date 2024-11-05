@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { IoPersonCircleOutline, IoNotificationsSharp } from "react-icons/io5";
+import {
+  IoPersonCircleOutline,
+  IoNotificationsSharp,
+} from "react-icons/io5";
 import "../../style/pages/landingpageassistant.css";
 import Slider from "react-slick";
 import { Line, Pie } from "react-chartjs-2";
@@ -17,7 +20,6 @@ import {
 import "../../style/pages/landingpageassistant.css";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
-import { useNavigate } from "react-router-dom";
 
 // Register chart components
 ChartJS.register(
@@ -34,7 +36,6 @@ ChartJS.register(
 const LandingPageAssistant = ({}) => {
   const token = getCookie("token");
   const API_URL = process.env.REACT_APP_API_URL;
-  const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [totalPatients, setTotalPatients] = useState(0);
   const [appointment, setAppointment] = useState([]);
@@ -270,30 +271,26 @@ const LandingPageAssistant = ({}) => {
     setSelectedMonth(event.target.value);
   };
 
-  const handleBookClick = (book) => {
-    navigate(`/book/${book._id}`);
-  };
-
   return (
     <div className="landingpage-assistant-container">
       <main className="landingpage-assistant-main-content">
         <header className="landingpage-assistant-header">
           <h1>Dashboard</h1>
           <div className="assistant-profile-icons">
-            <a
+          <a
               href="/userprofile"
               className="assistant-profile-icon"
               title="Profile"
             >
               <IoPersonCircleOutline />
             </a>
-            <a
-              href="/assistant-notification"
-              className="assistant-notification-icon"
-              title="Notifications"
-            >
-              <IoNotificationsSharp />
-            </a>
+          <a
+            href="/assistant-notification"
+            className="assistant-notification-icon"
+            title="Notifications"
+          >
+            <IoNotificationsSharp />
+          </a>
           </div>
           <div className="landingpage-assistant-user-profile">
             <h1>{user.name}</h1>
@@ -328,10 +325,6 @@ const LandingPageAssistant = ({}) => {
                   libraryItems.map((item) => (
                     <div
                       key={item.id}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleBookClick(item);
-                      }}
                       className="landingpage-assistant-library-box"
                     >
                       <img

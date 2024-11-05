@@ -1,13 +1,11 @@
-import React, { useState, Fragment, useRef, useEffect } from "react";
+import React, { Fragment, useRef, useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   useNavigate,
-  useLocation,
 } from "react-router-dom";
-import { CookiesProvider, useCookies } from "react-cookie";
-import { createHashHistory } from "history";
+import { useCookies } from "react-cookie";
 import "./App.css";
 import axios from "axios";
 
@@ -51,7 +49,7 @@ import UserLogs from "./Assistant/components/Pages/UserLogs.js";
 function AppContent() {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies();
+  const [cookies, removeCookie] = useCookies();
   const parsedUser = useRef({});
   const token = cookies.token;
   const role = cookies.role;
@@ -137,19 +135,15 @@ function AppContent() {
             </>
           )}
         />
-
         <Route
           path="/signup"
           element={getPage(
             <>
-              <>
-                <Header1 />
-                <Signup />
-              </>
+              <Header1 />
+              <Signup />
             </>
           )}
         />
-
         <Route
           path="/login"
           element={getPage(
@@ -159,7 +153,6 @@ function AppContent() {
             </>
           )}
         />
-
         <Route
           path="/forgot-password"
           element={getPage(
@@ -169,7 +162,6 @@ function AppContent() {
             </>
           )}
         />
-
         <Route
           path="/notification"
           element={token ? <Notifications /> : <Undefined />}
@@ -203,13 +195,8 @@ function AppContent() {
           element={
             token && role === "Patient" ? (
               <MedicalRec user={parsedUser} />
-            ) : role !== "Patient" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -230,16 +217,7 @@ function AppContent() {
         <Route
           path="/duedate-calculator"
           element={
-            token && role === "Patient" ? (
-              <DateCalculator />
-            ) : role !== "Patient" ? (
-              <Undefined />
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
+            token && role === "Patient" ? <DateCalculator /> : <Undefined />
           }
         />
         <Route
@@ -247,7 +225,8 @@ function AppContent() {
           element={
             token ? (
               <>
-                <LibrarySidebar /> <Article />
+                <LibrarySidebar />
+                <Article />
               </>
             ) : (
               <>
@@ -312,16 +291,11 @@ function AppContent() {
           element={
             token && role === "Obgyne" ? (
               <>
-                <ConsultantSidebar />{" "}
+                <ConsultantSidebar />
                 <LandingPageConsultant user={parsedUser} />
               </>
-            ) : role !== "Obgyne" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -330,15 +304,11 @@ function AppContent() {
           element={
             token && role === "Obgyne" ? (
               <>
-                <ConsultantSidebar /> <ManageBellyTalk user={parsedUser} />
+                <ConsultantSidebar />
+                <ManageBellyTalk user={parsedUser} />
               </>
-            ) : role !== "Obgyne" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -347,15 +317,11 @@ function AppContent() {
           element={
             token && role === "Obgyne" ? (
               <>
-                <ConsultantSidebar /> <ConsultantPatientInfo />
+                <ConsultantSidebar />
+                <ConsultantPatientInfo />
               </>
-            ) : role !== "Obgyne" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -364,46 +330,27 @@ function AppContent() {
           element={
             token && role === "Obgyne" ? (
               <>
-                <ConsultantSidebar /> <AppointmentConsultant />
+                <ConsultantSidebar />
+                <AppointmentConsultant />
               </>
-            ) : role !== "Obgyne" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
         <Route
           path="/consultant-notification"
           element={
-            token && role === "Obgyne" ? (
-              <Notifications />
-            ) : role !== "Obgyne" ? (
-              <Undefined />
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
+            token && role === "Obgyne" ? <Notifications /> : <Undefined />
           }
         />
-
         <Route
           path="/patient-records/:userId"
           element={
             token && role === "Obgyne" ? (
               <PatientRecords user={parsedUser} />
-            ) : role !== "Obgyne" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -412,15 +359,11 @@ function AppContent() {
           element={
             token && role === "Obgyne" ? (
               <>
-                <ConsultantSidebar /> <LibraryConsultant />
+                <ConsultantSidebar />
+                <LibraryConsultant />
               </>
-            ) : role !== "Obgyne" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -431,33 +374,24 @@ function AppContent() {
           element={
             token && role === "Assistant" ? (
               <>
-                <AssistantSidebar /> <LandingPageAssistant user={parsedUser} />
+                <AssistantSidebar />
+                <LandingPageAssistant user={parsedUser} />
               </>
-            ) : role !== "Assistant" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
-
         <Route
           path="/user-logs"
           element={
             token && role === "Assistant" ? (
               <>
-                <AssistantSidebar /> <UserLogs />{" "}
+                <AssistantSidebar />
+                <UserLogs />
               </>
-            ) : role !== "Assistant" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -466,47 +400,30 @@ function AppContent() {
           element={
             token && role === "Assistant" ? (
               <>
-                <AssistantSidebar /> <LibraryAssistant />{" "}
+                <AssistantSidebar />
+                <LibraryAssistant />
               </>
-            ) : role !== "Assistant" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
         <Route
           path="/assistant-notification"
           element={
-            token && role === "Assistant" ? (
-              <Notifications />
-            ) : role !== "Assistant" ? (
-              <Undefined />
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
+            token && role === "Assistant" ? <Notifications /> : <Undefined />
           }
         />
         <Route
-          path="/admin-profile"
+          path="/user-management"
           element={
             token && role === "Assistant" ? (
               <>
-                <AssistantSidebar /> <PatientUserManagement />
+                <AssistantSidebar />
+                <PatientUserManagement />
               </>
-            ) : role !== "Assistant" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
@@ -515,19 +432,14 @@ function AppContent() {
           element={
             token && role === "Assistant" ? (
               <>
-                <AssistantSidebar /> <AppointmentAssistant />
+                <AssistantSidebar />
+                <AppointmentAssistant />
               </>
-            ) : role !== "Assistant" ? (
-              <Undefined />
             ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
+              <Undefined />
             )
           }
         />
-        <Route path="*" element={<Undefined />} />
       </Routes>
       <Footer />
     </div>

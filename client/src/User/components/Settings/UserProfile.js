@@ -42,16 +42,7 @@ const UserProfile = ({ user }) => {
   const [showPasswordSettings, setShowPasswordSettings] = useState(false);
   const [error, setError] = useState("");
 
-  //notifications
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [notificationPreferences, setNotificationPreferences] = useState({
-    emailNotifications: false,
-    smsNotifications: false,
-    pushNotifications: false,
-  });
-
   const [isEditing, setIsEditing] = useState(false);
-  const [isEditingBabyDetails, setIsEditingBabyDetails] = useState(false);
   const [showBabyDetails, setShowBabyDetails] = useState(false);
   const [babyName, setBabyName] = useState("");
   const [lastMenstrualPeriod, setLastMenstrualPeriod] = useState("");
@@ -64,6 +55,7 @@ const UserProfile = ({ user }) => {
       setProfileImage(imageUrl);
     }
   };
+
 
   const handleUploadPrcId = async () => {
     if (uploadedFile) {
@@ -81,7 +73,6 @@ const UserProfile = ({ user }) => {
             },
           }
         );
-
         return response.data.documentLink;
       } catch (err) {
         console.error(err);
@@ -153,7 +144,7 @@ const UserProfile = ({ user }) => {
       }
 
       try {
-        await axios.put(
+        const response = await axios.put(
           `${API_URL}/user?userId=${userID}`,
           {
             password: oldPassword,
@@ -193,11 +184,6 @@ const UserProfile = ({ user }) => {
       // Exit editing mode
       setIsEditing(false);
     }
-  };
-
-  const handleNotificationChange = (e) => {
-    const { name, checked } = e.target;
-    setNotificationPreferences((prev) => ({ ...prev, [name]: checked }));
   };
 
   //handle user ifo update
@@ -243,11 +229,15 @@ const UserProfile = ({ user }) => {
     }
 
     try {
-      await axios.put(`${API_URL}/user?userId=${userID}`, updatedUserForm, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const response = await axios.put(
+        `${API_URL}/user?userId=${userID}`,
+        updatedUserForm,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       if (fullname || birthday || profilePicture) {
         const userData = localStorage.getItem("userData");
         const parsedData = JSON.parse(userData);
@@ -260,13 +250,10 @@ const UserProfile = ({ user }) => {
           parsedData.profilePicture = profilePicture;
         }
 
-        if (updatedUserForm.prcId) setPrcIdFile(updatedUserForm.prcId);
-
         localStorage.removeItem("userData");
         localStorage.setItem("userData", JSON.stringify(parsedData));
       }
       setIsEditing(false);
-      setIsEditingBabyDetails(false);
     } catch (error) {
       console.error(error);
     }
@@ -330,7 +317,6 @@ const UserProfile = ({ user }) => {
             onClick={() => {
               setIsEditing(true);
               setShowPasswordSettings(false);
-              setShowNotifications(false);
               setShowBabyDetails(false);
             }}
           >
@@ -340,21 +326,8 @@ const UserProfile = ({ user }) => {
           <button
             className="settings-btn"
             onClick={() => {
-              setIsEditing(false);
-              setShowPasswordSettings(false);
-              setShowNotifications(true);
-              setShowBabyDetails(false);
-            }}
-          >
-            <FcAdvertising className="UP-icon" />
-            Notifications
-          </button>
-          <button
-            className="settings-btn"
-            onClick={() => {
               setShowPasswordSettings(true);
               setIsEditing(false);
-              setShowNotifications(false);
               setShowBabyDetails(false);
             }}
           >
@@ -368,8 +341,6 @@ const UserProfile = ({ user }) => {
                 setShowBabyDetails(true);
                 setIsEditing(false);
                 setShowPasswordSettings(false);
-                setShowNotifications(false);
-                setIsEditingBabyDetails(true);
               }}
             >
               <FcDecision className="UP-icon" />
@@ -385,7 +356,6 @@ const UserProfile = ({ user }) => {
 
         {!isEditing &&
           !showPasswordSettings &&
-          !showNotifications &&
           !showBabyDetails && (
             <div className="user-profile-items-wrapper">
               <div className="user-profile-divider-wrapper">
@@ -540,27 +510,13 @@ const UserProfile = ({ user }) => {
                     </div>
                     <div className="user-profile-input-group">
                       <label htmlFor="prcId">PRC ID:</label>
-                      {!prcIdFile || !isVerified ? (
-                        <input
-                          type="file"
-                          id="prcId"
-                          accept="image/*,application/pdf"
-                          onChange={(e) => setUploadedFile(e.target.files[0])}
-                          className="user-profile-input"
-                        />
-                      ) : (
-                        isVerified && (
-                          <p className="user-profile-input verified-status">
-                            <a
-                              href={prcIdFile}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              View File
-                            </a>
-                          </p>
-                        )
-                      )}
+                      <input
+                        type="file"
+                        id="prcId"
+                        accept="image/*,application/pdf"
+                        onChange={(e) => setUploadedFile(e.target.files[0])}
+                        className="user-profile-input"
+                      />
                       {uploadedFile && (
                         <>
                           <p>{uploadedFile.name}</p>
@@ -675,74 +631,6 @@ const UserProfile = ({ user }) => {
           </>
         )}
 
-        {showNotifications && (
-          <>
-            <div className="user-profile-divider">
-              <span className="UP-divider-text">Notification Preferences</span>
-            </div>
-            <div className="notification-settings">
-              <div className="toggle-container">
-                <label className="toggle">
-                  <input
-                    type="checkbox"
-                    name="emailNotifications"
-                    checked={notificationPreferences.emailNotifications}
-                    onChange={handleNotificationChange}
-                  />
-                  <span className="slider"></span>
-                  <span className="toggle-label">Email Notifications</span>
-                </label>
-              </div>
-              <div className="toggle-container">
-                <label className="toggle">
-                  <input
-                    type="checkbox"
-                    name="smsNotifications"
-                    checked={notificationPreferences.smsNotifications}
-                    onChange={handleNotificationChange}
-                  />
-                  <span className="slider"></span>
-                  <span className="toggle-label">SMS Notifications</span>
-                </label>
-              </div>
-              <div className="toggle-container">
-                <label className="toggle">
-                  <input
-                    type="checkbox"
-                    name="pushNotifications"
-                    checked={notificationPreferences.pushNotifications}
-                    onChange={handleNotificationChange}
-                  />
-                  <span className="slider"></span>
-                  <span className="toggle-label">Push Notifications</span>
-                </label>
-              </div>
-            </div>
-            <div className="user-profile-button-group">
-              <button
-                type="button"
-                className="user-profile-save-btn"
-                onClick={() => {
-                  localStorage.setItem(
-                    "notificationPreferences",
-                    JSON.stringify(notificationPreferences)
-                  );
-                  setShowNotifications(false);
-                }}
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                className="user-profile-cancel-btn"
-                onClick={() => setShowNotifications(false)}
-              >
-                Cancel
-              </button>
-            </div>
-          </>
-        )}
-
         {showBabyDetails && (
           <>
             <div className="user-profile-divider">
@@ -768,35 +656,30 @@ const UserProfile = ({ user }) => {
                   <input
                     type="date"
                     id="lastMenstrualPeriod"
-                    value={
-                      lastMenstrualPeriod &&
-                      new Date(lastMenstrualPeriod).toISOString().split("T")[0]
-                    }
+                    value={lastMenstrualPeriod}
                     onChange={(e) => setLastMenstrualPeriod(e.target.value)}
                     className="user-profile-input"
                   />
                 </div>
 
-                {isEditingBabyDetails && (
-                  <div className="user-profile-button-group">
-                    <button
-                      type="submit"
-                      className="user-profile-save-btn"
-                      onClick={handleUserUpdate}
-                    >
-                      Save
-                    </button>
-                    <button
-                      type="button"
-                      className="user-profile-cancel-btn"
-                      onClick={() => {
-                        setIsEditingBabyDetails(false);
-                      }}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                )}
+                <div className="user-profile-button-group">
+                  <button
+                    type="submit"
+                    className="user-profile-save-btn"
+                    onClick={handleUserUpdate}
+                  >
+                    Save
+                  </button>
+                  <button
+                    type="button"
+                    className="user-profile-cancel-btn"
+                    onClick={() => {
+                      setShowBabyDetails(false);
+                    }}
+                  >
+                    Cancel
+                  </button>
+                </div>
               </form>
             </div>
           </>

@@ -50,7 +50,7 @@
 
 .appointmentConsultant-headerImage img {
   height: 40px; 
-  width: auto;
+  width: 40px;
   border-radius: 50%; 
 }
 
@@ -136,7 +136,7 @@
   align-items: flex-start;
   background-color: #ffffff;
   width: 1500px;
-  height: 600px;
+  height: 700px;
 }
 
 .appointmentConsultant-addAppointmentBtn svg {

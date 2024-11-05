@@ -3,14 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   IoHome,
   IoCalendar,
-  IoChatbubbles,
   IoLibrary,
   IoPerson,
   IoLogOutOutline,
 } from "react-icons/io5";
 import "../../style/pages/assistantsidebar.css";
 import axios from "axios";
-import { CookiesProvider, useCookies } from "react-cookie";
+import {useCookies } from "react-cookie";
 
 const AssistantSidebar = () => {
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -62,7 +61,7 @@ const AssistantSidebar = () => {
           <IoHome className="landingpage-assistant-icon" />
         </Link>
         <Link
-          to="/admin-profile"
+          to="/user-management"
           className="landingpage-assistant-sidebar-item"
         >
           <IoPerson className="landingpage-assistant-icon" />
@@ -80,13 +79,6 @@ const AssistantSidebar = () => {
           title="Library"
         >
           <IoLibrary className="landingpage-assistant-icon" />
-        </Link>
-        <Link
-          to="/belly-talk"
-          className="landingpage-assistant-sidebar-item"
-          title="BellyTalk"
-        >
-          <IoChatbubbles className="landingpage-assistant-icon" />
         </Link>
         <button className="assistant-logout-button" onClick={handleLogout}>
           <IoLogOutOutline />

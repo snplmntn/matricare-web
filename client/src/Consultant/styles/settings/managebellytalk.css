@@ -107,9 +107,10 @@
   height: 300px;
 }
 
-.MuiDialogTitle-root {
-  border-left: solid 10px #9a6cb4;
-  text-align: left;
+.dialog-title-text {
+  font-size: 20px !important; 
+  color: #7c459c; 
+  border-left: 5px solid #7c459c;
   text-indent: 10px;
 }
 
@@ -117,18 +118,39 @@
   text-align: left;
   margin-top: 20px;
   line-height: 1.5 !important;
+  margin-left: 15px;
 }
 
-.MuiDialogActions-root {
-  display: flex; 
-  justify-content: center; 
-  padding: 10px; 
-}
-
-.MuiDialogActions .MuiButton-root {
+.dialog-close-button {
+  position: absolute; 
+  right: -25px; 
+  top: -40px; 
   color: #7c459c; 
-  text-align: center;
-  align-items: center; 
-  margin: 0 10px; 
-  flex-grow: 0; 
+}
+
+.dialog-content {
+  padding: 16px; 
+  background-color: #ffffff; 
+}
+
+.download-button-container {
+  display: flex;
+  justify-content: center; 
+  padding: 16px; 
+}
+
+.dialog-download-button {
+  color: #7c459c !important; 
+}
+
+.dialog-actions {
+  padding: 16px; 
+  border-top: 1px solid #e0e0e0; 
+}
+
+/* Optional hover effects */
+.dialog-close-button:hover,
+.dialog-download-button:hover {
+  background-color: rgba(124, 69, 156, 0.1); 
+  transition: background-color 0.3s; 
 }

@@ -96,20 +96,21 @@
 }
 
 .consultant-profile h1 {
-  margin: 0; /* Remove default margin */
-  font-size: 18px; /* Adjust the size as needed */
+  margin: 0; 
+  font-size: 18px; 
 }
 
 .consultant-profile p {
-  margin: 0; /* Remove default margin */
-  font-size: 14px; /* Adjust the size as needed */
-  color: #666; /* Adjust the color as needed */
+  margin: 0; 
+  font-size: 14px; 
+  color: #666; 
 }
 
 .consultant-profile-image {
-  border-radius: 50%; /* Circular image */
-  width: 50px; /* Adjust the width */
-  height: 50px; /* Adjust the height */
+  border-radius: 50%; 
+  width: 50px; 
+  height: 50px; 
+  object-fit: cover;
 }
 
 
@@ -122,9 +123,9 @@
   width: 950px;
   margin-top: 80px;
   align-items: center;
-  justify-content: space-between; /* Ensures space between text and image */
+  justify-content: space-between; 
   padding: 30px;
-  background-color: white; /* Optional: background color for the section */
+  background-color: white; 
 }
 
 .consultant-greeting-text {
@@ -188,13 +189,13 @@
 }
 
 .consul-text {
-  font-size: 16px; /* Adjust text size */
-  margin-bottom: 5px; /* Space between text and number */
+  font-size: 16px; 
+  margin-bottom: 5px; 
 }
 
 .consul-number {
-  font-size: 24px; /* Adjust number size */
-  font-weight: bold; /* Make number bold */
+  font-size: 24px; 
+  font-weight: bold; 
 }
 
 .consultant-report-card.total-patients {
