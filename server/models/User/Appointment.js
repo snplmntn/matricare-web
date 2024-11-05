@@ -32,7 +32,7 @@ const AppointmentSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    findings: String,
+    diagnosis: String,
     document: [
       {
         type: String,
