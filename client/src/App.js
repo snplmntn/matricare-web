@@ -15,14 +15,11 @@ import Header1 from "./User/components/Pages/Header1";
 import LandingPage from "./User/components/Pages/LandingPage";
 import Notifications from "./User/components/Pages/Notifications";
 import UserProfile from "./User/components/Settings/UserProfile";
-import MedicalRec from "./User/components/Settings/MedicalRec";
 import BellyTalk from "./User/components/Features/BellyTalk";
-import HomePage from "./User/components/Pages/HomePage";
 import Signup from "./User/components/Pages/Signup";
 import Login from "./User/components/Pages/Login";
 import ForgotPass from "./User/components/Pages/ForgotPass";
 import SavedPosts from "./User/components/Features/SavedPosts";
-import DateCalculator from "./User/components/Features/datecalculator";
 import Article from "./User/components/Library/Article";
 import SavedArticle from "./User/components/Pages/SavedArticle";
 import Library from "./User/components/Features/Library";
@@ -116,7 +113,7 @@ function AppContent() {
         case "Ob-gyne Specialist":
           return <BellyTalk user={parsedUser} />;
         default:
-          return <HomePage user={parsedUser} />;
+          return <Undefined />;
       }
     } else {
       return Component;
@@ -191,16 +188,6 @@ function AppContent() {
           }
         />
         <Route
-          path="/medicalrecords"
-          element={
-            token && role === "Patient" ? (
-              <MedicalRec user={parsedUser} />
-            ) : (
-              <Undefined />
-            )
-          }
-        />
-        <Route
           path="/saved-posts"
           element={
             token ? (
@@ -214,12 +201,6 @@ function AppContent() {
           }
         />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
-        <Route
-          path="/duedate-calculator"
-          element={
-            token && role === "Patient" ? <DateCalculator /> : <Undefined />
-          }
-        />
         <Route
           path="/book/:bookId"
           element={
@@ -440,6 +421,9 @@ function AppContent() {
             )
           }
         />
+
+        {/* 404 Page  */}
+        <Route path="*" element={<Undefined />} />
       </Routes>
       <Footer />
     </div>

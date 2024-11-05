@@ -149,6 +149,14 @@ export default function Login() {
         username,
         password,
       });
+
+      if (response.data.user.role === "Patient") {
+        setLoading(false);
+        return alert(
+          "Access to the patient portal is available through our app. Please download the app to log in and access your records."
+        );
+      }
+
       const userDetails = {
         name: response.data.user.fullName,
         role: response.data.user.role,
