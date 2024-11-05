@@ -32,6 +32,12 @@ const AppointmentSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    findings: String,
+    document: [
+      {
+        type: String,
+      },
+    ],
   },
   {
     timestamps: true,
