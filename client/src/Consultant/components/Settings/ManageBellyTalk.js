@@ -37,6 +37,49 @@ const ManageBellyTalk = () => {
   const [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [open, setOpen] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [reportData, setReportData] = useState([]);
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const handleViewReports = () => {
+    setShowReport(!showReport); // Toggle the visibility state
+  };
+
+  const handleCloseModal = () => {
+    // Your logic to close the modal, e.g., setShowLibrary(false)
+    setShowLibrary(false);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Get the first file
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result); // Set the image preview
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL (base64 encoded)
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null); // Clear the selected image
+  };
+
+  useEffect(() => {
+    if (showReport) {
+      // Fetch the report data only when showReport is true
+      // Fetching report data logic goes here (this is just a placeholder)
+      fetchReports();
+    }
+  }, [showReport]);
+
+  const fetchReports = async () => {
+    // Replace this with actual API request logic
+    const response = await fetch('/api/reports');
+    const data = await response.json();
+    setReportData(data);
+  };
 
   const handleCardClick = (category) => {
     setSelectedCategory(category);
@@ -48,15 +91,17 @@ const ManageBellyTalk = () => {
     setSelectedCategory(null); 
   };
 
+  const handleOpen = () => setOpen(true);
+
   const handleViewReport = () => {
-    // Add logic to view report here
-    console.log("View Report clicked");
+    setOpen(true);
   };
-  
+
   const handleAddToLibrary = () => {
-    // Add logic to add to library here
-    console.log("Add to Library clicked");
+    setShowLibrary(!showLibrary);
   };
+
+
 
   const renderDetails = () => {
     if (!selectedCategory) return null;
@@ -417,13 +462,12 @@ const ManageBellyTalk = () => {
           </Button>
           
           <Button
-            className="dialog-download-button"
-            onClick={handleViewReport}
+            onClick={handleViewReports} 
+             className="dialog-download-button"
             startIcon={<ReportIcon />}
           >
-            View Report
+            {showReport ? 'Hide Reports' : 'View Reports'}
           </Button>
-          
           <Button
             className="dialog-download-button"
             onClick={handleAddToLibrary}
@@ -432,8 +476,144 @@ const ManageBellyTalk = () => {
             Add to Library
           </Button>
         </div>
-
       </Dialog>
+      {showReport && (
+        <Dialog open={showReport} onClose={handleViewReports}sx={{ 
+          "& .MuiDialog-paper": {
+            width: "80%", // Adjust the width
+            maxHeight: "80%", // Adjust the max height
+            height: "800px", // Adjust the height of the dialog
+          },
+          "& .MuiDialogContent-root": {
+            maxHeight: "60vh", // Set max height for content
+            overflowY: "auto", // Make it scrollable
+          }
+        }}>
+          <DialogTitle>
+            <Typography variant="h6">Reports</Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleViewReports}
+              aria-label="close"
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 20,
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">This is the content of the Report...</Typography>
+          </DialogContent>
+        </Dialog>
+        )}
+
+        {showLibrary &&(
+          <Dialog open={showLibrary} onClose={handleCloseModal}
+          sx={{ 
+            "& .MuiDialog-paper": {
+              width: "80%", // Adjust the width
+              maxHeight: "80%", // Adjust the max height
+              height: "800px", // Adjust the height of the dialog
+            },
+            "& .MuiDialogContent-root": {
+              maxHeight: "60vh", // Set max height for content
+              overflowY: "auto", // Make it scrollable
+            }
+          }}>
+          <DialogTitle>
+            <Typography variant="h6">Add to Library</Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleCloseModal}
+              aria-label="close"
+              sx={{
+                position: 'absolute',
+                top: 8,
+                right: 20,
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <label
+              htmlFor="cover-image-input"
+              style={{
+                fontSize: '16px',
+                fontWeight: 'bold',
+                marginBottom: '10px',
+                display: 'block', // Make the label block-level so it appears above the input
+              }}
+            >
+              Choose a Cover image
+            </label>
+
+            <input
+              type="file"
+              id="cover-image-input" // Associating the input with the label
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{
+                marginTop: '10px',
+                display: 'block', // Ensures input is on its own line
+              }}
+            />
+
+            {/* Show image preview if an image is selected */}
+            {selectedImage && (
+              <div style={{ position: 'relative', marginTop: '20px' }}>
+                <img
+                  src={selectedImage}
+                  alt="Preview"
+                  style={{
+                    maxWidth: '30%',
+                    height: 'auto',
+                    display: 'block', 
+                    margin: '0 auto', 
+                  }}
+                />
+                
+                {/* Close button */}
+                <Button
+                  onClick={handleRemoveImage}
+                  style={{
+                    position: 'absolute',
+                    top: '5px', 
+                    right: '195px', 
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                    color: 'white',
+                    borderRadius: '50%',
+                    padding: '5px',
+                    minWidth: '0',
+                    height: '25px',
+                    width: '25px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    fontSize: '16px',
+                  }}
+                >
+                  ×
+                </Button>
+              </div>
+            )}
+            {/* You can add more content or a form here */}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleCloseModal} color="primary">
+              Add to Library
+            </Button>
+          </DialogActions>
+        </Dialog>
+        )}
     </Box>
   );
 };
