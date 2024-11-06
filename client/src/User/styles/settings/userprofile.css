@@ -543,3 +543,29 @@ input:checked + .slider:before {
   width: 400px;
   margin-left: 0;
 }
+
+/* prc verify */
+
+.prc-verification-message {
+  font-size: 14px;
+  color: #042440 !important; 
+  margin-right: -10px;
+  font-weight: bold;
+  position: relative;  
+  left: -30px; 
+}
+
+.prc-verify-button {
+  background-color: #9a6cb4;
+  color: white;
+  padding: 10px 50px;
+  border: none;
+  cursor: pointer;
+  border-radius: 20px;
+  margin-top: 10px;
+}
+
+.prc-verify-button:hover {
+  background-color: #E39FA9; /* Darker green on hover */
+}
+
