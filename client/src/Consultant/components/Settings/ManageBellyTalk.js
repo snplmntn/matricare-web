@@ -55,8 +55,8 @@ const ManageBellyTalk = () => {
 
     return (
       <>
-        <Typography>Posts: {categoryData.Posts}</Typography>
         <Typography>Engagement: {categoryData.Engagement}</Typography>
+        <Typography>Posts: {categoryData.Posts}</Typography>
         <Typography>Discussions: {categoryData.Discussions}</Typography>
       </>
     );
@@ -93,144 +93,149 @@ const ManageBellyTalk = () => {
 
     const doc = new jsPDF();
 
-    const logoUrl = "img/logo3.png"; 
+    const logoUrl = "img/logo3.png";
     const logoImage = new Image();
     logoImage.src = logoUrl;
 
     logoImage.onload = () => {
-    const logoWidth = 10; 
-    const logoHeight = (logoWidth * logoImage.height) / logoImage.width; 
+      const logoWidth = 10;
+      const logoHeight = (logoWidth * logoImage.height) / logoImage.width;
 
-    const logoX = 10;
-    const logoY = 17; 
-    doc.addImage(logoImage, 'PNG', logoX, logoY, logoWidth, logoHeight); 
+      const logoX = 10;
+      const logoY = 17;
+      doc.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
 
-    doc.setFont("Times ", "bold");
-    doc.setFontSize(14);
-    const matriCareText = "MatriCare";
-    const matriCareX = logoX + logoWidth + 2; 
-    const matriCareY = logoY + (logoHeight / 5) + 4; 
-    doc.text(matriCareText, matriCareX, matriCareY); 
+      doc.setFont("Times ", "bold");
+      doc.setFontSize(14);
+      const matriCareText = "MatriCare";
+      const matriCareX = logoX + logoWidth + 2;
+      const matriCareY = logoY + logoHeight / 5 + 4;
+      doc.text(matriCareText, matriCareX, matriCareY);
 
-    doc.setFont("Times ", "normal"); 
-    doc.setFontSize(12);
-    doc.setTextColor(128, 128, 128);
-    const categoryText = `Category: ${selectedCategory}`;
-    const categoryX = matriCareX + doc.getTextWidth(matriCareText) + 10; 
-    const categoryY = matriCareY; 
-    doc.text(categoryText, categoryX, categoryY); 
+      doc.setFont("Times ", "normal");
+      doc.setFontSize(12);
+      doc.setTextColor(128, 128, 128);
+      const categoryText = `Category: ${selectedCategory}`;
+      const categoryX = matriCareX + doc.getTextWidth(matriCareText) + 10;
+      const categoryY = matriCareY;
+      doc.text(categoryText, categoryX, categoryY);
 
-    doc.setTextColor(0, 0, 0);
+      doc.setTextColor(0, 0, 0);
 
-    const lineY = categoryY + 5; 
-    const lineStartX = categoryX; 
-    const lineEndX = 200; 
-    doc.setDrawColor(0); 
-    doc.line(lineStartX, lineY, lineEndX, lineY); 
+      const lineY = categoryY + 5;
+      const lineStartX = categoryX;
+      const lineEndX = 200;
+      doc.setDrawColor(0);
+      doc.line(lineStartX, lineY, lineEndX, lineY);
 
-    // Header
-    doc.setFontSize(20);
-    doc.setFont("Times ", "bold");
-    const headerX = categoryX; 
-    doc.text(selectedCategory, headerX, 40); 
+      // Header
+      doc.setFontSize(20);
+      doc.setFont("Times ", "bold");
+      const headerX = categoryX;
+      doc.text(selectedCategory, headerX, 40);
 
-    // Date
-    doc.setFontSize(12);
-    doc.setFont("Times ", "normal");
-    const dateText = `Date: ${new Date().toLocaleDateString()}`;
-    const dateY = 50; 
-    doc.text(dateText, headerX, dateY); 
+      // Date
+      doc.setFontSize(12);
+      doc.setFont("Times ", "normal");
+      const dateText = `Date: ${new Date().toLocaleDateString()}`;
+      const dateY = 50;
+      doc.text(dateText, headerX, dateY);
 
-    // Date Line
-    const dateLineY = dateY + 10;
-    doc.line(headerX, dateLineY, 200, dateLineY);
+      // Date Line
+      const dateLineY = dateY + 10;
+      doc.line(headerX, dateLineY, 200, dateLineY);
 
-    // Engagement Overview
-    doc.setFontSize(12);
-    doc.setFont("Times ", "bold");
-    const overviewTitle = "Engagement Overview";
-    const overviewY = dateLineY + 10; 
-    doc.text(overviewTitle, headerX, overviewY);
+      // Engagement Overview
+      doc.setFontSize(12);
+      doc.setFont("Times ", "bold");
+      const overviewTitle = "Engagement Overview";
+      const overviewY = dateLineY + 10;
+      doc.text(overviewTitle, headerX, overviewY);
 
-    doc.setFont("Times ", "normal");
+      doc.setFont("Times ", "normal");
 
-    const baseY = overviewY + 15; 
-    const countY = baseY; 
-    const labelY = baseY + 10; 
+      const baseY = overviewY + 15;
+      const countY = baseY;
+      const labelY = baseY + 10;
 
-    const engagementData = [
-      { count: categoryData.Posts, label: "Total Posts" },
-      { count: categoryData.Engagement, label: "Total Engagement" },
-      { count: categoryData.Discussions, label: "Total Discussions" },
-    ];
+      const engagementData = [
+        { count: categoryData.Posts, label: "Total Posts" },
+        { count: categoryData.Engagement, label: "Total Engagement" },
+        { count: categoryData.Discussions, label: "Total Discussions" },
+      ];
 
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const countLabelWidth = pageWidth - (1.5 * headerX);
-    const countXOffset = countLabelWidth / engagementData.length; 
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const countLabelWidth = pageWidth - 1.5 * headerX;
+      const countXOffset = countLabelWidth / engagementData.length;
 
-    engagementData.forEach((item, index) => {
-    const currentX = headerX + index * countXOffset; 
+      engagementData.forEach((item, index) => {
+        const currentX = headerX + index * countXOffset;
 
-    doc.setTextColor(154, 108, 180); 
-    doc.setFontSize(18);
-    doc.setFont("Times ", "bold"); 
+        doc.setTextColor(154, 108, 180);
+        doc.setFontSize(18);
+        doc.setFont("Times ", "bold");
 
-    // Get the count text
-    const countText = item.count.toString();
-    const countWidth = doc.getTextWidth(countText);
-    const centeredCountX = currentX + (countXOffset - countWidth) / 2; 
+        // Get the count text
+        const countText = item.count.toString();
+        const countWidth = doc.getTextWidth(countText);
+        const centeredCountX = currentX + (countXOffset - countWidth) / 2;
 
-    // Draw count
-    doc.text(countText, centeredCountX, countY); 
+        // Draw count
+        doc.text(countText, centeredCountX, countY);
 
-    // Reset color for label
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(12); // Set back to the default size for labels
-    doc.setFont("Times ", "normal");
+        // Reset color for label
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(12); // Set back to the default size for labels
+        doc.setFont("Times ", "normal");
 
-    const labelText = item.label;
-    const labelWidth = doc.getTextWidth(labelText);
-    const centeredLabelX = currentX + (countXOffset - labelWidth) / 2; 
+        const labelText = item.label;
+        const labelWidth = doc.getTextWidth(labelText);
+        const centeredLabelX = currentX + (countXOffset - labelWidth) / 2;
 
-    // Draw label
-    doc.text(labelText, centeredLabelX, labelY); 
-  });
+        // Draw label
+        doc.text(labelText, centeredLabelX, labelY);
+      });
 
-    const engagementLineY = labelY + 10; 
-    console.log(`Line Y Position: ${engagementLineY}`); 
-    doc.setDrawColor(0); 
-    doc.line(headerX, engagementLineY, 200, engagementLineY);
+      const engagementLineY = labelY + 10;
+      console.log(`Line Y Position: ${engagementLineY}`);
+      doc.setDrawColor(0);
+      doc.line(headerX, engagementLineY, 200, engagementLineY);
 
-    // Position for the summary
-    const summaryYStart = engagementLineY + 10; 
-    const summaryX = headerX; 
-    doc.setFont("Times ", "bold"); 
-    doc.text("Summary:", summaryX, summaryYStart);
+      // Position for the summary
+      const summaryYStart = engagementLineY + 10;
+      const summaryX = headerX;
+      doc.setFont("Times ", "bold");
+      doc.text("Summary:", summaryX, summaryYStart);
 
-    doc.setFont("Times ", "normal"); 
-    doc.setTextColor(51, 51, 51);
+      doc.setFont("Times ", "normal");
+      doc.setTextColor(51, 51, 51);
 
+      doc.setFont("Times ", "normal");
+      const summaryContentY = summaryYStart + 7;
+      const summaryLines = doc.splitTextToSize(`\n${summary}`, countLabelWidth);
+      doc.text(summaryLines, summaryX, summaryContentY);
 
-    doc.setFont("Times ", "normal"); 
-    const summaryContentY = summaryYStart + 7; 
-    const summaryLines = doc.splitTextToSize(`\n${summary}`, countLabelWidth); 
-    doc.text(summaryLines, summaryX, summaryContentY);
-
-
-    // Add footer with a horizontal line above the page number
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
+      // Add footer with a horizontal line above the page number
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(10);
         const footerY = 290; // Y position for the footer
         doc.line(10, footerY - 5, 200, footerY - 5); // Draw line above the page number
-        doc.text(`Page ${i} of ${pageCount}`, 190, footerY, null, null, "right");
-    }
+        doc.text(
+          `Page ${i} of ${pageCount}`,
+          190,
+          footerY,
+          null,
+          null,
+          "right"
+        );
+      }
 
-    // Save the PDF
-    doc.save(`${selectedCategory}_data.pdf`);
+      // Save the PDF
+      doc.save(`${selectedCategory}_data.pdf`);
+    };
   };
-};
 
   async function fetchPosts() {
     try {
@@ -256,8 +261,8 @@ const ManageBellyTalk = () => {
       categoriesList.forEach((category) => {
         formattedData[category] = {
           name: category,
-          Posts: 0,
           Engagement: 0,
+          Posts: 0,
           Discussions: 0,
           PostContent: [],
           PostComments: [],
@@ -265,32 +270,42 @@ const ManageBellyTalk = () => {
       });
 
       // Check if posts data exists
-      if (response.data && response.data.post) {
+      if (response.data && response.data.category) {
         // Process each post in the response
-        response.data.post.forEach((post) => {
-          const categories = Array.isArray(post.category)
-            ? post.category
-            : [post.category];
+        response.data.category.forEach((list) => {
+          const categories = Array.isArray(list.category)
+            ? list.category
+            : [list.category];
 
           categories.forEach((category) => {
             // If the category exists in formattedData, update its values
             if (formattedData[category]) {
               // Increment counts for the category
-              formattedData[category].Posts += 1;
-              formattedData[category].Engagement += post.likes
-                ? post.likes.length
+
+              formattedData[category].Engagement +=
+                list.posts.length + list.comments.length;
+
+              formattedData[category].Posts += list.posts
+                ? list.posts.length
                 : 0;
-              formattedData[category].Discussions += post.comments
-                ? post.comments.length
+              formattedData[category].Discussions += list.comments
+                ? list.comments.length
                 : 0;
 
               // Append the content of the post to the array
-              formattedData[category].PostContent.push(post.content);
+              if (list.posts && Array.isArray(list.posts)) {
+                // Append the content of each post to the array
+                formattedData[category].PostContent.push(
+                  list.posts.map((posts) => posts.content)
+                );
+              } else {
+                formattedData[category].PostContent.push([]);
+              }
 
               // Append the comments if any, otherwise push an empty array
-              if (post.comments && Array.isArray(post.comments)) {
+              if (list.comments && Array.isArray(list.comments)) {
                 formattedData[category].PostComments.push(
-                  post.comments.map((comment) => comment.content)
+                  list.comments.map((comment) => comment.content)
                 );
               } else {
                 formattedData[category].PostComments.push([]);
@@ -300,6 +315,7 @@ const ManageBellyTalk = () => {
         });
       }
       setData(Object.values(formattedData)); // Set the accumulated data for Recharts
+      console.log(Object.values(formattedData));
     } catch (error) {
       console.error("Error fetching posts data: ", error);
     }
