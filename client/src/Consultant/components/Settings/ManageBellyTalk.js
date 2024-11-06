@@ -27,8 +27,13 @@ import "../../styles/settings/managebellytalk.css";
 import { jsPDF } from "jspdf";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import remarkHtml from "remark-html";
+import { remark } from "remark";
 
 const ManageBellyTalk = () => {
+  const [user, setUser] = useState({});
+  const userID = getCookie("userID");
   const API_URL = process.env.REACT_APP_API_URL;
   const OPENAI_URL = process.env.REACT_APP_OPENAI_URL;
   const token = getCookie("token");
@@ -37,6 +42,35 @@ const ManageBellyTalk = () => {
   const [data, setData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [open, setOpen] = useState(false);
+  const [showReport, setShowReport] = useState(false);
+  const [reportData, setReportData] = useState("");
+  const [reportTitle, setReportTitle] = useState("");
+  const [showLibrary, setShowLibrary] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageToUpload, setImageToUpload] = useState(null);
+  const [bookCover, setBookCover] = useState("");
+
+  const handleCloseModal = () => {
+    // Your logic to close the modal, e.g., setShowLibrary(false)
+    setShowLibrary(false);
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0]; // Get the first file
+    setImageToUpload(event.target.files[0]); // Set the image to upload
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result); // Set the image preview
+      };
+      reader.readAsDataURL(file); // Read the file as a data URL (base64 encoded)
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setSelectedImage(null); // Clear the selected image
+    setImageToUpload(null); // Clear the image to upload
+  };
 
   const handleCardClick = (category) => {
     setSelectedCategory(category);
@@ -46,9 +80,11 @@ const ManageBellyTalk = () => {
   const handleClose = () => {
     setOpen(false);
     setSelectedCategory(null);
+    setReportData("");
+    setReportTitle("");
   };
 
-  const handleViewReport = async () => {
+  const handleViewReports = async () => {
     if (!selectedCategory) return null;
 
     const categoryData = data.find((item) => item.name === selectedCategory);
@@ -57,23 +93,58 @@ const ManageBellyTalk = () => {
 
     if (categoryData.Engagement < 1)
       return alert("Engagement requirements not reached for this action.");
+
+    setShowReport(!showReport); // Toggle the visibility state of the report
 
     // Add logic to view report here
-    const summaryResponse = await axios.get(
-      `${API_URL}/analytics/article?category=${encodeURIComponent(
-        selectedCategory
-      )}`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
+    if (!reportData) {
+      const summaryResponse = await axios.get(
+        `${API_URL}/analytics/article?category=${encodeURIComponent(
+          selectedCategory
+        )}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
-    console.log("View Report clicked");
+      if (summaryResponse.data.article) {
+        setReportData(
+          `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
+        );
+        setReportTitle(
+          summaryResponse.data.article.title.replace(/^#+\s*/, "")
+        );
+        setShowReport(!showReport); // Toggle the visibility state
+      }
+    }
   };
 
-  const handleAddToLibrary = () => {
+  async function uploadBookCover() {
+    if (imageToUpload) {
+      const formData = new FormData();
+      formData.append("picture", imageToUpload);
+
+      try {
+        const response = await axios.post(
+          `${API_URL}/upload/a?userId=${userID}`,
+          formData,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        return response.data.pictureLink;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
+  const handleShowAddToLibrary = async () => {
     if (!selectedCategory) return null;
 
     const categoryData = data.find((item) => item.name === selectedCategory);
@@ -82,8 +153,78 @@ const ManageBellyTalk = () => {
 
     if (categoryData.Engagement < 1)
       return alert("Engagement requirements not reached for this action.");
+
     // Add logic to add to library here
-    console.log("Add to Library clicked");
+    setShowLibrary(!showLibrary);
+
+    if (!reportData) {
+      const summaryResponse = await axios.get(
+        `${API_URL}/analytics/article?category=${encodeURIComponent(
+          selectedCategory
+        )}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (summaryResponse.data.article) {
+        setReportData(
+          `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
+        );
+        setReportTitle(
+          summaryResponse.data.article.title.replace(/^#+\s*/, "")
+        );
+      }
+    }
+  };
+
+  const convertMarkdownToHTML = async (markdown) => {
+    const html = await remark().use(remarkHtml).process(markdown);
+    return html.toString();
+  };
+
+  const handleAddToLibrary = async () => {
+    if (!imageToUpload) return alert("Please select a cover image");
+    const bookCover = await uploadBookCover();
+
+    const convertedReportContent = await convertMarkdownToHTML(reportData);
+    const reportContent = convertedReportContent
+      .split("\n")
+      .slice(1)
+      .join("\n");
+
+    console.log(reportTitle);
+
+    const newBook = {
+      userId: userID,
+      reviewedBy: user.name,
+      author: "System Generated",
+      title: reportTitle,
+      fullTitle: reportTitle,
+      content: JSON.stringify(reportContent),
+      category: selectedCategory,
+      status: "Approved",
+      picture: bookCover,
+    };
+
+    try {
+      await axios.post(`${API_URL}/article`, newBook, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json ",
+        },
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    setSelectedImage(null); // Clear the selected image
+    setImageToUpload(null); // Clear the image to upload
+    alert("Book added to library successfully");
+    setShowLibrary(!showLibrary);
+    handleClose();
   };
 
   const renderDetails = () => {
@@ -185,6 +326,8 @@ const ManageBellyTalk = () => {
               }
             );
           }
+          // Re assign the summary to include title
+          summary = response.data.summary;
         }
       }
     }
@@ -424,8 +567,13 @@ const ManageBellyTalk = () => {
       console.error("Error fetching posts data: ", error);
     }
   }
-
   useEffect(() => {
+    const userData = localStorage.getItem("userData");
+
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+      setUser(parsedUserData);
+    }
     fetchPosts(); // Fetch data on component mount
   }, []);
 
@@ -523,22 +671,176 @@ const ManageBellyTalk = () => {
           </Button>
 
           <Button
+            onClick={handleViewReports}
             className="dialog-download-button"
-            onClick={handleViewReport}
             startIcon={<ReportIcon />}
           >
-            View Report
+            {showReport ? "Hide Reports" : "View Reports"}
           </Button>
 
           <Button
             className="dialog-download-button"
-            onClick={handleAddToLibrary}
+            onClick={handleShowAddToLibrary}
             startIcon={<LibraryAddIcon />}
           >
             Add to Library
           </Button>
         </div>
       </Dialog>
+      {showReport && (
+        <Dialog
+          open={showReport}
+          onClose={handleViewReports}
+          sx={{
+            "& .MuiDialog-paper": {
+              width: "80%", // Adjust the width
+              maxHeight: "80%", // Adjust the max height
+              height: "800px", // Adjust the height of the dialog
+            },
+            "& .MuiDialogContent-root": {
+              maxHeight: "60vh", // Set max height for content
+              overflowY: "auto", // Make it scrollable
+            },
+          }}
+        >
+          <DialogTitle>
+            <Typography variant="h6">Reports</Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleViewReports}
+              aria-label="close"
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 20,
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">
+              {reportData ? (
+                <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
+              ) : (
+                "No report available"
+              )}
+            </Typography>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showLibrary && (
+        <Dialog
+          open={showLibrary}
+          onClose={handleCloseModal}
+          sx={{
+            "& .MuiDialog-paper": {
+              width: "80%", // Adjust the width
+              maxHeight: "80%", // Adjust the max height
+              height: "800px", // Adjust the height of the dialog
+            },
+            "& .MuiDialogContent-root": {
+              maxHeight: "60vh", // Set max height for content
+              overflowY: "auto", // Make it scrollable
+            },
+          }}
+        >
+          <DialogTitle>
+            <Typography variant="h6">Add to Library</Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleCloseModal}
+              aria-label="close"
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 20,
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <label
+              htmlFor="cover-image-input"
+              style={{
+                fontSize: "16px",
+                fontWeight: "bold",
+                marginBottom: "10px",
+                display: "block", // Make the label block-level so it appears above the input
+              }}
+            >
+              Choose a Cover image
+            </label>
+
+            <input
+              type="file"
+              id="cover-image-input" // Associating the input with the label
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{
+                marginTop: "10px",
+                display: "block", // Ensures input is on its own line
+              }}
+            />
+
+            {/* Show image preview if an image is selected */}
+            {selectedImage && (
+              <div style={{ position: "relative", marginTop: "20px" }}>
+                <img
+                  src={selectedImage}
+                  alt="Preview"
+                  style={{
+                    maxWidth: "30%",
+                    height: "auto",
+                    display: "block",
+                    margin: "0 auto",
+                  }}
+                />
+
+                {/* Close button */}
+                <Button
+                  onClick={handleRemoveImage}
+                  style={{
+                    position: "absolute",
+                    top: "5px",
+                    right: "195px",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "5px",
+                    minWidth: "0",
+                    height: "25px",
+                    width: "25px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "16px",
+                  }}
+                >
+                  ×
+                </Button>
+              </div>
+            )}
+            {reportData ? (
+              <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
+            ) : (
+              "No report available"
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleAddToLibrary} color="primary">
+              Add to Library
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </Box>
   );
 };
