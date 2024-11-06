@@ -6,17 +6,19 @@ const post_get = catchAsync(async (req, res, next) => {
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
 
-  const post = await PostAnalytics.find({
+  const category = await PostAnalytics.find({
     updatedAt: {
       $gte: new Date(currentYear, currentMonth, 1),
       $lt: new Date(currentYear, currentMonth + 1, 1),
     },
-  }).populate("comments");
+  })
+    .populate("comments")
+    .populate("posts");
 
-  if (!(post.length > 0))
+  if (!(category.length > 0))
     return next(new AppError("Post Analytics not found", 404));
 
-  return res.status(200).json({ post });
+  return res.status(200).json({ category });
 });
 
 module.exports = {

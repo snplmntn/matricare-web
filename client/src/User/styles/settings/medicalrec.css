@@ -1,0 +1,871 @@
+.MR-patient-records-container {
+  display: flex;
+  height: 100vh !important;
+  background-color: #9a6cb4 !important;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+}
+
+.MR-back-button {
+  position: absolute;
+  top: 30px;
+  left: 50px;
+  color: #7c459c;
+  font-size: 40px;
+  text-decoration: none;
+  z-index: 10; /* Ensure it appears above other elements */
+}
+
+.MR-patient-records-main-content {
+  flex-grow: 1;
+  padding: 20px;
+  background-color: #ffffffe5;
+}
+
+.MR-top-section {
+  width: 70%;
+  margin-left: 40px;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column; /* Stack sections vertically */
+  gap: 20px; /* Space between sections */
+  margin-top: 80px;
+}
+
+.MR-patient-info,
+.MR-info-columns {
+  display: flex;
+  align-items: flex-start;
+}
+
+.MR-patient-info {
+  width: 40%; /* Adjust width as needed */
+}
+
+.MR-patient-info img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-top: -5px;
+  margin-left: 30px;
+}
+
+.MR-patient-details {
+  display: flex;
+  flex-direction: column; /* Align text details vertically */
+  gap: 10px; /* Space between text items */
+  margin-left: 30px;
+  margin-top: -20px;
+}
+
+.MR-patient-details h3 {
+  margin-bottom: -5px;
+}
+
+.MR-phone-info {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between the icon and text */
+}
+
+.MR-phone-icon {
+  font-size: 16px;
+  color: #333;
+}
+
+.MR-info-columns {
+  margin-left: 450px;
+  margin-top: -100px;
+  padding: 10px;
+  width: 60%; /* Adjust width as needed */
+  display: flex;
+  flex-direction: row; /* Ensure columns stay in a row */
+  gap: 20px; /* Space between columns */
+}
+
+.MR-info-columns > div {
+  flex: 1; /* Allow columns to grow equally */
+  min-width: 0; /* Prevent columns from shrinking too small */
+  border-left: 2px solid #ccc;
+  padding-left: 20px;
+}
+
+.MR-address-info,
+.MR-email-info,
+.MR-partner-info {
+  display: flex;
+  flex-direction: column; /* Align text vertically */
+  gap: 10px; /* Space between text items */
+}
+
+.MR-address-info h4,
+.MR-email-info h4,
+.MR-partner-info h4 {
+  font-weight: bold;
+  margin: 0;
+  color: #666;
+  font-size: 12px;
+}
+
+.MR-partner-contact {
+  display: flex;
+  align-items: center;
+  gap: 5px; /* Space between the icon and text */
+}
+
+.MR-outstanding-tasks {
+  height: 200px;
+  position: relative;
+  margin-top: 20px;
+  margin-left: 40px;
+  width: 70%;
+  grid-column: 1 / span 3;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.-webkit-scrollbar {
+  width: 8px; /* Adjust width as needed */
+}
+
+.-webkit-scrollbar {
+  background: transparent; /* Transparent track */
+}
+
+.-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0); /* Semi-transparent thumb */
+  border-radius: 4px; /* Rounded corners for the thumb */
+}
+
+.-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0); /* Darker on hover */
+}
+
+.MR-outstanding-tasks h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.MR-outstanding-tasks table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.MR-outstanding-tasks th {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ddd;
+}
+
+.MR-outstanding-tasks td {
+  padding: 10px;
+  text-align: center;
+}
+
+.MR-select-status {
+  width: 150px;
+  border-radius: 5px;
+  padding: 5px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  font-size: 16px;
+  color: #603830; /* Text color */
+  cursor: pointer;
+  outline: none;
+}
+
+.MR-select-status:focus {
+  border-color: #603830; /* Darker border on focus */
+  box-shadow: 0 0 5px rgba(96, 56, 48, 0.5); /* Shadow effect when focused */
+}
+
+.MR-select-status option {
+  background-color: #ffffff; /* White background for options */
+  color: #603830; /* Text color for options */
+}
+
+/* Panels: Encounters, Documents, Problem List */
+.MR-main-content {
+  display: flex;
+  gap: 20px; /* Space between the panels */
+  flex-wrap: wrap; /* Wrap panels if they don't fit in one row */
+  justify-content: center; /* Center panels horizontally */
+  margin-left: -440px;
+  margin-top: 30px;
+}
+
+.MR-panel {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 395px; /* Set a fixed width */
+  height: 300px; /* Set a fixed height to make it square */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Distribute space evenly */
+}
+
+.MR-panel {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.MR-input {
+  width: 88%;
+  height: 30px;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 14px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.MR-input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.MR-input::placeholder {
+  color: #040404;
+  font-style: normal;
+}
+
+.MR-input:hover {
+  border-color: #c98f8f;
+}
+
+.MR-Obstetric,
+.MR-Medical,
+.MR-Surgical {
+  display: flex;
+  flex-direction: column;
+}
+
+.MR-Obstetric h4,
+.MR-Medical h4,
+.MR-Surgical h4 {
+  margin-bottom: 10px;
+  font-size: 18px;
+  margin-top: 10px;
+}
+
+.MR-Obstetric ul,
+.MR-Medical ul,
+.MR-Surgical ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  flex-grow: 1;
+  margin-top: 10px;
+}
+
+.MR-Obstetric li,
+.MR-Medical li,
+.MR-Surgical li {
+  margin-bottom: 20px;
+  padding: 10px;
+  border-bottom: 1px solid #cccccca8;
+}
+
+.MR-panel li .date {
+  flex: 1; /* Take up space for the date */
+}
+
+.MR-panel li .text {
+  flex: 2; /* Take up more space for the text */
+  margin-left: 150px;
+}
+
+.MR-panel li .diagnosis-info {
+  display: flex; /* Align the diagnosis and status horizontally */
+  justify-content: space-between; /* Space between diagnosis and status */
+}
+
+.MR-panel li .diagnosis {
+  flex: 1; /* Take up space for the diagnosis */
+}
+
+.MR-panel li .diagnosis-duration {
+  font-size: 12px;
+  margin-top: -10px;
+}
+
+.MR-panel li .status {
+  flex: 0; /* Only take necessary space for the status */
+  text-align: right; /* Align status to the right */
+}
+
+.MR-panel li .status.active {
+  color: black; /* Color for active status */
+  background-color: #e39fa9;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.MR-panel li .status.inactive {
+  color: white; /* Color for inactive status */
+  background-color: #9a6cb4;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.MR-right-panels {
+  flex: 1; /* Takes up 1/4 of the space */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 400px;
+  margin-left: 1400px;
+  margin-top: -750px;
+  height: 200px;
+}
+
+.MR-weeks-count {
+  display: flex;
+  justify-content: space-between; /* Align text to left and circle to right */
+  align-items: center;
+  margin-top: 20px;
+  width: 100%; /* Make the container take full width */
+}
+
+.MR-text-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* Align text to the left */
+  flex-grow: 1; /* Let text take the available space */
+  margin-left: 5px;
+}
+
+.MR-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 8px solid #e39fa9;
+  margin-right: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 46px;
+  font-weight: bold;
+  color: #7c459c;
+  margin-left: 20px; /* Add space between the circle and text */
+}
+
+.MR-weeks-count h4 {
+  margin-bottom: 40px;
+  margin-top: -50px;
+}
+
+.MR-patient-docu {
+  height: 450px;
+  background-color: #fff;
+  padding: 20px;
+  margin-left: 1400px;
+  width: 400px;
+  margin-top: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.delete-icon {
+  color: red;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.MR-delete-docu-button {
+  background-color: transparent !important;
+  border: none;
+}
+
+.MR-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MR-modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  height: 250px;
+}
+
+.MR-modal-header {
+  margin: 15px 0;
+  font-weight: bold;
+}
+
+.MR-delete-icon {
+  font-size: 50px;
+  color: #9a6cb4;
+  display: block;
+  margin: 0 auto;
+}
+
+.MR-confirm-button,
+.MR-cancel-button {
+  padding: 10px 15px;
+  margin: 5px 0;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.MR-confirm-button {
+  background-color: #9a6cb4;
+  color: white;
+}
+
+.MR-cancel-button {
+  background-color: #ccc;
+  color: #333;
+}
+
+.MR-docu-item input {
+  margin-right: 10px;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.MR-add-docu-button {
+  background-color: transparent;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  height: auto;
+  width: 30px;
+  margin-top: -50px;
+  margin-left: 360px;
+  z-index: 1;
+  position: absolute;
+  color: #7c459c;
+}
+
+.MR-add-docu-button:hover {
+  background-color: transparent;
+  color: #e39fa9;
+}
+
+.MR-documents h4 {
+  margin-top: 10px;
+}
+
+.MR-docu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.MR-docu-item:hover {
+  background-color: #e39fa972;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.MR-docu-icon {
+  margin-right: 10px;
+  color: #7c459c; /* Adjust icon color */
+  font-size: 20px;
+}
+
+.MR-docu-date {
+  font-size: 14px;
+  color: #666;
+  margin-left: auto;
+  text-align: right;
+}
+
+.MR-docu-item:last-child {
+  border-bottom: none; /* Remove border for the last item */
+}
+
+.MR-document-details {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MR-document-details {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.MR-document-details-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  width: 30%;
+  height: 800px;
+  position: relative;
+}
+
+.MR-document-details-content h4 {
+  margin-top: 20px;
+  text-align: left;
+  margin-left: 25px;
+}
+
+.MR-document-details-content img {
+  max-width: 90%;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.MR-document-details-content button {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background-color: transparent;
+  color: black;
+  font-size: 24px;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* modal */
+
+.add-modal-content {
+  width: 380px;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  height: 380px;
+}
+
+.add-modal-content h3 {
+  border-left: solid 15px #9a6cb4;
+  text-align: left;
+  text-indent: 20px;
+}
+
+.add-hr {
+  color: #666;
+}
+
+.MR-save-docu-button {
+  background-color: #9a6cb4;
+  color: #ffffff;
+  border: none;
+  font-size: 16px;
+  border-radius: 10px;
+  margin-left: 230px;
+  padding: 10px;
+  width: 40%;
+  margin-top: 30px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.MR-save-docu-button:hover {
+  background-color: #e39fa9;
+}
+
+.input-icon-wrapper {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #7c459c;
+}
+
+.choose-file-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 10px;
+  background-color: #e39fa9; /* Background color */
+  color: #fff; /* Text color */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  text-align: center; /* Center text */
+}
+
+.choose-file-button:hover {
+  background-color: #d68997; /* Darker shade on hover */
+}
+
+.add-docu-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #ffffff;
+}
+
+.add-docu-close:hover {
+  color: #7c459c;
+  background-color: transparent;
+}
+
+/* selected docu */
+.selected-docu {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  width: 700px;
+  text-align: center;
+  height: 90vh;
+}
+
+.selected-docu-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  color: #ffffff;
+}
+
+.document-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.docu-button {
+  display: flex;
+}
+
+.docu-icon {
+  margin-left: 5px;
+  padding: 10px 10px;
+  background-color: transparent;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+}
+
+.docu-icon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* password */
+
+.MR-pass-background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+}
+
+.MR-pass-overlay {
+  background-color: #7c459cda;
+  z-index: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MR-pass-back-button {
+  position: absolute;
+  top: 10px;
+  left: 20px;
+  color: #ffffff !important;
+  font-size: 40px;
+  text-decoration: none;
+  z-index: 1000;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.MR-pass-title {
+  position: relative;
+  padding-left: 200px; /* Adjust as needed */
+  z-index: 1000;
+}
+
+.MR-pass-left-section {
+  display: flex;
+  align-items: center;
+  margin-left: -100px;
+  z-index: 1000;
+  position: relative;
+}
+
+.MR-pass-lock-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px; /* Adjust spacing as needed */
+  z-index: 1000;
+}
+
+.MR-pass-lock-icon svg {
+  width: 40px;
+  height: auto;
+  color: #ffffff;
+  z-index: 1000;
+}
+
+.MR-pass-lock-icon p {
+  margin-top: 5px;
+  color: #ffffff;
+  font-size: 50px;
+  font-weight: bold;
+  font-style: italic;
+  z-index: 1000;
+}
+
+.MR-pass-title::before {
+  content: "";
+  position: absolute;
+  left: 280px;
+  top: 50px;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 250px;
+  background-color: #ffffff;
+  z-index: 1000;
+}
+
+.MR-pass-container {
+  margin: 250px auto;
+  padding: 20px;
+  border-radius: 50px;
+  text-align: center;
+  width: 30%;
+  height: 20vh;
+  margin-top: 350px;
+  z-index: 1;
+  margin-left: 720px;
+}
+
+.MR-pass-container h3 {
+  margin-top: -100px;
+  margin-bottom: 0px;
+  color: white;
+  font-size: 15px;
+  font-weight: lighter;
+  margin-left: -70px;
+}
+
+.MR-pass-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 280px;
+  position: relative;
+  z-index: 1000;
+}
+
+.MR-pass-form input {
+  padding: 15px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 50px;
+  width: 250px;
+  position: relative;
+  z-index: 1000;
+}
+
+.MR-pass-button {
+  padding: 10px 20px;
+  background-color: #e39fa9;
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  width: 100px;
+  margin-top: 20px;
+  font-size: 16px;
+  position: relative;
+  z-index: 1000;
+}
+
+.MR-pass-button:hover {
+  background-color: #7c459c;
+}
+
+.MR-pass-error {
+  color: #e39fa9;
+  margin-top: 10px;
+  position: relative;
+  z-index: 1000;
+  margin-left: 100px;
+}

@@ -148,7 +148,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
 
     try {
       const commentForm = {
-        profilePicture: user.current.profilePicture,
         userId: userID,
         fullName: user.current.name,
         postId: post._id,

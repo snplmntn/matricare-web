@@ -20,15 +20,20 @@ import {
   IconButton,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import ReportIcon from '@mui/icons-material/Description'; 
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import ReportIcon from "@mui/icons-material/Description";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../styles/settings/managebellytalk.css";
 import { jsPDF } from "jspdf";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
+import remarkHtml from "remark-html";
+import { remark } from "remark";
 
 const ManageBellyTalk = () => {
+  const [user, setUser] = useState({});
+  const userID = getCookie("userID");
   const API_URL = process.env.REACT_APP_API_URL;
   const OPENAI_URL = process.env.REACT_APP_OPENAI_URL;
   const token = getCookie("token");
@@ -38,13 +43,12 @@ const ManageBellyTalk = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [open, setOpen] = useState(false);
   const [showReport, setShowReport] = useState(false);
-  const [reportData, setReportData] = useState([]);
+  const [reportData, setReportData] = useState("");
+  const [reportTitle, setReportTitle] = useState("");
   const [showLibrary, setShowLibrary] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleViewReports = () => {
-    setShowReport(!showReport); // Toggle the visibility state
-  };
+  const [imageToUpload, setImageToUpload] = useState(null);
+  const [bookCover, setBookCover] = useState("");
 
   const handleCloseModal = () => {
     // Your logic to close the modal, e.g., setShowLibrary(false)
@@ -53,6 +57,7 @@ const ManageBellyTalk = () => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]; // Get the first file
+    setImageToUpload(event.target.files[0]); // Set the image to upload
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -64,44 +69,163 @@ const ManageBellyTalk = () => {
 
   const handleRemoveImage = () => {
     setSelectedImage(null); // Clear the selected image
-  };
-
-  useEffect(() => {
-    if (showReport) {
-      // Fetch the report data only when showReport is true
-      // Fetching report data logic goes here (this is just a placeholder)
-      fetchReports();
-    }
-  }, [showReport]);
-
-  const fetchReports = async () => {
-    // Replace this with actual API request logic
-    const response = await fetch('/api/reports');
-    const data = await response.json();
-    setReportData(data);
+    setImageToUpload(null); // Clear the image to upload
   };
 
   const handleCardClick = (category) => {
     setSelectedCategory(category);
-    setOpen(true); 
+    setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedCategory(null); 
+    setSelectedCategory(null);
+    setReportData("");
+    setReportTitle("");
   };
 
-  const handleOpen = () => setOpen(true);
+  const handleViewReports = async () => {
+    if (!selectedCategory) return null;
 
-  const handleViewReport = () => {
-    setOpen(true);
+    const categoryData = data.find((item) => item.name === selectedCategory);
+
+    if (!categoryData) return null;
+
+    if (categoryData.Engagement < 1)
+      return alert("Engagement requirements not reached for this action.");
+
+    setShowReport(!showReport); // Toggle the visibility state of the report
+
+    // Add logic to view report here
+    if (!reportData) {
+      const summaryResponse = await axios.get(
+        `${API_URL}/analytics/article?category=${encodeURIComponent(
+          selectedCategory
+        )}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (summaryResponse.data.article) {
+        setReportData(
+          `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
+        );
+        setReportTitle(
+          summaryResponse.data.article.title.replace(/^#+\s*/, "")
+        );
+        setShowReport(!showReport); // Toggle the visibility state
+      }
+    }
   };
 
-  const handleAddToLibrary = () => {
+  async function uploadBookCover() {
+    if (imageToUpload) {
+      const formData = new FormData();
+      formData.append("picture", imageToUpload);
+
+      try {
+        const response = await axios.post(
+          `${API_URL}/upload/a?userId=${userID}`,
+          formData,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        return response.data.pictureLink;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
+  const handleShowAddToLibrary = async () => {
+    if (!selectedCategory) return null;
+
+    const categoryData = data.find((item) => item.name === selectedCategory);
+
+    if (!categoryData) return null;
+
+    if (categoryData.Engagement < 1)
+      return alert("Engagement requirements not reached for this action.");
+
+    // Add logic to add to library here
     setShowLibrary(!showLibrary);
+
+    if (!reportData) {
+      const summaryResponse = await axios.get(
+        `${API_URL}/analytics/article?category=${encodeURIComponent(
+          selectedCategory
+        )}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (summaryResponse.data.article) {
+        setReportData(
+          `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
+        );
+        setReportTitle(
+          summaryResponse.data.article.title.replace(/^#+\s*/, "")
+        );
+      }
+    }
   };
 
+  const convertMarkdownToHTML = async (markdown) => {
+    const html = await remark().use(remarkHtml).process(markdown);
+    return html.toString();
+  };
 
+  const handleAddToLibrary = async () => {
+    if (!imageToUpload) return alert("Please select a cover image");
+    const bookCover = await uploadBookCover();
+
+    const convertedReportContent = await convertMarkdownToHTML(reportData);
+    const reportContent = convertedReportContent
+      .split("\n")
+      .slice(1)
+      .join("\n");
+
+    console.log(reportTitle);
+
+    const newBook = {
+      userId: userID,
+      reviewedBy: user.name,
+      author: "System Generated",
+      title: reportTitle,
+      fullTitle: reportTitle,
+      content: JSON.stringify(reportContent),
+      category: selectedCategory,
+      status: "Approved",
+      picture: bookCover,
+    };
+
+    try {
+      await axios.post(`${API_URL}/article`, newBook, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json ",
+        },
+      });
+    } catch (err) {
+      console.error(err);
+    }
+
+    setSelectedImage(null); // Clear the selected image
+    setImageToUpload(null); // Clear the image to upload
+    alert("Book added to library successfully");
+    setShowLibrary(!showLibrary);
+    handleClose();
+  };
 
   const renderDetails = () => {
     if (!selectedCategory) return null;
@@ -112,184 +236,254 @@ const ManageBellyTalk = () => {
 
     return (
       <>
-        <Typography>Posts: {categoryData.Posts}</Typography>
         <Typography>Engagement: {categoryData.Engagement}</Typography>
+        <Typography>Posts: {categoryData.Posts}</Typography>
         <Typography>Discussions: {categoryData.Discussions}</Typography>
       </>
     );
   };
 
-  
-
   const handleDownload = async () => {
     const categoryData = data.find((item) => item.name === selectedCategory);
     if (!categoryData) return;
 
+    if (categoryData.Engagement < 1)
+      return alert("Engagement requirements not reached for this action.");
+
     let summary = "";
     if (categoryData.PostContent.length !== 0) {
-      // Start the `toSummarize` structure
-      const toSummarize = {
-        category: selectedCategory, // Selected category (e.g., Health & Wellness)
-        posts: categoryData.PostContent.map((content, index) => {
-          return {
-            content, // Post content
-            comments: categoryData.PostComments[index], // Associated comments
-          };
-        }),
-      };
-
-      const response = await axios.post(
-        `${OPENAI_URL}/summarize`,
-        toSummarize,
+      const summaryResponse = await axios.get(
+        `${API_URL}/analytics/article?category=${encodeURIComponent(
+          selectedCategory
+        )}`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      summary = response.data.summary;
+
+      if (summaryResponse.data) {
+        if (
+          summaryResponse.data.article &&
+          summaryResponse.data.article.engagement === categoryData.Engagement
+        ) {
+          summary = `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`;
+        } else {
+          // Start the `toSummarize` structure
+          const toSummarize = {
+            category: selectedCategory, // Selected category (e.g., Health & Wellness)
+            posts: categoryData.PostContent.map((content, index) => {
+              return {
+                content, // Post content
+                comments: categoryData.PostComments[index], // Associated comments
+              };
+            }),
+          };
+
+          const response = await axios.post(
+            `${OPENAI_URL}/article`,
+            toSummarize,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+
+          summary = response.data.summary;
+          const title = summary.split("\n")[0]; // Extract the first line as the title
+          summary = summary.split("\n").slice(1).join("\n"); // Remove the first line from the summary
+
+          const generatedArticleToSave = {
+            engagement: categoryData.Engagement,
+            title: title,
+            fullTitle: title,
+            content: summary,
+            category: selectedCategory,
+          };
+
+          if (summaryResponse.data.article) {
+            await axios.put(
+              `${API_URL}/analytics/article?category=${encodeURIComponent(
+                selectedCategory
+              )}`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          } else {
+            await axios.post(
+              `${API_URL}/analytics/article`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          }
+          // Re assign the summary to include title
+          summary = response.data.summary;
+        }
+      }
     }
 
     const doc = new jsPDF();
 
-    const logoUrl = "img/logo3.png"; 
+    const logoUrl = "img/logo3.png";
     const logoImage = new Image();
     logoImage.src = logoUrl;
 
     logoImage.onload = () => {
-    const logoWidth = 10; 
-    const logoHeight = (logoWidth * logoImage.height) / logoImage.width; 
+      const logoWidth = 10;
+      const logoHeight = (logoWidth * logoImage.height) / logoImage.width;
 
-    const logoX = 10;
-    const logoY = 17; 
-    doc.addImage(logoImage, 'PNG', logoX, logoY, logoWidth, logoHeight); 
+      const logoX = 10;
+      const logoY = 17;
+      doc.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
 
-    doc.setFont("Times ", "bold");
-    doc.setFontSize(14);
-    const matriCareText = "MatriCare";
-    const matriCareX = logoX + logoWidth + 2; 
-    const matriCareY = logoY + (logoHeight / 5) + 4; 
-    doc.text(matriCareText, matriCareX, matriCareY); 
+      doc.setFont("Times", "bold");
+      doc.setFontSize(14);
+      const matriCareText = "MatriCare";
+      const matriCareX = logoX + logoWidth + 2;
+      const matriCareY = logoY + logoHeight / 5 + 4;
+      doc.text(matriCareText, matriCareX, matriCareY);
 
-    doc.setFont("Times ", "normal"); 
-    doc.setFontSize(12);
-    doc.setTextColor(128, 128, 128);
-    const categoryText = `Category: ${selectedCategory}`;
-    const categoryX = matriCareX + doc.getTextWidth(matriCareText) + 10; 
-    const categoryY = matriCareY; 
-    doc.text(categoryText, categoryX, categoryY); 
+      doc.setFont("Times", "normal");
+      doc.setFontSize(12);
+      doc.setTextColor(128, 128, 128);
+      const categoryText = `Category: ${selectedCategory}`;
+      const categoryX = matriCareX + doc.getTextWidth(matriCareText) + 10;
+      const categoryY = matriCareY;
+      doc.text(categoryText, categoryX, categoryY);
 
-    doc.setTextColor(0, 0, 0);
+      doc.setTextColor(0, 0, 0);
 
-    const lineY = categoryY + 5; 
-    const lineStartX = categoryX; 
-    const lineEndX = 200; 
-    doc.setDrawColor(0); 
-    doc.line(lineStartX, lineY, lineEndX, lineY); 
+      const lineY = categoryY + 5;
+      const lineStartX = categoryX;
+      const lineEndX = 200;
+      doc.setDrawColor(0);
+      doc.line(lineStartX, lineY, lineEndX, lineY);
 
-    // Header
-    doc.setFontSize(20);
-    doc.setFont("Times ", "bold");
-    const headerX = categoryX; 
-    doc.text(selectedCategory, headerX, 40); 
+      // Header
+      doc.setFontSize(20);
+      doc.setFont("Times", "bold");
+      const headerX = categoryX;
+      doc.text(selectedCategory, headerX, 40);
 
-    // Date
-    doc.setFontSize(12);
-    doc.setFont("Times ", "normal");
-    const dateText = `Date: ${new Date().toLocaleDateString()}`;
-    const dateY = 50; 
-    doc.text(dateText, headerX, dateY); 
+      // Date
+      doc.setFontSize(12);
+      doc.setFont("Times", "normal");
+      const dateText = `Date: ${new Date().toLocaleDateString()}`;
+      const dateY = 50;
+      doc.text(dateText, headerX, dateY);
 
-    // Date Line
-    const dateLineY = dateY + 10;
-    doc.line(headerX, dateLineY, 200, dateLineY);
+      // Date Line
+      const dateLineY = dateY + 10;
+      doc.line(headerX, dateLineY, 200, dateLineY);
 
-    // Engagement Overview
-    doc.setFontSize(12);
-    doc.setFont("Times ", "bold");
-    const overviewTitle = "Engagement Overview";
-    const overviewY = dateLineY + 10; 
-    doc.text(overviewTitle, headerX, overviewY);
+      // Engagement Overview
+      doc.setFontSize(12);
+      doc.setFont("Times", "bold");
+      const overviewTitle = "Engagement Overview";
+      const overviewY = dateLineY + 10;
+      doc.text(overviewTitle, headerX, overviewY);
 
-    doc.setFont("Times ", "normal");
+      doc.setFont("Times", "normal");
 
-    const baseY = overviewY + 15; 
-    const countY = baseY; 
-    const labelY = baseY + 10; 
+      const baseY = overviewY + 15;
+      const countY = baseY;
+      const labelY = baseY + 10;
 
-    const engagementData = [
-      { count: categoryData.Posts, label: "Total Posts" },
-      { count: categoryData.Engagement, label: "Total Engagement" },
-      { count: categoryData.Discussions, label: "Total Discussions" },
-    ];
+      const engagementData = [
+        { count: categoryData.Posts, label: "Total Posts" },
+        { count: categoryData.Engagement, label: "Total Engagement" },
+        { count: categoryData.Discussions, label: "Total Discussions" },
+      ];
 
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const countLabelWidth = pageWidth - (1.5 * headerX);
-    const countXOffset = countLabelWidth / engagementData.length; 
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const countLabelWidth = pageWidth - 1.5 * headerX;
+      const countXOffset = countLabelWidth / engagementData.length;
 
-    engagementData.forEach((item, index) => {
-    const currentX = headerX + index * countXOffset; 
+      engagementData.forEach((item, index) => {
+        const currentX = headerX + index * countXOffset;
 
-    doc.setTextColor(154, 108, 180); 
-    doc.setFontSize(18);
-    doc.setFont("Times ", "bold"); 
+        doc.setTextColor(154, 108, 180);
+        doc.setFontSize(18);
+        doc.setFont("Times", "bold");
 
-    // Get the count text
-    const countText = item.count.toString();
-    const countWidth = doc.getTextWidth(countText);
-    const centeredCountX = currentX + (countXOffset - countWidth) / 2; 
+        // Get the count text
+        const countText = item.count.toString();
+        const countWidth = doc.getTextWidth(countText);
+        const centeredCountX = currentX + (countXOffset - countWidth) / 2;
 
-    // Draw count
-    doc.text(countText, centeredCountX, countY); 
+        // Draw count
+        doc.text(countText, centeredCountX, countY);
 
-    // Reset color for label
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(12); // Set back to the default size for labels
-    doc.setFont("Times ", "normal");
+        // Reset color for label
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(12); // Set back to the default size for labels
+        doc.setFont("Times", "normal");
 
-    const labelText = item.label;
-    const labelWidth = doc.getTextWidth(labelText);
-    const centeredLabelX = currentX + (countXOffset - labelWidth) / 2; 
+        const labelText = item.label;
+        const labelWidth = doc.getTextWidth(labelText);
+        const centeredLabelX = currentX + (countXOffset - labelWidth) / 2;
 
-    // Draw label
-    doc.text(labelText, centeredLabelX, labelY); 
-  });
+        // Draw label
+        doc.text(labelText, centeredLabelX, labelY);
+      });
 
-    const engagementLineY = labelY + 10; 
-    console.log(`Line Y Position: ${engagementLineY}`); 
-    doc.setDrawColor(0); 
-    doc.line(headerX, engagementLineY, 200, engagementLineY);
+      const engagementLineY = labelY + 10;
+      doc.setDrawColor(0);
+      doc.line(headerX, engagementLineY, 200, engagementLineY);
 
-    // Position for the summary
-    const summaryYStart = engagementLineY + 10; 
-    const summaryX = headerX; 
-    doc.setFont("Times ", "bold"); 
-    doc.text("Summary:", summaryX, summaryYStart);
+      // Position for the summary
+      const summaryYStart = engagementLineY + 10;
+      const summaryX = headerX;
+      doc.setFont("Times", "bold");
+      doc.text("Summary:", summaryX, summaryYStart);
 
-    doc.setFont("Times ", "normal"); 
-    doc.setTextColor(51, 51, 51);
+      doc.setFont("Times", "normal");
+      doc.setTextColor(51, 51, 51);
 
+      const summaryContentY = summaryYStart + 7;
+      const summaryLines = doc.splitTextToSize(`\n${summary}`, countLabelWidth);
 
-    doc.setFont("Times ", "normal"); 
-    const summaryContentY = summaryYStart + 7; 
-    const summaryLines = doc.splitTextToSize(`\n${summary}`, countLabelWidth); 
-    doc.text(summaryLines, summaryX, summaryContentY);
+      let currentY = summaryContentY;
+      summaryLines.forEach((line, index) => {
+        if (currentY > 280) {
+          doc.addPage();
+          currentY = 20; // Reset Y position for new page
+        }
+        doc.text(line, summaryX, currentY);
+        currentY += 7; // Increment Y position for next line
+      });
 
-
-    // Add footer with a horizontal line above the page number
-    const pageCount = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= pageCount; i++) {
+      // Add footer with a horizontal line above the page number
+      const pageCount = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(10);
         const footerY = 290; // Y position for the footer
         doc.line(10, footerY - 5, 200, footerY - 5); // Draw line above the page number
-        doc.text(`Page ${i} of ${pageCount}`, 190, footerY, null, null, "right");
-    }
+        doc.text(
+          `Page ${i} of ${pageCount}`,
+          190,
+          footerY,
+          null,
+          null,
+          "right"
+        );
+      }
 
-    // Save the PDF
-    doc.save(`${selectedCategory}_data.pdf`);
+      // Save the PDF
+      doc.save(`${selectedCategory}_data.pdf`);
+    };
   };
-};
 
   async function fetchPosts() {
     try {
@@ -315,8 +509,8 @@ const ManageBellyTalk = () => {
       categoriesList.forEach((category) => {
         formattedData[category] = {
           name: category,
-          Posts: 0,
           Engagement: 0,
+          Posts: 0,
           Discussions: 0,
           PostContent: [],
           PostComments: [],
@@ -324,32 +518,42 @@ const ManageBellyTalk = () => {
       });
 
       // Check if posts data exists
-      if (response.data && response.data.post) {
+      if (response.data && response.data.category) {
         // Process each post in the response
-        response.data.post.forEach((post) => {
-          const categories = Array.isArray(post.category)
-            ? post.category
-            : [post.category];
+        response.data.category.forEach((list) => {
+          const categories = Array.isArray(list.category)
+            ? list.category
+            : [list.category];
 
           categories.forEach((category) => {
             // If the category exists in formattedData, update its values
             if (formattedData[category]) {
               // Increment counts for the category
-              formattedData[category].Posts += 1;
-              formattedData[category].Engagement += post.likes
-                ? post.likes.length
+
+              formattedData[category].Engagement +=
+                list.posts.length + list.comments.length;
+
+              formattedData[category].Posts += list.posts
+                ? list.posts.length
                 : 0;
-              formattedData[category].Discussions += post.comments
-                ? post.comments.length
+              formattedData[category].Discussions += list.comments
+                ? list.comments.length
                 : 0;
 
               // Append the content of the post to the array
-              formattedData[category].PostContent.push(post.content);
+              if (list.posts && Array.isArray(list.posts)) {
+                // Append the content of each post to the array
+                formattedData[category].PostContent.push(
+                  list.posts.map((posts) => posts.content)
+                );
+              } else {
+                formattedData[category].PostContent.push([]);
+              }
 
               // Append the comments if any, otherwise push an empty array
-              if (post.comments && Array.isArray(post.comments)) {
+              if (list.comments && Array.isArray(list.comments)) {
                 formattedData[category].PostComments.push(
-                  post.comments.map((comment) => comment.content)
+                  list.comments.map((comment) => comment.content)
                 );
               } else {
                 formattedData[category].PostComments.push([]);
@@ -363,8 +567,13 @@ const ManageBellyTalk = () => {
       console.error("Error fetching posts data: ", error);
     }
   }
-
   useEffect(() => {
+    const userData = localStorage.getItem("userData");
+
+    if (userData) {
+      const parsedUserData = JSON.parse(userData);
+      setUser(parsedUserData);
+    }
     fetchPosts(); // Fetch data on component mount
   }, []);
 
@@ -460,17 +669,18 @@ const ManageBellyTalk = () => {
           >
             Download
           </Button>
-          
+
           <Button
-            onClick={handleViewReports} 
-             className="dialog-download-button"
+            onClick={handleViewReports}
+            className="dialog-download-button"
             startIcon={<ReportIcon />}
           >
-            {showReport ? 'Hide Reports' : 'View Reports'}
+            {showReport ? "Hide Reports" : "View Reports"}
           </Button>
+
           <Button
             className="dialog-download-button"
-            onClick={handleAddToLibrary}
+            onClick={handleShowAddToLibrary}
             startIcon={<LibraryAddIcon />}
           >
             Add to Library
@@ -478,42 +688,10 @@ const ManageBellyTalk = () => {
         </div>
       </Dialog>
       {showReport && (
-        <Dialog open={showReport} onClose={handleViewReports}sx={{ 
-          "& .MuiDialog-paper": {
-            width: "80%", // Adjust the width
-            maxHeight: "80%", // Adjust the max height
-            height: "800px", // Adjust the height of the dialog
-          },
-          "& .MuiDialogContent-root": {
-            maxHeight: "60vh", // Set max height for content
-            overflowY: "auto", // Make it scrollable
-          }
-        }}>
-          <DialogTitle>
-            <Typography variant="h6">Reports</Typography>
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={handleViewReports}
-              aria-label="close"
-              sx={{
-                position: 'absolute',
-                top: 8,
-                right: 20,
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <DialogContent>
-            <Typography variant="body1">This is the content of the Report...</Typography>
-          </DialogContent>
-        </Dialog>
-        )}
-
-        {showLibrary &&(
-          <Dialog open={showLibrary} onClose={handleCloseModal}
-          sx={{ 
+        <Dialog
+          open={showReport}
+          onClose={handleViewReports}
+          sx={{
             "& .MuiDialog-paper": {
               width: "80%", // Adjust the width
               maxHeight: "80%", // Adjust the max height
@@ -522,8 +700,53 @@ const ManageBellyTalk = () => {
             "& .MuiDialogContent-root": {
               maxHeight: "60vh", // Set max height for content
               overflowY: "auto", // Make it scrollable
-            }
-          }}>
+            },
+          }}
+        >
+          <DialogTitle>
+            <Typography variant="h6">Reports</Typography>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={handleViewReports}
+              aria-label="close"
+              sx={{
+                position: "absolute",
+                top: 8,
+                right: 20,
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <DialogContent>
+            <Typography variant="body1">
+              {reportData ? (
+                <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
+              ) : (
+                "No report available"
+              )}
+            </Typography>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {showLibrary && (
+        <Dialog
+          open={showLibrary}
+          onClose={handleCloseModal}
+          sx={{
+            "& .MuiDialog-paper": {
+              width: "80%", // Adjust the width
+              maxHeight: "80%", // Adjust the max height
+              height: "800px", // Adjust the height of the dialog
+            },
+            "& .MuiDialogContent-root": {
+              maxHeight: "60vh", // Set max height for content
+              overflowY: "auto", // Make it scrollable
+            },
+          }}
+        >
           <DialogTitle>
             <Typography variant="h6">Add to Library</Typography>
             <IconButton
@@ -532,7 +755,7 @@ const ManageBellyTalk = () => {
               onClick={handleCloseModal}
               aria-label="close"
               sx={{
-                position: 'absolute',
+                position: "absolute",
                 top: 8,
                 right: 20,
               }}
@@ -544,10 +767,10 @@ const ManageBellyTalk = () => {
             <label
               htmlFor="cover-image-input"
               style={{
-                fontSize: '16px',
-                fontWeight: 'bold',
-                marginBottom: '10px',
-                display: 'block', // Make the label block-level so it appears above the input
+                fontSize: "16px",
+                fontWeight: "bold",
+                marginBottom: "10px",
+                display: "block", // Make the label block-level so it appears above the input
               }}
             >
               Choose a Cover image
@@ -559,61 +782,65 @@ const ManageBellyTalk = () => {
               accept="image/*"
               onChange={handleFileChange}
               style={{
-                marginTop: '10px',
-                display: 'block', // Ensures input is on its own line
+                marginTop: "10px",
+                display: "block", // Ensures input is on its own line
               }}
             />
 
             {/* Show image preview if an image is selected */}
             {selectedImage && (
-              <div style={{ position: 'relative', marginTop: '20px' }}>
+              <div style={{ position: "relative", marginTop: "20px" }}>
                 <img
                   src={selectedImage}
                   alt="Preview"
                   style={{
-                    maxWidth: '30%',
-                    height: 'auto',
-                    display: 'block', 
-                    margin: '0 auto', 
+                    maxWidth: "30%",
+                    height: "auto",
+                    display: "block",
+                    margin: "0 auto",
                   }}
                 />
-                
+
                 {/* Close button */}
                 <Button
                   onClick={handleRemoveImage}
                   style={{
-                    position: 'absolute',
-                    top: '5px', 
-                    right: '195px', 
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-                    color: 'white',
-                    borderRadius: '50%',
-                    padding: '5px',
-                    minWidth: '0',
-                    height: '25px',
-                    width: '25px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    fontSize: '16px',
+                    position: "absolute",
+                    top: "5px",
+                    right: "195px",
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    color: "white",
+                    borderRadius: "50%",
+                    padding: "5px",
+                    minWidth: "0",
+                    height: "25px",
+                    width: "25px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    fontSize: "16px",
                   }}
                 >
                   ×
                 </Button>
               </div>
             )}
-            {/* You can add more content or a form here */}
+            {reportData ? (
+              <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
+            ) : (
+              "No report available"
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal} color="primary">
               Cancel
             </Button>
-            <Button onClick={handleCloseModal} color="primary">
+            <Button onClick={handleAddToLibrary} color="primary">
               Add to Library
             </Button>
           </DialogActions>
         </Dialog>
-        )}
+      )}
     </Box>
   );
 };
