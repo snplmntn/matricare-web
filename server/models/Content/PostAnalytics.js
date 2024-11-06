@@ -2,26 +2,19 @@ const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
   {
-    content: {
+    category: {
       type: String,
-      required: true,
-      index: "text",
+      enum: [
+        "Health & Wellness",
+        "Finance & Budgeting",
+        "Parenting & Family",
+        "Baby’s Essentials",
+        "Exercise & Fitness",
+        "Labor & Delivery",
+      ],
     },
-    category: [
-      {
-        type: String,
-        enum: [
-          "Health & Wellness",
-          "Finance & Budgeting",
-          "Parenting & Family",
-          "Baby’s Essentials",
-          "Exercise & Fitness",
-          "Labor & Delivery",
-        ],
-      },
-    ],
-    likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostComment" }],
+    posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
   },
   {
     timestamps: true,

@@ -59,15 +59,23 @@ const post_post = catchAsync(async (req, res, next) => {
   const savedPost = await Post.findById(newPost._id).populate("userId");
 
   if (savedPost.userId.verified) {
-    const post = await PostAnalytics.create({
-      content: newPost.content,
-      category: newPost.category,
-    });
+    savedPost.category.map(
+      catchAsync(async (e) => {
+        const category = await PostAnalytics.findOne({ category: e });
 
-    await Post.findByIdAndUpdate(
-      savedPost._id,
-      { postAnalytics: post._id },
-      { new: true }
+        if (category) {
+          await PostAnalytics.findByIdAndUpdate(
+            category._id,
+            { $push: { posts: savedPost._id } },
+            { new: true }
+          );
+        } else {
+          await PostAnalytics.create({
+            category: e,
+            posts: savedPost._id,
+          });
+        }
+      })
     );
   }
 
