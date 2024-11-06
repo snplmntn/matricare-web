@@ -1,0 +1,267 @@
+.prc-verification-container {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    padding: 20px;
+    height: 100vh;
+  }
+
+  .prc-content {
+    background-color: white;
+    width: 375px;
+    height: 667px; 
+    border-radius: 30px; 
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.2); 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: 0 auto; 
+    margin-top: 70px;
+  }
+
+  .prc-logo {
+    width: 100px; 
+    height: auto;
+    margin-bottom: 20px; 
+    margin-top: -50px;
+  }
+
+  .prc-content h1{
+    font-size: 24px;
+  }
+
+  .prc-content p{
+    font-size: 14px;
+    justify-content: center;
+    text-align: center;
+    width: 400px;
+    margin-top: 15px;
+    line-height: 20px;
+    margin-bottom: 50px;
+  }
+  
+  
+  .step-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    margin: 10px 0;
+    padding: 15px 20px;
+    background-color: #ffffff; 
+    border: 2px solid #ccc;
+    border-radius: 4px; 
+    width: 100%; 
+    box-sizing: border-box; 
+  }
+  
+  .step-container.disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  
+  .step-container.clickable {
+    cursor: pointer;
+  }
+  
+  .step {
+    display: flex;
+    align-items: center; /* Keep icon and text horizontally aligned */
+  }
+  
+  .step-icon {
+    font-size: 24px; /* Icon size */
+    color: #4e4e4e;
+    margin-right: 15px; /* Space between icon and text */
+  }
+  
+  .step-text-container {
+    display: flex;
+    flex-direction: column; /* Stack text vertically */
+    justify-content: center;
+  }
+  
+  .step-text {
+    font-size: 14px !important;
+    margin-bottom: 5px; 
+  }
+  
+  .step-container span {
+    font-size: 18px;
+    color: #333;
+  }
+
+  .prc-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    
+  }
+  
+  .prc-submit-button {
+    background-color: #9a6cb4;
+    color: white;
+    border: none;
+    padding: 12px 180px;
+    font-size: 16px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    transition: background-color 0.3s ease;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    text-align: center;
+    margin-top: 70px;
+  }
+  
+  .prc-submit-button:hover {
+    background-color: #E39FA9;
+  }
+  
+  .prc-submit-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+
+  /* Styling for video and camera preview */
+/* Container for camera wrapper */
+.camera-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Header container for back button, title and clip icon */
+  .camera-header {
+    display: flex;
+    justify-content: space-between;  /* Spreads the items across the available space */
+    align-items: center;  /* Vertically center align the items */
+    width: 100%;
+    padding: 10px 20px;
+  }
+  
+  /* Back button style (left side) */
+  .prc-back-button {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  /* Clip button style (right side) */
+  .prc-clip-button {
+    background: none;
+    border: none;
+    color: #000;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  /* Styling for the h2 */
+  .camera-header h2 {
+    font-size: 18px;
+    margin: 0; 
+    flex-grow: 1; 
+    text-align: center; 
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
+  
+  /* Camera container styling */
+  .camera-container {
+    width: 100%;
+    max-width: 400px; 
+    height: 400px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: #f9f9f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Video element styling */
+  .camera-container video {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  /* Capture photo button styling */
+  .camera-button {
+    background-color: #E39FA9;
+    color: #333;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-bottom: -50px;
+  }
+  
+  .camera-button:hover {
+    background-color: #9a6cb4;
+  }
+
+  .thank-you-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center elements horizontally */
+    justify-content: center; /* Center elements vertically */
+    text-align: center;
+    padding: 20px;
+    height: 100vh; /* Full viewport height for centering */
+  }
+  
+  .prc-verlogo {
+    max-width: 350px; 
+    margin-bottom: 20px;
+  }
+  
+  .thank-you-message h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+  
+  .thank-you-message p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+    max-width: 400px; 
+  }
+  
+  .prc-submit-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #9a6cb4;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .prc-submit-button:hover {
+    background-color: #0056b3;
+  }
+
+  .prc-back {
+    background-color: transparent;
+    border: none;
+    color: #040404;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: -20px;
+    cursor: pointer;
+  }
+  
