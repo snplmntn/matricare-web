@@ -131,7 +131,7 @@ const AppointmentConsultant = () => {
     }
   }, []);
 
-  const categoryOptions = ["Monthly Check-up", "Advice by the Doctor"];
+  const categoryOptions = ["Follow-up Check up", "New Patient"];
 
   const handleStatusChange = async (id, newStatus) => {
     try {
@@ -179,13 +179,19 @@ const AppointmentConsultant = () => {
       newAppointment;
     if (date && time && patientName && location && category) {
       const fullDateTime = `${date}, ${time}`;
+      const selectedDateTime = new Date(fullDateTime);
+      const now = new Date();
+
+      if (selectedDateTime < now) {
+        return alert("The selected date and time is already past.");
+      }
 
       const appointmentObj = {
         email: email,
         patientName: patientName,
         location: location,
         category: category,
-        date: new Date(fullDateTime),
+        date: selectedDateTime,
       };
 
       try {
