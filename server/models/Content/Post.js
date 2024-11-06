@@ -38,10 +38,6 @@ const PostSchema = new mongoose.Schema(
     ],
     likes: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostLike" }],
     comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "PostComment" }],
-    postAnalytics: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "PostAnalytics",
-    },
   },
   {
     timestamps: true,

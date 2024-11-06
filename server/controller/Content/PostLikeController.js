@@ -1,7 +1,6 @@
 const PostComment = require("../../models/Content/PostComment");
 const PostLike = require("../../models/Content/PostLike");
 const Post = require("../../models/Content/Post");
-const PostAnalytics = require("../../models/Content/PostAnalytics");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 
@@ -53,14 +52,6 @@ const like_post = catchAsync(async (req, res, next) => {
       { $push: { likes: like._id } }, // Increment the likes field by 1
       { new: true }
     );
-
-    if (updatedModel.postAnalytics) {
-      await PostAnalytics.findByIdAndUpdate(
-        updatedModel.postAnalytics,
-        { $push: { likes: like._id } },
-        { new: true }
-      );
-    }
 
     if (!updatedModel) {
       await PostLike.findOneAndDelete(like);
@@ -170,14 +161,6 @@ const like_delete = catchAsync(async (req, res, next) => {
       { $pull: { likes: existingLike._id } }, // Decrement the likes field by 1
       { new: true }
     );
-
-    if (updatedModel.postAnalytics) {
-      await PostAnalytics.findByIdAndUpdate(
-        updatedModel.postAnalytics,
-        { $pull: { likes: existingLike._id } },
-        { new: true }
-      );
-    }
   } else if (postCommentId) {
     updatedModel = await PostComment.findByIdAndUpdate(
       likeableId,

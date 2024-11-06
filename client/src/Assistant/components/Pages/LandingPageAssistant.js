@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  IoPersonCircleOutline,
-  IoNotificationsSharp,
-} from "react-icons/io5";
+import { IoPersonCircleOutline, IoNotificationsSharp } from "react-icons/io5";
 import "../../style/pages/landingpageassistant.css";
 import Slider from "react-slick";
 import { Line, Pie } from "react-chartjs-2";
@@ -277,20 +274,20 @@ const LandingPageAssistant = ({}) => {
         <header className="landingpage-assistant-header">
           <h1>Dashboard</h1>
           <div className="assistant-profile-icons">
-          <a
+            <a
               href="/userprofile"
               className="assistant-profile-icon"
               title="Profile"
             >
               <IoPersonCircleOutline />
             </a>
-          <a
-            href="/assistant-notification"
-            className="assistant-notification-icon"
-            title="Notifications"
-          >
-            <IoNotificationsSharp />
-          </a>
+            <a
+              href="/assistant-notification"
+              className="assistant-notification-icon"
+              title="Notifications"
+            >
+              <IoNotificationsSharp />
+            </a>
           </div>
           <div className="landingpage-assistant-user-profile">
             <h1>{user.name}</h1>
@@ -313,7 +310,7 @@ const LandingPageAssistant = ({}) => {
             <p>Have a nice day at work</p>
           </div>
           <div className="assistant-greeting-image">
-            <img src="img/assistant.png" alt="Good Morning" />
+            <img src="img/doctor.png" alt="Good Morning" />
           </div>
         </section>
         <section className="landingpage-assistant-dashboard">

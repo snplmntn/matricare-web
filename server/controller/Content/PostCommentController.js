@@ -37,27 +37,42 @@ const comment_post = catchAsync(async (req, res, next) => {
 
   // if verified add to post analytics
   if (commentPopulated.userId.verified) {
-    if (!commentPopulated.postId.postAnalytics) {
-      const post = await PostAnalytics.create({
-        content: commentPopulated.postId.content,
-        category: commentPopulated.postId.category,
-        likes: commentPopulated.postId.likes,
-        comments: commentPopulated.postId.comments,
-      });
+    commentPopulated.postId.category.map(
+      catchAsync(async (e) => {
+        const category = await PostAnalytics.findOne({ category: e });
 
-      await Post.findByIdAndUpdate(
-        commentPopulated.postId._id,
-        { postAnalytics: post._id },
-        { new: true }
-      );
-      // if already in post analytics, push comments to post analytics
-    } else {
-      await PostAnalytics.findByIdAndUpdate(
-        commentPopulated.postId.postAnalytics,
-        { $push: { comments: comment._id } },
-        { new: true }
-      );
-    }
+        if (category) {
+          if (category.posts.includes(commentPopulated.postId._id)) {
+            await PostAnalytics.findByIdAndUpdate(
+              category._id,
+              {
+                $push: {
+                  comments: comment._id,
+                },
+              },
+              { new: true }
+            );
+          } else {
+            await PostAnalytics.findByIdAndUpdate(
+              category._id,
+              {
+                $push: {
+                  posts: commentPopulated.postId._id,
+                  comments: comment._id,
+                },
+              },
+              { new: true }
+            );
+          }
+        } else {
+          await PostAnalytics.create({
+            category: e,
+            posts: savedPost._id,
+            comments: commentPopulated.postId.comments,
+          });
+        }
+      })
+    );
   }
 
   return res.status(200).json({
