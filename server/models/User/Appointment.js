@@ -20,8 +20,8 @@ const AppointmentSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Monthly Check-up", "Advice by the Doctor"],
-      default: "Monthly Check-up",
+      enum: ["New Patient", "Follow-up Check up"],
+      default: "Follow-up Check up",
     },
     status: {
       type: String,
