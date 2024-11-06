@@ -98,13 +98,13 @@
 
 /* Modal Styles */
 .MuiDialog-paper {
-  width: 300px; 
+  width: 450px; 
   padding: 20px;
   background-color: #ffffff;
   border-radius: 30px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   text-align: center;
-  height: 300px;
+  height: 280px;
 }
 
 .dialog-title-text {
@@ -133,24 +133,23 @@
   background-color: #ffffff; 
 }
 
-.download-button-container {
+
+.dialog-button-container {
   display: flex;
-  justify-content: center; 
-  padding: 16px; 
+  gap: 25px; /* Adjusts space between buttons */
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .dialog-download-button {
-  color: #7c459c !important; 
+  color: #7c459c !important;
+  white-space: nowrap; /* Prevents line breaks */
 }
 
-.dialog-actions {
-  padding: 16px; 
-  border-top: 1px solid #e0e0e0; 
-}
 
-/* Optional hover effects */
 .dialog-close-button:hover,
 .dialog-download-button:hover {
   background-color: rgba(124, 69, 156, 0.1); 
-  transition: background-color 0.3s; 
+  transition: background-color 0.3s;
 }
+

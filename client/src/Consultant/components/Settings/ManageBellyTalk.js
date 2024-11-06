@@ -20,6 +20,8 @@ import {
   IconButton,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
+import ReportIcon from '@mui/icons-material/Description'; 
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import CloseIcon from "@mui/icons-material/Close";
 import "../../styles/settings/managebellytalk.css";
 import { jsPDF } from "jspdf";
@@ -38,12 +40,22 @@ const ManageBellyTalk = () => {
 
   const handleCardClick = (category) => {
     setSelectedCategory(category);
-    setOpen(true); // Open the modal when a card is clicked
+    setOpen(true); 
   };
 
   const handleClose = () => {
-    setOpen(false); // Close the modal
-    setSelectedCategory(null); // Reset selected category
+    setOpen(false);
+    setSelectedCategory(null); 
+  };
+
+  const handleViewReport = () => {
+    // Add logic to view report here
+    console.log("View Report clicked");
+  };
+  
+  const handleAddToLibrary = () => {
+    // Add logic to add to library here
+    console.log("Add to Library clicked");
   };
 
   const renderDetails = () => {
@@ -61,6 +73,8 @@ const ManageBellyTalk = () => {
       </>
     );
   };
+
+  
 
   const handleDownload = async () => {
     const categoryData = data.find((item) => item.name === selectedCategory);
@@ -409,13 +423,32 @@ const ManageBellyTalk = () => {
           </Box>
         </DialogTitle>
         <DialogContent>{renderDetails()}</DialogContent>
-        <Button
-          onClick={handleDownload}
-          className="dialog-download-button"
-          startIcon={<DownloadIcon />}
-        >
-          Download
-        </Button>
+        <div className="dialog-button-container">
+          <Button
+            onClick={handleDownload}
+            className="dialog-download-button"
+            startIcon={<DownloadIcon />}
+          >
+            Download
+          </Button>
+          
+          <Button
+            className="dialog-download-button"
+            onClick={handleViewReport}
+            startIcon={<ReportIcon />}
+          >
+            View Report
+          </Button>
+          
+          <Button
+            className="dialog-download-button"
+            onClick={handleAddToLibrary}
+            startIcon={<LibraryAddIcon />}
+          >
+            Add to Library
+          </Button>
+        </div>
+
       </Dialog>
     </Box>
   );

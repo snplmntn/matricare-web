@@ -5,7 +5,6 @@ import {
   IoCalendar,
   IoFolderOpen,
   IoChatbubbles,
-  IoLibrary,
   IoBarChart,
   IoLogOutOutline,
 } from "react-icons/io5";
@@ -68,13 +67,6 @@ const ConsultantSidebar = () => {
           title="Appointment"
         >
           <IoCalendar />
-        </Link>
-        <Link
-          to="/library-consultant"
-          className="consultant-sidebar-item library"
-          title="Library"
-        >
-          <IoLibrary />
         </Link>
         <Link
           to="/belly-talk"
