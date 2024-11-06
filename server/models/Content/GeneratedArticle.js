@@ -1,14 +1,8 @@
 const mongoose = require("mongoose");
 
-const ArticleSchema = new mongoose.Schema(
+const GeneratedArticleSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    reviewedBy: String,
-    author: {
-      type: String,
-      required: true,
-      index: "text",
-    },
+    engagement: Number,
     title: {
       type: String,
       required: true,
@@ -35,18 +29,10 @@ const ArticleSchema = new mongoose.Schema(
       ],
       default: "Health & Wellness",
     },
-    status: {
-      type: String,
-      enum: ["Draft", "Approved", "Revision", "Archived"],
-      default: "Draft",
-    },
-    picture: {
-      type: String,
-    },
   },
   {
     timestamps: true,
   }
 );
 
-module.exports = mongoose.model("Article", ArticleSchema);
+module.exports = mongoose.model("GeneratedArticle", GeneratedArticleSchema);

@@ -20,8 +20,8 @@ import {
   IconButton,
 } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
-import ReportIcon from '@mui/icons-material/Description'; 
-import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import ReportIcon from "@mui/icons-material/Description";
+import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import CloseIcon from "@mui/icons-material/Close";
 import "../../styles/settings/managebellytalk.css";
 import { jsPDF } from "jspdf";
@@ -40,20 +40,48 @@ const ManageBellyTalk = () => {
 
   const handleCardClick = (category) => {
     setSelectedCategory(category);
-    setOpen(true); 
+    setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedCategory(null); 
+    setSelectedCategory(null);
   };
 
-  const handleViewReport = () => {
+  const handleViewReport = async () => {
+    if (!selectedCategory) return null;
+
+    const categoryData = data.find((item) => item.name === selectedCategory);
+
+    if (!categoryData) return null;
+
+    if (categoryData.Engagement < 1)
+      return alert("Engagement requirements not reached for this action.");
+
     // Add logic to view report here
+    const summaryResponse = await axios.get(
+      `${API_URL}/analytics/article?category=${encodeURIComponent(
+        selectedCategory
+      )}`,
+      {
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
+
     console.log("View Report clicked");
   };
-  
+
   const handleAddToLibrary = () => {
+    if (!selectedCategory) return null;
+
+    const categoryData = data.find((item) => item.name === selectedCategory);
+
+    if (!categoryData) return null;
+
+    if (categoryData.Engagement < 1)
+      return alert("Engagement requirements not reached for this action.");
     // Add logic to add to library here
     console.log("Add to Library clicked");
   };
@@ -74,35 +102,91 @@ const ManageBellyTalk = () => {
     );
   };
 
-  
-
   const handleDownload = async () => {
     const categoryData = data.find((item) => item.name === selectedCategory);
     if (!categoryData) return;
 
+    if (categoryData.Engagement < 1)
+      return alert("Engagement requirements not reached for this action.");
+
     let summary = "";
     if (categoryData.PostContent.length !== 0) {
-      // Start the `toSummarize` structure
-      const toSummarize = {
-        category: selectedCategory, // Selected category (e.g., Health & Wellness)
-        posts: categoryData.PostContent.map((content, index) => {
-          return {
-            content, // Post content
-            comments: categoryData.PostComments[index], // Associated comments
-          };
-        }),
-      };
-
-      const response = await axios.post(
-        `${OPENAI_URL}/summarize`,
-        toSummarize,
+      const summaryResponse = await axios.get(
+        `${API_URL}/analytics/article?category=${encodeURIComponent(
+          selectedCategory
+        )}`,
         {
           headers: {
             Authorization: token,
           },
         }
       );
-      summary = response.data.summary;
+
+      if (summaryResponse.data) {
+        if (
+          summaryResponse.data.article &&
+          summaryResponse.data.article.engagement === categoryData.Engagement
+        ) {
+          summary = `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`;
+        } else {
+          // Start the `toSummarize` structure
+          const toSummarize = {
+            category: selectedCategory, // Selected category (e.g., Health & Wellness)
+            posts: categoryData.PostContent.map((content, index) => {
+              return {
+                content, // Post content
+                comments: categoryData.PostComments[index], // Associated comments
+              };
+            }),
+          };
+
+          const response = await axios.post(
+            `${OPENAI_URL}/article`,
+            toSummarize,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+
+          summary = response.data.summary;
+          const title = summary.split("\n")[0]; // Extract the first line as the title
+          summary = summary.split("\n").slice(1).join("\n"); // Remove the first line from the summary
+
+          const generatedArticleToSave = {
+            engagement: categoryData.Engagement,
+            title: title,
+            fullTitle: title,
+            content: summary,
+            category: selectedCategory,
+          };
+
+          if (summaryResponse.data.article) {
+            await axios.put(
+              `${API_URL}/analytics/article?category=${encodeURIComponent(
+                selectedCategory
+              )}`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          } else {
+            await axios.post(
+              `${API_URL}/analytics/article`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          }
+        }
+      }
     }
 
     const doc = new jsPDF();
@@ -119,14 +203,14 @@ const ManageBellyTalk = () => {
       const logoY = 17;
       doc.addImage(logoImage, "PNG", logoX, logoY, logoWidth, logoHeight);
 
-      doc.setFont("Times ", "bold");
+      doc.setFont("Times", "bold");
       doc.setFontSize(14);
       const matriCareText = "MatriCare";
       const matriCareX = logoX + logoWidth + 2;
       const matriCareY = logoY + logoHeight / 5 + 4;
       doc.text(matriCareText, matriCareX, matriCareY);
 
-      doc.setFont("Times ", "normal");
+      doc.setFont("Times", "normal");
       doc.setFontSize(12);
       doc.setTextColor(128, 128, 128);
       const categoryText = `Category: ${selectedCategory}`;
@@ -144,13 +228,13 @@ const ManageBellyTalk = () => {
 
       // Header
       doc.setFontSize(20);
-      doc.setFont("Times ", "bold");
+      doc.setFont("Times", "bold");
       const headerX = categoryX;
       doc.text(selectedCategory, headerX, 40);
 
       // Date
       doc.setFontSize(12);
-      doc.setFont("Times ", "normal");
+      doc.setFont("Times", "normal");
       const dateText = `Date: ${new Date().toLocaleDateString()}`;
       const dateY = 50;
       doc.text(dateText, headerX, dateY);
@@ -161,12 +245,12 @@ const ManageBellyTalk = () => {
 
       // Engagement Overview
       doc.setFontSize(12);
-      doc.setFont("Times ", "bold");
+      doc.setFont("Times", "bold");
       const overviewTitle = "Engagement Overview";
       const overviewY = dateLineY + 10;
       doc.text(overviewTitle, headerX, overviewY);
 
-      doc.setFont("Times ", "normal");
+      doc.setFont("Times", "normal");
 
       const baseY = overviewY + 15;
       const countY = baseY;
@@ -187,7 +271,7 @@ const ManageBellyTalk = () => {
 
         doc.setTextColor(154, 108, 180);
         doc.setFontSize(18);
-        doc.setFont("Times ", "bold");
+        doc.setFont("Times", "bold");
 
         // Get the count text
         const countText = item.count.toString();
@@ -200,7 +284,7 @@ const ManageBellyTalk = () => {
         // Reset color for label
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(12); // Set back to the default size for labels
-        doc.setFont("Times ", "normal");
+        doc.setFont("Times", "normal");
 
         const labelText = item.label;
         const labelWidth = doc.getTextWidth(labelText);
@@ -211,23 +295,30 @@ const ManageBellyTalk = () => {
       });
 
       const engagementLineY = labelY + 10;
-      console.log(`Line Y Position: ${engagementLineY}`);
       doc.setDrawColor(0);
       doc.line(headerX, engagementLineY, 200, engagementLineY);
 
       // Position for the summary
       const summaryYStart = engagementLineY + 10;
       const summaryX = headerX;
-      doc.setFont("Times ", "bold");
+      doc.setFont("Times", "bold");
       doc.text("Summary:", summaryX, summaryYStart);
 
-      doc.setFont("Times ", "normal");
+      doc.setFont("Times", "normal");
       doc.setTextColor(51, 51, 51);
 
-      doc.setFont("Times ", "normal");
       const summaryContentY = summaryYStart + 7;
       const summaryLines = doc.splitTextToSize(`\n${summary}`, countLabelWidth);
-      doc.text(summaryLines, summaryX, summaryContentY);
+
+      let currentY = summaryContentY;
+      summaryLines.forEach((line, index) => {
+        if (currentY > 280) {
+          doc.addPage();
+          currentY = 20; // Reset Y position for new page
+        }
+        doc.text(line, summaryX, currentY);
+        currentY += 7; // Increment Y position for next line
+      });
 
       // Add footer with a horizontal line above the page number
       const pageCount = doc.internal.getNumberOfPages();
@@ -329,7 +420,6 @@ const ManageBellyTalk = () => {
         });
       }
       setData(Object.values(formattedData)); // Set the accumulated data for Recharts
-      console.log(Object.values(formattedData));
     } catch (error) {
       console.error("Error fetching posts data: ", error);
     }
@@ -431,7 +521,7 @@ const ManageBellyTalk = () => {
           >
             Download
           </Button>
-          
+
           <Button
             className="dialog-download-button"
             onClick={handleViewReport}
@@ -439,7 +529,7 @@ const ManageBellyTalk = () => {
           >
             View Report
           </Button>
-          
+
           <Button
             className="dialog-download-button"
             onClick={handleAddToLibrary}
@@ -448,7 +538,6 @@ const ManageBellyTalk = () => {
             Add to Library
           </Button>
         </div>
-
       </Dialog>
     </Box>
   );
