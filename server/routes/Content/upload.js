@@ -26,4 +26,11 @@ router.post("/id", upload.single("document"), uploadController.prcId_post);
 // Upload Document
 router.post("/d", upload.single("document"), uploadController.document_post);
 
+// Upload Appointment Document
+router.post(
+  "/appointment",
+  upload.single("picture"),
+  uploadController.article_picture_post
+);
+
 module.exports = router;
