@@ -56,6 +56,10 @@ const UserProfile = ({ user }) => {
     }
   };
 
+  const handleVerify = () => {
+    navigate('/prc-verification');  // Navigate to /prc-verification
+  };
+
 
   const handleUploadPrcId = async () => {
     if (uploadedFile) {
@@ -509,19 +513,10 @@ const UserProfile = ({ user }) => {
                       </p>
                     </div>
                     <div className="user-profile-input-group">
-                      <label htmlFor="prcId">PRC ID:</label>
-                      <input
-                        type="file"
-                        id="prcId"
-                        accept="image/*,application/pdf"
-                        onChange={(e) => setUploadedFile(e.target.files[0])}
-                        className="user-profile-input"
-                      />
-                      {uploadedFile && (
-                        <>
-                          <p>{uploadedFile.name}</p>
-                        </>
-                      )}
+                      <p className="prc-verification-message">Please complete your account verification:</p>
+                      <button className="prc-verify-button" onClick={handleVerify}>
+                        VERIFY
+                      </button>
                     </div>
                   </>
                 )}
