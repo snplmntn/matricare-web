@@ -65,7 +65,7 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    prcId: String,
+    prcId: [String],
     assignedTask: [{ type: mongoose.Schema.Types.ObjectId, ref: "Task" }],
     savedPost: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
     savedArticle: [{ type: mongoose.Schema.Types.ObjectId, ref: "Article" }],

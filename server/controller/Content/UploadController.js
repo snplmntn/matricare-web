@@ -127,27 +127,38 @@ const prcId_post = catchAsync(async (req, res, next) => {
   initializeApp(firebaseConfig);
   const storage = getStorage();
 
-  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-  const storageRef = ref(
-    storage,
-    `prcId/${req.query.userId}/${req.file.originalname}-${uniqueSuffix}`
-  );
+  // Prepare an array to store the download URLs for the multiple files
+  const downloadURLs = [];
 
-  const metadata = {
-    contentType: req.file.mimetype,
-  };
+  // Loop through each file in req.files (since you're using upload.array)
+  for (const file of req.files) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    const storageRef = ref(
+      storage,
+      `prcId/${req.query.userId}/${file.originalname}-${uniqueSuffix}`
+    );
 
-  const snapshot = await uploadBytesResumable(
-    storageRef,
-    req.file.buffer,
-    metadata
-  );
+    const metadata = {
+      contentType: file.mimetype,
+    };
 
-  const downloadURL = await getDownloadURL(snapshot.ref);
+    // Upload each file
+    const snapshot = await uploadBytesResumable(
+      storageRef,
+      file.buffer,
+      metadata
+    );
+
+    // Get the download URL for each uploaded file
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    // Store the download URL in the array
+    downloadURLs.push(downloadURL);
+  }
 
   return res.status(200).json({
-    message: "Profile Picture Successfully Uploaded!",
-    documentLink: downloadURL,
+    message: "Pictures Successfully Uploaded!",
+    pictureLink: downloadURLs, // Return all the download URLs
   });
 });
 
