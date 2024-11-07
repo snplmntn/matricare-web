@@ -86,15 +86,11 @@ const ConsultantPatientInfo = () => {
         fullName: newPatient.fullName,
         phoneNumber: newPatient.phoneNumber,
       };
-      await axios.post(
-        `${API_URL}/record/patient`,
-        patientForm,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.post(`${API_URL}/record/patient`, patientForm, {
+        headers: {
+          Authorization: token,
+        },
+      });
       setPatients([...patients, patientForm]);
     } catch (error) {
       console.error(error);
@@ -315,10 +311,11 @@ const ConsultantPatientInfo = () => {
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>
-                      {user.status === "Verified" ||
-                      user.status === "On Process" ? (
-                        <span>{user.status}</span>
-                      ) : null}{" "}
+                      {user.prcId
+                        ? user.verified
+                          ? "Verified"
+                          : "On Process"
+                        : "No ID Found"}{" "}
                     </td>
                   </>
                 )}
