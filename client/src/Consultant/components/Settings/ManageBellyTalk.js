@@ -195,8 +195,6 @@ const ManageBellyTalk = () => {
       .slice(1)
       .join("\n");
 
-    console.log(reportTitle);
-
     const newBook = {
       userId: userID,
       reviewedBy: user.name,
