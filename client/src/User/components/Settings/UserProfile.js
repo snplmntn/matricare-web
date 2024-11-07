@@ -519,17 +519,19 @@ const UserProfile = ({ user }) => {
                           : "In Progress"}
                       </p>
                     </div>
-                    <div className="user-profile-input-group">
-                      <p className="prc-verification-message">
-                        Please complete your account verification:
-                      </p>
-                      <button
-                        className="prc-verify-button"
-                        onClick={handleVerify}
-                      >
-                        VERIFY
-                      </button>
-                    </div>
+                    {!isVerified && (
+                      <div className="user-profile-input-group">
+                        <p className="prc-verification-message">
+                          Please complete your account verification:
+                        </p>
+                        <button
+                          className="prc-verify-button"
+                          onClick={handleVerify}
+                        >
+                          VERIFY
+                        </button>
+                      </div>
+                    )}
                   </>
                 )}
                 {role === "Patient" && (

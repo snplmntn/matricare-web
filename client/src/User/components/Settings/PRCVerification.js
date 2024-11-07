@@ -174,12 +174,19 @@ const PRCVerification = () => {
         }
       );
 
-      console.log(response.data)
-
       alert("Documents Submitted!");
       setSubmitted(true);
     } else {
       alert("Please complete both steps first");
+    }
+  };
+
+  const UploadIdFromFiles = async (e) => {
+    const file = e.target.files[0];
+    setSelectedImages([file]);
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setCapturedImageStep1(imageUrl);
     }
   };
 
@@ -251,8 +258,19 @@ const PRCVerification = () => {
                 <FaArrowLeft />
               </button>
               <h2>Take a Photo of Your ID</h2>
+
               <button className="prc-clip-button">
-                <FaPaperclip />
+                <input
+                  type="file"
+                  id="profileImage"
+                  className="user-profile-image-input"
+                  accept="image/*"
+                  onChange={UploadIdFromFiles}
+                  style={{ display: "none" }} // Hide the default file input
+                />
+                <label htmlFor="profileImage" style={{ cursor: "pointer" }}>
+                  <FaPaperclip />
+                </label>
               </button>
             </div>
             <div className="camera-container">
