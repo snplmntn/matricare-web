@@ -31,7 +31,7 @@ const UserProfile = ({ user }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   // const [profilePicture, setProfilePicture] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [prcIdFile, setPrcIdFile] = useState(null);
+  const [prcIdFile, setPrcIdFile] = useState([]);
   const [isVerified, setIsVerified] = useState(false);
 
   //user password
@@ -57,9 +57,8 @@ const UserProfile = ({ user }) => {
   };
 
   const handleVerify = () => {
-    navigate('/prc-verification');  // Navigate to /prc-verification
+    navigate("/prc-verification"); // Navigate to /prc-verification
   };
-
 
   const handleUploadPrcId = async () => {
     if (uploadedFile) {
@@ -358,85 +357,93 @@ const UserProfile = ({ user }) => {
         <h2>Personal</h2>
         <p>Patient's Information</p>
 
-        {!isEditing &&
-          !showPasswordSettings &&
-          !showBabyDetails && (
-            <div className="user-profile-items-wrapper">
-              <div className="user-profile-divider-wrapper">
-                <span className="UP-divider-text-wrapper">
-                  Personal Details
-                </span>
-              </div>
-              <div className="user-profile-item">
-                <label>Full Name:</label>
-                <p className="user-profile-detail">{fullname}</p>
-              </div>
-              <div className="user-profile-item">
-                <label>Email:</label>
-                <p className="user-profile-detail">{email}</p>
-              </div>
-              <div className="user-profile-item">
-                <label>Phone Number:</label>
-                <p className="user-profile-detail">{phoneNumber}</p>
-              </div>
-              <div className="user-profile-item">
-                <label>Birthdate:</label>
-                <p className="user-profile-detail">
-                  {birthday ? formatDate(birthday) : "N/A"}
-                </p>
-              </div>
-              <div className="user-profile-item">
-                <label>Address:</label>
-                <p className="user-profile-detail">
-                  {address ? address : "N/A"}
-                </p>
-              </div>
-              {role === "Ob-gyne Specialist" && (
-                <>
-                  <div className="user-profile-item">
-                    <label>Verified Status:</label>
-                    <p className="user-profile-detail">
-                      {!prcIdFile
-                        ? "No ID Found"
-                        : isVerified
-                        ? "Verified"
-                        : "In Progress"}
-                    </p>
-                  </div>
-                  <div className="user-profile-item">
-                    <label>PRC ID:</label>
-                    {prcIdFile && (
-                      <p className="user-profile-detail">
-                        <a
-                          href={prcIdFile}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          View File
-                        </a>
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
-              {role === "Patient" && (
-                <>
-                  <div className="user-profile-item">
-                    <label>Husband / Partner :</label>
-                    <p className="user-profile-detail">
-                      {partner ? partner : "N/A"}
-                    </p>
-                  </div>
-                  <div className="user-profile-item">
-                    <label>Phone Number:</label>
-                    <p className="user-profile-detail">
-                      {number ? number : "N/A"}
-                    </p>
-                  </div>
-                </>
-              )}
+        {!isEditing && !showPasswordSettings && !showBabyDetails && (
+          <div className="user-profile-items-wrapper">
+            <div className="user-profile-divider-wrapper">
+              <span className="UP-divider-text-wrapper">Personal Details</span>
             </div>
-          )}
+            <div className="user-profile-item">
+              <label>Full Name:</label>
+              <p className="user-profile-detail">{fullname}</p>
+            </div>
+            <div className="user-profile-item">
+              <label>Email:</label>
+              <p className="user-profile-detail">{email}</p>
+            </div>
+            <div className="user-profile-item">
+              <label>Phone Number:</label>
+              <p className="user-profile-detail">{phoneNumber}</p>
+            </div>
+            <div className="user-profile-item">
+              <label>Birthdate:</label>
+              <p className="user-profile-detail">
+                {birthday ? formatDate(birthday) : "N/A"}
+              </p>
+            </div>
+            <div className="user-profile-item">
+              <label>Address:</label>
+              <p className="user-profile-detail">{address ? address : "N/A"}</p>
+            </div>
+            {role === "Ob-gyne Specialist" && (
+              <>
+                <div className="user-profile-item">
+                  <label>Verified Status:</label>
+                  <p className="user-profile-detail">
+                    {!prcIdFile
+                      ? "No ID Found"
+                      : isVerified
+                      ? "Verified"
+                      : "In Progress"}
+                  </p>
+                </div>
+                <div className="user-profile-item">
+                  <label>PRC ID:</label>
+                  {prcIdFile && (
+                    <p className="user-profile-detail">
+                      <a
+                        href={prcIdFile[0]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View File
+                      </a>
+                    </p>
+                  )}
+                </div>
+                {prcIdFile && (
+                  <div className="user-profile-item">
+                    <label>Selfie with PRC ID:</label>
+                    <p className="user-profile-detail">
+                      <a
+                        href={prcIdFile[1]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View File
+                      </a>
+                    </p>
+                  </div>
+                )}
+              </>
+            )}
+            {role === "Patient" && (
+              <>
+                <div className="user-profile-item">
+                  <label>Husband / Partner :</label>
+                  <p className="user-profile-detail">
+                    {partner ? partner : "N/A"}
+                  </p>
+                </div>
+                <div className="user-profile-item">
+                  <label>Phone Number:</label>
+                  <p className="user-profile-detail">
+                    {number ? number : "N/A"}
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        )}
 
         {isEditing && (
           <>
@@ -513,8 +520,13 @@ const UserProfile = ({ user }) => {
                       </p>
                     </div>
                     <div className="user-profile-input-group">
-                      <p className="prc-verification-message">Please complete your account verification:</p>
-                      <button className="prc-verify-button" onClick={handleVerify}>
+                      <p className="prc-verification-message">
+                        Please complete your account verification:
+                      </p>
+                      <button
+                        className="prc-verify-button"
+                        onClick={handleVerify}
+                      >
                         VERIFY
                       </button>
                     </div>

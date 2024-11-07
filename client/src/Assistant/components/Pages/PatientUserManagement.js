@@ -269,6 +269,7 @@ const PatientUserManagement = () => {
                 <>
                   <th>Specialist Name</th>
                   <th>PRC ID</th>
+                  <th>Selfie with ID</th>
                   <th>Phone Number</th>
                   <th>Email Address</th>
                   <th>Verification Status</th>
@@ -337,7 +338,7 @@ const PatientUserManagement = () => {
                     <td>
                       {user.prcId ? (
                         <a
-                          href={user.prcId}
+                          href={user.prcId[0]}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
@@ -345,6 +346,19 @@ const PatientUserManagement = () => {
                         </a>
                       ) : (
                         "No ID Found"
+                      )}
+                    </td>
+                    <td>
+                      {user.prcId ? (
+                        <a
+                          href={user.prcId[1]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          View File
+                        </a>
+                      ) : (
+                        "No Selfie with ID Found"
                       )}
                     </td>
                     <td>{user.phoneNumber}</td>
