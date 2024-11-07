@@ -20,17 +20,12 @@ import Signup from "./User/components/Pages/Signup";
 import Login from "./User/components/Pages/Login";
 import ForgotPass from "./User/components/Pages/ForgotPass";
 import SavedPosts from "./User/components/Features/SavedPosts";
-import Article from "./User/components/Library/Article";
-import SavedArticle from "./User/components/Pages/SavedArticle";
-import Library from "./User/components/Features/Library";
-import LibrarySidebar from "./User/components/Features/LibrarySidebar";
 import Undefined from "./User/components/Pages/Undefined";
 import PRCVerification from "./User/components/Settings/PRCVerification.js";
 
 // Assistant Components
 import LandingPageAssistant from "./Assistant/components/Pages/LandingPageAssistant";
 import AssistantSidebar from "./Assistant/components/Pages/AssistantSidebar";
-import LibraryAssistant from "./Assistant/components/Features/LibraryAssistant";
 import PatientUserManagement from "./Assistant/components/Pages/PatientUserManagement";
 import AppointmentAssistant from "./Assistant/components/Features/AppointmentAssistant";
 
@@ -38,7 +33,6 @@ import AppointmentAssistant from "./Assistant/components/Features/AppointmentAss
 import LandingPageConsultant from "./Consultant/components/Pages/LandingPageConsultant";
 import ConsultantSidebar from "./Consultant/components/Pages/ConsultantSidebar";
 import AppointmentConsultant from "./Consultant/components/Features/AppointmentConsultant";
-import LibraryConsultant from "./Consultant/components/Features/LibraryConsultant";
 import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ManageBellyTalk from "./Consultant/components/Settings/ManageBellyTalk";
@@ -215,70 +209,6 @@ function AppContent() {
           }
         />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
-        <Route
-          path="/book/:bookId"
-          element={
-            token ? (
-              <>
-                <LibrarySidebar />
-                <Article />
-              </>
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
-          }
-        />
-        <Route
-          path="/library"
-          element={
-            token ? (
-              <>
-                <LibrarySidebar />
-                <Library />
-              </>
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
-          }
-        />
-        <Route
-          path="/book"
-          element={
-            token ? (
-              <>
-                <LibrarySidebar />
-                <Library />
-              </>
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
-          }
-        />
-        <Route
-          path="/savedarticle"
-          element={
-            token ? (
-              <>
-                <LibrarySidebar />
-                <SavedArticle />
-              </>
-            ) : (
-              <>
-                <Header1 />
-                <Login />
-              </>
-            )
-          }
-        />
 
         {/* CONSULTANT Routes */}
         <Route
@@ -349,19 +279,6 @@ function AppContent() {
             )
           }
         />
-        <Route
-          path="/library-consultant"
-          element={
-            token && role === "Obgyne" ? (
-              <>
-                <ConsultantSidebar />
-                <LibraryConsultant />
-              </>
-            ) : (
-              <Undefined />
-            )
-          }
-        />
 
         {/* Assistant Routes  */}
         <Route
@@ -384,19 +301,6 @@ function AppContent() {
               <>
                 <AssistantSidebar />
                 <UserLogs />
-              </>
-            ) : (
-              <Undefined />
-            )
-          }
-        />
-        <Route
-          path="/library-assistant"
-          element={
-            token && role === "Assistant" ? (
-              <>
-                <AssistantSidebar />
-                <LibraryAssistant />
               </>
             ) : (
               <Undefined />
