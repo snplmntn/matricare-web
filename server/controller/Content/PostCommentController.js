@@ -67,7 +67,7 @@ const comment_post = catchAsync(async (req, res, next) => {
         } else {
           await PostAnalytics.create({
             category: e,
-            posts: savedPost._id,
+            posts: commentPopulated.postId._id,
             comments: commentPopulated.postId.comments,
           });
         }
