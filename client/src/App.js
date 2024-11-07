@@ -25,6 +25,7 @@ import SavedArticle from "./User/components/Pages/SavedArticle";
 import Library from "./User/components/Features/Library";
 import LibrarySidebar from "./User/components/Features/LibrarySidebar";
 import Undefined from "./User/components/Pages/Undefined";
+import PRCVerification from "./User/components/Settings/PRCVerification.js";
 
 // Assistant Components
 import LandingPageAssistant from "./Assistant/components/Pages/LandingPageAssistant";
@@ -179,6 +180,19 @@ function AppContent() {
           element={
             token ? (
               <UserProfile user={parsedUser} />
+            ) : (
+              <>
+                <Header1 />
+                <Login />
+              </>
+            )
+          }
+        />
+        <Route
+          path="/prc-verification"
+          element={
+            token && role === "Ob-gyne Specialist" ? (
+              <PRCVerification />
             ) : (
               <>
                 <Header1 />

@@ -1,100 +1,202 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FaCamera, FaIdCard, FaArrowLeft, FaPaperclip } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
+import React, { useState, useRef, useEffect } from "react";
+import { FaCamera, FaIdCard, FaArrowLeft, FaPaperclip } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import "../../styles/settings/prcverification.css";
+import axios from "axios";
+import { getCookie } from "../../../utils/getCookie";
 
 const PRCVerification = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const token = getCookie("token");
+  const userID = getCookie("userID");
+
   const [step1Completed, setStep1Completed] = useState(false);
   const [step1Clicked, setStep1Clicked] = useState(false);
-  const [showCamera, setShowCamera] = useState(false);
   const [showStep2, setShowStep2] = useState(false);
-  const [submitted, setSubmitted] = useState(false); // New state to track submission
-  const videoRef = useRef(null); // Reference for the video element
-  const [cameraStream, setCameraStream] = useState(null); // To store the camera stream
+  const [submitted, setSubmitted] = useState(false);
+  const [capturedImageStep1, setCapturedImageStep1] = useState(null);
+  const [capturedImageStep2, setCapturedImageStep2] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const videoRefStep1 = useRef(null);
+  const videoRefStep2 = useRef(null);
+  const canvasRef = useRef(null);
+  const [cameraStreamStep1, setCameraStreamStep1] = useState(null);
+  const [cameraStreamStep2, setCameraStreamStep2] = useState(null);
 
-  const navigate = useNavigate(); // To handle navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (showCamera) {
-      // Request the camera
-      navigator.mediaDevices.getUserMedia({ video: true })
+    if (step1Clicked && !cameraStreamStep1) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
         .then((stream) => {
-          setCameraStream(stream); // Store the stream
-          if (videoRef.current) {
-            videoRef.current.srcObject = stream; // Attach the camera stream to the video element
+          setCameraStreamStep1(stream);
+          if (videoRefStep1.current) {
+            videoRefStep1.current.srcObject = stream;
           }
         })
         .catch((error) => {
-          console.error('Error accessing the camera:', error);
-          alert('Could not access the camera');
+          console.error("Error accessing the Step 1 camera:", error);
+          alert("Could not access the camera for Step 1");
         });
     }
 
-    // Cleanup the camera when the component unmounts or the camera is no longer needed
+    if (showStep2 && !cameraStreamStep2) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          setCameraStreamStep2(stream);
+          if (videoRefStep2.current) {
+            videoRefStep2.current.srcObject = stream;
+          }
+        })
+        .catch((error) => {
+          console.error("Error accessing the Step 2 camera:", error);
+          alert("Could not access the camera for Step 2");
+        });
+    }
+
     return () => {
-      if (cameraStream) {
-        const tracks = cameraStream.getTracks();
-        tracks.forEach(track => track.stop()); // Stop the camera stream
+      if (cameraStreamStep1) {
+        const tracks = cameraStreamStep1.getTracks();
+        tracks.forEach((track) => track.stop());
+      }
+      if (cameraStreamStep2) {
+        const tracks = cameraStreamStep2.getTracks();
+        tracks.forEach((track) => track.stop());
       }
     };
-  }, [showCamera, cameraStream]);
+  }, [step1Clicked, showStep2, cameraStreamStep1, cameraStreamStep2]);
 
   const handleStep1Click = () => {
-    setStep1Clicked(true); // Mark Step 1 as clicked
-    setShowCamera(true); // Start showing the camera
+    setStep1Clicked(true);
   };
 
   const handleStep2Click = () => {
-    setShowStep2(true); // Proceed to Step 2 (Take a Selfie)
-    setShowCamera(true); // Start showing the camera for Step 2
+    if (capturedImageStep1) setStep1Completed(true);
+    if (capturedImageStep1) {
+      setShowStep2(true);
+    } else {
+      alert("Please complete Step 1 first");
+    }
   };
 
-  const handleCameraCapture = () => {
-    if (videoRef.current) {
-      alert('ID Photo Taken!');
-      setStep1Completed(true); // Mark Step 1 as completed
-      setShowCamera(false); // Hide the camera after the photo is taken
+  // Convert data URL to Blob
+  const dataURLToBlob = (dataURL) => {
+    const byteString = atob(dataURL.split(",")[1]);
+    const mimeString = dataURL.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
     }
+    setSelectedImages((prev) => [
+      ...prev,
+      new Blob([ab], { type: mimeString }),
+    ]);
+    return new Blob([ab], { type: mimeString });
+  };
+  // Capture image and convert to Blob
+  const captureImage = (videoRef, setImageState) => {
+    const canvas = canvasRef.current;
+    if (canvas && videoRef.current) {
+      canvas.width = videoRef.current.videoWidth;
+      canvas.height = videoRef.current.videoHeight;
+      const context = canvas.getContext("2d");
+      context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+      const imageUrl = canvas.toDataURL("image/png");
+      dataURLToBlob(imageUrl); // Convert to Blob
+      setImageState(imageUrl); // Store the Blob instead of data URL
+    }
+  };
+  const handleCameraCaptureStep1 = () => {
+    captureImage(videoRefStep1, setCapturedImageStep1);
+    alert("ID Photo Taken for Step 1!");
+  };
+
+  const handleCameraCaptureStep2 = () => {
+    captureImage(videoRefStep2, setCapturedImageStep2);
+    alert("Selfie Taken for Step 2!");
   };
 
   const handleBackButtonClick = () => {
-    setShowCamera(false);
-    setStep1Clicked(false); // Reset Step 1 click state
-    setShowStep2(false); // Hide Step 2 if going back
-  };
-
-  const handleNextClick = () => {
-    if (step1Completed) {
-      setShowStep2(true);  // Make sure this is triggered when step1 is done
-    } else {
-      alert('Please complete Step 1 first');
-    }
-  };
-
-  const handleSubmit = () => {
-    setSubmitted(true); // Mark as submitted
+    setShowStep2(false);
+    setStep1Clicked(false);
   };
 
   const handleRedirect = () => {
-    navigate('/userprofile'); // Navigate to /userprofile when "Let's Go!" is clicked
+    navigate("/userprofile");
   };
 
   const handleBackToUserProfile = () => {
-    navigate('/userprofile'); // Navigate back to user profile
+    navigate("/userprofile");
+  };
+
+  const uploadPRCId = async () => {
+    if (selectedImages && selectedImages.length > 0) {
+      const formData = new FormData();
+
+      // Loop through each image in selectedImage array and append it to formData
+      selectedImages.forEach((image) => {
+        formData.append("document", image);
+      });
+
+      try {
+        const response = await axios.post(
+          `${API_URL}/upload/id?userId=${userID}`,
+          formData,
+          {
+            headers: {
+              Authorization: token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        return response.data.pictureLink;
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (capturedImageStep1 && capturedImageStep2) {
+      const prcId = await uploadPRCId();
+      const response = await axios.put(
+        `${API_URL}/user?userId=${userID}`,
+        {
+          prcId: prcId,
+        },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      console.log(response.data)
+
+      alert("Documents Submitted!");
+      setSubmitted(true);
+    } else {
+      alert("Please complete both steps first");
+    }
   };
 
   return (
     <div className="prc-verification-container">
-        <button className="prc-back" onClick={handleBackToUserProfile}>
+      <button className="prc-back" onClick={handleBackToUserProfile}>
         <FaArrowLeft />
       </button>
       <div className="prc-content">
-        {/* Show introductory content only when step1Clicked or step2Clicked is false */}
         {!submitted && !step1Clicked && !showStep2 && (
           <>
             <img src="img/logo3.png" alt="Logo" className="prc-logo" />
             <h1>Submit Documents</h1>
-            <p>We need to verify your information. <br />Please submit the documents below to process your verification.</p>
+            <p>
+              We need to verify your information. <br />
+              Please submit the documents below to process your verification.
+            </p>
 
             <div className="step-container" onClick={handleStep1Click}>
               <div className="step">
@@ -106,7 +208,10 @@ const PRCVerification = () => {
               </div>
             </div>
 
-            <div className="step-container clickable" onClick={handleStep2Click}>
+            <div
+              className="step-container clickable"
+              onClick={handleStep2Click}
+            >
               <div className="step">
                 <FaCamera className="step-icon" />
                 <div className="step-text-container">
@@ -118,22 +223,31 @@ const PRCVerification = () => {
           </>
         )}
 
-        {/* Thank you message section */}
         {submitted && (
           <div className="thank-you-message">
-            <img src="img/verification.png" alt="Logo" className="prc-verlogo" />
+            <img
+              src="img/verification.png"
+              alt="Logo"
+              className="prc-verlogo"
+            />
             <h1>Thank you!</h1>
-            <p>Your data is being processed and <br />you can already enjoy all the features of the application.</p>
+            <p>
+              Your data is being processed and <br />
+              you can already enjoy all the features of the application.
+            </p>
             <button className="prc-submit-button" onClick={handleRedirect}>
               Let's Go!
             </button>
           </div>
         )}
 
-        {showCamera && !showStep2 && (
+        {step1Clicked && !step1Completed && (
           <div className="camera-wrapper">
             <div className="camera-header">
-              <button className="prc-back-button" onClick={handleBackButtonClick}>
+              <button
+                className="prc-back-button"
+                onClick={handleBackButtonClick}
+              >
                 <FaArrowLeft />
               </button>
               <h2>Take a Photo of Your ID</h2>
@@ -142,19 +256,38 @@ const PRCVerification = () => {
               </button>
             </div>
             <div className="camera-container">
-              <video ref={videoRef} autoPlay width="100%" height="auto" />
+              {capturedImageStep1 ? (
+                <img
+                  src={capturedImageStep1}
+                  alt="Captured ID"
+                  width="100%"
+                  height="auto"
+                />
+              ) : (
+                <video
+                  ref={videoRefStep1}
+                  autoPlay
+                  width="100%"
+                  height="auto"
+                />
+              )}
             </div>
-            <button className="camera-button" onClick={handleCameraCapture}>
+            <button
+              className="camera-button"
+              onClick={handleCameraCaptureStep1}
+            >
               Capture Photo
             </button>
           </div>
         )}
 
-        {/* Show Camera for Step 2 */}
-        {showStep2 && (
+        {showStep2 && !submitted && (
           <div className="camera-wrapper">
             <div className="camera-header">
-              <button className="prc-back-button" onClick={handleBackButtonClick}>
+              <button
+                className="prc-back-button"
+                onClick={handleBackButtonClick}
+              >
                 <FaArrowLeft />
               </button>
               <h2>Upload Selfie with Your ID</h2>
@@ -163,30 +296,47 @@ const PRCVerification = () => {
               </button>
             </div>
             <div className="camera-container">
-              <video ref={videoRef} autoPlay width="100%" height="auto" />
+              {capturedImageStep2 ? (
+                <img
+                  src={capturedImageStep2}
+                  alt="Captured Selfie"
+                  width="100%"
+                  height="auto"
+                />
+              ) : (
+                <video
+                  ref={videoRefStep2}
+                  autoPlay
+                  width="100%"
+                  height="auto"
+                />
+              )}
             </div>
-            <button className="camera-button" onClick={handleCameraCapture}>
+            <button
+              className="camera-button"
+              onClick={handleCameraCaptureStep2}
+            >
               Capture Selfie
             </button>
           </div>
         )}
 
-        {/* Submit / Next button, only show when not submitted */}
         {!submitted && (
           <div className="prc-button-container">
             {!step1Completed && (
-              <button className="prc-submit-button" onClick={handleNextClick}>
+              <button className="prc-submit-button" onClick={handleStep2Click}>
                 {step1Clicked ? "Next" : "Submit"}
               </button>
             )}
 
-            {step1Completed && !showStep2 && (
+            {showStep2 && step1Completed && (
               <button className="prc-submit-button" onClick={handleSubmit}>
                 Submit
               </button>
             )}
           </div>
         )}
+        <canvas ref={canvasRef} style={{ display: "none" }}></canvas>
       </div>
     </div>
   );
