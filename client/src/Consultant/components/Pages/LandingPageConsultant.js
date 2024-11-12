@@ -83,9 +83,11 @@ const LandingPageConsultant = ({}) => {
             Authorization: token,
           },
         });
-        const today = new Date().toISOString().split("T")[0];
+        const fiveMinutesAgo = new Date(
+          Date.now() - 5 * 60 * 1000
+        ).toISOString();
         const newPatientsToday = response.data.filter(
-          (patient) => patient.createdAt.split("T")[0] === today
+          (patient) => patient.createdAt >= fiveMinutesAgo
         ).length;
         setNewPatients(newPatientsToday);
         setTotalPatients(response.data.length);
@@ -98,7 +100,6 @@ const LandingPageConsultant = ({}) => {
     fetchAppointment();
     fetchPatients();
   }, []);
-
 
   return (
     <div className="consultant-dashboard-container">
@@ -162,22 +163,22 @@ const LandingPageConsultant = ({}) => {
               </tr>
             </thead>
             <tbody>
-            {appointment &&
-              appointment.map((appt, index) => (
-                <tr key={index}>
-                  <td>{appt.patientName}</td>
-                  <td>{appt.location}</td>
-                  <td>{new Date(appt.date).toLocaleDateString()}</td>
-                  <td>
-                    {new Date(appt.date).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </td>
-                  <td>{appt.status}</td>
-                </tr>
-              ))}
-          </tbody>
+              {appointment &&
+                appointment.map((appt, index) => (
+                  <tr key={index}>
+                    <td>{appt.patientName}</td>
+                    <td>{appt.location}</td>
+                    <td>{new Date(appt.date).toLocaleDateString()}</td>
+                    <td>
+                      {new Date(appt.date).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </td>
+                    <td>{appt.status}</td>
+                  </tr>
+                ))}
+            </tbody>
           </table>
         </section>
       </main>
