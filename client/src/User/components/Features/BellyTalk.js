@@ -103,12 +103,44 @@ const BellyTalk = ({ user }) => {
     setIsOpen(!isOpen);
   };
 
+  function containsBadWord(text) {
+    const badWords = [
+      // English bad words (sample, and not exhaustive)
+      "damn", "hell", "bitch", "bastard", "crap", "shit", "asshole", "douche", "freaking", "fuck",
+      "fucked", "fucker", "fucking", "motherfucker", "prick", "dick", "dickhead", "piss", "pissed",
+      "slut", "whore", "cock", "suck", "retard", "loser", "idiot", "stupid",
+  
+      // Filipino bad words (sample, and not exhaustive)
+      "putangina", "gago", "tangina", "bobo", "puki", "kantot", "tanga", "tarantado", "ulol",
+      "inutil", "leche", "lintik", "bwisit", "siraulo", "pakshet", "hinayupak", "sagad", "hayop",
+      "kupal", "ulol", "sira", "pesteng yawa", "bwakanangina"
+  ];
+
+    text = text.toLowerCase();
+
+    for (const word of badWords) {
+        if (text.includes(word)) {
+            return true;  // Bad word found
+        }
+    }
+
+    return false;  // No bad words found
+}
+
+
+
   const handlePostSubmit = async () => {
     setIsPosting(true);
     if (newPostText.trim() === "") {
       setIsPosting(false);
       alert("Post content cannot be empty.");
       return;
+    }
+
+    if(containsBadWord(newPostText)) {
+      return alert(
+        "Post contains bad words. Please edit your post to remove bad words."
+      )
     }
 
     let imgLink;
