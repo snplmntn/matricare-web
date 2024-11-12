@@ -91,7 +91,7 @@ const ManageBellyTalk = () => {
 
     if (!categoryData) return null;
 
-    if (categoryData.Engagement < 1)
+    if (categoryData.Engagement < 2)
       return alert("Engagement requirements not reached for this action.");
 
     setShowReport(!showReport); // Toggle the visibility state of the report
@@ -151,7 +151,7 @@ const ManageBellyTalk = () => {
 
     if (!categoryData) return null;
 
-    if (categoryData.Engagement < 1)
+    if (categoryData.Engagement < 2)
       return alert("Engagement requirements not reached for this action.");
 
     // Add logic to add to library here
@@ -245,7 +245,7 @@ const ManageBellyTalk = () => {
     const categoryData = data.find((item) => item.name === selectedCategory);
     if (!categoryData) return;
 
-    if (categoryData.Engagement < 1)
+    if (categoryData.Engagement < 2)
       return alert("Engagement requirements not reached for this action.");
 
     let summary = "";
