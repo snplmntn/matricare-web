@@ -336,7 +336,7 @@ const PatientUserManagement = () => {
                   <>
                     <td>{user.fullName}</td>
                     <td>
-                      {user.prcId ? (
+                      {user.prcId && user.prcId.length > 0 ? (
                         <a
                           href={user.prcId[0]}
                           target="_blank"
@@ -349,7 +349,7 @@ const PatientUserManagement = () => {
                       )}
                     </td>
                     <td>
-                      {user.prcId ? (
+                      {user.prcId && user.prcId.length > 0 ? (
                         <a
                           href={user.prcId[1]}
                           target="_blank"
@@ -364,7 +364,7 @@ const PatientUserManagement = () => {
                     <td>{user.phoneNumber}</td>
                     <td>{user.email}</td>
                     <td>
-                      {user.prcId ? (
+                      {user.prcId && user.prcId.length > 0 ? (
                         <select
                           value={user.verified ? "Verified" : "On Process"}
                           onChange={(e) =>

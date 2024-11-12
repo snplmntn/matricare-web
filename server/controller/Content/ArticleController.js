@@ -39,6 +39,19 @@ const article_post = catchAsync(async (req, res, next) => {
   const newArticle = new Article(req.body);
 
   await newArticle.save();
+
+  if (newArticle.status === "Approved") {
+    const users = await User.find({}, "_id");
+    const recipientUserIds = users.map((user) => user._id);
+    const newNotification = await Notification.create({
+      senderName: `MatriCare`,
+      message: `New Article has been uploaded - ${newArticle.title}. Check It Out!`,
+      recipientUserId: recipientUserIds,
+    });
+
+    await newNotification.save();
+  }
+
   return res
     .status(200)
     .json({ message: "Article Successfully Created", newArticle });
@@ -65,12 +78,6 @@ const article_put = catchAsync(async (req, res, next) => {
   }
 
   if (updatedArticle.status === "Approved") {
-    await Notification.create({
-      senderName: `MatriCare`,
-      message: `The article that you submitted titled "${updatedArticle.title}" is approved.`,
-      recipientUserId: updatedArticle.userId,
-    });
-
     const users = await User.find({}, "_id");
     const recipientUserIds = users.map((user) => user._id);
     const newNotification = await Notification.create({
