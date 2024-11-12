@@ -131,6 +131,72 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     setOpenReply(!openReply);
   };
 
+  function containsBadWord(text) {
+    const badWords = [
+      "damn",
+      "hell",
+      "bitch",
+      "bastard",
+      "crap",
+      "shit",
+      "asshole",
+      "douche",
+      "freaking",
+      "fuck",
+      "fucked",
+      "fucker",
+      "fucking",
+      "motherfucker",
+      "prick",
+      "dick",
+      "dickhead",
+      "piss",
+      "pissed",
+      "slut",
+      "whore",
+      "cock",
+      "suck",
+      "retard",
+      "loser",
+      "idiot",
+      "stupid",
+
+      "putangina",
+      "gago",
+      "tangina",
+      "bobo",
+      "puki",
+      "kantot",
+      "tanga",
+      "tarantado",
+      "ulol",
+      "inutil",
+      "leche",
+      "lintik",
+      "bwisit",
+      "siraulo",
+      "pakshet",
+      "hinayupak",
+      "sagad",
+      "hayop",
+      "kupal",
+      "ulol",
+      "sira",
+      "pesteng yawa",
+      "bwakanangina",
+    ];
+
+    text = text.toLowerCase();
+
+    for (const word of badWords) {
+      if (text.includes(word)) {
+        return true; // Bad word found
+      }
+    }
+
+    return false; // No bad words found
+  }
+
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       handleCommentPost();
@@ -143,7 +209,13 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     }
 
     if (commentText.trim() === "") {
-      return; // Prevent posting empty content
+      return alert("Comment cannot be empty."); // Prevent posting empty content
+    }
+
+    if (containsBadWord(commentText)) {
+      return alert(
+        "Comment contains bad words. Please edit your post to remove bad words."
+      );
     }
 
     try {

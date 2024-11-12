@@ -105,29 +105,69 @@ const BellyTalk = ({ user }) => {
 
   function containsBadWord(text) {
     const badWords = [
-      // English bad words (sample, and not exhaustive)
-      "damn", "hell", "bitch", "bastard", "crap", "shit", "asshole", "douche", "freaking", "fuck",
-      "fucked", "fucker", "fucking", "motherfucker", "prick", "dick", "dickhead", "piss", "pissed",
-      "slut", "whore", "cock", "suck", "retard", "loser", "idiot", "stupid",
-  
-      // Filipino bad words (sample, and not exhaustive)
-      "putangina", "gago", "tangina", "bobo", "puki", "kantot", "tanga", "tarantado", "ulol",
-      "inutil", "leche", "lintik", "bwisit", "siraulo", "pakshet", "hinayupak", "sagad", "hayop",
-      "kupal", "ulol", "sira", "pesteng yawa", "bwakanangina"
-  ];
+      "damn",
+      "hell",
+      "bitch",
+      "bastard",
+      "crap",
+      "shit",
+      "asshole",
+      "douche",
+      "freaking",
+      "fuck",
+      "fucked",
+      "fucker",
+      "fucking",
+      "motherfucker",
+      "prick",
+      "dick",
+      "dickhead",
+      "piss",
+      "pissed",
+      "slut",
+      "whore",
+      "cock",
+      "suck",
+      "retard",
+      "loser",
+      "idiot",
+      "stupid",
+
+      "putangina",
+      "gago",
+      "tangina",
+      "bobo",
+      "puki",
+      "kantot",
+      "tanga",
+      "tarantado",
+      "ulol",
+      "inutil",
+      "leche",
+      "lintik",
+      "bwisit",
+      "siraulo",
+      "pakshet",
+      "hinayupak",
+      "sagad",
+      "hayop",
+      "kupal",
+      "ulol",
+      "sira",
+      "pesteng yawa",
+      "bwakanangina",
+    ];
 
     text = text.toLowerCase();
 
     for (const word of badWords) {
-        if (text.includes(word)) {
-            return true;  // Bad word found
-        }
+      if (text.includes(word)) {
+        return true; // Bad word found
+      }
     }
 
-    return false;  // No bad words found
-}
-
-
+    return false; // No bad words found
+  }
 
   const handlePostSubmit = async () => {
     setIsPosting(true);
@@ -137,10 +177,11 @@ const BellyTalk = ({ user }) => {
       return;
     }
 
-    if(containsBadWord(newPostText)) {
+    if (containsBadWord(newPostText)) {
+      setIsPosting(false);
       return alert(
         "Post contains bad words. Please edit your post to remove bad words."
-      )
+      );
     }
 
     let imgLink;
@@ -219,7 +260,6 @@ const BellyTalk = ({ user }) => {
       if (response.data.length === 0) setShowLoading(false);
       else CheckToFetchMore();
       setLoading(false);
-
     } catch (error) {
       console.error(error);
     }
