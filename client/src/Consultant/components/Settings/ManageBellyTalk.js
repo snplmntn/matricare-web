@@ -43,6 +43,7 @@ const ManageBellyTalk = () => {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [open, setOpen] = useState(false);
   const [showReport, setShowReport] = useState(false);
+  const [isFetchingReport, setIsFetchingReport] = useState(false);
   const [reportData, setReportData] = useState("");
   const [reportTitle, setReportTitle] = useState("");
   const [showLibrary, setShowLibrary] = useState(false);
@@ -98,6 +99,7 @@ const ManageBellyTalk = () => {
 
     // Add logic to view report here
     if (!reportData) {
+      setIsFetchingReport(true);
       const summaryResponse = await axios.get(
         `${API_URL}/analytics/article?category=${encodeURIComponent(
           selectedCategory
@@ -109,14 +111,80 @@ const ManageBellyTalk = () => {
         }
       );
 
-      if (summaryResponse.data.article) {
-        setReportData(
-          `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
-        );
-        setReportTitle(
-          summaryResponse.data.article.title.replace(/^#+\s*/, "")
-        );
-        setShowReport(!showReport); // Toggle the visibility state
+      if (summaryResponse.data) {
+        if (
+          summaryResponse.data.article &&
+          summaryResponse.data.article.engagement === categoryData.Engagement
+        ) {
+          setReportData(
+            `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
+          );
+          setReportTitle(
+            summaryResponse.data.article.title.replace(/^#+\s*/, "")
+          );
+          setIsFetchingReport(false);
+        } else {
+          // Start the `toSummarize` structure
+          const toSummarize = {
+            category: selectedCategory, // Selected category (e.g., Health & Wellness)
+            posts: categoryData.PostContent.map((content, index) => {
+              return {
+                content, // Post content
+                comments: categoryData.PostComments[index], // Associated comments
+              };
+            }),
+          };
+
+          const response = await axios.post(
+            `${OPENAI_URL}/article`,
+            toSummarize,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+
+          let summary = response.data.summary;
+          const title = summary.split("\n")[0]; // Extract the first line as the title
+          summary = summary.split("\n").slice(1).join("\n"); // Remove the first line from the summary
+
+          const generatedArticleToSave = {
+            engagement: categoryData.Engagement,
+            title: title,
+            fullTitle: title,
+            content: summary,
+            category: selectedCategory,
+          };
+
+          if (summaryResponse.data.article) {
+            await axios.put(
+              `${API_URL}/analytics/article?category=${encodeURIComponent(
+                selectedCategory
+              )}`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          } else {
+            await axios.post(
+              `${API_URL}/analytics/article`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          }
+          setReportData(response.data.summary);
+          setReportTitle(title);
+          setIsFetchingReport(false);
+          // setShowReport(!showReport);
+        }
       }
     }
   };
@@ -158,6 +226,7 @@ const ManageBellyTalk = () => {
     setShowLibrary(!showLibrary);
 
     if (!reportData) {
+      setIsFetchingReport(true);
       const summaryResponse = await axios.get(
         `${API_URL}/analytics/article?category=${encodeURIComponent(
           selectedCategory
@@ -169,13 +238,79 @@ const ManageBellyTalk = () => {
         }
       );
 
-      if (summaryResponse.data.article) {
-        setReportData(
-          `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
-        );
-        setReportTitle(
-          summaryResponse.data.article.title.replace(/^#+\s*/, "")
-        );
+      if (summaryResponse.data) {
+        if (
+          summaryResponse.data.article &&
+          summaryResponse.data.article.engagement === categoryData.Engagement
+        ) {
+          setReportData(
+            `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`
+          );
+          setReportTitle(
+            summaryResponse.data.article.title.replace(/^#+\s*/, "")
+          );
+          setIsFetchingReport(false);
+        } else {
+          // Start the `toSummarize` structure
+          const toSummarize = {
+            category: selectedCategory, // Selected category (e.g., Health & Wellness)
+            posts: categoryData.PostContent.map((content, index) => {
+              return {
+                content, // Post content
+                comments: categoryData.PostComments[index], // Associated comments
+              };
+            }),
+          };
+
+          const response = await axios.post(
+            `${OPENAI_URL}/article`,
+            toSummarize,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+
+          let summary = response.data.summary;
+          const title = summary.split("\n")[0]; // Extract the first line as the title
+          summary = summary.split("\n").slice(1).join("\n"); // Remove the first line from the summary
+
+          const generatedArticleToSave = {
+            engagement: categoryData.Engagement,
+            title: title,
+            fullTitle: title,
+            content: summary,
+            category: selectedCategory,
+          };
+
+          if (summaryResponse.data.article) {
+            await axios.put(
+              `${API_URL}/analytics/article?category=${encodeURIComponent(
+                selectedCategory
+              )}`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          } else {
+            await axios.post(
+              `${API_URL}/analytics/article`,
+              generatedArticleToSave,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+          }
+          setReportData(response.data.summary);
+          setReportTitle(title);
+          setIsFetchingReport(false);
+        }
       }
     }
   };
@@ -186,6 +321,7 @@ const ManageBellyTalk = () => {
   };
 
   const handleAddToLibrary = async () => {
+    if (reportData.trim() === "") return alert("No available report");
     if (!imageToUpload) return alert("Please select a cover image");
     const bookCover = await uploadBookCover();
 
@@ -719,8 +855,10 @@ const ManageBellyTalk = () => {
           </DialogTitle>
           <DialogContent>
             <Typography variant="body1">
-              {reportData ? (
+              {reportData && !isFetchingReport ? (
                 <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
+              ) : isFetchingReport ? (
+                "Fetching Report..."
               ) : (
                 "No report available"
               )}
@@ -823,8 +961,10 @@ const ManageBellyTalk = () => {
                 </Button>
               </div>
             )}
-            {reportData ? (
+            {reportData && !isFetchingReport ? (
               <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
+            ) : isFetchingReport ? (
+              "Fetching Report..."
             ) : (
               "No report available"
             )}
