@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/pages/forgotpass.css";
 import Modal from "react-modal";
@@ -35,10 +35,52 @@ export default function ForgotPassword() {
     return `${visibleNamePart}${censoredNamePart}@${visibleDomainPart}${censoredDomainPart}`;
   };
 
+  const inputRefs = useRef([]); // Array to store input references
+
+  const handleInputChange = (e, index) => {
+    const { value } = e.target;
+    const newCode = [...verificationCode];
+
+    // Allow only valid hexadecimal characters (0-9, A-F)
+    if (/^[0-9A-Fa-f]$/.test(value)) {
+      newCode[index] = value.toUpperCase(); // Store uppercase for consistency
+      setVerificationCode(newCode);
+
+      // Move to the next input if not the last input
+      if (index < inputRefs.current.length - 1 && value) {
+        inputRefs.current[index + 1].focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    const newCode = [...verificationCode];
+
+    if (e.key === "Backspace") {
+      if (newCode[index]) {
+        // Clear the current input
+        newCode[index] = "";
+        setVerificationCode(newCode);
+      } else if (index > 0) {
+        // Move to the previous input and clear that input
+        inputRefs.current[index - 1].focus();
+        newCode[index - 1] = "";
+        setVerificationCode(newCode);
+      }
+    }
+  };
+
   const handleCodeSubmission = () => {
     setAuthMessage("");
 
-    if (verifyToken === verificationCode.toUpperCase()) {
+    if (verificationCode.length !== 6) {
+      setAuthMessage("Verification code must be 6 digits long.");
+      return;
+    }
+
+    const joinedCode = verificationCode.join("");
+
+    if (verifyToken === joinedCode) {
       setAuthMessage("Verification Successful!");
       setIsChangePassword(true);
 
@@ -123,10 +165,7 @@ export default function ForgotPassword() {
       const passwordObj = {
         password: newPassword,
       };
-      await axios.put(
-        `${API_URL}/auth/recover?userId=${userId}`,
-        passwordObj
-      );
+      await axios.put(`${API_URL}/auth/recover?userId=${userId}`, passwordObj);
       setPasswordError("Password changed successfully! Please Login.");
 
       setTimeout(() => {
@@ -249,11 +288,9 @@ export default function ForgotPassword() {
                 className="Authentication__CodeInput"
                 maxLength={1}
                 value={verificationCode[index] || ""}
-                onChange={(e) => {
-                  const newCode = (verificationCode || "").toString().split("");
-                  newCode[index] = e.target.value; // Allow any character input
-                  setVerificationCode(newCode.join(""));
-                }}
+                onChange={(e) => handleInputChange(e, index)}
+                onKeyDown={(e) => handleKeyDown(e, index)}
+                ref={(input) => (inputRefs.current[index] = input)}
               />
             ))}
           </div>
