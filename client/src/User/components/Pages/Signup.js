@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Updated import
 import axios from "axios";
-// import { URL } from "../../../App";
+import Modal from "react-modal";
 import "../../styles/pages/signup.css";
+import { BsPatchCheckFill } from "react-icons/bs";
+import { getCookie } from "../../../utils/getCookie";
+import { useCookies } from "react-cookie";
 
 export default function Signup() {
   const [formData, setFormData] = useState({
@@ -18,6 +21,17 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [success, setSuccess] = useState("");
+
+  // Verification Modal
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [authMessage, setAuthMessage] = useState("");
+  const [verificationCode, setVerificationCode] = useState(
+    new Array(6).fill("")
+  );
+  const inputRefs = useRef([]); // Array to store input references
+  const [verifyToken, setVerifyToken] = useState("");
+  const [cookies, setCookie, removeCookie] = useCookies();
+
   const API_URL = process.env.REACT_APP_API_URL;
 
   const {
@@ -32,6 +46,73 @@ export default function Signup() {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleInputChange = (e, index) => {
+    const { value } = e.target;
+    const newCode = [...verificationCode];
+
+    // Allow only valid hexadecimal characters (0-9, A-F)
+    if (/^[0-9A-Fa-f]$/.test(value)) {
+      newCode[index] = value.toUpperCase(); // Store uppercase for consistency
+      setVerificationCode(newCode);
+
+      // Move to the next input if not the last input
+      if (index < inputRefs.current.length - 1 && value) {
+        inputRefs.current[index + 1].focus();
+      }
+    }
+  };
+
+  const handleKeyDown = (e, index) => {
+    const newCode = [...verificationCode];
+
+    if (e.key === "Backspace") {
+      if (newCode[index]) {
+        // Clear the current input
+        newCode[index] = "";
+        setVerificationCode(newCode);
+      } else if (index > 0) {
+        // Move to the previous input and clear that input
+        inputRefs.current[index - 1].focus();
+        newCode[index - 1] = "";
+        setVerificationCode(newCode);
+      }
+    }
+  };
+
+  const handleCodeSubmission = () => {
+    setAuthMessage("");
+
+    if (verificationCode.length !== 6) {
+      setAuthMessage("Verification code must be 6 digits long.");
+      return;
+    }
+
+    const expiryTimestamp = parseInt(getCookie("expiryTimestamp"), 10);
+
+    if (!expiryTimestamp) {
+      setAuthMessage("Verification code has expired. Please Sign up again.");
+      return;
+    }
+
+    const joinedCode = verificationCode.join("");
+
+    if (verifyToken === joinedCode.toUpperCase()) {
+      setAuthMessage("Verification Successful!");
+
+      setTimeout(() => {
+        setShowVerificationModal(false);
+      }, 1000);
+      submitUser();
+      // handleRedirectToApp();
+    } else {
+      setAuthMessage("Invalid verification code. Please try again.");
+    }
+
+    setTimeout(() => {
+      setAuthMessage("");
+    }, 3000);
   };
 
   const validateForm = () => {
@@ -77,14 +158,31 @@ export default function Signup() {
     return true;
   };
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const sendEmail = async () => {
     setError("");
     setSuccess("");
 
-    if (!validateForm()) return; // Validate form before sending
+    try {
+      const emailResponse = await axios.put(
+        `${API_URL}/verify?email=${email}&fullName=${fullName}`
+      );
+      setVerifyToken(emailResponse.data.verificationToken);
+      setSuccess("Email sent! Please check your inbox.");
+      const expiryTime = Date.now() + 5 * 60 * 1000; // 5 minutes in milliseconds
+      setCookie("expiryTimestamp", expiryTime, { path: "/", maxAge: 5 * 60 }); // Setting cookie with maxAge
+      setLoading(false);
+      setShowVerificationModal(true);
+    } catch (error) {
+      setVerifyToken("");
+      setError("Failed to send verification email. Please try again.");
+      setLoading(false);
+      console.error("Failed to send verification email:", error);
+    }
+  };
 
-    setLoading(true);
+  const submitUser = async () => {
+    setError("");
+    setSuccess("");
 
     try {
       const newUser = {
@@ -96,7 +194,7 @@ export default function Signup() {
       };
 
       if (obGyneSpecialist) newUser.role = "Ob-gyne Specialist";
-      const response = await axios.post(`${API_URL}/auth/signup`, newUser);
+      await axios.post(`${API_URL}/auth/signup`, newUser);
 
       setSuccess("Registration successful! Redirecting to login...");
 
@@ -117,9 +215,37 @@ export default function Signup() {
           ? err.response.data.message
           : "Signup error. Please try again."
       );
+      setVerifyToken("");
+      setVerificationCode(new Array(6).fill(""));
     } finally {
       setLoading(false); // End loading state
     }
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!validateForm()) return; // Validate form before sending
+
+    setLoading(true);
+
+    if (!verifyToken) {
+      await sendEmail();
+      return;
+    } else {
+      submitUser();
+    }
+  };
+
+  const censorEmail = (email) => {
+    const [name, domain] = email.split("@");
+    const visibleNamePart = name.slice(0, 3);
+    const censoredNamePart = "*".repeat(Math.max(name.length - 3, 0));
+    const visibleDomainPart = domain.slice(0, 1);
+    const censoredDomainPart = "*".repeat(Math.max(domain.length - 1, 0));
+    return `${visibleNamePart}${censoredNamePart}@${visibleDomainPart}${censoredDomainPart}`;
   };
 
   return (
@@ -257,6 +383,50 @@ export default function Signup() {
           </div>
         </form>
       </div>
+
+      <Modal
+        isOpen={showVerificationModal}
+        onRequestClose={() => setShowVerificationModal(false)}
+        className="Authentication__Content"
+        overlayClassName="Authentication__Overlay"
+      >
+        <div className="Authentication__Icon">
+          <BsPatchCheckFill />
+        </div>
+        <h2 className="Authentication__Title">Confirm your Email</h2>
+        <p className="Authentication__Subtitle">
+          {authMessage ? (
+            authMessage
+          ) : (
+            <>
+              Please type the verification code sent to{" "}
+              <strong>{email && censorEmail(email)}</strong>.
+            </>
+          )}
+        </p>
+
+        <div className="Authentication__CodeWrapper">
+          {[...Array(6)].map((_, index) => (
+            <input
+              key={index}
+              type="text"
+              className="Authentication__CodeInput"
+              maxLength={1}
+              value={verificationCode[index] || ""}
+              onChange={(e) => handleInputChange(e, index)}
+              onKeyDown={(e) => handleKeyDown(e, index)}
+              ref={(input) => (inputRefs.current[index] = input)}
+            />
+          ))}
+        </div>
+
+        <button
+          className="Authentication__Button Authentication__SubmitButton"
+          onClick={handleCodeSubmission}
+        >
+          Submit
+        </button>
+      </Modal>
     </div>
   );
 }

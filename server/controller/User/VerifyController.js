@@ -12,18 +12,26 @@ const createVerificationToken = (length) => {
 
 // Send Verification Email
 const verification_mail = catchAsync(async (req, res, next) => {
-  const { userId } = req.query;
+  const { userId, email, fullName } = req.query;
 
   //Generate Token
   const verificationToken = createVerificationToken(3).toUpperCase();
 
-  const user = await User.findByIdAndUpdate(
-    userId,
-    { token: verificationToken },
-    { new: true }
-  );
+  let user;
 
-  if (!user) return next(new AppError("User not found", 404));
+  if (userId) {
+    user = await User.findByIdAndUpdate(
+      userId,
+      { token: verificationToken },
+      { new: true }
+    );
+
+    if (!user) return next(new AppError("User not found", 404));
+  } else if (email) {
+    user = new User({ email, fullName });
+  } else {
+    return next(new AppError("Invalid request", 400));
+  }
 
   const transporter = nodemailer.createTransport({
     host: "smtp.zoho.com",
