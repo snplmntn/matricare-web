@@ -6,7 +6,7 @@ import Modal from "react-modal";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
-import { CookiesProvider, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 
 export default function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -88,7 +88,6 @@ export default function Login() {
   };
 
   const handleCodeSubmission = () => {
-    setAuthMessage("");
     setAuthMessage("");
     let userID = getCookie("userID");
 
