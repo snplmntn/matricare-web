@@ -12,11 +12,6 @@ const notificationSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["Unread", "Read"],
-      default: "Unread",
-    },
     category: {
       type: String,
       enum: ["Article", "Appointment"],
@@ -24,6 +19,7 @@ const notificationSchema = new mongoose.Schema(
     },
     senderId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     recipientUserId: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: true,

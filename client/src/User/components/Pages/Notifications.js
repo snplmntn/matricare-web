@@ -21,16 +21,22 @@ function Notifications() {
     setIsModalOpen(true);
 
     try {
-      const response = await axios.put(
-        `${API_URL}/user/n?id=${notification._id}`,
-        {
-          status: "Read",
-        },
+      await axios.put(
+        `${API_URL}/user/n?id=${notification._id}&userId=${userID}`,
+        {},
         {
           headers: {
             Authorization: token,
           },
         }
+      );
+      // Update the notification status locally
+      setNotification((prevNotifications) =>
+        prevNotifications.map((notif) =>
+          notif._id === notification._id
+            ? { ...notif, readBy: [notif.readBy, userID] }
+            : notif
+        )
       );
     } catch (error) {
       console.error(error);
@@ -100,7 +106,9 @@ function Notifications() {
             {notification.map((notification, index) => (
               <div
                 key={index}
-                className={`notification-container info`}
+                className={`notification-container info ${
+                  !notification.readBy.includes(userID) && "notification-unread"
+                }`}
                 onClick={() => handleNotificationClick(notification)}
               >
                 <div className="notification-content">
