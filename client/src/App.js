@@ -28,6 +28,7 @@ import LandingPageAssistant from "./Assistant/components/Pages/LandingPageAssist
 import AssistantSidebar from "./Assistant/components/Pages/AssistantSidebar";
 import PatientUserManagement from "./Assistant/components/Pages/PatientUserManagement";
 import AppointmentAssistant from "./Assistant/components/Features/AppointmentAssistant";
+import UserLogs from "./Assistant/components/Pages/UserLogs.js";
 
 // Consultant Components
 import LandingPageConsultant from "./Consultant/components/Pages/LandingPageConsultant";
@@ -36,7 +37,6 @@ import AppointmentConsultant from "./Consultant/components/Features/AppointmentC
 import PatientRecords from "./Consultant/components/Settings/PatientRecords";
 import ConsultantPatientInfo from "./Consultant/components/Settings/ConsultantPatientInfo";
 import ManageBellyTalk from "./Consultant/components/Settings/ManageBellyTalk";
-import UserLogs from "./Assistant/components/Pages/UserLogs.js";
 
 function AppContent() {
   const API_URL = process.env.REACT_APP_API_URL;
