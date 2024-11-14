@@ -80,13 +80,14 @@ const user_signup = catchAsync(async (req, res, next) => {
 
   if (user.role === "Patient") {
     const userCount = await Patient.find().countDocuments();
+    const yearToday = new Date().getFullYear();
 
     await Patient.create({
       fullName,
       email,
       phoneNumber,
       userId: user._id,
-      seq: userCount + 1,
+      seq: `${yearToday} - ${userCount + 1}`,
     });
   }
 
