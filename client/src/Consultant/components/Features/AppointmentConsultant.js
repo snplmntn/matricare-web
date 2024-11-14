@@ -15,7 +15,7 @@ const AppointmentConsultant = () => {
     email: "",
     location: "",
     category: "",
-    status: "Pending",
+    status: "Confirmed",
   });
   const [user, setUser] = useState({});
 
@@ -223,7 +223,7 @@ const AppointmentConsultant = () => {
       patientName: "",
       location: "",
       category: "",
-      status: "pending",
+      status: "Confirmed",
     });
   };
 
@@ -467,7 +467,6 @@ const AppointmentConsultant = () => {
                         }}
                       >
                         <option value="Confirmed">Confirmed</option>
-                        <option value="Pending">Pending</option>
                         <option value="Rescheduled">Reschedule</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>
