@@ -15,7 +15,7 @@ const AppointmentConsultant = () => {
     email: "",
     location: "",
     category: "",
-    status: "Pending",
+    status: "Confirmed",
   });
   const [user, setUser] = useState({});
 
@@ -108,7 +108,7 @@ const AppointmentConsultant = () => {
 
       // Check if the selected date's day is in the available days for the selected location
       if (!availableDays || !availableDays[selectedDay]) {
-        alert("There's no available schedule.");
+        alert("There's no available doctor for this date.");
         setTimeOptions([]); // Clear time options if no availability
       } else {
         // Set available times for the selected day
@@ -223,7 +223,7 @@ const AppointmentConsultant = () => {
       patientName: "",
       location: "",
       category: "",
-      status: "pending",
+      status: "Confirmed",
     });
   };
 
@@ -467,7 +467,6 @@ const AppointmentConsultant = () => {
                         }}
                       >
                         <option value="Confirmed">Confirmed</option>
-                        <option value="Pending">Pending</option>
                         <option value="Rescheduled">Reschedule</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>

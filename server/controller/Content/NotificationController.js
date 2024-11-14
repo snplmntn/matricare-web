@@ -25,11 +25,23 @@ const notification_get = catchAsync(async (req, res, next) => {
 });
 
 const notification_put = catchAsync(async (req, res, next) => {
-  const updatedNotification = await Notification.findByIdAndUpdate(
-    req.query.id,
-    { $set: req.body },
-    { new: true }
-  );
+  const { id, userId } = req.query;
+
+  let updatedNotification;
+
+  if (userId) {
+    updatedNotification = await Notification.findByIdAndUpdate(
+      id,
+      { $push: { readBy: userId } },
+      { new: true }
+    );
+  } else {
+    updatedNotification = await Notification.findByIdAndUpdate(
+      id,
+      { $set: req.body },
+      { new: true }
+    );
+  }
 
   if (!updatedNotification) {
     return next(new AppError("Notification not found", 404));

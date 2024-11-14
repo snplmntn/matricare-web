@@ -19,7 +19,10 @@ const patientSchema = new mongoose.Schema(
       enum: ["Active", "Inactive"],
       default: "Active",
     },
-    seq: Number,
+    seq: {
+      type: String,
+      index: "text",
+    },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   {

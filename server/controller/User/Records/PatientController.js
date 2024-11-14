@@ -33,7 +33,8 @@ const patient_post = catchAsync(async (req, res, next) => {
     return next(new AppError("Patient is not a registered user!", 404));
 
   const userCount = await Patient.find().countDocuments();
-  req.body.seq = userCount + 1;
+  const yearToday = new Date().getFullYear();
+  req.body.seq = `${yearToday} - ${userCount + 1}`;
   req.body.userId = user._id;
   req.body.profilePicture = user.profilePicture;
 
