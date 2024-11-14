@@ -108,7 +108,7 @@ const AppointmentConsultant = () => {
 
       // Check if the selected date's day is in the available days for the selected location
       if (!availableDays || !availableDays[selectedDay]) {
-        alert("There's no available schedule.");
+        alert("There's no available doctor for this date.");
         setTimeOptions([]); // Clear time options if no availability
       } else {
         // Set available times for the selected day
