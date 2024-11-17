@@ -20,26 +20,30 @@ function Notifications() {
     setSelectedNotification(notification);
     setIsModalOpen(true);
 
-    try {
-      await axios.put(
-        `${API_URL}/user/n?id=${notification._id}&userId=${userID}`,
-        {},
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      // Update the notification status locally
-      setNotification((prevNotifications) =>
-        prevNotifications.map((notif) =>
-          notif._id === notification._id
-            ? { ...notif, readBy: [notif.readBy, userID] }
-            : notif
-        )
-      );
-    } catch (error) {
-      console.error(error);
+    if (!notification.readBy.includes(userID)) {
+      try {
+        await axios.put(
+          `${API_URL}/user/n?id=${notification._id}&userId=${userID}`,
+          {},
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        // Update the notification status locally
+        setNotification((prevNotifications) =>
+          prevNotifications.map((notif) =>
+            notif._id === notification._id
+              ? { ...notif, readBy: [notif.readBy, userID] }
+              : notif
+          )
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      return;
     }
   };
 
@@ -178,7 +182,12 @@ function Notifications() {
             <div className="modal-notification-time">
               {new Date(selectedNotification.createdAt).toLocaleString()}
             </div>
-            <div className="message-bubble">
+            <div
+              className={`message-bubble ${
+                !selectedNotification.readBy.includes(userID) &&
+                "message-unread"
+              }`}
+            >
               <p className="notification-message">
                 {selectedNotification.message}
               </p>
