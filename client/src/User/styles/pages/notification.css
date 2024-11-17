@@ -164,11 +164,15 @@
 }
 
 .message-bubble {
-  background-color: #9a6cb46c;
   border-radius: 15px;
   padding: 15px;
   margin-top: 20px;
   border-radius: 20px 20px 20px 0;
+  border: 1px solid #e0e0e0;
+}
+
+.message-unread {
+  background-color: #9a6cb46c;
 }
 
 .modal-sender-photo {
