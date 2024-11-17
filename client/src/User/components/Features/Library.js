@@ -7,7 +7,6 @@ import "slick-carousel/slick/slick-theme.css";
 import { IoSearch } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
-import Article from "../Library/Article";
 
 const sliderSettings = {
   dots: true,

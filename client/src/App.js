@@ -20,6 +20,10 @@ import Signup from "./User/components/Pages/Signup";
 import Login from "./User/components/Pages/Login";
 import ForgotPass from "./User/components/Pages/ForgotPass";
 import SavedPosts from "./User/components/Features/SavedPosts";
+import Article from "./User/components/Library/Article";
+import SavedArticle from "./User/components/Pages/SavedArticle";
+import Library from "./User/components/Features/Library";
+import LibrarySidebar from "./User/components/Features/LibrarySidebar";
 import Undefined from "./User/components/Pages/Undefined";
 import PRCVerification from "./User/components/Settings/PRCVerification.js";
 
@@ -209,6 +213,45 @@ function AppContent() {
           }
         />
         <Route path="/belly-talk" element={<BellyTalk user={parsedUser} />} />
+        <Route
+          path="/book/:bookId"
+          element={
+            token && role === "Ob-gyne Specialist" ? (
+              <>
+                <LibrarySidebar />
+                <Article />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/library"
+          element={
+            token && role === "Ob-gyne Specialist" ? (
+              <>
+                <LibrarySidebar />
+                <Library />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
+        <Route
+          path="/savedarticle"
+          element={
+            token && role === "Ob-gyne Specialist" ? (
+              <>
+                <LibrarySidebar />
+                <SavedArticle />
+              </>
+            ) : (
+              <Undefined />
+            )
+          }
+        />
 
         {/* CONSULTANT Routes */}
         <Route
