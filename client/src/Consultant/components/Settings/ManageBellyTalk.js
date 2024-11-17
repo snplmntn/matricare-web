@@ -183,7 +183,6 @@ const ManageBellyTalk = () => {
           setReportData(response.data.summary);
           setReportTitle(title);
           setIsFetchingReport(false);
-          // setShowReport(!showReport);
         }
       }
     }
@@ -308,7 +307,7 @@ const ManageBellyTalk = () => {
             );
           }
           setReportData(response.data.summary);
-          setReportTitle(title);
+          setReportTitle(title.replace(/^#+\s*/, ""));
           setIsFetchingReport(false);
         }
       }
