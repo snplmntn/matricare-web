@@ -238,9 +238,17 @@ export default function Signup() {
       submitUser();
     }
   };
-
   const censorEmail = (email) => {
+    if (!email || typeof email !== "string" || !email.includes("@")) {
+      return email || "";
+    }
+
     const [name, domain] = email.split("@");
+
+    if (!name || !domain) {
+      return email;
+    }
+
     const visibleNamePart = name.slice(0, 3);
     const censoredNamePart = "*".repeat(Math.max(name.length - 3, 0));
     const visibleDomainPart = domain.slice(0, 1);

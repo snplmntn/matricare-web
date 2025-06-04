@@ -1,4 +1,4 @@
-import React, { Fragment, useRef, useEffect } from "react";
+import React, { Fragment, useRef, useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -46,6 +46,7 @@ function AppContent() {
   const API_URL = process.env.REACT_APP_API_URL;
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies();
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const parsedUser = useRef({});
   const token = cookies.token;
   const role = cookies.role;
@@ -54,7 +55,7 @@ function AppContent() {
 
   useEffect(() => {
     async function checkToken() {
-      if (token) {
+      if (token && !isRedirecting) {
         try {
           await axios.get(`${API_URL}/user?userId=${userID}`, {
             headers: {
@@ -64,25 +65,41 @@ function AppContent() {
         } catch (err) {
           console.error(err);
 
-          removeCookie("token");
-          removeCookie("userID");
-          removeCookie("verifyToken");
-          removeCookie("role");
-          localStorage.removeItem("userData");
-          localStorage.removeItem("address");
-          localStorage.removeItem("email");
-          localStorage.removeItem("events");
-          localStorage.removeItem("userData");
-          localStorage.removeItem("phoneNumber");
-          localStorage.removeItem("profileImageUrl");
-          localStorage.removeItem("savedArticles");
-          localStorage.removeItem("userName");
-          window.location.href = "/";
+          if (!isRedirecting) {
+            setIsRedirecting(true);
+
+            removeCookie("token");
+            removeCookie("userID");
+            removeCookie("verifyToken");
+            removeCookie("role");
+            localStorage.removeItem("userData");
+            localStorage.removeItem("address");
+            localStorage.removeItem("email");
+            localStorage.removeItem("events");
+            localStorage.removeItem("userData");
+            localStorage.removeItem("phoneNumber");
+            localStorage.removeItem("profileImageUrl");
+            localStorage.removeItem("savedArticles");
+            localStorage.removeItem("userName");
+
+            // Only redirect if not already on public pages
+            const currentPath = window.location.pathname;
+            if (
+              currentPath !== "/" &&
+              currentPath !== "/login" &&
+              currentPath !== "/signup"
+            ) {
+              navigate("/login");
+            }
+
+            // Reset flag after a delay
+            setTimeout(() => setIsRedirecting(false), 1000);
+          }
         }
       }
     }
     checkToken();
-  }, []);
+  }, [token, userID, API_URL, navigate, removeCookie, isRedirecting]);
 
   useEffect(() => {
     if (userData) {
