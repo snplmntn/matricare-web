@@ -483,9 +483,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             className={`text-[18px] sm:text-[20px] cursor-pointer transition-colors duration-200 ${
               isLikedByMe ? "text-[#e39fa9]" : "text-[#9a6cb4]"
             } hover:text-[#e39fa9]`}
-            onClick={() => {
-              setIsLikedByMe(!isLikedByMe);
-              // handlePostLike logic here
+            onClick={async () => {
+              await handlePostLike();
+              console.log("Like result:", isLikedByMe);
             }}
           />
           {likesCount > 0 && (
@@ -497,8 +497,9 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             className={`text-[18px] sm:text-[20px] cursor-pointer transition-colors duration-200 ${
               isSavedByMe ? "text-[#e39fa9]" : "text-[#9a6cb4]"
             } hover:text-[#e39fa9]`}
-            onClick={() => {
-              // handleSave logic here
+            onClick={async () => {
+              await handleSave();
+              console.log("Save result:", isSavedByMe);
             }}
           />
         </div>
@@ -513,7 +514,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
               className="w-full md:w-[60%] p-2 border-none bg-transparent text-xs sm:text-sm absolute -mt-10 z-10"
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  // handleCommentPost logic here
+                  handleKeyPress();
                 }
               }}
             />
