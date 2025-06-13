@@ -23,7 +23,6 @@ import DownloadIcon from "@mui/icons-material/Download";
 import ReportIcon from "@mui/icons-material/Description";
 import LibraryAddIcon from "@mui/icons-material/LibraryAdd";
 import CloseIcon from "@mui/icons-material/Close";
-import "../../styles/settings/managebellytalk.css";
 import { jsPDF } from "jspdf";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
@@ -49,28 +48,22 @@ const ManageBellyTalk = () => {
   const [showLibrary, setShowLibrary] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageToUpload, setImageToUpload] = useState(null);
-  const [bookCover, setBookCover] = useState("");
 
-  const handleCloseModal = () => {
-    // Your logic to close the modal, e.g., setShowLibrary(false)
-    setShowLibrary(false);
-  };
+  const handleCloseModal = () => setShowLibrary(false);
 
   const handleFileChange = (event) => {
-    const file = event.target.files[0]; // Get the first file
-    setImageToUpload(event.target.files[0]); // Set the image to upload
+    const file = event.target.files[0];
+    setImageToUpload(file);
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedImage(reader.result); // Set the image preview
-      };
-      reader.readAsDataURL(file); // Read the file as a data URL (base64 encoded)
+      reader.onloadend = () => setSelectedImage(reader.result);
+      reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveImage = () => {
-    setSelectedImage(null); // Clear the selected image
-    setImageToUpload(null); // Clear the image to upload
+    setSelectedImage(null);
+    setImageToUpload(null);
   };
 
   const handleCardClick = (category) => {
@@ -87,28 +80,20 @@ const ManageBellyTalk = () => {
 
   const handleViewReports = async () => {
     if (!selectedCategory) return null;
-
     const categoryData = data.find((item) => item.name === selectedCategory);
-
     if (!categoryData) return null;
-
     if (categoryData.Engagement < 2)
       return alert("Engagement requirements not reached for this action.");
 
-    setShowReport(!showReport); // Toggle the visibility state of the report
+    setShowReport(!showReport);
 
-    // Add logic to view report here
     if (!reportData) {
       setIsFetchingReport(true);
       const summaryResponse = await axios.get(
         `${API_URL}/analytics/article?category=${encodeURIComponent(
           selectedCategory
         )}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
+        { headers: { Authorization: token } }
       );
 
       if (summaryResponse.data) {
@@ -124,30 +109,23 @@ const ManageBellyTalk = () => {
           );
           setIsFetchingReport(false);
         } else {
-          // Start the `toSummarize` structure
           const toSummarize = {
-            category: selectedCategory, // Selected category (e.g., Health & Wellness)
-            posts: categoryData.PostContent.map((content, index) => {
-              return {
-                content, // Post content
-                comments: categoryData.PostComments[index], // Associated comments
-              };
-            }),
+            category: selectedCategory,
+            posts: categoryData.PostContent.map((content, index) => ({
+              content,
+              comments: categoryData.PostComments[index],
+            })),
           };
 
           const response = await axios.post(
             `${OPENAI_URL}/article`,
             toSummarize,
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
+            { headers: { Authorization: token } }
           );
 
           let summary = response.data.summary;
-          const title = summary.split("\n")[0]; // Extract the first line as the title
-          summary = summary.split("\n").slice(1).join("\n"); // Remove the first line from the summary
+          const title = summary.split("\n")[0];
+          summary = summary.split("\n").slice(1).join("\n");
 
           const generatedArticleToSave = {
             engagement: categoryData.Engagement,
@@ -163,21 +141,13 @@ const ManageBellyTalk = () => {
                 selectedCategory
               )}`,
               generatedArticleToSave,
-              {
-                headers: {
-                  Authorization: token,
-                },
-              }
+              { headers: { Authorization: token } }
             );
           } else {
             await axios.post(
               `${API_URL}/analytics/article`,
               generatedArticleToSave,
-              {
-                headers: {
-                  Authorization: token,
-                },
-              }
+              { headers: { Authorization: token } }
             );
           }
           setReportData(response.data.summary);
@@ -213,15 +183,11 @@ const ManageBellyTalk = () => {
 
   const handleShowAddToLibrary = async () => {
     if (!selectedCategory) return null;
-
     const categoryData = data.find((item) => item.name === selectedCategory);
-
     if (!categoryData) return null;
-
     if (categoryData.Engagement < 2)
       return alert("Engagement requirements not reached for this action.");
 
-    // Add logic to add to library here
     setShowLibrary(!showLibrary);
 
     if (!reportData) {
@@ -230,11 +196,7 @@ const ManageBellyTalk = () => {
         `${API_URL}/analytics/article?category=${encodeURIComponent(
           selectedCategory
         )}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
+        { headers: { Authorization: token } }
       );
 
       if (summaryResponse.data) {
@@ -250,30 +212,23 @@ const ManageBellyTalk = () => {
           );
           setIsFetchingReport(false);
         } else {
-          // Start the `toSummarize` structure
           const toSummarize = {
-            category: selectedCategory, // Selected category (e.g., Health & Wellness)
-            posts: categoryData.PostContent.map((content, index) => {
-              return {
-                content, // Post content
-                comments: categoryData.PostComments[index], // Associated comments
-              };
-            }),
+            category: selectedCategory,
+            posts: categoryData.PostContent.map((content, index) => ({
+              content,
+              comments: categoryData.PostComments[index],
+            })),
           };
 
           const response = await axios.post(
             `${OPENAI_URL}/article`,
             toSummarize,
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
+            { headers: { Authorization: token } }
           );
 
           let summary = response.data.summary;
-          const title = summary.split("\n")[0]; // Extract the first line as the title
-          summary = summary.split("\n").slice(1).join("\n"); // Remove the first line from the summary
+          const title = summary.split("\n")[0];
+          summary = summary.split("\n").slice(1).join("\n");
 
           const generatedArticleToSave = {
             engagement: categoryData.Engagement,
@@ -289,21 +244,13 @@ const ManageBellyTalk = () => {
                 selectedCategory
               )}`,
               generatedArticleToSave,
-              {
-                headers: {
-                  Authorization: token,
-                },
-              }
+              { headers: { Authorization: token } }
             );
           } else {
             await axios.post(
               `${API_URL}/analytics/article`,
               generatedArticleToSave,
-              {
-                headers: {
-                  Authorization: token,
-                },
-              }
+              { headers: { Authorization: token } }
             );
           }
           setReportData(response.data.summary);
@@ -353,8 +300,8 @@ const ManageBellyTalk = () => {
       console.error(err);
     }
 
-    setSelectedImage(null); // Clear the selected image
-    setImageToUpload(null); // Clear the image to upload
+    setSelectedImage(null);
+    setImageToUpload(null);
     alert("Book added to library successfully");
     setShowLibrary(!showLibrary);
     handleClose();
@@ -362,11 +309,8 @@ const ManageBellyTalk = () => {
 
   const renderDetails = () => {
     if (!selectedCategory) return null;
-
     const categoryData = data.find((item) => item.name === selectedCategory);
-
     if (!categoryData) return null;
-
     return (
       <>
         <Typography>Engagement: {categoryData.Engagement}</Typography>
@@ -389,11 +333,7 @@ const ManageBellyTalk = () => {
         `${API_URL}/analytics/article?category=${encodeURIComponent(
           selectedCategory
         )}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
+        { headers: { Authorization: token } }
       );
 
       if (summaryResponse.data) {
@@ -403,30 +343,23 @@ const ManageBellyTalk = () => {
         ) {
           summary = `${summaryResponse.data.article.title}\n${summaryResponse.data.article.content}`;
         } else {
-          // Start the `toSummarize` structure
           const toSummarize = {
-            category: selectedCategory, // Selected category (e.g., Health & Wellness)
-            posts: categoryData.PostContent.map((content, index) => {
-              return {
-                content, // Post content
-                comments: categoryData.PostComments[index], // Associated comments
-              };
-            }),
+            category: selectedCategory,
+            posts: categoryData.PostContent.map((content, index) => ({
+              content,
+              comments: categoryData.PostComments[index],
+            })),
           };
 
           const response = await axios.post(
             `${OPENAI_URL}/article`,
             toSummarize,
-            {
-              headers: {
-                Authorization: token,
-              },
-            }
+            { headers: { Authorization: token } }
           );
 
           summary = response.data.summary;
-          const title = summary.split("\n")[0]; // Extract the first line as the title
-          summary = summary.split("\n").slice(1).join("\n"); // Remove the first line from the summary
+          const title = summary.split("\n")[0];
+          summary = summary.split("\n").slice(1).join("\n");
 
           const generatedArticleToSave = {
             engagement: categoryData.Engagement,
@@ -442,24 +375,15 @@ const ManageBellyTalk = () => {
                 selectedCategory
               )}`,
               generatedArticleToSave,
-              {
-                headers: {
-                  Authorization: token,
-                },
-              }
+              { headers: { Authorization: token } }
             );
           } else {
             await axios.post(
               `${API_URL}/analytics/article`,
               generatedArticleToSave,
-              {
-                headers: {
-                  Authorization: token,
-                },
-              }
+              { headers: { Authorization: token } }
             );
           }
-          // Re assign the summary to include title
           summary = response.data.summary;
         }
       }
@@ -502,24 +426,20 @@ const ManageBellyTalk = () => {
       doc.setDrawColor(0);
       doc.line(lineStartX, lineY, lineEndX, lineY);
 
-      // Header
       doc.setFontSize(20);
       doc.setFont("Times", "bold");
       const headerX = categoryX;
       doc.text(selectedCategory, headerX, 40);
 
-      // Date
       doc.setFontSize(12);
       doc.setFont("Times", "normal");
       const dateText = `Date: ${new Date().toLocaleDateString()}`;
       const dateY = 50;
       doc.text(dateText, headerX, dateY);
 
-      // Date Line
       const dateLineY = dateY + 10;
       doc.line(headerX, dateLineY, 200, dateLineY);
 
-      // Engagement Overview
       doc.setFontSize(12);
       doc.setFont("Times", "bold");
       const overviewTitle = "Engagement Overview";
@@ -549,24 +469,20 @@ const ManageBellyTalk = () => {
         doc.setFontSize(18);
         doc.setFont("Times", "bold");
 
-        // Get the count text
         const countText = item.count.toString();
         const countWidth = doc.getTextWidth(countText);
         const centeredCountX = currentX + (countXOffset - countWidth) / 2;
 
-        // Draw count
         doc.text(countText, centeredCountX, countY);
 
-        // Reset color for label
         doc.setTextColor(0, 0, 0);
-        doc.setFontSize(12); // Set back to the default size for labels
+        doc.setFontSize(12);
         doc.setFont("Times", "normal");
 
         const labelText = item.label;
         const labelWidth = doc.getTextWidth(labelText);
         const centeredLabelX = currentX + (countXOffset - labelWidth) / 2;
 
-        // Draw label
         doc.text(labelText, centeredLabelX, labelY);
       });
 
@@ -574,7 +490,6 @@ const ManageBellyTalk = () => {
       doc.setDrawColor(0);
       doc.line(headerX, engagementLineY, 200, engagementLineY);
 
-      // Position for the summary
       const summaryYStart = engagementLineY + 10;
       const summaryX = headerX;
       doc.setFont("Times", "bold");
@@ -590,19 +505,18 @@ const ManageBellyTalk = () => {
       summaryLines.forEach((line, index) => {
         if (currentY > 280) {
           doc.addPage();
-          currentY = 20; // Reset Y position for new page
+          currentY = 20;
         }
         doc.text(line, summaryX, currentY);
-        currentY += 7; // Increment Y position for next line
+        currentY += 7;
       });
 
-      // Add footer with a horizontal line above the page number
       const pageCount = doc.internal.getNumberOfPages();
       for (let i = 1; i <= pageCount; i++) {
         doc.setPage(i);
         doc.setFontSize(10);
-        const footerY = 290; // Y position for the footer
-        doc.line(10, footerY - 5, 200, footerY - 5); // Draw line above the page number
+        const footerY = 290;
+        doc.line(10, footerY - 5, 200, footerY - 5);
         doc.text(
           `Page ${i} of ${pageCount}`,
           190,
@@ -613,7 +527,6 @@ const ManageBellyTalk = () => {
         );
       }
 
-      // Save the PDF
       doc.save(`${selectedCategory}_data.pdf`);
     };
   };
@@ -621,14 +534,10 @@ const ManageBellyTalk = () => {
   async function fetchPosts() {
     try {
       const response = await axios.get(`${API_URL}/analytics`, {
-        headers: {
-          Authorization: token,
-        },
+        headers: { Authorization: token },
       });
 
       const formattedData = {};
-
-      // Define the categories you want to initialize
       const categoriesList = [
         "Health & Wellness",
         "Finance & Budgeting",
@@ -638,7 +547,6 @@ const ManageBellyTalk = () => {
         "Labor & Delivery",
       ];
 
-      // Initialize all categories to zero counts
       categoriesList.forEach((category) => {
         formattedData[category] = {
           name: category,
@@ -650,40 +558,29 @@ const ManageBellyTalk = () => {
         };
       });
 
-      // Check if posts data exists
       if (response.data && response.data.category) {
-        // Process each post in the response
         response.data.category.forEach((list) => {
           const categories = Array.isArray(list.category)
             ? list.category
             : [list.category];
 
           categories.forEach((category) => {
-            // If the category exists in formattedData, update its values
             if (formattedData[category]) {
-              // Increment counts for the category
-
               formattedData[category].Engagement +=
                 list.posts.length + list.comments.length;
-
               formattedData[category].Posts += list.posts
                 ? list.posts.length
                 : 0;
               formattedData[category].Discussions += list.comments
                 ? list.comments.length
                 : 0;
-
-              // Append the content of the post to the array
               if (list.posts && Array.isArray(list.posts)) {
-                // Append the content of each post to the array
                 formattedData[category].PostContent.push(
                   list.posts.map((posts) => posts.content)
                 );
               } else {
                 formattedData[category].PostContent.push([]);
               }
-
-              // Append the comments if any, otherwise push an empty array
               if (list.comments && Array.isArray(list.comments)) {
                 formattedData[category].PostComments.push(
                   list.comments.map((comment) => comment.content)
@@ -695,124 +592,115 @@ const ManageBellyTalk = () => {
           });
         });
       }
-      setData(Object.values(formattedData)); // Set the accumulated data for Recharts
+      setData(Object.values(formattedData));
     } catch (error) {
       console.error("Error fetching posts data: ", error);
     }
   }
   useEffect(() => {
     const userData = localStorage.getItem("userData");
-
     if (userData) {
       const parsedUserData = JSON.parse(userData);
       setUser(parsedUserData);
     }
-    fetchPosts(); // Fetch data on component mount
+    fetchPosts();
   }, []);
 
   return (
-    <Box className="manage-bellytalk-container">
-      <Box className="manage-bellytalk-main-container">
-        <h2>BellyTalk Dashboard</h2>
+    <div
+      className="flex h-screen w-[89%] ml-[200px] bg-[#9a6cb4] font-['Lucida_Sans','Lucida_Sans_Regular','Lucida_Grande','Lucida_Sans_Unicode',Geneva,Verdana,sans-serif]
+      max-[1100px]:flex-col max-[1100px]:ml-0 max-[1100px]:w-full max-[1100px]:h-auto "
+    >
+      <main
+        className="flex-grow p-5 bg-white/90 rounded-l-[50px]
+        max-[1100px]:rounded-none max-[1100px]:w-full max-[1100px]:pt-16"
+      >
+        <h2 className="text-[28px] font-bold mb-[50px] text-center text-[#333] mt-5 max-[600px]:text-[20px] max-[600px]:mb-6">
+          BellyTalk Dashboard
+        </h2>
 
-        <div className="manage-bellytalk-category-cards">
-          <div
-            className="manage-bellytalk-category-card health"
-            onClick={() => handleCardClick("Health & Wellness")}
-          >
+        <div className="grid grid-cols-3 gap-5 mb-10 max-[900px]:grid-cols-2">
+          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9DC3E2] hover:-translate-y-1 hover:shadow-lg">
             Health & Wellness
           </div>
-          <div
-            className="manage-bellytalk-category-card finance"
-            onClick={() => handleCardClick("Finance & Budgeting")}
-          >
+          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#e39fa9] hover:-translate-y-1 hover:shadow-lg">
             Finance & Budgeting
           </div>
-          <div
-            className="manage-bellytalk-category-card parenting"
-            onClick={() => handleCardClick("Parenting & Family")}
-          >
+          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9a6cb4af] hover:-translate-y-1 hover:shadow-lg">
             Parenting & Family
           </div>
-          <div
-            className="manage-bellytalk-category-card essentials"
-            onClick={() => handleCardClick("Baby’s Essentials")}
-          >
+          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#e39fa9] hover:-translate-y-1 hover:shadow-lg">
             Baby's Essentials
           </div>
-          <div
-            className="manage-bellytalk-category-card exercise"
-            onClick={() => handleCardClick("Exercise & Fitness")}
-          >
+          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9a6cb4af] hover:-translate-y-1 hover:shadow-lg">
             Exercise & Fitness
           </div>
-          <div
-            className="manage-bellytalk-category-card labor"
-            onClick={() => handleCardClick("Labor & Delivery")}
-          >
+          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9DC3E2] hover:-translate-y-1 hover:shadow-lg">
             Labor & Delivery
           </div>
         </div>
 
         {/* Recharts Bar Graph */}
-        <Box className="manage-bellytalk-chart">
-          <Typography variant="h5">Category Engagement Overview</Typography>
-          <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="Posts" fill="#9DC3E2" />
-              <Bar dataKey="Engagement" fill="#e39fa9" />
-              <Bar dataKey="Discussions" fill="#9a6cb4af" />
-            </BarChart>
-          </ResponsiveContainer>
-        </Box>
-      </Box>
+        <div className="mt-12 bg-white p-6 rounded-[12px] shadow-md max-[600px]:mt-6">
+          <h3 className="text-[22px] font-bold mb-5 text-[#333] text-center max-[900px]:text-[18px] max-[600px]:text-[14px]">
+            Category Engagement Overview
+          </h3>
+          <div className="w-full h-[400px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart
+                data={data}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="Posts" fill="#9DC3E2" />
+                <Bar dataKey="Engagement" fill="#e39fa9" />
+                <Bar dataKey="Discussions" fill="#9a6cb4af" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </main>
 
+      {/* Category Modal */}
       <Dialog open={open} onClose={handleClose}>
         <DialogActions></DialogActions>
         <DialogTitle>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Typography className="dialog-title-text">
+          <div className="flex items-center justify-between">
+            <span className="text-[20px] text-[#7c459c] border-l-4 border-[#7c459c] pl-2">
               {selectedCategory}
-            </Typography>
-            <IconButton onClick={handleClose} className="dialog-close-button">
+            </span>
+            <IconButton
+              onClick={handleClose}
+              className="!absolute !right-[-25px] !top-[-40px] text-[#7c459c]"
+            >
               <CloseIcon />
             </IconButton>
-          </Box>
+          </div>
         </DialogTitle>
-        <DialogContent>{renderDetails()}</DialogContent>
-        <div className="dialog-button-container">
+        <DialogContent>
+          <div className="text-left mt-5 ml-4 leading-6">{renderDetails()}</div>
+        </DialogContent>
+        <div className="flex gap-6 items-center px-6 pb-6">
           <Button
             onClick={handleDownload}
-            className="dialog-download-button"
+            className="!text-[#7c459c] whitespace-nowrap"
             startIcon={<DownloadIcon />}
           >
             Download
           </Button>
-
           <Button
             onClick={handleViewReports}
-            className="dialog-download-button"
+            className="!text-[#7c459c] whitespace-nowrap"
             startIcon={<ReportIcon />}
           >
             {showReport ? "Hide Reports" : "View Reports"}
           </Button>
-
           <Button
-            className="dialog-download-button"
+            className="!text-[#7c459c] whitespace-nowrap"
             onClick={handleShowAddToLibrary}
             startIcon={<LibraryAddIcon />}
           >
@@ -820,24 +708,26 @@ const ManageBellyTalk = () => {
           </Button>
         </div>
       </Dialog>
+
+      {/* Report Modal */}
       {showReport && (
         <Dialog
           open={showReport}
           onClose={handleViewReports}
           sx={{
             "& .MuiDialog-paper": {
-              width: "80%", // Adjust the width
-              maxHeight: "80%", // Adjust the max height
-              height: "800px", // Adjust the height of the dialog
+              width: "80%",
+              maxHeight: "80%",
+              height: "800px",
             },
             "& .MuiDialogContent-root": {
-              maxHeight: "60vh", // Set max height for content
-              overflowY: "auto", // Make it scrollable
+              maxHeight: "60vh",
+              overflowY: "auto",
             },
           }}
         >
           <DialogTitle>
-            <Typography variant="h6">Reports</Typography>
+            <span className="text-lg font-bold">Reports</span>
             <IconButton
               edge="end"
               color="inherit"
@@ -853,7 +743,7 @@ const ManageBellyTalk = () => {
             </IconButton>
           </DialogTitle>
           <DialogContent>
-            <Typography variant="body1">
+            <div className="text-base">
               {reportData && !isFetchingReport ? (
                 <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
               ) : isFetchingReport ? (
@@ -861,29 +751,30 @@ const ManageBellyTalk = () => {
               ) : (
                 "No report available"
               )}
-            </Typography>
+            </div>
           </DialogContent>
         </Dialog>
       )}
 
+      {/* Add to Library Modal */}
       {showLibrary && (
         <Dialog
           open={showLibrary}
           onClose={handleCloseModal}
           sx={{
             "& .MuiDialog-paper": {
-              width: "80%", // Adjust the width
-              maxHeight: "80%", // Adjust the max height
-              height: "800px", // Adjust the height of the dialog
+              width: "80%",
+              maxHeight: "80%",
+              height: "800px",
             },
             "& .MuiDialogContent-root": {
-              maxHeight: "60vh", // Set max height for content
-              overflowY: "auto", // Make it scrollable
+              maxHeight: "60vh",
+              overflowY: "auto",
             },
           }}
         >
           <DialogTitle>
-            <Typography variant="h6">Add to Library</Typography>
+            <span className="text-lg font-bold">Add to Library</span>
             <IconButton
               edge="end"
               color="inherit"
@@ -901,72 +792,41 @@ const ManageBellyTalk = () => {
           <DialogContent>
             <label
               htmlFor="cover-image-input"
-              style={{
-                fontSize: "16px",
-                fontWeight: "bold",
-                marginBottom: "10px",
-                display: "block", // Make the label block-level so it appears above the input
-              }}
+              className="block font-bold text-[16px] mb-2"
             >
               Choose a Cover image
             </label>
-
             <input
               type="file"
-              id="cover-image-input" // Associating the input with the label
+              id="cover-image-input"
               accept="image/*"
               onChange={handleFileChange}
-              style={{
-                marginTop: "10px",
-                display: "block", // Ensures input is on its own line
-              }}
+              className="block mt-2"
             />
-
-            {/* Show image preview if an image is selected */}
             {selectedImage && (
-              <div style={{ position: "relative", marginTop: "20px" }}>
+              <div className="relative mt-5 flex justify-center">
                 <img
                   src={selectedImage}
                   alt="Preview"
-                  style={{
-                    maxWidth: "30%",
-                    height: "auto",
-                    display: "block",
-                    margin: "0 auto",
-                  }}
+                  className="max-w-[30%] h-auto mx-auto"
                 />
-
-                {/* Close button */}
                 <Button
                   onClick={handleRemoveImage}
-                  style={{
-                    position: "absolute",
-                    top: "5px",
-                    right: "195px",
-                    backgroundColor: "rgba(0, 0, 0, 0.5)",
-                    color: "white",
-                    borderRadius: "50%",
-                    padding: "5px",
-                    minWidth: "0",
-                    height: "25px",
-                    width: "25px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    fontSize: "16px",
-                  }}
+                  className="!absolute !top-2 !right-2 !bg-black/50 !text-white !rounded-full !p-1 !min-w-0 !h-[25px] !w-[25px] flex items-center justify-center text-[16px]"
                 >
                   ×
                 </Button>
               </div>
             )}
-            {reportData && !isFetchingReport ? (
-              <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
-            ) : isFetchingReport ? (
-              "Fetching Report..."
-            ) : (
-              "No report available"
-            )}
+            <div className="mt-4 text-base">
+              {reportData && !isFetchingReport ? (
+                <ReactMarkdown>{reportData.toString()}</ReactMarkdown>
+              ) : isFetchingReport ? (
+                "Fetching Report..."
+              ) : (
+                "No report available"
+              )}
+            </div>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseModal} color="primary">
@@ -978,7 +838,7 @@ const ManageBellyTalk = () => {
           </DialogActions>
         </Dialog>
       )}
-    </Box>
+    </div>
   );
 };
 

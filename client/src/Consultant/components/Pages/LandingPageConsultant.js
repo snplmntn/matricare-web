@@ -29,11 +29,11 @@ const LandingPageConsultant = ({}) => {
 
   const formatDate = (date) => {
     const d = new Date(date);
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); // Format as YYYY-MM-DD
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   };
 
   useEffect(() => {
-    const formattedDate = formatDate(date); // Apply the new formatting
+    const formattedDate = formatDate(date);
     const todaysAppointments = allAppointment.filter(
       (appt) => formatDate(appt.date) === formattedDate
     );
@@ -102,109 +102,195 @@ const LandingPageConsultant = ({}) => {
   }, []);
 
   return (
-    <div className="consultant-dashboard-container">
-      <main className="consultant-main-content">
-        <section className="consultant-greeting-section">
-          <div className="consultant-greeting-text">
-            <h2>Good Morning,</h2>
-            <h3>{`Doctor ${user.name?.split(" ")[0]}`}</h3>
-            <p>Have a nice day at work</p>
+    <div
+      className="flex h-screen w-[89%] ml-[200px] bg-[#9a6cb4] font-['Lucida_Sans','Lucida_Sans_Regular','Lucida_Grande','Lucida_Sans_Unicode',Geneva,Verdana,sans-serif]
+      max-[1100px]:flex-col max-[1100px]:ml-0 max-[1100px]:w-full max-[1100px]:h-auto  max-[1100px]:pt-8"
+    >
+      <main
+        className="flex-grow p-5 bg-white/90 rounded-l-[50px]
+        max-[1100px]:rounded-none max-[1100px]:w-full max-[1100px]:p-2"
+      >
+        {/* Greeting Section */}
+        <section
+          className="flex rounded-[20px] mb-5 ml-[50px] h-[150px] w-[950px] mt-[80px] items-center justify-between px-[30px] bg-white
+          max-[1100px]:w-full max-[1100px]:ml-0 max-[1100px]:mt-5 max-[1100px]:px-2 max-[1100px]:h-auto "
+        >
+          <div className="max-w-[50%] ml-5 max-[1100px]:ml-2 max-[1100px]:max-w-full">
+            <h2 className="m-0 text-[26px] text-[#333] max-[600px]:text-[20px]">
+              Good Morning,
+            </h2>
+            <h3 className="mt-1 mb-0 text-[30px] text-[#7c459c] max-[600px]:text-[22px]">{`Doctor ${
+              user.name?.split(" ")[0]
+            }`}</h3>
+            <p className="mt-1 mb-0 text-[16px] text-[#666] max-[600px]:text-[14px]">
+              Have a nice day at work
+            </p>
           </div>
-          <div className="consultant-greeting-image">
-            <img src="img/doctor.png" alt="Good Morning" />
-          </div>
-        </section>
-        <section className="consultant-weekly-reports">
-          <div className="consultant-report-card total-patients">
-            <div className="consul-icon">
-              <IoPeople />
-            </div>
-            <div className="consul-text">Total Patients</div>
-            <div className="consul-number">{totalPatients}</div>
-          </div>
-          <div className="consultant-report-card phone-calls">
-            <div className="consul-icon" style={{ color: "#7c459c" }}>
-              <IoPeople />
-            </div>
-            <div className="consul-text">New Patients</div>
-            <div className="consul-number">{newPatients}</div>
-          </div>
-          <div className="consultant-report-card appointments">
-            <div className="consul-icon" style={{ color: "#e39fa9" }}>
-              <IoCalendar />
-            </div>
-            <div className="consul-text">Appointments</div>
-            <div className="consul-number">{appointmentNum}</div>
-          </div>
-          <div className="consultant-report-card unread-mails">
-            <div className="consul-icon" style={{ color: "#9a6cb4" }}>
-              <IoMail />
-            </div>
-            <div className="consul-text">Unread Notifications</div>
-            <div className="consul-number">{unreadNotification}</div>
+          <div className="max-w-full -mt-[70px] mr-5 max-[1100px]:mt-2 max-[1100px]:mr-0">
+            <img
+              src="img/doctor.png"
+              alt="Good Morning"
+              className="w-[300px] h-auto rounded-[8px] max-[600px]:w-[180px]"
+            />
           </div>
         </section>
 
-        <section className="consultant-patients-table">
-          <div className="patients-header">
-            <h3>Today's Appointment</h3>
-            <a href="/consultant-appointment" className="view-all-patients">
+        {/* Weekly Reports */}
+        <section
+          className="w-[950px] flex justify-between mb-5 ml-[80px]
+          max-[1100px]:w-full max-[1100px]:ml-0 max-[600px]:flex-col max-[600px]:gap-3"
+        >
+          <div
+            className="bg-[#9a6cb4] text-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
+            max-[600px]:w-full max-[600px]:h-[100px]"
+          >
+            <div className="text-[24px] mb-2 mt-[30px] max-[600px]:mt-2">
+              <IoPeople />
+            </div>
+            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
+              Total Patients
+            </div>
+            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
+              {totalPatients}
+            </div>
+          </div>
+          <div
+            className="bg-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
+            max-[600px]:w-full max-[600px]:h-[100px]"
+          >
+            <div className="text-[24px] mb-2 mt-[30px] text-[#7c459c] max-[600px]:mt-2">
+              <IoPeople />
+            </div>
+            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
+              New Patients
+            </div>
+            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
+              {newPatients}
+            </div>
+          </div>
+          <div
+            className="bg-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
+            max-[600px]:w-full max-[600px]:h-[100px]"
+          >
+            <div className="text-[24px] mb-2 mt-[30px] text-[#e39fa9] max-[600px]:mt-2">
+              <IoCalendar />
+            </div>
+            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
+              Appointments
+            </div>
+            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
+              {appointmentNum}
+            </div>
+          </div>
+          <div
+            className="bg-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
+            max-[600px]:w-full max-[600px]:h-[100px]"
+          >
+            <div className="text-[24px] mb-2 mt-[30px] text-[#9a6cb4] max-[600px]:mt-2">
+              <IoMail />
+            </div>
+            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
+              Unread Notifications
+            </div>
+            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
+              {unreadNotification}
+            </div>
+          </div>
+        </section>
+
+        {/* Patients Table */}
+        <section
+          className="bg-transparent p-5 rounded-[10px] w-[950px] ml-[40px] -mt-5
+          max-[1100px]:w-full max-[1100px]:ml-0 max-[600px]:p-2"
+        >
+          <div className="flex justify-between items-center ml-5 max-[600px]:ml-0">
+            <h3 className="max-[600px]:text-[16px]">Today's Appointment</h3>
+            <a
+              href="/consultant-appointment"
+              className="bg-[#9a6cb4] text-white px-5 py-2 rounded-[10px] text-[14px] ml-2 hover:bg-[#7c459c] no-underline max-[600px]:px-2 max-[600px]:py-1 max-[600px]:text-[12px]"
+            >
               View Appointment
             </a>
           </div>
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Location</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {appointment &&
-                appointment.map((appt, index) => (
-                  <tr key={index}>
-                    <td>{appt.patientName}</td>
-                    <td>{appt.location}</td>
-                    <td>{new Date(appt.date).toLocaleDateString()}</td>
-                    <td>
-                      {new Date(appt.date).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </td>
-                    <td>{appt.status}</td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+          <div className="overflow-x-auto">
+            <table className="w-[95%] border-separate mt-2 ml-10 rounded-[8px] border-spacing-y-[15px] max-[600px]:ml-0 max-[600px]:w-full">
+              <thead>
+                <tr>
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left max-[600px]:px-2 max-[600px]:py-2">
+                    Name
+                  </th>
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left max-[600px]:px-2 max-[600px]:py-2">
+                    Location
+                  </th>
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left max-[600px]:px-2 max-[600px]:py-2">
+                    Date
+                  </th>
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left max-[600px]:px-2 max-[600px]:py-2">
+                    Time
+                  </th>
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left max-[600px]:px-2 max-[600px]:py-2">
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {appointment &&
+                  appointment.map((appt, index) => (
+                    <tr key={index}>
+                      <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md max-[600px]:px-2 max-[600px]:py-2">
+                        {appt.patientName}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md max-[600px]:px-2 max-[600px]:py-2">
+                        {appt.location}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md max-[600px]:px-2 max-[600px]:py-2">
+                        {new Date(appt.date).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md max-[600px]:px-2 max-[600px]:py-2">
+                        {new Date(appt.date).toLocaleTimeString([], {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md max-[600px]:px-2 max-[600px]:py-2">
+                        {appt.status}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       </main>
 
-      <aside className="consultant-right-sidebar">
-        <div className="consultant-profile">
-          <div className="consultant-profile-icons">
+      {/* Sidebar */}
+      <aside
+        className="w-[450px] bg-white p-5 flex flex-col
+        max-[1100px]:w-full max-[1100px]:p-2 max-[1100px]:rounded-none"
+      >
+        <div className="flex items-center justify-between max-[600px]:items-start">
+          <div className="flex items-center justify-center mt-4 mr-2 z-[1001] max-[600px]:mb-2">
             <a
               href="/userprofile"
-              className="consul-profile-icon"
+              className="text-[30px] text-[#7c459c] mr-2"
               title="Profile"
             >
               <IoPersonCircleOutline />
             </a>
             <a
               href="/consultant-notification"
-              className="consul-notification-icon"
+              className="text-[30px] text-[#7c459c] ml-2"
               title="Notifications"
             >
               <IoNotificationsSharp />
             </a>
           </div>
-          <div className="consultant-profile-info">
-            <div className="consultant-profile-text">
-              <h1>{`Doctor ${user.name?.split(" ")[0]}`}</h1>
-              <p>{`${user.role}`}</p>
+          <div className="fixed right-5 top-5 flex items-center z-[1000] bg-transparent max-[1100px]:static max-[1100px]:mt-2">
+            <div className="flex flex-col text-right mr-2">
+              <h1 className="m-0 text-[18px] max-[600px]:text-[15px]">{`Doctor ${
+                user.name?.split(" ")[0]
+              }`}</h1>
+              <p className="m-0 text-[14px] text-[#666] max-[600px]:text-[12px]">{`${user.role}`}</p>
             </div>
             <img
               src={
@@ -213,26 +299,33 @@ const LandingPageConsultant = ({}) => {
                   : "img/profilePicture.jpg"
               }
               alt="Profile"
-              className="consultant-profile-image"
+              className="rounded-full w-[50px] h-[50px] object-cover max-[600px]:w-[36px] max-[600px]:h-[36px]"
             />
           </div>
         </div>
 
-        <div className="consultant-schedule-calendar">
-          <h3>Schedule Calendar</h3>
+        <div className="mb-5 mt-5">
+          <h3 className="mb-2 text-[#042440] max-[600px]:text-[16px]">
+            Schedule Calendar
+          </h3>
           <Calendar
             onChange={setDate}
             value={date}
-            className="consul-custom-calendar"
+            className="consul-custom-calendar !w-full !max-w-[350px] ml-[50px] border-none font-['Lucida_Sans','Lucida_Sans_Regular','Lucida_Grande','Lucida_Sans_Unicode',Geneva,Verdana,sans-serif] "
           />
         </div>
 
-        <div className="consultant-notifications">
-          <h3>Notifications</h3>
-          <div className="notifications-list">
+        <div className="mb-5 h-[400px] overflow-y-scroll scrollbar-hide max-[600px]:h-[200px]">
+          <h3 className="mb-5 text-[#042440] max-[600px]:text-[16px]">
+            Notifications
+          </h3>
+          <div>
             {notification &&
               notification.map((notif, index) => (
-                <div key={index} className="notification-item">
+                <div
+                  key={index}
+                  className="bg-transparent p-2 border border-[#9a6cb4] rounded-[5px] mb-2 text-[#042440] ml-[-100px] max-[600px]:ml-0 max-[600px]:text-[13px]"
+                >
                   {notif.message}
                 </div>
               ))}

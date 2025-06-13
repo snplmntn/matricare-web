@@ -176,9 +176,7 @@ const PatientRecords = ({ user }) => {
             },
           }
         );
-        // response.data.map((i) => {
         setTasks(response.data);
-        // });
       } catch (error) {
         console.error(error);
       }
@@ -310,9 +308,7 @@ const PatientRecords = ({ user }) => {
   };
 
   const [obstetricHistory, setObstetricHistory] = useState([]);
-
   const [medicalHistory, setMedicalHistory] = useState([]);
-
   const [surgicalHistory, setSurgicalHistory] = useState([]);
 
   const handleChange = (event) => {
@@ -356,7 +352,6 @@ const PatientRecords = ({ user }) => {
 
   const saveEntry = async () => {
     const { type, file } = modalData;
-    // const newDocument = { name: newDocName, date: newDocDate, userId: userID };
 
     if (!file) return alert("Please select a file to upload.");
 
@@ -481,425 +476,495 @@ const PatientRecords = ({ user }) => {
   return (
     <>
       {!isAuthenticated ? (
-        <div className="MR-pass-container">
-          <div
-            className="MR-pass-background-image"
-            style={{ backgroundImage: `url('/img/bg6.jpg')` }}
-          ></div>
-          <div className="MR-pass-overlay"></div>
-          <Link to="/app" className="MR-pass-back-button">
+        <div className="relative min-h-screen flex flex-col items-center justify-center bg-cover bg-center">
+          <div className="absolute inset-0 bg-[#7c459cda] z-0"></div>
+          <Link
+            to="/app"
+            className="absolute top-4 left-4 text-white text-[40px] z-10 p-2 rounded hover:bg-[#9a6cb4]"
+          >
             <IoChevronBackCircle />
           </Link>
-          <div className="MR-pass-left-section">
-            <div className="MR-pass-lock-icon">
-              <IoLockClosed />
-              <p>MatriCare</p>
+          <div className="relative z-10 flex flex-col items-center px-4">
+            <div className="flex items-center mb-4">
+              <IoLockClosed className="text-white text-[40px] mr-2" />
+              <p className="text-white text-[32px] italic font-bold">
+                MatriCare
+              </p>
             </div>
-          </div>
-          <h3 className="MR-pass-title">Enter Password</h3>
-          <form onSubmit={handlePasswordSubmit} className="MR-pass-form">
-            <div className="MR-pass-input-container">
+            <h3 className="text-white text-[22px] mb-4">Enter Password</h3>
+            <form
+              onSubmit={handlePasswordSubmit}
+              className="flex flex-col items-center"
+            >
               <input
                 type="password"
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="p-4 rounded-full border border-gray-300 w-[250px] mb-4"
               />
-              <button type="submit" className="MR-pass-button">
+              <button
+                type="submit"
+                className="bg-[#e39fa9] text-white rounded-full px-6 py-2 text-[16px] hover:bg-[#7c459c]"
+              >
                 Submit
               </button>
-            </div>
-          </form>
-          {error && <p className="MR-pass-error">{error}</p>}
+            </form>
+            {error && <p className="text-[#e39fa9] mt-2">{error}</p>}
+          </div>
         </div>
       ) : (
-        <div className="patient-records-container">
-          <main className="patient-records-main-content">
-            <div onClick={handleBack} className="PR-back-button">
+        <div className="flex min-h-screen bg-[#9a6cb4] font-['Lucida_Sans','Lucida_Sans_Regular','Lucida_Grande','Lucida_Sans_Unicode',Geneva,Verdana,sans-serif]">
+          <main className="flex-1 p-4 lg:p-5 bg-white/90 relative">
+            <button
+              onClick={handleBack}
+              className="absolute top-4 left-4 lg:top-[50px] lg:left-[70px] text-[#7c459c] text-[30px] z-10 hover:text-[#e39fa9]"
+            >
               <IoMdArrowRoundBack />
+            </button>
+
+            <div className="mb-6 mt-12 ml-4 lg:mb-8 lg:mt-[30px] lg:ml-[100px]">
+              <h2 className="text-[24px] lg:text-[30px] text-[#7c459c] text-left">
+                Patients
+              </h2>
             </div>
-            <div className="PR-label">
-              <h2>Patients</h2>
-            </div>
-            <div className="PR-top-section">
-              <div className="PR-patient-info">
-                <img
-                  src={
-                    patientInfo &&
-                    patientInfo.userId &&
-                    patientInfo.userId.profilePicture
-                      ? patientInfo.userId.profilePicture
-                      : "/img/profilePicture.jpg"
-                  }
-                  alt="Patient Photo"
-                />
-                <div className="PR-patient-details">
-                  <h3>{patientInfo && patientInfo.fullName}</h3>
-                  <p>
-                    {patientInfo &&
-                    patientInfo.userId &&
-                    patientInfo.userId.birthdate
-                      ? `${formatDate(
-                          patientInfo.userId.birthdate
-                        )} : ${calculateAge(
-                          patientInfo.userId.birthdate
-                        )} yrs old`
-                      : "Birthdate not set"}
-                  </p>
-                  <div className="PR-phone-info">
-                    <FaMobileAlt className="PR-phone-icon" />
-                    <p>{patientInfo && patientInfo.phoneNumber}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="PR-info-columns">
-                <div className="PR-address-info">
-                  <h4>Home Address:</h4>
-                  <p>
-                    {patientInfo &&
-                      patientInfo.userId &&
-                      patientInfo.userId.address}
-                  </p>
-                </div>
-                <div className="PR-email-info">
-                  <h4>Email Address:</h4>
-                  <p>{patientInfo && patientInfo.email}</p>
-                </div>
-                <div className="PR-partner-info">
-                  <h4>Husband/Partner:</h4>
-                  <p>
-                    {patientInfo &&
-                      patientInfo.userId &&
-                      patientInfo.userId.husband}
-                  </p>
-                  <div className="PR-partner-contact">
-                    <FaMobileAlt className="PR-phone-icon" />
-                    <p>
-                      {patientInfo &&
+
+            {/* Main Content Container */}
+            <div className="flex flex-col lg:flex-row gap-6 lg:gap-0">
+              {/* Left Column */}
+              <div className="w-full lg:w-[70%] lg:ml-[40px]">
+                {/* Patient Info Section */}
+                <div className="bg-white rounded-[10px] p-4 lg:p-5 shadow-lg flex flex-col gap-5 mb-6">
+                  <div className="flex flex-col lg:flex-row items-start gap-4">
+                    <img
+                      src={
+                        patientInfo &&
                         patientInfo.userId &&
-                        patientInfo.userId.husbandNumber}
-                    </p>
+                        patientInfo.userId.profilePicture
+                          ? patientInfo.userId.profilePicture
+                          : "/img/profilePicture.jpg"
+                      }
+                      alt="Patient Photo"
+                      className="w-[60px] h-[60px] lg:w-[80px] lg:h-[80px] rounded-full object-cover lg:mt-[-5px] lg:ml-[30px]"
+                    />
+                    <div className="flex flex-col gap-2 lg:ml-[30px] lg:mt-[-20px]">
+                      <h3 className="mb-[-5px] text-lg lg:text-xl">
+                        {patientInfo && patientInfo.fullName}
+                      </h3>
+                      <p className="text-sm lg:text-base">
+                        {patientInfo &&
+                        patientInfo.userId &&
+                        patientInfo.userId.birthdate
+                          ? `${formatDate(
+                              patientInfo.userId.birthdate
+                            )} : ${calculateAge(
+                              patientInfo.userId.birthdate
+                            )} yrs old`
+                          : "Birthdate not set"}
+                      </p>
+                      <div className="flex items-center gap-1">
+                        <FaMobileAlt className="text-[16px] text-[#333]" />
+                        <p className="text-sm lg:text-base">
+                          {patientInfo && patientInfo.phoneNumber}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col lg:flex-row w-full lg:ml-[50px] p-2 gap-4 lg:gap-5">
+                      <div className="flex flex-col gap-2 lg:border-l-2 border-[#ccc] lg:pl-5">
+                        <h4 className="font-bold text-[#666] text-[12px] m-0">
+                          Home Address:
+                        </h4>
+                        <p className="text-sm">
+                          {patientInfo &&
+                            patientInfo.userId &&
+                            patientInfo.userId.address}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2 lg:border-l-2 border-[#ccc] lg:pl-5">
+                        <h4 className="font-bold text-[#666] text-[12px] m-0">
+                          Email Address:
+                        </h4>
+                        <p className="text-sm">
+                          {patientInfo && patientInfo.email}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2 lg:border-l-2 border-[#ccc] lg:pl-5">
+                        <h4 className="font-bold text-[#666] text-[12px] m-0">
+                          Husband/Partner:
+                        </h4>
+                        <p className="text-sm">
+                          {patientInfo &&
+                            patientInfo.userId &&
+                            patientInfo.userId.husband}
+                        </p>
+                        <div className="flex items-center gap-1">
+                          <FaMobileAlt className="text-[16px] text-[#333]" />
+                          <p className="text-sm">
+                            {patientInfo &&
+                              patientInfo.userId &&
+                              patientInfo.userId.husbandNumber}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-[10px] p-4 lg:p-5 shadow-lg overflow-x-auto mb-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-[16px] lg:text-[18px] font-bold">
+                      Outstanding Tasks
+                    </h4>
+                    <button
+                      className="bg-transparent text-[#7c459c] border-none text-[14px] lg:text-[16px] font-bold hover:text-[#e39fa9]"
+                      onClick={() => setFormVisible(!formVisible)}
+                    >
+                      {formVisible ? "- Cancel" : "+ Add"}
+                    </button>
+                  </div>
+
+                  {formVisible && (
+                    <div className="flex flex-col lg:flex-row gap-2 mb-4">
+                      <input
+                        type="text"
+                        placeholder="Enter Task Name"
+                        value={taskName}
+                        onChange={(e) => setTaskName(e.target.value)}
+                        className="p-2 rounded border border-[#ccc] flex-1 min-w-0"
+                      />
+                      <button
+                        className="bg-[#7c459c] text-white px-4 py-2 rounded hover:bg-[#6a3e8a] whitespace-nowrap"
+                        onClick={handleAddTask}
+                      >
+                        Submit
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="overflow-x-auto">
+                    <table className="w-[95%] border-separate mt-2 ml-10 rounded-[8px] border-spacing-y-[15px] max-[600px]:ml-0 max-[600px]:w-full">
+                      <thead>
+                        <tr>
+                          <th className="p-2 text-center border-b border-[#ddd]"></th>
+                          <th className="p-2 text-center border-b border-[#ddd] text-sm lg:text-base">
+                            Task Name
+                          </th>
+                          <th className="p-2 text-center border-b border-[#ddd] text-sm lg:text-base">
+                            Prescribed On
+                          </th>
+                          <th className="p-2 text-center border-b border-[#ddd] text-sm lg:text-base">
+                            Status
+                          </th>
+                          <th className="p-2 text-center border-b border-[#ddd] text-sm lg:text-base">
+                            Prescribed By
+                          </th>
+                          <th className="p-2 text-center border-b border-[#ddd] text-sm lg:text-base">
+                            Order Number
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tasks &&
+                          tasks.map((task, index) => (
+                            <tr key={index}>
+                              <td className="p-2 text-center">
+                                <FaFileAlt />
+                              </td>
+                              <td className="p-2 text-center text-sm lg:text-base">
+                                {task.taskName}
+                              </td>
+                              <td className="p-2 text-center text-sm lg:text-base">
+                                {task.prescribedDate.split("T")[0]}
+                              </td>
+                              <td className="p-2 text-center text-sm lg:text-base">
+                                {task.status ? task.status : status}
+                              </td>
+                              <td className="p-2 text-center text-sm lg:text-base">
+                                {task.prescribedBy}
+                              </td>
+                              <td className="p-2 text-center text-sm lg:text-base">
+                                {task.orderNumber}
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+                  {/* Obstetric */}
+                  <div className="bg-white rounded-[10px] p-4 lg:p-5 shadow-lg h-[300px] flex flex-col justify-between">
+                    <h4 className="mb-2 text-[18px] mt-2">Obstetric History</h4>
+                    <ul className="list-none p-0 m-0 overflow-y-auto flex-grow mt-2">
+                      {obstetricHistory.map((entry, index) => (
+                        <li
+                          key={index}
+                          className="mb-5 p-2 border-b border-[#cccccca8] cursor-pointer"
+                          onClick={() => handleEntryClick(entry)}
+                        >
+                          <div className="flex flex-col lg:flex-row lg:items-center justify-between">
+                            <span className="text-sm lg:text-base">
+                              {formatDate(entry.date)}
+                            </span>
+                            <span className="text-sm lg:text-base mt-1 lg:mt-0">
+                              {entry.content}
+                            </span>
+                            <button
+                              className="bg-transparent border-none mt-2 lg:mt-0 self-start lg:self-center"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setTypeToDelete("obstetric");
+                                setDocumentToDelete(entry);
+                                setModalOpen(true);
+                              }}
+                              aria-label="Delete Document"
+                            >
+                              <IoTrashOutline className="text-red-600 cursor-pointer text-[20px]" />
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      className="bg-[#9a6cb4] border-none text-white text-[14px] rounded px-3 py-1 mt-2"
+                      onClick={() => openModal("Obstetric")}
+                    >
+                      Add
+                    </button>
+                  </div>
+
+                  {/* Medical */}
+                  <div className="bg-white rounded-[10px] p-4 lg:p-5 shadow-lg h-[300px] flex flex-col justify-between">
+                    <h4 className="mb-2 text-[18px] mt-2">Medical History</h4>
+                    <ul className="list-none p-0 m-0 overflow-y-auto flex-grow mt-2">
+                      {medicalHistory.map((entry, index) => (
+                        <li
+                          key={index}
+                          className="mb-5 p-2 border-b border-[#cccccca8] cursor-pointer"
+                          onClick={() => handleEntryClick(entry)}
+                        >
+                          <div className="flex justify-between items-start">
+                            <div className="flex-1">
+                              <div className="flex flex-col lg:flex-row lg:justify-between">
+                                <span className="text-sm lg:text-base">
+                                  {entry.diagnosis}
+                                </span>
+                                <span className="text-sm lg:text-base mt-1 lg:mt-0">
+                                  {entry.status}
+                                </span>
+                              </div>
+                              <div className="text-[12px] mt-1">
+                                {entry.duration}
+                              </div>
+                            </div>
+                            <button
+                              className="bg-transparent border-none ml-2"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setTypeToDelete("medical");
+                                setDocumentToDelete(entry);
+                                setModalOpen(true);
+                              }}
+                              aria-label="Delete Document"
+                            >
+                              <IoTrashOutline className="text-red-600 cursor-pointer text-[20px]" />
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      className="bg-[#9a6cb4] border-none text-white text-[14px] rounded px-3 py-1 mt-2"
+                      onClick={() => openModal("Medical")}
+                    >
+                      Add
+                    </button>
+                  </div>
+
+                  {/* Surgical */}
+                  <div className="bg-white rounded-[10px] p-4 lg:p-5 shadow-lg h-[300px] flex flex-col justify-between">
+                    <h4 className="mb-2 text-[18px] mt-2">Surgical History</h4>
+                    <ul className="list-none p-0 m-0 overflow-y-auto flex-grow mt-2">
+                      {surgicalHistory.map((entry, index) => (
+                        <li
+                          key={index}
+                          className="mb-5 p-2 border-b border-[#cccccca8] cursor-pointer"
+                          onClick={() => handleEntryClick(entry)}
+                        >
+                          <div className="flex flex-col lg:flex-row lg:items-center justify-between">
+                            <span className="text-sm lg:text-base">
+                              {formatDate(entry.date)}
+                            </span>
+                            <span className="text-sm lg:text-base mt-1 lg:mt-0">
+                              {entry.content}
+                            </span>
+                            <button
+                              className="bg-transparent border-none mt-2 lg:mt-0 self-start lg:self-center"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                setTypeToDelete("surgical");
+                                setDocumentToDelete(entry);
+                                setModalOpen(true);
+                              }}
+                              aria-label="Delete Document"
+                            >
+                              <IoTrashOutline className="text-red-600 cursor-pointer text-[20px]" />
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    <button
+                      className="bg-[#9a6cb4] border-none text-white text-[14px] rounded px-3 py-1 mt-2"
+                      onClick={() => openModal("Surgical")}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column - Sidebar */}
+              <div className="w-full lg:w-[400px] lg:ml-6 flex flex-col gap-5">
+                {/* Weeks Count */}
+                <div className="bg-white p-4 lg:p-5 rounded-[8px] shadow-lg h-auto lg:h-[200px]">
+                  <div className="flex flex-col lg:flex-row justify-between items-center mt-5 w-full gap-4">
+                    <div className="flex flex-col justify-center items-start flex-grow lg:ml-1">
+                      <h4 className="mb-4 lg:mb-10 mt-0 lg:mt-[-30px]">
+                        Weeks Count
+                      </h4>
+                      <p className="text-sm lg:text-base">
+                        Estimated Pregnancy <br />
+                        Due Date: <br />
+                        <strong>
+                          {dueDate.isValid()
+                            ? dueDate.format("MMMM D, YYYY")
+                            : "N/A"}
+                        </strong>
+                      </p>
+                    </div>
+                    <div className="w-[120px] h-[120px] lg:w-[150px] lg:h-[150px] rounded-full border-[8px] border-[#e39fa9] flex justify-center items-center text-[32px] lg:text-[46px] font-bold text-[#7c459c] lg:ml-5">
+                      {dueDate.isValid() ? weeksPassed : "N/A"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Documents */}
+                <div className="bg-white p-4 lg:p-5 rounded-[8px] shadow-lg h-[400px] lg:h-[460px] overflow-y-auto">
+                  <div>
+                    <h4 className="mt-2 mb-4">Documents</h4>
+                    {documents.map((doc, index) => (
+                      <div
+                        key={doc._id}
+                        className="flex justify-between items-center p-2 cursor-pointer mb-2 hover:bg-[#e39fa972] hover:p-4 hover:rounded"
+                        onClick={() => handleDocumentClick(doc)}
+                      >
+                        <div className="flex items-center flex-1 min-w-0">
+                          <span className="mr-2 text-[#7c459c] text-[20px] flex-shrink-0">
+                            <FaFilePdf />
+                          </span>
+                          <span className="text-sm lg:text-base truncate">
+                            {doc.name}
+                          </span>
+                        </div>
+                        <span className="text-[12px] lg:text-[14px] text-[#666] ml-2 flex-shrink-0">
+                          {formatDate(doc.date)}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               </div>
             </div>
-            <div className="PR-outstanding-tasks">
-              <div className="PR-header">
-                <h4>Outstanding Tasks</h4>
-                <button
-                  className="add-task-button"
-                  onClick={() => setFormVisible(!formVisible)}
-                >
-                  {formVisible ? "- Cancel" : "+ Add"}
-                </button>
-              </div>
-              {formVisible && (
-                <div className="PR-form">
-                  <input
-                    type="text"
-                    placeholder="Enter Task Name"
-                    value={taskName}
-                    onChange={(e) => setTaskName(e.target.value)}
-                  />
+
+            {/* Delete Confirmation Modal */}
+            {issModalOpen && (
+              <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+                <div className="flex flex-col items-center p-5 rounded bg-white shadow-lg w-full max-w-sm">
+                  <IoTrashOutline className="text-red-600 text-[50px] mb-2" />
+                  <h3 className="font-bold mb-4 text-center">
+                    Are you sure you want to delete this?
+                  </h3>
                   <button
-                    className="submit-task-button"
-                    onClick={handleAddTask}
+                    className="bg-[#9a6cb4] text-white px-4 py-2 rounded mb-2 w-full"
+                    onClick={() => {
+                      handleDeleteDocument(documentToDelete);
+                      setModalOpen(false);
+                    }}
                   >
-                    Submit
+                    Yes
+                  </button>
+                  <button
+                    className="bg-[#ccc] text-[#333] px-4 py-2 rounded w-full"
+                    onClick={() => setModalOpen(false)}
+                  >
+                    No
                   </button>
                 </div>
-              )}
-              <table>
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Task Name</th>
-                    <th>Prescribed On</th>
-                    <th>Status</th>
-                    <th>Prescribed By</th>
-                    <th>Order Number</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tasks &&
-                    tasks.map((task, index) => (
-                      <tr key={index}>
-                        <td>
-                          <FaFileAlt />
-                        </td>
-                        <td>{task.taskName}</td>
-                        <td>{task.prescribedDate.split("T")[0]}</td>
-                        <td>{task.status ? task.status : status}</td>
-                        <td>{task.prescribedBy}</td>
-                        <td>{task.orderNumber}</td>
-                      </tr>
-                    ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="PR-main-content">
-              <div className="PR-panel PR-Obstetric">
-                <h4>Obstetric History</h4>
-                <ul>
-                  {obstetricHistory.map((entry, index) => (
-                    <li key={index} onClick={() => handleEntryClick(entry)}>
-                      <span className="date">{formatDate(entry.date)}</span>
-                      <span className="text">{entry.content}</span>
-                      {entry.file && (
-                        <span className="file">{entry.file.name}</span>
-                      )}
-                      <button
-                        className="PRM-delete-docu-button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation(); // Prevent the document click event
-                          setTypeToDelete("obstetric");
-                          setDocumentToDelete(entry); // Store the document to delete
-                          setModalOpen(true); // Open the modal
-                        }}
-                        aria-label="Delete Document" // Accessibility label
-                      >
-                        <IoTrashOutline className="PRM-delete-icon" />
-                      </button>
-                      {issModalOpen && (
-                        <div className="PRM-modal-overlay">
-                          <div className="PRM-modal-content">
-                            <IoTrashOutline className="PRM-delete-icon" />
-                            <h3 className="PRM-modal-header">
-                              Are you sure you want to delete this?
-                            </h3>
-                            <button
-                              className="PRM-confirm-button"
-                              onClick={() => {
-                                handleDeleteDocument(documentToDelete); // Call delete function
-                                setModalOpen(false); // Close the modal
-                              }}
-                            >
-                              Yes
-                            </button>
-                            <button
-                              className="PRM-cancel-button"
-                              onClick={() => setModalOpen(false)}
-                            >
-                              No
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-
-                {selectedEntry && (
-                  <div className="modal-overlay">
-                    <div className="selected-docu">
-                      <button
-                        onClick={handleClose}
-                        className="selected-docu-close"
-                      >
-                        &times;
-                      </button>
-                      <div className="document-info">
-                        <p>Date: {formatDate(selectedEntry.date)}</p>
-                        <p>Details: {selectedEntry.content}</p>
-                      </div>
-                      <embed
-                        src={selectedEntry.selectedEntry}
-                        type="application/pdf"
-                        width="100%"
-                        height="600px"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <button
-                  className="PR-Add"
-                  onClick={() => openModal("Obstetric")}
-                >
-                  Add
-                </button>
               </div>
+            )}
 
-              <div className="PR-panel PR-Medical">
-                <h4>Medical History</h4>
-                <ul>
-                  {medicalHistory.map((entry, index) => (
-                    <li key={index} onClick={() => handleEntryClick(entry)}>
-                      <div className="diagnosis-info">
-                        <span className="diagnosis">{entry.diagnosis}</span>
-                        <span className="status">{entry.status}</span>
-                      </div>
-                      <div className="diagnosis-duration">{entry.duration}</div>
-                      {entry.file && (
-                        <span className="file">{entry.file.name}</span>
-                      )}
-                      <button
-                        className="PRM-delete-docu-button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation(); // Prevent the document click event
-                          setTypeToDelete("medical");
-                          setDocumentToDelete(entry); // Store the document to delete
-                          setModalOpen(true); // Open the modal
-                        }}
-                        aria-label="Delete Document" // Accessibility label
-                      >
-                        <IoTrashOutline className="PRM-delete-icon" />
-                      </button>
-                      {issModalOpen && (
-                        <div className="PRM-modal-overlay">
-                          <div className="PRM-modal-content">
-                            <IoTrashOutline className="PRM-delete-icon" />
-                            <h3 className="PRM-modal-header">
-                              Are you sure you want to delete this?
-                            </h3>
-                            <button
-                              className="PRM-confirm-button"
-                              onClick={() => {
-                                handleDeleteDocument(documentToDelete); // Call delete function
-                                setModalOpen(false); // Close the modal
-                              }}
-                            >
-                              Yes
-                            </button>
-                            <button
-                              className="PRM-cancel-button"
-                              onClick={() => setModalOpen(false)}
-                            >
-                              No
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {selectedEntry && (
-                  <div className="modal-overlay">
-                    <div className="selected-docu">
-                      <button
-                        onClick={handleClose}
-                        className="selected-docu-close"
-                      >
-                        &times;
-                      </button>
-                      <div className="document-info">
-                        <p>Date: {formatDate(selectedEntry.date)}</p>
-                        <p>Diagnosis: {selectedEntry.diagnosis}</p>
-                        <p>Status: {selectedEntry.status}</p>
-                      </div>
-                      <embed
-                        src={selectedEntry.selectedEntry}
-                        type="application/pdf"
-                        width="100%"
-                        height="600px"
-                      />
-                    </div>
+            {/* Selected Entry Modal */}
+            {selectedEntry && (
+              <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+                <div className="bg-white p-4 lg:p-5 rounded shadow-lg w-full max-w-2xl h-[90vh] lg:h-[800px] relative flex flex-col">
+                  <button
+                    onClick={handleClose}
+                    className="absolute top-4 right-4 text-[24px] bg-transparent hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
+                  >
+                    &times;
+                  </button>
+                  <div className="text-left ml-2 lg:ml-6 mt-6 mb-4">
+                    <p className="text-sm lg:text-base">
+                      Date:{" "}
+                      {selectedEntry && selectedEntry.duration
+                        ? selectedEntry.duration
+                        : formatDate(selectedEntry.date)}
+                    </p>
+                    {selectedEntry.content && (
+                      <p className="text-sm lg:text-base">
+                        Details: {selectedEntry.content}
+                      </p>
+                    )}
+                    {selectedEntry.diagnosis && (
+                      <p className="text-sm lg:text-base">
+                        Diagnosis: {selectedEntry.diagnosis}
+                      </p>
+                    )}
+                    {selectedEntry.status && (
+                      <p className="text-sm lg:text-base">
+                        Status: {selectedEntry.status}
+                      </p>
+                    )}
                   </div>
-                )}
-
-                <button className="PR-Add" onClick={() => openModal("Medical")}>
-                  Add
-                </button>
+                  <embed
+                    src={selectedEntry.documentLink}
+                    type="application/pdf"
+                    width="100%"
+                    className="flex-1 min-h-0"
+                  />
+                </div>
               </div>
+            )}
 
-              <div className="PR-panel PR-Surgical">
-                <h4>Surgical History</h4>
-                <ul>
-                  {surgicalHistory.map((entry, index) => (
-                    <li key={index} onClick={() => handleEntryClick(entry)}>
-                      <span className="date">{formatDate(entry.date)}</span>
-                      <span className="text">{entry.content}</span>
-                      {entry.file && (
-                        <span className="file">{entry.file.name}</span>
-                      )}
-                      <button
-                        className="PRM-delete-docu-button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation(); // Prevent the document click event
-                          setTypeToDelete("surgical");
-                          setDocumentToDelete(entry); // Store the document to delete
-                          setModalOpen(true); // Open the modal
-                        }}
-                        aria-label="Delete Document" // Accessibility label
-                      >
-                        <IoTrashOutline className="PRM-delete-icon" />
-                      </button>
-                      {issModalOpen && (
-                        <div className="PRM-modal-overlay">
-                          <div className="PRM-modal-content">
-                            <IoTrashOutline className="PRM-delete-icon" />
-                            <h3 className="PRM-modal-header">
-                              Are you sure you want to delete this?
-                            </h3>
-                            <button
-                              className="PRM-confirm-button"
-                              onClick={() => {
-                                handleDeleteDocument(documentToDelete); // Call delete function
-                                setModalOpen(false); // Close the modal
-                              }}
-                            >
-                              Yes
-                            </button>
-                            <button
-                              className="PRM-cancel-button"
-                              onClick={() => setModalOpen(false)}
-                            >
-                              No
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {selectedEntry && (
-                  <div className="modal-overlay">
-                    <div className="selected-docu">
-                      <button
-                        onClick={handleClose}
-                        className="selected-docu-close"
-                      >
-                        &times;
-                      </button>
-                      <div className="document-info">
-                        <p>
-                          Date:{" "}
-                          {selectedEntry && selectedEntry.duration
-                            ? selectedEntry.duration
-                            : formatDate(selectedEntry.date)}
-                        </p>
-                        <p>Details: {selectedEntry.content}</p>
-                      </div>
-                      <embed
-                        src={selectedEntry.documentLink}
-                        type="application/pdf"
-                        width="100%"
-                        height="600px"
-                      />
-                    </div>
-                  </div>
-                )}
-                <button
-                  className="PR-Add"
-                  onClick={() => openModal("Surgical")}
-                >
-                  Add
-                </button>
-              </div>
-            </div>
-
+            {/* Add/Edit Modal */}
             {isModalOpen && (
-              <div className="PR-modal">
-                <div className="PR-modal-content">
-                  <span className="PR-modal-close" onClick={closeModal}>
+              <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+                <div className="bg-white p-4 lg:p-5 rounded-[10px] w-full max-w-2xl max-h-[90vh] overflow-y-auto flex flex-col relative">
+                  <span
+                    className="absolute top-4 right-4 text-[28px] font-bold cursor-pointer hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
+                    onClick={closeModal}
+                  >
                     &times;
                   </span>
-                  <h2>{modalData.type} History</h2>
-                  <div className="PR-input-row">
+                  <h2 className="border-l-[15px] border-[#9a6cb4] text-left pl-5 mb-4 text-lg lg:text-xl">
+                    {modalData.type} History
+                  </h2>
+                  <div className="flex flex-col gap-3 mb-4 mt-6 lg:mt-10">
                     {modalData.type === "Obstetric" && (
                       <>
                         <input
@@ -908,6 +973,7 @@ const PatientRecords = ({ user }) => {
                           value={modalData.date}
                           onChange={handleChange}
                           required
+                          className="w-full p-2 border border-[#ccc] rounded"
                         />
                         <input
                           type="text"
@@ -916,6 +982,7 @@ const PatientRecords = ({ user }) => {
                           onChange={handleChange}
                           placeholder="Description"
                           required
+                          className="w-full p-2 border border-[#ccc] rounded"
                         />
                       </>
                     )}
@@ -928,6 +995,7 @@ const PatientRecords = ({ user }) => {
                           onChange={handleChange}
                           placeholder="Diagnosis"
                           required
+                          className="w-full p-2 border border-[#ccc] rounded"
                         />
                         <input
                           type="text"
@@ -936,6 +1004,7 @@ const PatientRecords = ({ user }) => {
                           onChange={handleChange}
                           placeholder="Status"
                           required
+                          className="w-full p-2 border border-[#ccc] rounded"
                         />
                         <input
                           type="text"
@@ -944,6 +1013,7 @@ const PatientRecords = ({ user }) => {
                           onChange={handleChange}
                           placeholder="Duration"
                           required
+                          className="w-full p-2 border border-[#ccc] rounded"
                         />
                       </>
                     )}
@@ -955,6 +1025,7 @@ const PatientRecords = ({ user }) => {
                           value={modalData.date}
                           onChange={handleChange}
                           required
+                          className="w-full p-2 border border-[#ccc] rounded"
                         />
                         <input
                           type="text"
@@ -963,81 +1034,56 @@ const PatientRecords = ({ user }) => {
                           onChange={handleChange}
                           placeholder="Description"
                           required
+                          className="w-full p-2 border border-[#ccc] rounded"
                         />
                       </>
                     )}
                   </div>
-                  <input type="file" onChange={handleFileChange} />
-                  <button className="PR-Save" onClick={saveEntry}>
+                  <input
+                    type="file"
+                    onChange={handleFileChange}
+                    className="mb-4 w-full"
+                  />
+                  <button
+                    className="bg-[#9a6cb4] text-white rounded-[10px] px-6 py-2 w-full lg:w-auto lg:ml-auto mt-4 hover:bg-[#7c459c]"
+                    onClick={saveEntry}
+                  >
                     Save
                   </button>
                 </div>
               </div>
             )}
 
-            <div className="PR-right-panels">
-              <div className="PR-weeks-count">
-                <div className="PR-text-content">
-                  <h4>Weeks Count</h4>
-                  <p className="PR-due-date">
-                    Estimated Pregnancy <br />
-                    Due Date: <br />
-                    <strong>
-                      {dueDate.isValid()
-                        ? dueDate.format("MMMM D, YYYY")
-                        : "N/A"}
-                    </strong>
-                  </p>
-                </div>
-                <div className="PR-circle">
-                  {dueDate.isValid() ? weeksPassed : "N/A"}
-                </div>
-              </div>
-            </div>
-            <div className="PR-patient-docu">
-              <div className="PR-documents">
-                <h4>Documents</h4>
-                {documents.map((doc, index) => (
-                  <div
-                    key={doc._id}
-                    className="PR-docu-item"
-                    onClick={() => handleDocumentClick(doc)}
-                  >
-                    <span className="docu-icon">
-                      <FaFilePdf />
-                    </span>
-                    {doc.name}
-                    <span className="docu-date">{formatDate(doc.date)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
             {/* Document Details View */}
-            {selectedDocument ? (
-              <div className="modal-overlay">
-                <div className="selected-docu">
+            {selectedDocument && (
+              <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50 p-4">
+                <div className="bg-white p-4 lg:p-5 rounded shadow-lg w-full max-w-2xl h-[90vh] lg:h-[800px] relative flex flex-col">
                   <button
-                    className="selected-docu-close"
+                    className="absolute top-4 right-4 text-[24px] bg-transparent hover:bg-gray-100 rounded-full w-8 h-8 flex items-center justify-center"
                     onClick={handleClose}
                     aria-label="Close Modal"
                   >
                     &times;
                   </button>
-                  <div className="document-info">
-                    <p>{formatDate(selectedDocument.date)}</p>
-                    <p>{selectedDocument.name}</p>
-                    <div className="docu-button">
+                  <div className="text-left ml-2 lg:ml-6 mt-6 mb-4">
+                    <p className="text-sm lg:text-base">
+                      {formatDate(selectedDocument.date)}
+                    </p>
+                    <p className="text-sm lg:text-base">
+                      {selectedDocument.name}
+                    </p>
+                    <div className="flex gap-2 mt-2">
                       <button
                         onClick={handleDownload}
                         aria-label="Download Document"
-                        className="docu-icon"
+                        className="mr-2 text-[20px] text-[#7c459c] hover:bg-gray-100 p-1 rounded"
                       >
                         <FcDownload />
                       </button>
                       <button
                         onClick={handlePrint}
                         aria-label="Print Document"
-                        className="docu-icon"
+                        className="text-[20px] text-[#7c459c] hover:bg-gray-100 p-1 rounded"
                       >
                         <FcPrint />
                       </button>
@@ -1047,11 +1093,11 @@ const PatientRecords = ({ user }) => {
                     src={selectedDocument.documentLink}
                     type="application/pdf"
                     width="100%"
-                    height="600px"
+                    className="flex-1 min-h-0"
                   />
                 </div>
               </div>
-            ) : null}
+            )}
           </main>
         </div>
       )}

@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../styles/pages/login.css";
+// import "../../styles/pages/login.css";
 import Modal from "react-modal";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import { useCookies } from "react-cookie";
 
-export default function Login() {
+const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -243,76 +243,112 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="login-outer-container login-background">
+    <div className="p-8 md:p-16 lg:p-24 xl:p-48 2xl:p-52 relative z-0 min-h-screen">
+      {/* Background Image */}
       <div
-        className="background-image"
+        className="absolute inset-0 w-full h-screen bg-cover bg-center opacity-90 -z-10"
         style={{ backgroundImage: `url(/img/login.jpg)` }}
       ></div>
-      <div className="login-overlay"></div>
-      <h2 className="login-welcome-message">Login!</h2>
-      <p className="login-sign-up-text">
-        Don't have an account? <Link to="/signup">Sign Up here!</Link>
-      </p>
 
-      {error && <p className="login-error-message">{error}</p>}
+      {/* Overlay */}
+      <div className="absolute inset-0 w-full h-screen bg-purple-600 bg-opacity-75 -z-10"></div>
 
+      {/* Back Button */}
+      <a
+        href="#"
+        className="fixed top-4 left-6 md:top-5 md:left-10 text-white text-4xl md:text-5xl no-underline z-10 hover:text-pink-200 transition-colors"
+      >
+        ←
+      </a>
+
+      {/* Welcome Message */}
+      <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-bold text-white mb-6 md:mb-8 lg:mb-12 -mt-12 md:-mt-16 lg:-mt-20 ml-4 md:ml-8 lg:ml-24 xl:ml-28 leading-tight md:leading-snug lg:leading-normal">
+        Welcome Back!
+      </h1>
+
+      {/* Success/Error Messages */}
       {successMessage && (
-        <p className="login-success-message">{successMessage}</p>
+        <div className="text-pink-300 ml-4 md:ml-8 lg:ml-24 xl:ml-28 mb-6 md:mb-8 lg:mb-10 -mt-6 md:-mt-8 lg:-mt-10">
+          {successMessage}
+        </div>
       )}
 
-      <div className="container-login">
-        <form onSubmit={handleLogin}>
-          <div className="LI-form-group">
+      {error && (
+        <div className="text-pink-300 ml-4 md:ml-8 lg:ml-24 xl:ml-28 mb-6 md:mb-8 lg:mb-10 -mt-6 md:-mt-8 lg:-mt-10">
+          {error}
+        </div>
+      )}
+
+      {/* Main Container */}
+      <div className="bg-white bg-opacity-40 h-80 md:h-96 lg:h-[400px] w-full max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-4 md:mx-8 lg:ml-24 xl:ml-28 flex justify-center items-center rounded-2xl shadow-lg shadow-purple-900/50 backdrop-blur-sm">
+        <form onSubmit={handleLogin} className="w-full px-4 md:px-6">
+          {/* Email Input */}
+          <div className="relative mb-6 md:mb-8 ml-2 md:ml-3 mt-4 md:mt-5">
             <input
-              className="LI-form-input"
-              type="text"
+              type="email"
               id="username"
-              placeholder=" "
               value={username}
               onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
+              placeholder=" "
+              className="p-2 md:p-3 border-0 text-base mt-1 md:mt-2 bg-white text-slate-800 w-full transition-all duration-300 ease-in-out rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 font-sans placeholder-transparent peer"
             />
-            <label htmlFor="username" className="LI-form-label">
-              Username:
+            <label className="absolute top-4 md:top-5 left-2 md:left-3 text-slate-800 text-base transition-all duration-300 ease-in-out pointer-events-none font-sans peer-focus:-top-4 peer-focus:md:-top-5 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:md:-top-5 peer-[:not(:placeholder-shown)]:text-xs">
+              Email
             </label>
           </div>
 
-          <div className="LI-form-group password-toggle-container">
+          {/* Password Input */}
+          <div className="relative mb-6 md:mb-8 ml-2 md:ml-3 mt-4 md:mt-5">
             <input
-              className="LI-form-input"
-              type={showPassword ? "text" : "password"} // Toggle between text and password
+              type={showPassword ? "text" : "password"}
               id="password"
-              placeholder=" "
               value={password}
               onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
+              placeholder=" "
+              className="p-2 md:p-3 border-0 text-base mt-1 md:mt-2 bg-white text-slate-800 w-full transition-all duration-300 ease-in-out rounded-md focus:outline-none focus:ring-2 focus:ring-purple-300 font-sans placeholder-transparent peer"
             />
-            <label htmlFor="password" className="LI-form-label">
-              Password:
+            <label className="absolute top-4 md:top-5 left-2 md:left-3 text-slate-800 text-base transition-all duration-300 ease-in-out pointer-events-none font-sans peer-focus:-top-4 peer-focus:md:-top-5 peer-focus:text-xs peer-[:not(:placeholder-shown)]:-top-4 peer-[:not(:placeholder-shown)]:md:-top-5 peer-[:not(:placeholder-shown)]:text-xs">
+              Password
             </label>
-            <span
-              className="password-toggle-icon"
+            <div
               onClick={togglePasswordVisibility}
+              className="absolute top-1/2 right-4 md:right-5 -translate-y-1/2 cursor-pointer z-10 text-slate-600 hover:text-slate-800 transition-colors"
             >
               {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
-            </span>
+            </div>
           </div>
 
-          <div className="forgot-password">
-            <Link to="/forgot-password">Forgot Password?</Link>
-          </div>
+          {/* Forgot Password Link */}
+          <a
+            href="/forgot-password"
+            className="ml-48 md:ml-56 lg:ml-72 xl:ml-80 -mt-2 md:-mt-3 mb-2 md:mb-3 text-pink-300 hover:text-pink-200 transition-colors block text-sm"
+          >
+            Forgot Password?
+          </a>
 
-          <div className="LI-form-group">
-            <button type="submit" className="LI-button" disabled={loading}>
-              {loading ? "Logging in..." : "LOGIN"}
-            </button>
-          </div>
+          {/* Login Button */}
+          <button
+            type="submit"
+            className="px-8 md:px-12 lg:px-16 py-2 md:py-3 w-full max-w-xs md:max-w-sm bg-pink-300 text-slate-900 border-0 rounded-md cursor-pointer font-sans ml-1 md:ml-2 flex justify-center items-center text-base md:text-lg font-medium hover:bg-purple-600 hover:text-white transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-purple-300"
+          >
+            {loading ? "Logging in..." : "LOGIN"}
+          </button>
         </form>
+      </div>
 
-        {/* Verification Modal */}
+      {/* Sign Up Text */}
+      <div className="text-base md:text-lg lg:text-xl text-slate-800 text-center -mt-4 md:-mt-5 -ml-4 md:-ml-8 lg:-ml-96 xl:-ml-[930px] mb-8 md:mb-12">
+        Don't have an account?
+        <a
+          href="/signup"
+          className="text-white no-underline ml-2 md:ml-3 hover:underline hover:text-pink-300 transition-colors"
+        >
+          Sign Up
+        </a>
+      </div>
 
+      {/* Authentication Modal */}
+      {showVerificationModal && (
         <Modal
           isOpen={showVerificationModal}
           onRequestClose={() => setShowVerificationModal(false)}
@@ -371,7 +407,47 @@ export default function Login() {
             Submit
           </button>
         </Modal>
-      </div>
+      )}
+
+      {/* Mobile Responsive Adjustments */}
+      <style jsx>{`
+        @media (max-width: 640px) {
+          .container-login {
+            margin-left: 1rem;
+            margin-right: 1rem;
+          }
+
+          .login-welcome-message {
+            margin-left: 1rem;
+          }
+
+          .login-sign-up-text {
+            margin-left: -1rem;
+          }
+
+          .forgot-password {
+            margin-left: 12rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .login-welcome-message {
+            font-size: 2.5rem;
+            line-height: 1.1;
+          }
+
+          .container-login {
+            height: 320px;
+            width: calc(100vw - 2rem);
+          }
+
+          .forgot-password {
+            margin-left: 8rem;
+          }
+        }
+      `}</style>
     </div>
   );
-}
+};
+
+export default Login;

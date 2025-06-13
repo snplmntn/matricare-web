@@ -31,6 +31,24 @@
   height: 100px;
 }
 
+@media (max-width: 900px) {
+  .bellytalk-top-bar {
+    flex-direction: column;
+    height: auto;
+    padding: 15px 0;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .bellytalk-top-bar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 0;
+    gap: 10px;
+  }
+}
+
 .bellytalk-title-logo {
   font-size: 30px;
   font-weight: bold;
@@ -51,7 +69,6 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  margin-left: 600px;
 }
 
 .bellytalk-icon-button {
@@ -654,3 +671,201 @@
   background-color: #f2f2f2;
   cursor: pointer;
 }
+
+/* ...existing code... */
+
+/* --- MOBILE RESPONSIVE STYLES --- */
+@media (max-width: 900px) {
+  .bellytalk-main-content {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 0;
+    padding: 0 5vw;
+  }
+  .bellytalk-title-logo {
+    margin-left: 10vw;
+    font-size: 22px;
+  }
+  .bellytalk-icons {
+    margin-left: 0;
+  }
+  .bellytalk-search-container {
+    width: 60vw;
+    margin-right: 0;
+  }
+  .bellytalk-search {
+    width: 100%;
+    min-width: 0;
+  }
+  .sharebox {
+    margin-left: 0;
+    margin-top: 30px;
+  }
+  .sharebox-container {
+    width: 100%;
+    min-width: 0;
+  }
+  .bellytalk-feed {
+    width: 100% !important;
+    margin-left: 0 !important;
+  }
+  .filter-section {
+    position: static;
+    width: 100%;
+    left: 0;
+    top: 0;
+    margin-top: 30px;
+  }
+}
+
+@media (max-width: 600px) {
+  .bellytalk-container {
+    height: auto;
+    min-height: 100vh;
+  }
+  .bellytalk-top-bar {
+    flex-direction: column;
+    height: auto;
+    padding: 10px 0;
+    gap: 10px;
+  }
+  .bellytalk-title-logo {
+    margin-left: 0;
+    font-size: 18px;
+    text-align: center;
+  }
+  .BT-back-button {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  .bellytalk-icons {
+    margin-left: 0;
+    margin-bottom: 10px;
+  }
+  .bellytalk-search-container {
+    width: 90vw;
+    margin: 0 auto 10px auto;
+  }
+  .bellytalk-search {
+    width: 100%;
+    min-width: 0;
+    font-size: 14px;
+    height: 36px;
+  }
+  .sharebox {
+    margin-left: 0;
+    margin-top: 20px;
+  }
+  .sharebox-container {
+    width: 100%;
+    min-width: 0;
+  }
+  .sharebox .bellytalk-share-box-input {
+    font-size: 13px;
+    height: 50px;
+    text-indent: 10px;
+  }
+  .pen-icon {
+    left: 5px;
+    top: 5px;
+    font-size: 12px;
+  }
+  .sharebox-modal-content {
+    max-width: 98vw;
+    padding: 10px;
+  }
+  .sharebox-title {
+    font-size: 18px;
+    padding: 5px;
+  }
+  .upload-button {
+    margin-top: 30px;
+    height: 40px;
+    border-radius: 8px;
+  }
+  .custom-file-upload {
+    margin-left: 10px;
+    font-size: 22px;
+  }
+  .image-preview {
+    margin-top: 5px;
+  }
+  .preview-image {
+    max-width: 90vw;
+    max-height: 120px;
+  }
+  .remove-image {
+    font-size: 18px;
+    width: 22px;
+    height: 22px;
+    top: 5px;
+    right: 5px;
+    padding: 2px;
+  }
+  .bellytalk-feed {
+    width: 100% !important;
+    margin-left: 0 !important;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .bellytalk-feed-item {
+    padding: 10px;
+    flex-direction: column;
+  }
+  .bt-post-image {
+    width: 100%;
+    max-width: 95vw;
+  }
+  .bellytalk-post-content {
+    margin-left: 0;
+    width: 100%;
+  }
+  .bellytalk-actions {
+    margin-left: 0;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+  .bellytalk-reply-input {
+    width: 90vw !important;
+    font-size: 12px !important;
+    margin-top: 0 !important;
+    position: static;
+  }
+  .filter-section {
+    position: static;
+    width: 100%;
+    left: 0;
+    top: 0;
+    margin-top: 20px;
+  }
+  .filter-container {
+    height: auto;
+    padding: 5px;
+    box-shadow: none;
+  }
+  .filter-container label {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+  .bt-dropdown-container {
+    position: static;
+    display: block;
+    text-align: right;
+    margin-right: 10px;
+  }
+  .BT-profile-button {
+    right: 0;
+    top: 0;
+    font-size: 30px;
+    position: static;
+  }
+  .bt-dropdown-menu {
+    right: 0;
+    left: auto;
+    width: 120px;
+    font-size: 14px;
+  }
+}
+
+/* ...existing code... */

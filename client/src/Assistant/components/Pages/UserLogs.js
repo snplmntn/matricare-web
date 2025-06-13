@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../style/pages/userlogs.css";
-import { IoPrint } from "react-icons/io5";
+import { IoPrint, IoArrowBack } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
 import jsPDF from "jspdf";
@@ -10,6 +9,7 @@ import "jspdf-autotable";
 const ConsultantLogs = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const token = getCookie("token");
+  const navigate = useNavigate();
   const [filter, setFilter] = useState("all");
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
@@ -30,6 +30,10 @@ const ConsultantLogs = () => {
   const [obGyneSpecialist, setObGyneSpecialist] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
+
+  const handleBackClick = () => {
+    navigate("/user-management");
+  };
 
   useEffect(() => {
     const filterUsers = () => {
@@ -273,12 +277,55 @@ const ConsultantLogs = () => {
   };
 
   return (
-    <div className="CPL-container">
-      <div className="CPL-main-section">
-        <header className="CPL-header">
-          <div className="CPL-user-profile">
-            <h1>{`${user.name}`}</h1>
-            <p>{user.role}</p>
+    <div className="flex h-screen w-full lg:w-[90%] lg:ml-[200px] bg-[#9a6cb4] font-['Lucida_Sans','Lucida_Sans_Regular','Lucida_Grande','Lucida_Sans_Unicode',Geneva,Verdana,sans-serif]">
+      <main className="flex-grow p-4 lg:p-5 flex flex-col bg-white/90 lg:rounded-l-[50px]">
+        {/* Header */}
+        <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center mb-4 lg:mb-5">
+          {/* Mobile Header */}
+          <div className="flex justify-between items-center w-full lg:hidden mb-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleBackClick}
+                className="p-2 text-[#7c459c] hover:bg-[#7c459c] hover:text-white rounded-lg transition-colors duration-200"
+                title="Back to User Management"
+              >
+                <IoArrowBack size={24} />
+              </button>
+            </div>
+          </div>
+
+          {/* Desktop Back Button and Title */}
+          <div className="hidden lg:flex items-center gap-4 lg:ml-10 lg:mt-5">
+            <button
+              onClick={handleBackClick}
+              className="p-2 text-[#7c459c] hover:bg-[#7c459c] hover:text-white rounded-lg transition-colors duration-200"
+              title="Back to User Management"
+            >
+              <IoArrowBack size={28} />
+            </button>
+          </div>
+
+          {/* Desktop Header - Exact positioning */}
+          <div className="hidden lg:flex lg:justify-between lg:items-center lg:mb-5 lg:ml-[1000px] lg:-mt-5">
+            <div className="flex flex-col text-right lg:mt-[30px]">
+              <h1 className="m-0 text-lg lg:mr-[70px]">{user.name}</h1>
+              <p className="m-0 text-sm text-gray-600 lg:mr-[70px]">
+                {user.role}
+              </p>
+              <img
+                src={
+                  user.profilePicture
+                    ? user.profilePicture
+                    : "img/profilePicture.jpg"
+                }
+                alt="Profile"
+                className="rounded-full w-[50px] h-[50px] lg:ml-[290px] lg:-mt-[45px]"
+              />
+            </div>
+          </div>
+
+          {/* Mobile User Profile */}
+          <div className="flex items-center gap-3 w-full lg:hidden p-3 bg-white rounded-lg shadow-sm">
             <img
               src={
                 user.profilePicture
@@ -286,270 +333,374 @@ const ConsultantLogs = () => {
                   : "img/profilePicture.jpg"
               }
               alt="Profile"
+              className="w-10 h-10 rounded-full object-cover"
             />
+            <div>
+              <h2 className="text-base font-semibold text-[#7c459c]">
+                {user.name}
+              </h2>
+              <p className="text-sm text-gray-600">{user.role}</p>
+            </div>
           </div>
         </header>
 
-        <div className="CPL-type-buttons">
+        {/* Type Buttons */}
+        <div className="flex flex-wrap justify-start mb-5 mt-4 lg:mt-5 lg:ml-10 gap-2 lg:gap-0">
           <button
-            className={`CPL-type-button ${view === "patients" ? "active" : ""}`}
+            className={`px-4 py-2 lg:px-[70px] lg:py-5 lg:mr-2.5 border-none rounded cursor-pointer bg-white text-black text-sm lg:text-lg ${
+              view === "patients"
+                ? "border-b-2 lg:border-b-[3px] border-[#e39fa9]"
+                : ""
+            } hover:bg-[#7c459c] hover:text-white`}
             onClick={() => setView("patients")}
           >
             Patient Logs
           </button>
           <button
-            className={`CPL-type-button ${view === "admins" ? "active" : ""}`}
+            className={`px-4 py-2 lg:px-[70px] lg:py-5 lg:mr-2.5 border-none rounded cursor-pointer bg-white text-black text-sm lg:text-lg ${
+              view === "admins"
+                ? "border-b-2 lg:border-b-[3px] border-[#e39fa9]"
+                : ""
+            } hover:bg-[#7c459c] hover:text-white`}
             onClick={() => setView("admins")}
           >
             Admin Logs
           </button>
           <button
-            className={`CPL-type-button ${
-              view === "specialist" ? "active" : ""
-            }`}
+            className={`px-4 py-2 lg:px-[70px] lg:py-5 lg:mr-2.5 border-none rounded cursor-pointer bg-white text-black text-sm lg:text-lg ${
+              view === "specialist"
+                ? "border-b-2 lg:border-b-[3px] border-[#e39fa9]"
+                : ""
+            } hover:bg-[#7c459c] hover:text-white`}
             onClick={() => setView("specialist")}
           >
             OB Specialists
           </button>
         </div>
 
-        <div className="CPL-view-label">
-          {view === "patients" ? (
-            <h2>Patient Logs</h2>
-          ) : view === "admin" ? (
-            <h2>Admin Logs</h2>
-          ) : (
-            <h2>OB Specialist</h2>
-          )}
+        {/* View Label */}
+        <div className="mb-2.5 text-left mt-2.5 lg:mt-2.5 lg:ml-10">
+          <h2 className="text-2xl lg:text-3xl font-bold text-[#4a4a4a] mt-2.5">
+            {view === "patients"
+              ? "Patient Logs"
+              : view === "admins"
+              ? "Admin Logs"
+              : "OB Specialist"}
+          </h2>
         </div>
 
-        <div className="CPL-filter-options">
+        {/* Filter Options */}
+        <div className="flex flex-col lg:flex-row justify-between mb-2.5 gap-4 lg:gap-0">
+          {/* Patient Filters */}
           {view === "patients" && (
             <>
-              <div className="CPL-toggle-select">
-                <input
-                  type="checkbox"
-                  id="selectAll"
-                  checked={selectAll}
-                  onChange={toggleSelectAll}
-                />
-                <label htmlFor="selectAll">Select All Users</label>
-                <span className="CPL-total-users">
-                  ({patients.length} Users)
-                </span>
-              </div>
-              <button className="CPL-download-button" onClick={generatePDF}>
-                Download All &nbsp;
-                <IoPrint />
-              </button>
-
-              <div className="CPL-filter-section">
-                <div className="CPL-filter-container">
-                  <label htmlFor="filter">Filter by Status:</label>
-                  <select id="filter" onChange={handleFilterChange}>
-                    <option value="all">All</option>
-                    <option value="New">New</option>
-                    <option value="On-Going">On-Going</option>
-                    <option value="Done">Done</option>
-                  </select>
+              <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-0">
+                <div className="flex items-center lg:ml-[250px] lg:-mt-[50px]">
+                  <input
+                    type="checkbox"
+                    id="selectAll"
+                    checked={selectAll}
+                    onChange={toggleSelectAll}
+                    className="mr-1"
+                  />
+                  <label
+                    htmlFor="selectAll"
+                    className="ml-1 text-sm lg:text-base lg:mt-1"
+                  >
+                    Select All Users
+                  </label>
+                  <span className="font-bold text-[#ccc] text-xs lg:text-sm ml-2.5 mt-1">
+                    ({patients.length} Users)
+                  </span>
                 </div>
+
+                <button
+                  className="bg-white text-black border-none px-4 py-2 lg:px-[15px] lg:py-2.5 text-center no-underline inline-block text-sm lg:text-base cursor-pointer rounded lg:-mt-[45px] lg:ml-[650px] mb-2.5 hover:bg-[#7c459c] hover:text-white flex items-center gap-2"
+                  onClick={generatePDF}
+                >
+                  Download All <IoPrint />
+                </button>
+              </div>
+
+              <div className="flex items-center lg:-mt-[50px] lg:mr-10">
+                <label htmlFor="filter" className="mr-2 lg:mt-2">
+                  Filter by Status:
+                </label>
+                <select
+                  id="filter"
+                  onChange={handleFilterChange}
+                  className="px-2 py-1 rounded border border-[#ccc] w-[150px]"
+                >
+                  <option value="all">All</option>
+                  <option value="New">New</option>
+                  <option value="On-Going">On-Going</option>
+                  <option value="Done">Done</option>
+                </select>
               </div>
             </>
           )}
 
           {/* Admin Filters */}
           {view === "admins" && (
-            <>
+            <div className="flex flex-col lg:flex-row items-start lg:items-center gap-4 lg:gap-0">
               <button
-                className="CPL-admin-download-button"
+                className="bg-white text-black border-none px-4 py-2 lg:px-[15px] lg:py-2.5 text-center no-underline inline-block text-sm lg:text-base cursor-pointer rounded lg:-mt-10 lg:ml-[1150px] hover:bg-[#7c459c] hover:text-white flex items-center gap-2"
                 onClick={generatePDF}
               >
-                Download All &nbsp;
-                <IoPrint />
+                Download All <IoPrint />
               </button>
 
-              <div className="CPL-admin-filter-section">
-                <div className="CPL-admin-filter-container">
-                  <label htmlFor="admin-filter">Filter by Role:</label>
-                  <select id="admin-filter" onChange={handleFilterChange}>
-                    <option value="all">All</option>
-                    <option value="Obgyne">Obgyne</option>
-                    <option value="Assistant">Assistant</option>
-                  </select>
-                </div>
+              <div className="flex items-center lg:-mt-[50px] lg:mr-10">
+                <label htmlFor="admin-filter" className="mr-2">
+                  Filter by Role:
+                </label>
+                <select
+                  id="admin-filter"
+                  onChange={handleFilterChange}
+                  className="px-2 py-1 rounded border border-[#ccc] w-[150px] ml-2.5"
+                >
+                  <option value="all">All</option>
+                  <option value="Obgyne">Obgyne</option>
+                  <option value="Assistant">Assistant</option>
+                </select>
               </div>
-            </>
+            </div>
           )}
 
+          {/* Specialist Filters */}
           {view === "specialist" && (
-            <button className="CPL-admin-download-button" onClick={generatePDF}>
-              Download All &nbsp;
-              <IoPrint />
+            <button
+              className="bg-white text-black border-none px-4 py-2 lg:px-[15px] lg:py-2.5 text-center no-underline inline-block text-sm lg:text-base cursor-pointer rounded lg:-mt-10 lg:ml-[1150px] hover:bg-[#7c459c] hover:text-white flex items-center gap-2"
+              onClick={generatePDF}
+            >
+              Download All <IoPrint />
             </button>
           )}
         </div>
 
-        <table className="CPL-user-table">
-          <thead>
-            <tr>
-              {view === "patients" && <th>Select</th>}
-              <th>Patient ID</th>
-              <th>Photo</th>
-              {view === "patients" && (
-                <>
-                  <th>Name</th>
-                  <th>Phone Number</th> {/* New Phone Number Column */}
-                  <th>Date</th> {/* New Date Column */}
-                  <th>Log In Time</th>
-                  <th>Log Out Time</th>
-                </>
-              )}
-              {view === "admins" && (
-                <>
-                  <th>Name</th>
-                  <th>Phone Number</th> {/* New Phone Number Column */}
-                  <th>Date</th> {/* New Date Column */}
-                  <th>Log In Time</th>
-                  <th>Log Out Time</th>
-                  <th>Role</th>
-                </>
-              )}
-              {view === "specialist" && (
-                <>
-                  <th>Name</th>
-                  <th>Phone Number</th> {/* New Phone Number Column */}
-                  <th>Date</th> {/* New Date Column */}
-                  <th>Log In Time</th>
-                  <th>Log Out Time</th>
-                  <th>Role</th>
-                </>
-              )}
-            </tr>
-          </thead>
-          <tbody>
+        {/* Table Container */}
+        <div className="w-full lg:w-[95%] h-[400px] lg:h-[700px] overflow-y-auto mt-2.5 lg:mt-2.5 lg:ml-10 rounded-lg scrollbar-hide">
+          {/* Mobile Card View */}
+          <div className="block lg:hidden space-y-4">
             {filteredUsers.map((user, index) => (
-              <tr key={user._id}>
-                {view === "patients" && (
-                  <td>
+              <div
+                key={user._id}
+                className="bg-white p-4 rounded-lg shadow-md border"
+              >
+                <div className="flex items-center mb-3">
+                  {view === "patients" && (
                     <input
                       type="checkbox"
                       checked={selectedUsers.includes(user._id)}
                       onChange={() => handleUserSelection(user._id)}
+                      className="mr-3"
                     />
-                  </td>
-                )}
-                <td>{user.seq}</td>
-                <td>
-                  {view === "patients" ? (
+                  )}
+                  <img
+                    src={
+                      view === "patients"
+                        ? user.userId && user.userId.profilePicture
+                          ? user.userId.profilePicture
+                          : "img/profilePicture.jpg"
+                        : user.profilePicture
+                        ? user.profilePicture
+                        : "img/profilePicture.jpg"
+                    }
+                    alt="Profile"
+                    className="w-10 h-10 rounded-lg object-cover mr-3"
+                  />
+                  <div className="flex-1">
+                    <div className="font-semibold text-[#333]">
+                      {user.fullName}
+                    </div>
+                    <div className="text-sm text-gray-500">ID: {user.seq}</div>
+                  </div>
+                </div>
+
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="font-medium">Phone:</span>{" "}
+                    {user.phoneNumber}
+                  </div>
+
+                  {view === "patients" && (
                     <>
-                      <img
-                        src={
-                          user.userId && user.userId.profilePicture
-                            ? user.userId.profilePicture
-                            : "img/profilePicture.jpg"
-                        }
-                        // alt={user.name}
-                        className="CPM-user-photo"
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <img
-                        src={
-                          user.profilePicture
-                            ? user.profilePicture
-                            : "img/profilePicture.jpg"
-                        }
-                        // alt={user.name}
-                        className="CPM-user-photo"
-                      />
+                      <div>
+                        <span className="font-medium">Date:</span>{" "}
+                        {user.userId && user.userId.logInTime
+                          ? formatDate(user.userId.logInTime)
+                          : "N/A"}
+                      </div>
+                      <div>
+                        <span className="font-medium">Log In:</span>{" "}
+                        {user.userId && user.userId.logInTime
+                          ? formatTime(user.userId.logInTime)
+                          : "N/A"}
+                      </div>
+                      <div>
+                        <span className="font-medium">Log Out:</span>{" "}
+                        {user.userId &&
+                        user.userId.logOutTime &&
+                        user.userId.logInTime
+                          ? new Date(user.userId.logOutTime) >
+                            new Date(user.userId.logInTime)
+                            ? formatTime(user.userId.logOutTime)
+                            : " - - : - -"
+                          : " - - : - -"}
+                      </div>
                     </>
                   )}
-                </td>
+
+                  {(view === "admins" || view === "specialist") && (
+                    <>
+                      <div>
+                        <span className="font-medium">Date:</span>{" "}
+                        {user && user.logInTime
+                          ? formatDate(user.logInTime)
+                          : "N/A"}
+                      </div>
+                      <div>
+                        <span className="font-medium">Log In:</span>{" "}
+                        {user && user.logInTime
+                          ? formatTime(user.logInTime)
+                          : "N/A"}
+                      </div>
+                      <div>
+                        <span className="font-medium">Log Out:</span>{" "}
+                        {user && user.logOutTime && user.logInTime
+                          ? new Date(user.logOutTime) > new Date(user.logInTime)
+                            ? formatTime(user.logOutTime)
+                            : " - - : - -"
+                          : " - - : - -"}
+                      </div>
+                      <div>
+                        <span className="font-medium">Role:</span> {user.role}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table View */}
+          <table className="hidden lg:table w-[95%] border-separate mt-2.5 ml-10 rounded-lg border-spacing-y-[15px] table-auto">
+            <thead className="bg-white">
+              <tr>
                 {view === "patients" && (
-                  <>
-                    <td>{user.fullName}</td>
-                    <td>{user.phoneNumber}</td> {/* New Phone Number Field */}
-                    <td>
-                      {user.userId && user.userId.logInTime
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left">
+                    Select
+                  </th>
+                )}
+                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
+                  Patient ID
+                </th>
+                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
+                  Photo
+                </th>
+                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
+                  Name
+                </th>
+                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left">
+                  Phone Number
+                </th>
+                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left">
+                  Date
+                </th>
+                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left">
+                  Log In Time
+                </th>
+                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left">
+                  Log Out Time
+                </th>
+                {(view === "admins" || view === "specialist") && (
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left">
+                    Role
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user, index) => (
+                <tr key={user._id}>
+                  {view === "patients" && (
+                    <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md">
+                      <input
+                        type="checkbox"
+                        checked={selectedUsers.includes(user._id)}
+                        onChange={() => handleUserSelection(user._id)}
+                      />
+                    </td>
+                  )}
+                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md text-center">
+                    {user.seq}
+                  </td>
+                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md text-center">
+                    <img
+                      src={
+                        view === "patients"
+                          ? user.userId && user.userId.profilePicture
+                            ? user.userId.profilePicture
+                            : "img/profilePicture.jpg"
+                          : user.profilePicture
+                          ? user.profilePicture
+                          : "img/profilePicture.jpg"
+                      }
+                      alt="Profile"
+                      className="w-10 h-10 rounded-lg object-cover"
+                    />
+                  </td>
+                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md text-center">
+                    {user.fullName}
+                  </td>
+                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md">
+                    {user.phoneNumber}
+                  </td>
+                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md">
+                    {view === "patients"
+                      ? user.userId && user.userId.logInTime
                         ? formatDate(user.userId.logInTime)
-                        : "N/A"}
-                    </td>
-                    {/* New Date Column */}
-                    <td>
-                      {user.userId && user.userId.logInTime
+                        : "N/A"
+                      : user && user.logInTime
+                      ? formatDate(user.logInTime)
+                      : "N/A"}
+                  </td>
+                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md">
+                    {view === "patients"
+                      ? user.userId && user.userId.logInTime
                         ? formatTime(user.userId.logInTime)
-                        : "N/A"}
-                    </td>
-                    <td>
-                      {user.userId &&
-                      user.userId.logOutTime &&
-                      user.userId.logInTime
+                        : "N/A"
+                      : user && user.logInTime
+                      ? formatTime(user.logInTime)
+                      : "N/A"}
+                  </td>
+                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md">
+                    {view === "patients"
+                      ? user.userId &&
+                        user.userId.logOutTime &&
+                        user.userId.logInTime
                         ? new Date(user.userId.logOutTime) >
                           new Date(user.userId.logInTime)
                           ? formatTime(user.userId.logOutTime)
                           : " - - : - -"
-                        : " - - : - -"}
+                        : " - - : - -"
+                      : user && user.logOutTime && user.logInTime
+                      ? new Date(user.logOutTime) > new Date(user.logInTime)
+                        ? formatTime(user.logOutTime)
+                        : " - - : - -"
+                      : " - - : - -"}
+                  </td>
+                  {(view === "admins" || view === "specialist") && (
+                    <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md">
+                      {user.role}
                     </td>
-                  </>
-                )}
-                {view === "admins" && (
-                  <>
-                    <td>{user.fullName}</td>
-                    <td>{user.phoneNumber}</td>
-                    <td>
-                      {user && user.logInTime
-                        ? formatDate(user.logInTime)
-                        : "N/A"}
-                    </td>
-                    {/* New Date Column */}
-                    <td>
-                      {user && user.logInTime
-                        ? formatTime(user.logInTime)
-                        : "N/A"}
-                    </td>
-                    <td>
-                      {user && user.logOutTime && user.logInTime
-                        ? new Date(user.logOutTime) > new Date(user.logInTime)
-                          ? formatTime(user.logOutTime)
-                          : " - - : - -"
-                        : " - - : - -"}
-                    </td>
-
-                    <td>{user.role}</td>
-                  </>
-                )}
-                {view === "specialist" && (
-                  <>
-                    <td>{user.fullName}</td>
-                    <td>{user.phoneNumber}</td>
-                    <td>
-                      {user && user.logInTime
-                        ? formatDate(user.logInTime)
-                        : "N/A"}
-                    </td>
-                    {/* New Date Column */}
-                    <td>
-                      {user && user.logInTime
-                        ? formatTime(user.logInTime)
-                        : "N/A"}
-                    </td>
-                    <td>
-                      {user && user.logOutTime && user.logInTime
-                        ? new Date(user.logOutTime) > new Date(user.logInTime)
-                          ? formatTime(user.logOutTime)
-                          : " - - : - -"
-                        : " - - : - -"}
-                    </td>
-
-                    <td>{user.role}</td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </main>
     </div>
   );
 };
