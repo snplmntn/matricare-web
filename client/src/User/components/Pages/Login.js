@@ -214,20 +214,20 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center py-10 px-2 bg-[#7c459c]">
+    <div className="relative min-h-screen flex flex-col justify-center items-center bg-[#7c459c] overflow-hidden">
       {/* Background image and overlay */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center opacity-90 z-0"
         style={{ backgroundImage: `url(/img/login.jpg)` }}
       ></div>
-      <div className="absolute inset-0 w-full h-full bg-[#7c459cbc] z-0"></div>
+      <div className="absolute inset-0 bg-[#7c459cbc] z-0"></div>
 
       {/* Content */}
-      <div className="relative z-10 w-full flex flex-col items-center">
-        <h2 className="text-white text-5xl md:text-7xl font-bold mb-4 mt-4 md:mt-0 leading-tight text-center drop-shadow-lg">
+      <div className="relative z-10 flex flex-col  w-full px-2 sm:px-0 lg:left-40">
+        <h2 className="font-bold text-white text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-2 sm:mb-4 mt-8 sm:mt-0 leading-tight drop-shadow-lg sm:text-left">
           Login!
         </h2>
-        <p className="text-[#042440] text-base md:text-lg text-center mb-2">
+        <p className="text-[#042440] text-sm xs:text-base sm:text-lg mb-2 sm:mb-4  sm:text-left">
           Don't have an account?
           <Link
             to="/signup"
@@ -237,138 +237,134 @@ export default function Login() {
           </Link>
         </p>
         {error && (
-          <p className="text-[#e39fa9] text-center mb-2 font-semibold">
-            {error}
-          </p>
+          <p className="text-[#e39fa9] mb-2 sm:mb-4 font-semibold">{error}</p>
         )}
         {successMessage && (
-          <p className="text-[#e39fa9] text-center mb-2 font-semibold">
+          <p className="text-[#e39fa9] mb-2 sm:mb-4 font-semibold">
             {successMessage}
           </p>
         )}
 
-        <div className="w-full max-w-md bg-white/80 rounded-2xl shadow-lg p-8 flex flex-col items-center mt-2">
+        <div className="w-full max-w-[500px] bg-white/60 rounded-2xl shadow-lg p-3 xs:p-4 sm:p-8 flex flex-col items-center">
           <form onSubmit={handleLogin} className="w-full">
-            {/* Username */}
-            <div className="relative mb-6">
+            <div className="relative mb-4 sm:mb-6">
+              <label htmlFor="username" className="">
+                Email:
+              </label>
               <input
-                className="peer block w-full px-4 py-4 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9] placeholder-transparent"
+                className="block w-full px-3 py-2 sm:px-4 sm:py-3 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9] peer"
                 type="text"
                 id="username"
-                placeholder="Username"
+                placeholder=" "
                 value={username}
                 onChange={handleChange}
                 required
-                autoComplete="username"
               />
-              <label
-                htmlFor="username"
-                className="absolute left-4 top-4 text-[#042440] text-base transition-all duration-200 pointer-events-none peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-5 peer-focus:text-xs peer-focus:text-[#042440] peer-focus:bg-white peer-focus:px-1 bg-white px-1"
-              >
-                Username:
-              </label>
             </div>
-            {/* Password */}
-            <div className="relative mb-6">
+
+            <div className="relative mb-4 sm:mb-6">
+              <label htmlFor="password" className="">
+                Password:
+              </label>
               <input
-                className="peer block w-full px-4 py-4 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9] placeholder-transparent"
+                className="block w-full px-3 py-2 sm:px-4 sm:py-3 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9] pr-10 peer"
                 type={showPassword ? "text" : "password"}
                 id="password"
-                placeholder="Password"
+                placeholder=" "
                 value={password}
                 onChange={handleChange}
                 required
-                autoComplete="current-password"
               />
-              <label
-                htmlFor="password"
-                className="absolute left-4 top-4 text-[#042440] text-base transition-all duration-200 pointer-events-none peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-focus:-top-5 peer-focus:text-xs peer-focus:text-[#042440] peer-focus:bg-white peer-focus:px-1 bg-white px-1"
-              >
-                Password:
-              </label>
+
               <span
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 text-2xl text-[#7c459c] cursor-pointer"
+                className="absolute right-3 sm:right-4 top-2/3 transform -translate-y-1/2 text-xl sm:text-2xl text-[#7c459c] cursor-pointer"
                 onClick={togglePasswordVisibility}
+                tabIndex={0}
+                role="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
               </span>
             </div>
-            {/* Forgot Password */}
-            <div className="flex justify-end mb-4">
+
+            <div className="flex justify-end mb-3 sm:mb-4">
               <Link
                 to="/forgot-password"
-                className="text-[#e39fa9] text-sm hover:underline"
+                className="text-[#e39fa9] text-xs sm:text-sm hover:underline"
               >
                 Forgot Password?
               </Link>
             </div>
-            {/* Login Button */}
+
             <button
               type="submit"
-              className="w-full py-3 bg-[#e39fa9] text-white rounded-md font-semibold text-lg hover:bg-[#7c459c] transition"
+              className="w-full py-2 sm:py-3 bg-[#e39fa9] text-[#040400] rounded-md font-semibold text-base sm:text-lg hover:bg-[#7c459cbc] hover:text-white transition"
               disabled={loading}
             >
               {loading ? "Logging in..." : "LOGIN"}
             </button>
           </form>
+
+          {/* Verification Modal */}
+          <Modal
+            isOpen={showVerificationModal}
+            onRequestClose={() => setShowVerificationModal(false)}
+            className="bg-white rounded-2xl p-3 xs:p-4 sm:p-8 max-w-xs sm:max-w-md w-[95vw] sm:w-full mx-auto shadow-lg flex flex-col items-center outline-none"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+          >
+            <div className="text-[#9a6cb4] text-4xl sm:text-6xl mb-2 sm:mb-4">
+              <BsPatchCheckFill />
+            </div>
+            <h2 className="text-lg sm:text-2xl font-bold text-[#333] mb-1 sm:mb-2 text-center">
+              Authenticate Your Account
+            </h2>
+            <p className="text-xs sm:text-base text-[#666] mb-3 sm:mb-6 text-center">
+              {authMessage ? (
+                authMessage
+              ) : (
+                <>
+                  Please type the verification code sent to{" "}
+                  <strong>{email && censorEmail(email)}</strong>.
+                </>
+              )}
+            </p>
+            <div className="flex justify-between gap-1 sm:gap-2 mb-3 sm:mb-6">
+              {[...Array(6)].map((_, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  className="w-8 h-12 sm:w-10 sm:h-14 text-xl sm:text-2xl border-2 border-gray-200 rounded-lg text-center focus:outline-none focus:border-[#f5b63a] shadow"
+                  maxLength={1}
+                  value={verificationCode[index] || ""}
+                  onChange={(e) => handleInputChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  ref={(input) => (inputRefs.current[index] = input)}
+                />
+              ))}
+            </div>
+            <div className="flex items-center mb-3">
+              <input
+                type="checkbox"
+                id="rememberDevice"
+                className="mr-2"
+                onChange={(e) => setRememberDevice(e.target.checked)}
+              />
+              <label
+                htmlFor="rememberDevice"
+                className="text-xs sm:text-sm text-[#333]"
+              >
+                Remember this Device
+              </label>
+            </div>
+            <button
+              className="bg-[#9a6cb4] text-white px-6 sm:px-8 py-2 rounded-full font-bold text-base sm:text-lg hover:bg-[#e39fa9] transition"
+              onClick={handleCodeSubmission}
+            >
+              Submit
+            </button>
+          </Modal>
         </div>
       </div>
-
-      {/* Verification Modal */}
-      <Modal
-        isOpen={showVerificationModal}
-        onRequestClose={() => setShowVerificationModal(false)}
-        className="bg-white rounded-2xl p-8 max-w-md w-full mx-auto shadow-lg flex flex-col items-center outline-none"
-        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-      >
-        <div className="text-[#9a6cb4] text-6xl mb-4">
-          <BsPatchCheckFill />
-        </div>
-        <h2 className="text-2xl font-bold text-[#333] mb-2 text-center">
-          Authenticate Your Account
-        </h2>
-        <p className="text-base text-[#666] mb-6 text-center">
-          {authMessage ? (
-            authMessage
-          ) : (
-            <>
-              Please type the verification code sent to{" "}
-              <strong>{email && censorEmail(email)}</strong>.
-            </>
-          )}
-        </p>
-        <div className="flex justify-between gap-2 mb-6">
-          {[...Array(6)].map((_, index) => (
-            <input
-              key={index}
-              type="text"
-              className="w-10 h-14 text-2xl border-2 border-gray-200 rounded-lg text-center focus:outline-none focus:border-[#f5b63a] shadow"
-              maxLength={1}
-              value={verificationCode[index] || ""}
-              onChange={(e) => handleInputChange(e, index)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              ref={(input) => (inputRefs.current[index] = input)}
-            />
-          ))}
-        </div>
-        <div className="flex items-center mb-4">
-          <input
-            type="checkbox"
-            id="rememberDevice"
-            className="mr-2"
-            onChange={(e) => setRememberDevice(e.target.checked)}
-          />
-          <label htmlFor="rememberDevice" className="text-sm text-[#333]">
-            Remember this Device
-          </label>
-        </div>
-        <button
-          className="bg-[#9a6cb4] text-white px-8 py-3 rounded-full font-bold text-lg hover:bg-[#e39fa9] transition"
-          onClick={handleCodeSubmission}
-        >
-          Submit
-        </button>
-      </Modal>
     </div>
   );
 }
