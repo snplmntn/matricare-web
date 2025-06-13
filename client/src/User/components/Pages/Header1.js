@@ -24,7 +24,7 @@ export default function Header1() {
           <li>
             <Link
               to="/"
-              className="font-serif text-xl text-[#7c459c] hover:text-[#E39FA9]"
+              className="font-serif text-md text-[#7c459c] hover:text-[#E39FA9]"
             >
               Home
             </Link>
@@ -32,7 +32,7 @@ export default function Header1() {
           <li>
             <a
               href="#about-us"
-              className="font-serif text-xl text-[#7c459c] hover:text-[#E39FA9]"
+              className="font-serif text-md text-[#7c459c] hover:text-[#E39FA9]"
             >
               About
             </a>
@@ -40,7 +40,7 @@ export default function Header1() {
           <li>
             <a
               href="#what-we-do"
-              className="font-serif text-xl text-[#7c459c] hover:text-[#E39FA9]"
+              className="font-serif text-md text-[#7c459c] hover:text-[#E39FA9]"
             >
               Service
             </a>
@@ -48,7 +48,7 @@ export default function Header1() {
           <li>
             <a
               href="#topic-of-interest"
-              className="font-serif text-xl text-[#7c459c] hover:text-[#E39FA9]"
+              className="font-serif text-md text-[#7c459c] hover:text-[#E39FA9]"
             >
               Articles
             </a>
@@ -56,7 +56,7 @@ export default function Header1() {
           <li>
             <a
               href="#contact"
-              className="font-serif text-xl text-[#7c459c] hover:text-[#E39FA9]"
+              className="font-serif text-md text-[#7c459c] hover:text-[#E39FA9]"
             >
               Contact
             </a>
@@ -64,7 +64,7 @@ export default function Header1() {
           <li>
             <Link
               to="/belly-talk"
-              className="font-serif text-xl text-[#7c459c] hover:text-[#E39FA9]"
+              className="font-serif text-md text-[#7c459c] hover:text-[#E39FA9]"
             >
               BellyTalk
             </Link>
@@ -75,7 +75,7 @@ export default function Header1() {
       <div className="hidden md:flex ml-auto">
         <Link
           to="/login"
-          className="bg-[#E39FA9] text-white px-20 py-2 rounded-full text-lg font-semibold hover:bg-[#7c459c] transition text-center mr-36"
+          className="bg-[#E39FA9] text-white px-20 py-2 rounded-full text-lg  hover:bg-[#7c459c] transition text-center mr-36"
         >
           LOGIN
         </Link>

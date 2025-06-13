@@ -1,8 +1,7 @@
 import React, { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom"; // Updated import
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "react-modal";
-import "../../styles/pages/signup.css";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { getCookie } from "../../../utils/getCookie";
 import { useCookies } from "react-cookie";
@@ -28,7 +27,7 @@ export default function Signup() {
   const [verificationCode, setVerificationCode] = useState(
     new Array(6).fill("")
   );
-  const inputRefs = useRef([]); // Array to store input references
+  const inputRefs = useRef([]);
   const [verifyToken, setVerifyToken] = useState("");
   const [cookies, setCookie, removeCookie] = useCookies();
 
@@ -45,19 +44,16 @@ export default function Signup() {
   } = formData;
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
   const handleInputChange = (e, index) => {
     const { value } = e.target;
     const newCode = [...verificationCode];
-
-    // Allow only valid hexadecimal characters (0-9, A-F)
     if (/^[0-9A-Fa-f]$/.test(value)) {
-      newCode[index] = value.toUpperCase(); // Store uppercase for consistency
+      newCode[index] = value.toUpperCase();
       setVerificationCode(newCode);
-
-      // Move to the next input if not the last input
       if (index < inputRefs.current.length - 1 && value) {
         inputRefs.current[index + 1].focus();
       }
@@ -66,14 +62,11 @@ export default function Signup() {
 
   const handleKeyDown = (e, index) => {
     const newCode = [...verificationCode];
-
     if (e.key === "Backspace") {
       if (newCode[index]) {
-        // Clear the current input
         newCode[index] = "";
         setVerificationCode(newCode);
       } else if (index > 0) {
-        // Move to the previous input and clear that input
         inputRefs.current[index - 1].focus();
         newCode[index - 1] = "";
         setVerificationCode(newCode);
@@ -83,33 +76,25 @@ export default function Signup() {
 
   const handleCodeSubmission = () => {
     setAuthMessage("");
-
     if (verificationCode.length !== 6) {
       setAuthMessage("Verification code must be 6 digits long.");
       return;
     }
-
     const expiryTimestamp = parseInt(getCookie("expiryTimestamp"), 10);
-
     if (!expiryTimestamp) {
       setAuthMessage("Verification code has expired. Please Sign up again.");
       return;
     }
-
     const joinedCode = verificationCode.join("");
-
     if (verifyToken === joinedCode.toUpperCase()) {
       setAuthMessage("Verification Successful!");
-
       setTimeout(() => {
         setShowVerificationModal(false);
       }, 1000);
       submitUser();
-      // handleRedirectToApp();
     } else {
       setAuthMessage("Invalid verification code. Please try again.");
     }
-
     setTimeout(() => {
       setAuthMessage("");
     }, 3000);
@@ -120,7 +105,6 @@ export default function Signup() {
     const phoneRegex = /^\d{11}$/;
     const passwordRegex =
       /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
-
     if (
       !fullName.trim() ||
       !email.trim() ||
@@ -132,44 +116,38 @@ export default function Signup() {
       setError("Please fill in all fields.");
       return false;
     }
-
     if (!emailRegex.test(email)) {
       setError("Invalid email format.");
       return false;
     }
-
     if (!phoneRegex.test(phoneNumber)) {
       setError("Phone number must be 11 digits.");
       return false;
     }
-
     if (!passwordRegex.test(password)) {
       setError(
         "Password must contain at least 8 characters, an uppercase letter, a number, and a special character."
       );
       return false;
     }
-
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return false;
     }
-
     return true;
   };
 
   const sendEmail = async () => {
     setError("");
     setSuccess("");
-
     try {
       const emailResponse = await axios.put(
         `${API_URL}/verify?email=${email}&fullName=${fullName}`
       );
       setVerifyToken(emailResponse.data.verificationToken);
       setSuccess("Email sent! Please check your inbox.");
-      const expiryTime = Date.now() + 5 * 60 * 1000; // 5 minutes in milliseconds
-      setCookie("expiryTimestamp", expiryTime, { path: "/", maxAge: 5 * 60 }); // Setting cookie with maxAge
+      const expiryTime = Date.now() + 5 * 60 * 1000;
+      setCookie("expiryTimestamp", expiryTime, { path: "/", maxAge: 5 * 60 });
       setLoading(false);
       setShowVerificationModal(true);
     } catch (error) {
@@ -183,7 +161,6 @@ export default function Signup() {
   const submitUser = async () => {
     setError("");
     setSuccess("");
-
     try {
       const newUser = {
         fullName,
@@ -192,33 +169,22 @@ export default function Signup() {
         password,
         phoneNumber,
       };
-
       if (obGyneSpecialist) newUser.role = "Ob-gyne Specialist";
       await axios.post(`${API_URL}/auth/signup`, newUser);
-
       setSuccess("Registration successful! Redirecting to login...");
-
       setTimeout(() => {
-        navigate("/login"); // Redirect to login after 2 seconds
+        navigate("/login");
       }, 2000);
-
-      // Handle response, such as redirecting the user
     } catch (err) {
       if (err.response && err.response.status === 400) {
         setError(err.response.data.message);
       } else {
         setError("Signup error. Please try again.");
       }
-      console.error(
-        "Signup error:",
-        err.response
-          ? err.response.data.message
-          : "Signup error. Please try again."
-      );
       setVerifyToken("");
       setVerificationCode(new Array(6).fill(""));
     } finally {
-      setLoading(false); // End loading state
+      setLoading(false);
     }
   };
 
@@ -226,11 +192,8 @@ export default function Signup() {
     e.preventDefault();
     setError("");
     setSuccess("");
-
-    if (!validateForm()) return; // Validate form before sending
-
+    if (!validateForm()) return;
     setLoading(true);
-
     if (!verifyToken) {
       await sendEmail();
       return;
@@ -238,17 +201,15 @@ export default function Signup() {
       submitUser();
     }
   };
+
   const censorEmail = (email) => {
     if (!email || typeof email !== "string" || !email.includes("@")) {
       return email || "";
     }
-
     const [name, domain] = email.split("@");
-
     if (!name || !domain) {
       return email;
     }
-
     const visibleNamePart = name.slice(0, 3);
     const censoredNamePart = "*".repeat(Math.max(name.length - 3, 0));
     const visibleDomainPart = domain.slice(0, 1);
@@ -257,152 +218,190 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup-outer-container signup-background">
+    <div className="relative min-h-screen flex flex-col bg-[#7c459c] overflow-hidden">
+      {/* Background image and overlay */}
       <div
-        className="background-image"
+        className="absolute inset-0 w-full h-full bg-cover bg-center opacity-90 z-0"
         style={{ backgroundImage: `url(/img/login.jpg)` }}
       ></div>
-      <div className="signup-overlay"></div>
-      <h2 className="signup-welcome-message">Create New Account!</h2>
-      <p className="sign-up-text">
-        Already have an Account? <Link to="/login">Log in here!</Link>
-      </p>
+      <div className="absolute inset-0 bg-[#7c459cbc] z-0"></div>
 
-      {error && <p className="signup-error-message">{error}</p>}
-
-      {success && <p className="signup-success-message">{success}</p>}
-
-      <div className="signup-container">
-        <form onSubmit={handleSignup}>
-          <div className="SU-form-group">
+      {/* Content */}
+      <div className="relative left-0 sm:left-20 z-10 flex flex-col px-2 sm:px-4 md:px-4 lg:left-40 w-full">
+        <h2 className="text-white text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 mt-8 xs:mt-12 sm:mt-24 leading-tight drop-shadow-lg text-center sm:text-left">
+          Create New Account!
+        </h2>
+        <p className="text-[#042440] text-sm xs:text-base sm:text-lg mb-4 sm:mb-6 text-center sm:text-left">
+          Already have an Account?
+          <Link
+            to="/login"
+            className="ml-2 text-white hover:text-[#e39fa9] underline"
+          >
+            Log in here!
+          </Link>
+        </p>
+        {error && (
+          <p className="text-[#E39FA9] mb-4 text-center font-semibold">
+            {error}
+          </p>
+        )}
+        {success && (
+          <p className="text-[#E39FA9] mb-4 text-center font-semibold">
+            {success}
+          </p>
+        )}
+        <form
+          onSubmit={handleSignup}
+          className="w-full max-w-[500px] bg-white/60 rounded-2xl shadow-lg p-3 xs:p-4 sm:p-8 flex flex-col items-center mx-auto  sm:mx-0"
+        >
+          <div className="w-full mb-4">
+            <label
+              htmlFor="fullName"
+              className="block text-[#042440] text-base mb-2"
+            >
+              Full Name:
+            </label>
             <input
-              className="SU-form-input"
+              className="block w-full px-3 py-2 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9]"
               type="text"
               id="fullName"
               name="fullName"
-              placeholder=" "
+              placeholder="Full Name"
               value={fullName}
               onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
               required
             />
-            <label htmlFor="fullName" className="SU-form-label">
-              Full Name:
-            </label>
           </div>
-          <div className="SU-form-group">
-            <input
-              className="SU-form-input"
-              type="email"
-              name="email"
-              id="email"
-              placeholder=" "
-              value={email}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="email" className="SU-form-label">
+          <div className="w-full mb-4">
+            <label
+              htmlFor="email"
+              className="block text-[#042440] text-base mb-2"
+            >
               Email:
             </label>
-          </div>
-          <div className="SU-form-group">
             <input
-              className="SU-form-input"
+              className="block w-full px-3 py-2 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9]"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Email"
+              value={email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div className="w-full mb-4">
+            <label
+              htmlFor="username"
+              className="block text-[#042440] text-base mb-2"
+            >
+              Username:
+            </label>
+            <input
+              className="block w-full px-3 py-2 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9]"
               type="text"
               id="username"
               name="username"
-              placeholder=" "
+              placeholder="Username"
               value={username}
               onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
               required
             />
-            <label htmlFor="username" className="SU-form-label">
-              Username:
-            </label>
           </div>
-
-          <div className="SU-form-group">
+          <div className="w-full mb-4">
+            <label
+              htmlFor="password"
+              className="block text-[#042440] text-base mb-2"
+            >
+              Password:
+            </label>
             <input
-              className="SU-form-input"
+              className="block w-full px-3 py-2 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9]"
               type="password"
               id="password"
               name="password"
-              placeholder=" "
+              placeholder="Password"
               value={password}
               onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
               required
             />
-            <label htmlFor="password" className="SU-form-label">
-              Password:
-            </label>
           </div>
-
-          <div className="SU-form-group">
+          <div className="w-full mb-4">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-[#042440] text-base mb-2"
+            >
+              Confirm Password:
+            </label>
             <input
-              className="SU-form-input"
+              className="block w-full px-3 py-2 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9]"
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              placeholder=" "
+              placeholder="Confirm Password"
               value={confirmPassword}
               onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
               required
             />
-            <label htmlFor="confirmPassword" className="SU-form-label">
-              Confirm Password:
-            </label>
           </div>
-
-          <div className="SU-form-group">
+          <div className="w-full mb-4">
+            <label
+              htmlFor="phoneNumber"
+              className="block text-[#042440] text-base mb-2"
+            >
+              Phone Number:
+            </label>
             <input
-              className="SU-form-input"
+              className="block w-full px-3 py-2 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9]"
               type="text"
               id="phoneNumber"
               name="phoneNumber"
-              placeholder=" "
+              placeholder="Phone Number"
               value={phoneNumber}
               onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
               required
             />
-            <label htmlFor="phoneNumber" className="SU-form-label">
-              Phone Number:
-            </label>
           </div>
-          <div className="SU-form-group">
-            <label>
-              <input
-                type="checkbox"
-                id="obGyneSpecialist"
-                name="obGyneSpecialist"
-                onChange={handleChange}
-              />
+          <div className="w-full flex items-center mb-4">
+            <input
+              type="checkbox"
+              id="obGyneSpecialist"
+              name="obGyneSpecialist"
+              checked={obGyneSpecialist}
+              onChange={handleChange}
+              className="mr-2"
+            />
+            <label
+              htmlFor="obGyneSpecialist"
+              className="text-[#042440] text-base"
+            >
               Ob-Gyne Specialist
             </label>
           </div>
-          <div className="SU-form-group">
-            <button type="submit" className="SU-button" disabled={loading}>
-              SIGN UP
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full py-2 bg-[#e39fa9] text-white rounded-md font-semibold text-lg hover:bg-[#7c459c] transition"
+            disabled={loading}
+          >
+            SIGN UP
+          </button>
         </form>
       </div>
 
+      {/* Verification Modal */}
       <Modal
         isOpen={showVerificationModal}
         onRequestClose={() => setShowVerificationModal(false)}
-        className="Authentication__Content"
-        overlayClassName="Authentication__Overlay"
+        className="bg-white rounded-2xl p-3 xs:p-4 sm:p-8 max-w-xs sm:max-w-md w-[95vw] sm:w-full mx-auto shadow-lg flex flex-col items-center outline-none"
+        overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
-        <div className="Authentication__Icon">
+        <div className="text-[#9a6cb4] text-4xl sm:text-6xl mb-2 sm:mb-4">
           <BsPatchCheckFill />
         </div>
-        <h2 className="Authentication__Title">Confirm your Email</h2>
-        <p className="Authentication__Subtitle">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#333] mb-1 sm:mb-2 text-center">
+          Confirm your Email
+        </h2>
+        <p className="text-sm sm:text-base text-[#666] mb-4 sm:mb-6 text-center">
           {authMessage ? (
             authMessage
           ) : (
@@ -412,13 +411,12 @@ export default function Signup() {
             </>
           )}
         </p>
-
-        <div className="Authentication__CodeWrapper">
+        <div className="flex justify-between gap-1 sm:gap-2 mb-4 sm:mb-6">
           {[...Array(6)].map((_, index) => (
             <input
               key={index}
               type="text"
-              className="Authentication__CodeInput"
+              className="w-8 h-12 sm:w-10 sm:h-14 text-xl sm:text-2xl border-2 border-gray-200 rounded-lg text-center focus:outline-none focus:border-[#f5b63a] shadow"
               maxLength={1}
               value={verificationCode[index] || ""}
               onChange={(e) => handleInputChange(e, index)}
@@ -427,9 +425,8 @@ export default function Signup() {
             />
           ))}
         </div>
-
         <button
-          className="Authentication__Button Authentication__SubmitButton"
+          className="bg-[#9a6cb4] text-white px-6 sm:px-8 py-2 sm:py-3 rounded-full font-bold text-base sm:text-lg hover:bg-[#e39fa9] transition"
           onClick={handleCodeSubmission}
         >
           Submit
