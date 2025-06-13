@@ -60,59 +60,57 @@
   display: flex;
   align-items: center;
   margin-right: 10px;
-  z-index: 1001; 
+  z-index: 1001;
 }
 
 .consul-profile-icon,
 .consul-notification-icon {
   font-size: 30px;
-  color: #7c459c; 
+  color: #7c459c;
 }
 
 .consul-profile-icon {
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 
 .consul-notification-icon {
-  margin-left: 10px; 
+  margin-left: 10px;
 }
 
-
 .consultant-profile-info {
-  position: fixed; 
-  right: 20px; 
+  position: fixed;
+  right: 20px;
   top: 20px;
   display: flex;
-  align-items: center; 
-  z-index: 1000; 
-  background-color: transparent; 
+  align-items: center;
+  z-index: 1000;
+  background-color: transparent;
 }
 
 .consultant-profile-text {
   display: flex;
-  flex-direction: column; 
+  flex-direction: column;
   text-align: right; /* Align text to the right */
   margin-right: 10px; /* Space between text and image */
 }
 
 .consultant-profile h1 {
-  margin: 0; 
-  font-size: 18px; 
+  margin: 0;
+  font-size: 18px;
 }
 
 .consultant-profile p {
-  margin: 0; 
-  font-size: 14px; 
-  color: #666; 
+  margin: 0;
+  font-size: 14px;
+  color: #666;
 }
 
 .consultant-profile-image {
-  border-radius: 50%; 
-  width: 50px; 
-  height: 50px; 
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
   object-fit: cover;
 }
-
 
 .consultant-greeting-section {
   display: flex;
@@ -123,9 +121,9 @@
   width: 950px;
   margin-top: 80px;
   align-items: center;
-  justify-content: space-between; 
+  justify-content: space-between;
   padding: 30px;
-  background-color: white; 
+  background-color: white;
 }
 
 .consultant-greeting-text {
@@ -189,13 +187,13 @@
 }
 
 .consul-text {
-  font-size: 16px; 
-  margin-bottom: 5px; 
+  font-size: 16px;
+  margin-bottom: 5px;
 }
 
 .consul-number {
-  font-size: 24px; 
-  font-weight: bold; 
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .consultant-report-card.total-patients {
@@ -255,8 +253,8 @@
   padding: 12px 15px;
   color: #333;
   text-align: left;
-  background-color: #fff; 
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); 
+  background-color: #fff;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .consultant-right-sidebar {
@@ -285,14 +283,14 @@
 
 .consultant-notifications {
   margin-bottom: 20px;
-  height: 400px; 
-  overflow-y: scroll; 
-  scrollbar-width: none; 
-  -ms-overflow-style: none; 
+  height: 400px;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .consultant-notifications::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
 
 .consultant-notifications h3 {
@@ -315,11 +313,17 @@
   width: 100%;
   max-width: 350px;
   background-color: none !important;
-  margin-left: 50px;
+  margin: auto;
   border: none !important;
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
+
+/* @media (max-width: 1100px) {
+  .consul-custom-calendar {
+    margin-left: 0;
+  }
+} */
 
 .consul-custom-calendar .react-calendar__tile {
   padding: 10px;

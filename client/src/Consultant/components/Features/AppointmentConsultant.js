@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "../../styles/features/appointmentconsultant.css";
 import { IoAddCircleOutline, IoNotifications } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
@@ -92,7 +91,7 @@ const AppointmentConsultant = () => {
     // Check if location or date is changed
     if (name === "location" || name === "date") {
       checkAvailability(
-        newAppointment.location,
+        name === "location" ? value : newAppointment.location,
         name === "date" ? value : newAppointment.date
       );
     }
@@ -254,23 +253,29 @@ const AppointmentConsultant = () => {
   };
 
   return (
-    <div className="appointmentConsultant-dashboard">
-      <main className="appointmentConsultant-main">
-        <header className="appointmentConsultant-header">
-          <div className="appointmentConsultant-notificationIcon">
+    <div
+      className="flex h-screen w-[89%] ml-[200px] bg-[#9a6cb4] font-['Lucida_Sans','Lucida_Sans_Regular','Lucida_Grande','Lucida_Sans_Unicode',Geneva,Verdana,sans-serif]
+      max-[1100px]:flex-col max-[1100px]:ml-0 max-[1100px]:w-full max-[1100px]:h-auto  "
+    >
+      <main
+        className="flex-1 p-5 bg-white/90 rounded-l-[50px]
+        max-[1100px]:rounded-none max-[1100px]:w-full max-[1100px]:p-2 max-[1100px]:pt-4"
+      >
+        <header className="flex justify-end pb-5 mr-8 pt-[54px]">
+          <div className="mr-8 text-[1.5rem] text-[#7c459c] ">
             <a href="/consultant-notification">
               <IoNotifications />
             </a>
           </div>
-          <div className="appointmentConsultant-headerUser">
-            <h1>{`Dr. ${user.name}`}</h1>
-            <p>
+          <div className="flex flex-col mr-5 text-right">
+            <h1 className="m-0 text-[18px] max-[600px]:text-[15px]">{`Dr. ${user.name}`}</h1>
+            <p className="m-0 text-[14px] text-[#666] max-[600px]:text-[12px]">
               {user && user.role === "Obgyne"
                 ? "Obstetrician - gynecologist"
                 : user.role}
             </p>
           </div>
-          <div className="appointmentConsultant-headerImage">
+          <div>
             <img
               src={
                 user.profilePicture
@@ -278,31 +283,45 @@ const AppointmentConsultant = () => {
                   : "img/profilePicture.jpg"
               }
               alt="Profile"
+              className="h-[40px] w-[40px] rounded-full"
             />
           </div>
         </header>
 
-        <div className="appointmentConsultant-breadcrumb">
-          <a href="#doctor">Doctor</a> <span>&gt;</span>{" "}
-          <a href="#appointments" className="breadcrumb-active">
+        <div className="my-5 text-[16px] ml-[50px] max-[600px]:ml-2 max-[600px]:text-[13px]">
+          <a
+            href="#doctor"
+            className="no-underline text-[#040404] text-[20px] font-bold max-[600px]:text-[15px]"
+          >
+            Doctor
+          </a>{" "}
+          <span className="mx-1">{">"}</span>{" "}
+          <a
+            href="#appointments"
+            className="text-[#7c459c] no-underline text-[20px] font-bold max-[600px]:text-[15px]"
+          >
             Appointments
           </a>
         </div>
 
-        <div className="appointmentConsultant-content">
-          <section className="appointmentConsultant-appointments">
-            <div className="appointmentConsultant-tabs">
+        <div className="grid grid-cols-2 gap-5 mt-5 ml-[50px] max-[1100px]:grid-cols-1 max-[1100px]:ml-0">
+          <section className="flex flex-col items-start bg-white w-[1500px] h-[700px] max-[1600px]:w-full max-[900px]:h-auto max-[900px]:p-2 max-[900px]:w-full">
+            <div className="flex gap-2 ml-10 mt-12 max-[900px]:ml-2 max-[900px]:mt-4">
               <button
-                className={`appointmentConsultant-tab ${
-                  activeTab === "upcoming" ? "active" : ""
+                className={`px-5 py-2 rounded text-[14px] ${
+                  activeTab === "upcoming"
+                    ? "bg-[#e39fa9] text-white"
+                    : "bg-[#f4f4f4] "
                 }`}
                 onClick={() => setActiveTab("upcoming")}
               >
                 Upcoming Appointments
               </button>
               <button
-                className={`appointmentConsultant-tab ${
-                  activeTab === "post" ? "active" : ""
+                className={`px-5 py-2 rounded text-[14px] ${
+                  activeTab === "post"
+                    ? "bg-[#e39fa9] text-white"
+                    : "bg-[#f4f4f4] "
                 }`}
                 onClick={() => setActiveTab("post")}
               >
@@ -310,16 +329,19 @@ const AppointmentConsultant = () => {
               </button>
             </div>
             <button
-              className="appointmentConsultant-addAppointmentBtn"
+              className="flex items-center text-[#040404] bg-none border-none px-5 py-2 rounded text-[18px] mt-[-35px] ml-[1200px] mb-5 whitespace-nowrap
+                max-[1600px]:ml-[600px] max-[1100px]:mt-2 max-[1100px]:ml-2 max-[1100px]:mb-2 max-[1100px]:ml-2"
               onClick={() => setIsFormVisible(true)}
             >
-              <IoAddCircleOutline /> Add Appointment
+              <IoAddCircleOutline className="mr-2" /> Add Appointment
             </button>
 
             {/* Appointment Form */}
             {isFormVisible && (
-              <div className="appointmentConsultant-appointmentForm">
-                <h2>Add Appointment</h2>
+              <div className="fixed top-1/2 left-1/2 z-[1000] bg-white p-5 rounded-lg shadow-lg w-[400px] h-[580px] flex flex-col -translate-x-1/2 -translate-y-1/2 max-[500px]:w-[95vw] max-[500px]:h-auto">
+                <h2 className="text-center mb-8 mt-5 text-[22px]">
+                  Add Appointment
+                </h2>
                 <input
                   type="text"
                   name="patientName"
@@ -327,6 +349,7 @@ const AppointmentConsultant = () => {
                   value={newAppointment.patientName}
                   onChange={handleFormChange}
                   required
+                  className="my-2 px-3 py-2 border border-gray-300 rounded-lg text-[16px] font-['Lucida_Sans',sans-serif] bg-white"
                 />
                 <input
                   type="text"
@@ -335,9 +358,10 @@ const AppointmentConsultant = () => {
                   value={newAppointment.email}
                   onChange={handleFormChange}
                   required
+                  className="my-2 px-3 py-2 border border-gray-300 rounded-lg text-[16px] font-['Lucida_Sans',sans-serif] bg-white"
                 />
                 <select
-                  className="appointment-select"
+                  className="my-2 px-3 py-2 border border-gray-300 rounded-lg text-[16px] font-['Lucida_Sans',sans-serif] bg-white"
                   name="category"
                   value={newAppointment.category}
                   onChange={handleFormChange}
@@ -354,7 +378,7 @@ const AppointmentConsultant = () => {
                 </select>
 
                 <select
-                  className="appointment-select"
+                  className="my-2 px-3 py-2 border border-gray-300 rounded-lg text-[16px] font-['Lucida_Sans',sans-serif] bg-white"
                   name="location"
                   value={newAppointment.location}
                   onChange={handleFormChange}
@@ -376,10 +400,11 @@ const AppointmentConsultant = () => {
                   value={newAppointment.date}
                   onChange={handleFormChange}
                   required
+                  className="my-2 px-3 py-2 border border-gray-300 rounded-lg text-[16px] font-['Lucida_Sans',sans-serif] bg-white"
                 />
 
                 <select
-                  className="appointment-select"
+                  className="my-2 px-3 py-2 border border-gray-300 rounded-lg text-[16px] font-['Lucida_Sans',sans-serif] bg-white"
                   name="time"
                   value={newAppointment.time}
                   onChange={handleFormChange}
@@ -395,14 +420,14 @@ const AppointmentConsultant = () => {
 
                 <button
                   type="button"
-                  className="appointment-add-button"
+                  className="my-2 px-3 py-2 bg-[#9a6cb4] text-white rounded-[20px] text-[16px] mt-5"
                   onClick={handleFormSubmit}
                 >
                   Add Appointment
                 </button>
                 <button
                   type="button"
-                  className="appointment-cancel-button"
+                  className="my-2 px-3 py-2 bg-[#e39fa9] text-white rounded-[20px] text-[16px] mt-[-1]"
                   onClick={handleCancel}
                 >
                   Cancel
@@ -412,55 +437,55 @@ const AppointmentConsultant = () => {
 
             {/* Conditionally render based on the active tab */}
             {activeTab === "upcoming" && (
-              <div className="appointmentConsultant-appointmentList">
+              <div className="mb-5 overflow-y-scroll max-h-[500px] w-full scrollbar-hide">
                 {upcomingAppointments.map((appointment) => (
                   <div
                     key={appointment._id}
-                    className="appointmentConsultant-appointmentItem"
+                    className="w-[1300px] p-2 bg-[#f9f9f9] mb-2 rounded-[15px] ml-[120px] flex flex-wrap gap-2  max-[900px]:ml-2"
                   >
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Date:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {formatDate(appointment.date)}
                         </span>
                       </div>
                     </div>
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Patient Name:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {appointment.patientName}
                         </span>
                       </div>
                     </div>
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Location:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {appointment.location}
                         </span>
                       </div>
                     </div>
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Category:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {appointment.category}
                         </span>
                       </div>
                     </div>
-                    <div className="appointmentConsultant-action">
+                    <div className="ml-auto mt-5">
                       <select
-                        className="appointmentConsultant-statusSelect"
+                        className="mt-5 px-4 py-2 border border-gray-300 rounded-full text-[14px] bg-[#e39fa9] w-[150px] text-center text-[#040404] mr-5"
                         value={appointment.status}
                         onChange={(e) => {
                           handleStatusChange(appointment._id, e.target.value);
@@ -477,48 +502,48 @@ const AppointmentConsultant = () => {
             )}
 
             {activeTab === "post" && (
-              <div className="appointmentConsultant-appointmentList">
+              <div className="mb-5 overflow-y-scroll max-h-[500px] w-full scrollbar-hide">
                 {postAppointments.map((appointment, index) => (
                   <div
                     key={index}
-                    className="appointmentConsultant-appointmentItem"
+                    className="w-[1300px] p-2 bg-[#f9f9f9] mb-2 rounded-[15px] ml-[120px] flex flex-wrap gap-2  max-[900px]:ml-2"
                   >
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Date:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {formatDate(appointment.date)}
                         </span>
                       </div>
                     </div>
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Patient Name:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {appointment.patientName}
                         </span>
                       </div>
                     </div>
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Location:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {appointment.location}
                         </span>
                       </div>
                     </div>
-                    <div className="appointmentConsultant-detail">
-                      <div className="appointmentConsultant-detailContent">
-                        <span className="appointmentConsultant-label">
+                    <div className="flex-1 mr-5 mb-5">
+                      <div className="mt-5 ml-5 flex flex-col">
+                        <span className="font-bold text-[#444] text-[14px] mb-1">
                           Category:
                         </span>
-                        <span className="appointmentConsultant-text">
+                        <span className="text-[18px] text-[#040404]">
                           {appointment.category}
                         </span>
                       </div>

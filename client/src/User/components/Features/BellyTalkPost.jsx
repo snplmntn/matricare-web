@@ -27,8 +27,6 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [commentsCount, setCommentsCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
   const API_URL = process.env.REACT_APP_API_URL;
-
-  //will enable user to open the input in reply
   const [openReply, setOpenReply] = useState(false);
 
   const handleItemClick = () => {
@@ -361,46 +359,52 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   };
 
   return (
-    <div className="bellytalk-feed-item" key={post.id}>
+    <div className="relative mt-5 p-3 sm:p-5 rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.1)] bg-white flex flex-col md:flex-row items-start">
+      {/* Avatar */}
       <img
-        src={`${
+        src={
           post.userId && post.userId.profilePicture
             ? `${post.userId.profilePicture}`
             : "img/profilePicture.jpg"
-        }`}
+        }
         alt="Avatar"
-        className="bellytalk-avatar-overlay"
+        className="absolute -top-5 left-3 md:-left-5 w-12 h-12 md:w-[60px] md:h-[60px] rounded-full object-cover z-10"
       />
-      <div className="bellytalk-post-content">
-        <div className="bellytalk-post-header">
-          <h4>
+      {/* Post Content */}
+      <div className="ml-0 md:ml-10 w-full md:w-[95%] mt-8 md:mt-0">
+        {/* Header */}
+        <div className="flex justify-between items-center relative flex-wrap">
+          <h4 className="m-0 text-[#7c459c] font-bold flex items-center text-base sm:text-lg">
             {post.fullname}
             {post.userId && post.userId.verified && (
-              <MdVerified className="verified-icon" />
+              <MdVerified className="ml-1 text-[#6b95e5]" />
             )}
           </h4>
           {post.userId && post.userId._id === userID && (
             <>
               <IoEllipsisVertical
-                className="bellytalk-menu-icon"
-                onClick={toggleMenu}
+                className="text-xl sm:text-2xl text-[#888] cursor-pointer"
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
               />
             </>
           )}
           {isMenuOpen && (
-            <ul className="bellytalk-meatball-menu">
+            <ul className="absolute top-8 right-0 bg-white border border-[#ddd] rounded-lg shadow-lg list-none p-0 w-32 sm:w-[150px] z-50">
               <li
+                className="px-3 sm:px-4 py-2 text-sm text-[#333] cursor-pointer hover:bg-[#f5f5f5] border-b border-[#f5f5f5] last:border-b-0"
                 onClick={() => {
-                  handleEditPost();
-                  handleItemClick();
+                  setIsEditing(true);
+                  setNewCaption(post.content);
+                  setIsMenuOpen(false);
                 }}
               >
                 Edit Post
               </li>
               <li
+                className="px-3 sm:px-4 py-2 text-sm text-[#333] cursor-pointer hover:bg-[#f5f5f5]"
                 onClick={() => {
-                  handleDeletePost();
-                  handleItemClick();
+                  onDeletePost(post._id);
+                  setIsMenuOpen(false);
                 }}
               >
                 Delete Post
@@ -408,93 +412,122 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
             </ul>
           )}
         </div>
-
-        <div className="location-with-icon">
-          <IoLocationSharp />
-          <p>{post.address}</p>
+        {/* Location */}
+        <div className="flex items-center mb-1 text-[#e39fa9] text-xs sm:text-sm mt-1">
+          <IoLocationSharp className="mr-1" />
+          <p className="m-0">{post.address}</p>
         </div>
-
+        {/* Content or Edit */}
         {isEditing ? (
           <div>
             <input
               type="text"
               value={newCaption}
               onChange={(e) => setNewCaption(e.target.value)}
-              className="bellytalk-edit-input"
+              className="w-full md:w-[80%] p-2 sm:p-3 border-none rounded text-xs sm:text-sm mb-2 sm:mb-4 resize-y bg-gray-100"
             />
-            <button className="bellytalk-edit-save" onClick={handleSaveEdit}>
-              Save
-            </button>
-            <button
-              className="bellytalk-edit-cancel"
-              onClick={() => setIsEditing(false)}
-            >
-              Cancel
-            </button>
+            <div className="flex flex-wrap gap-2">
+              <button
+                className="bg-[#e39fa9] text-[#333] border-none px-4 sm:px-8 py-1 sm:py-2 text-xs sm:text-sm rounded"
+                onClick={async () => {
+                  // handleSaveEdit logic here
+                  setIsEditing(false);
+                }}
+              >
+                Save
+              </button>
+              <button
+                className="bg-[#e39fa9] text-[#333] border-none px-4 sm:px-8 py-1 sm:py-2 text-xs sm:text-sm rounded"
+                onClick={() => setIsEditing(false)}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         ) : (
-          <p>{post.content}</p>
+          <p className="my-1 text-sm sm:text-base">{post.content}</p>
         )}
-
+        {/* Images */}
         {Array.isArray(post.picture)
           ? post.picture.map((pic, index) => (
               <img
                 key={index}
                 src={pic}
                 alt={`Post ${index}`}
-                className="bt-post-image"
+                className="w-full md:w-[500px] max-w-full h-auto rounded mb-2"
               />
             ))
           : post.picture && (
-              <img src={post.picture} alt="Post" className="bt-post-image" />
+              <img
+                src={post.picture}
+                alt="Post"
+                className="w-full md:w-[500px] max-w-full h-auto rounded mb-2"
+              />
             )}
-        <hr className="bellytalk-divider" />
-        <div className="bellytalk-actions">
-          <button className="bellytalk-action-button" onClick={handleReply}>
+        {/* Divider */}
+        <hr className="border-0 h-[1px] bg-[#e0e0e0] my-3 sm:my-4" />
+        {/* Actions */}
+        <div className="flex items-center gap-2 md:ml-[550px]">
+          <button
+            className="text-[18px] sm:text-[20px] text-[#9a6cb4] cursor-pointer bg-transparent border-none mt-1 hover:text-[#e39fa9]"
+            onClick={() => setOpenReply(!openReply)}
+          >
             <IoChatbubbleSharp />
           </button>
           {commentsCount > 0 && (
-            <span className="bellytalk-action-count">{commentsCount}</span>
+            <span className="text-xs sm:text-sm text-[#9a6cb4]">
+              {commentsCount}
+            </span>
           )}
-
           <IoHeart
-            className={`bellytalk-action-icon`}
-            style={{ color: isLikedByMe ? "#e39fa9" : "#9a6cb4" }}
-            onClick={() => {
-              setIsLikedByMe(!isLikedByMe);
-              handlePostLike();
+            className={`text-[18px] sm:text-[20px] cursor-pointer transition-colors duration-200 ${
+              isLikedByMe ? "text-[#e39fa9]" : "text-[#9a6cb4]"
+            } hover:text-[#e39fa9]`}
+            onClick={async () => {
+              await handlePostLike();
+              console.log("Like result:", isLikedByMe);
             }}
           />
           {likesCount > 0 && (
-            <span className="bellytalk-action-count">{likesCount}</span>
+            <span className="text-xs sm:text-sm text-[#9a6cb4]">
+              {likesCount}
+            </span>
           )}
-
           <IoBookmark
-            className={`bellytalk-action-icon`}
-            style={{ color: isSavedByMe ? "#e39fa9" : "#9a6cb4" }}
-            onClick={() => handleSave(post.id)}
+            className={`text-[18px] sm:text-[20px] cursor-pointer transition-colors duration-200 ${
+              isSavedByMe ? "text-[#e39fa9]" : "text-[#9a6cb4]"
+            } hover:text-[#e39fa9]`}
+            onClick={async () => {
+              await handleSave();
+              console.log("Save result:", isSavedByMe);
+            }}
           />
         </div>
-
+        {/* Reply Input */}
         {openReply && (
-          <div className="bellytalk-reply-container">
+          <div className="relative">
             <input
               type="text"
               placeholder="Write a comment..."
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
-              className="bellytalk-reply-input"
-              onKeyPress={(e) => handleKeyPress(e)} // Handle Enter key press
+              className="w-full md:w-[60%] p-2 border-none bg-transparent text-xs sm:text-sm absolute -mt-10 z-10"
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  handleKeyPress();
+                }
+              }}
             />
           </div>
         )}
+        {/* Comments */}
         {comments &&
           comments.map((comment, index) => (
             <div
               key={comment._id ? comment._id : index}
-              className="bellytalk-comment"
+              className="mb-4 sm:mb-6"
             >
-              <div className="comment-user-info">
+              <div className="flex items-start">
                 <img
                   src={
                     comment.userId && comment.userId.profilePicture
@@ -502,14 +535,16 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
                       : "img/profilePicture.jpg"
                   }
                   alt="User Avatar"
-                  className="comment-avatar"
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2"
                 />
                 <div>
-                  <h4>{comment.fullName}</h4>
-                  {comment.userId && comment.userId.verified && (
-                    <MdVerified className="verified-icon" />
-                  )}
-                  <p>{comment.content}</p>
+                  <h4 className="inline text-xs sm:text-base font-semibold m-0">
+                    {comment.fullName}
+                    {comment.userId && comment.userId.verified && (
+                      <MdVerified className="ml-1 text-[#6b95e5]" />
+                    )}
+                  </h4>
+                  <p className="mt-1 text-xs sm:text-sm">{comment.content}</p>
                 </div>
               </div>
             </div>

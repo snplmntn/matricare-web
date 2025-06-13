@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/settings/consultantpatientsinfo.css";
 import { IoPencil, IoTrash, IoSave } from "react-icons/io5";
 import { getCookie } from "../../../utils/getCookie";
 import axios from "axios";
@@ -36,7 +35,7 @@ const ConsultantPatientInfo = () => {
 
   const [admins, setAdmins] = useState([]);
 
-  const [showForm, setShowForm] = useState(false); // State for form visibility
+  const [showForm, setShowForm] = useState(false);
 
   const filteredUsers =
     view === "patients"
@@ -69,7 +68,7 @@ const ConsultantPatientInfo = () => {
   };
 
   const handleAddPatientClick = () => {
-    setShowForm(true); // Show the form when the button is clicked
+    setShowForm(true);
   };
 
   const handleFormChange = (event) => {
@@ -95,11 +94,11 @@ const ConsultantPatientInfo = () => {
     } catch (error) {
       console.error(error);
     }
-    setShowForm(false); // Hide the form
+    setShowForm(false);
   };
 
   const handleCancelClick = () => {
-    setShowForm(false); // Hide the form
+    setShowForm(false);
   };
 
   useEffect(() => {
@@ -142,14 +141,22 @@ const ConsultantPatientInfo = () => {
   }, []);
 
   return (
-    <div className="CPM-container">
-      <div className="CPM-main-section">
-        <header className="CPM-header">
-          <div className="CPM-user-profile">
-            <h1>{`Dr. ${user.name}`}</h1>
-            <p>
-              {user.role === "Obgyne" ? "Obstetrician-gynecologist" : user.role}
-            </p>
+    <div
+      className="flex h-screen w-[90%] ml-[200px] bg-[#9a6cb4] font-['Lucida_Sans','Lucida_Sans_Regular','Lucida_Grande','Lucida_Sans_Unicode',Geneva,Verdana,sans-serif]
+      max-[1100px]:flex-col max-[1100px]:ml-0 max-[1100px]:w-full max-[1100px]:h-auto"
+    >
+      <div
+        className="flex-grow flex flex-col p-5 bg-white/90 rounded-l-[50px]
+        max-[1100px]:rounded-none max-[1100px]:w-full max-[1100px]:p-2 max-[1100px]:pt-16"
+      >
+        <header className="flex justify-end items-center mb-5 max-[600px]:flex-col max-[600px]:items-end max-[600px]:gap-2">
+          <div className="flex gap-4 text-right mt-8">
+            <button
+              className="bg-[#9a6cb4] text-white px-5 py-2 rounded-[10px] hover:bg-[#7c459c] transition-colors duration-300 max-[900px]:mr-0 max-[900px]:ml-0 max-[600px]:px-2 max-[600px]:py-1 max-[600px]:text-[12px]"
+              onClick={handleAddPatientClick}
+            >
+              + Add Patients
+            </button>
             <img
               src={
                 user.profilePicture
@@ -157,187 +164,275 @@ const ConsultantPatientInfo = () => {
                   : "img/profilePicture.jpg"
               }
               alt="Profile"
+              className="rounded-full w-[50px] h-[50px] object-cover max-[600px]:w-[36px] max-[600px]:h-[36px]"
             />
-            <button className="CPM-add-btn" onClick={handleAddPatientClick}>
-              + Add Patients
-            </button>
+            <div>
+              <h1 className="m-0 text-[18px] mr-16 max-[600px]:text-[15px] max-[1100px]:ml-0">{`Dr. ${user.name}`}</h1>
+              <p className="m-0 text-[14px] text-[#666] mr-16 max-[600px]:text-[12px] max-[1100px]:ml-0 ">
+                {user.role === "Obgyne"
+                  ? "Obstetrician-gynecologist"
+                  : user.role}
+              </p>
+            </div>
           </div>
         </header>
 
-        <div className="CPM-type-buttons">
+        <div className="flex justify-start mb-5 mt-5 ml-10 max-[600px]:flex-col max-[600px]:ml-0">
           <button
-            className={`CPM-type-button ${view === "patients" ? "active" : ""}`}
+            className={`px-8 py-5 mr-2 rounded bg-white text-[#040404] text-[18px] ${
+              view === "patients"
+                ? "border-b-4 border-[#e39fa9]"
+                : "hover:bg-[#7c459c] hover:text-white"
+            } max-[600px]:w-full max-[600px]:mb-2`}
             onClick={() => setView("patients")}
           >
             Patients
           </button>
           <button
-            className={`CPM-type-button ${
-              view === "specialist" ? "active" : ""
-            }`}
+            className={`px-8 py-5 mr-2 rounded bg-white text-[#040404] text-[18px] ${
+              view === "specialist"
+                ? "border-b-4 border-[#e39fa9]"
+                : "hover:bg-[#7c459c] hover:text-white"
+            } max-[600px]:w-full max-[600px]:mb-2`}
             onClick={() => setView("specialist")}
           >
             Ob-Gyne Specialist
           </button>
           <button
-            className={`CPM-type-button ${view === "admins" ? "active" : ""}`}
+            className={`px-8 py-5 mr-2 rounded bg-white text-[#040404] text-[18px] ${
+              view === "admins"
+                ? "border-b-4 border-[#e39fa9]"
+                : "hover:bg-[#7c459c] hover:text-white"
+            } max-[600px]:w-full max-[600px]:mb-2`}
             onClick={() => setView("admins")}
           >
             Admins
           </button>
         </div>
 
-        <div className="CPM-view-label">
+        <div className="mb-2 text-left mt-2 ml-10 max-[600px]:ml-0">
           {view === "patients" ? (
-            <h2>Patients</h2>
+            <h2 className="text-[30px] font-bold text-[#4a4a4a] mt-2 max-[600px]:text-[20px]">
+              Patients
+            </h2>
           ) : view === "admins" ? (
-            <h2>Admins</h2>
+            <h2 className="text-[30px] font-bold text-[#4a4a4a] mt-2 max-[600px]:text-[20px]">
+              Admins
+            </h2>
           ) : view === "specialist" ? (
-            <h2>Ob-Gyne Specialists</h2>
+            <h2 className="text-[30px] font-bold text-[#4a4a4a] mt-2 max-[600px]:text-[20px]">
+              Ob-Gyne Specialists
+            </h2>
           ) : (
-            <h2>Default Title</h2>
+            <h2 className="text-[30px] font-bold text-[#4a4a4a] mt-2 max-[600px]:text-[20px]">
+              Default Title
+            </h2>
           )}
         </div>
 
-        <div className="CPM-filter-options">
+        <div className="flex justify-between mb-2 max-[600px]:flex-col max-[600px]:gap-2">
           {view === "patients" && (
-            <div className="CPM-toggle-select">
+            <div className="flex items-center ml-10 max-[600px]:ml-0">
               <input
                 type="checkbox"
                 id="selectAll"
                 checked={selectAll}
                 onChange={toggleSelectAll}
+                className="mr-2"
               />
-              <label htmlFor="selectAll">Select All Users</label>
-              <span className="CPM-total-users">({patients.length} Users)</span>
+              <label htmlFor="selectAll" className="text-[16px] mt-1">
+                Select All Users
+              </label>
+              <span className="font-bold text-[#ccc] text-[14px] ml-2 mt-1">
+                ({patients.length} Users)
+              </span>
             </div>
           )}
           {view === "patients" && (
-            <div className="CPM-filter-section">
-              <div className="CPM-filter-container">
-                <label htmlFor="filter">Filter:</label>
-                <select id="filter" onChange={handleFilterChange}>
-                  <option value="all">All</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                </select>
-              </div>
+            <div className="flex items-center mt-[-30px] mr-10 max-[600px]:mr-0 max-[600px]:mt-0">
+              <label htmlFor="filter" className="mr-2 mt-2">
+                Filter:
+              </label>
+              <select
+                id="filter"
+                onChange={handleFilterChange}
+                className="px-2 py-1 rounded border border-gray-300 w-[150px]"
+              >
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
             </div>
           )}
         </div>
 
-        <table className="CPM-user-table">
-          <thead>
-            <tr>
-              {view === "patients" && <th>Select</th>}
-
-              <th> ID</th>
-              <th>Photo</th>
-              {view === "patients" && (
-                <>
-                  <th>Patient Name</th>
-                  <th>Phone Number</th>
-                  <th>Email Address</th>
-                </>
-              )}
-              {view === "specialist" && (
-                <>
-                  <th>Specialist Name</th>
-                  <th>Phone Number</th>
-                  <th>Email Address</th>
-                  <th>Verification Status</th>
-                </>
-              )}
-              {view === "admins" && (
-                <>
-                  <th>Name</th>
-                  <th>Phone Number</th>
-                  <th>Email Address</th>
-                  <th>Role</th>
-                </>
-              )}
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.map((user, index) => (
-              <tr key={user.id} onClick={() => handleRowClick(user._id)}>
+        <div className="overflow-x-auto">
+          <table className="w-[95%] border-separate mt-2 ml-10 rounded-[8px] border-spacing-y-[15px] max-[600px]:ml-0 max-[600px]:w-full">
+            <thead className="sticky top-0 z-10">
+              <tr>
                 {view === "patients" && (
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedUsers.includes(user.id)}
-                      onChange={() => handleUserSelection(user.id)}
-                    />
-                  </td>
+                  <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                    Select
+                  </th>
                 )}
-                <td>{user.seq}</td>
-                <td>
-                  {view === "patients" ? (
-                    <>
+                <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                  ID
+                </th>
+                <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                  Photo
+                </th>
+                {view === "patients" && (
+                  <>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Patient Name
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Phone Number
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Email Address
+                    </th>
+                  </>
+                )}
+                {view === "specialist" && (
+                  <>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Specialist Name
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Phone Number
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Email Address
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Verification Status
+                    </th>
+                  </>
+                )}
+                {view === "admins" && (
+                  <>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Name
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Phone Number
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Email Address
+                    </th>
+                    <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                      Role
+                    </th>
+                  </>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user, index) => (
+                <tr
+                  key={user.id}
+                  onClick={() => handleRowClick(user._id)}
+                  className="hover:bg-[#f4f4f4] cursor-pointer"
+                >
+                  {view === "patients" && (
+                    <td className="px-4 py-3 text-[#333] text-center bg-white shadow-md">
+                      <input
+                        type="checkbox"
+                        checked={selectedUsers.includes(user.id)}
+                        onChange={() => handleUserSelection(user.id)}
+                      />
+                    </td>
+                  )}
+                  <td className="px-4 py-3 text-[#333] text-center bg-white shadow-md">
+                    {user.seq}
+                  </td>
+                  <td className="px-4 py-3 text-[#333] text-center bg-white shadow-md">
+                    {view === "patients" ? (
                       <img
                         src={
                           user.userId && user.userId.profilePicture
                             ? user.userId.profilePicture
                             : "img/profilePicture.jpg"
                         }
-                        // alt={user.name}
-                        className="CPM-user-photo"
+                        className="w-[40px] h-[40px] rounded-[10px] object-cover"
+                        alt=""
                       />
-                    </>
-                  ) : (
-                    <>
+                    ) : (
                       <img
                         src={
                           user.profilePicture
                             ? user.profilePicture
                             : "img/profilePicture.jpg"
                         }
-                        // alt={user.name}
-                        className="CPM-user-photo"
+                        className="w-[40px] h-[40px] rounded-[10px] object-cover"
+                        alt=""
                       />
+                    )}
+                  </td>
+                  {view === "patients" && (
+                    <>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.fullName}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.phoneNumber}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.email}
+                      </td>
                     </>
                   )}
-                </td>
-                {view === "patients" && (
-                  <>
-                    <td>{user.fullName}</td>
-                    <td>{user.phoneNumber}</td>
-                    <td>{user.email}</td>
-                  </>
-                )}
-                {view === "specialist" && (
-                  <>
-                    <td>{user.fullName}</td>
-                    <td>{user.phoneNumber}</td>
-                    <td>{user.email}</td>
-                    <td>
-                      {user.prcId
-                        ? user.verified
-                          ? "Verified"
-                          : "On Process"
-                        : "No ID Found"}{" "}
-                    </td>
-                  </>
-                )}
-                {view === "admins" && (
-                  <>
-                    <td>{user.fullName}</td>
-                    <td>{user.phoneNumber}</td>
-                    <td>{user.email}</td>
-                    <td>{user.role}</td>
-                  </>
-                )}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  {view === "specialist" && (
+                    <>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.fullName}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.phoneNumber}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.email}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.prcId
+                          ? user.verified
+                            ? "Verified"
+                            : "On Process"
+                          : "No ID Found"}
+                      </td>
+                    </>
+                  )}
+                  {view === "admins" && (
+                    <>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.fullName}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.phoneNumber}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.email}
+                      </td>
+                      <td className="px-4 py-3 text-[#333] bg-white shadow-md">
+                        {user.role}
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
       {showForm && (
-        <div className="CPM-patient">
-          <div className="CPM-add-patient-form">
+        <div className="fixed top-0 left-0 w-screen h-screen bg-black/50 flex justify-center items-center z-[1000]">
+          <div className="bg-white p-8 rounded-[10px] w-[400px] shadow-lg max-[500px]:w-[95vw]">
             <form onSubmit={handleAddPatientSubmit}>
-              <div className="CPM-add-form">
-                <label htmlFor="patientName">Name:</label>
+              <div className="mb-4">
+                <label htmlFor="patientName" className="block mb-2">
+                  Name:
+                </label>
                 <input
                   type="text"
                   id="patientName"
@@ -345,10 +440,13 @@ const ConsultantPatientInfo = () => {
                   value={newPatient.fullName}
                   onChange={handleFormChange}
                   required
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
                 />
               </div>
-              <div className="CPM-add-form">
-                <label htmlFor="patientMobile">Mobile Number:</label>
+              <div className="mb-4">
+                <label htmlFor="patientMobile" className="block mb-2">
+                  Mobile Number:
+                </label>
                 <input
                   type="tel"
                   id="patientMobile"
@@ -356,10 +454,13 @@ const ConsultantPatientInfo = () => {
                   value={newPatient.phoneNumber}
                   onChange={handleFormChange}
                   required
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
                 />
               </div>
-              <div className="CPM-add-form">
-                <label htmlFor="patientEmail">Email:</label>
+              <div className="mb-4">
+                <label htmlFor="patientEmail" className="block mb-2">
+                  Email:
+                </label>
                 <input
                   type="email"
                   id="patientEmail"
@@ -367,14 +468,18 @@ const ConsultantPatientInfo = () => {
                   value={newPatient.email}
                   onChange={handleFormChange}
                   required
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
                 />
               </div>
-              <button type="submit" className="CPM-add-submit">
+              <button
+                type="submit"
+                className="my-2 px-3 py-2 bg-[#9a6cb4] text-white rounded-[8px] text-[16px] w-[150px] ml-[70px] max-[500px]:ml-0"
+              >
                 Add Patient
               </button>
               <button
                 type="button"
-                className="CPM-add-cancel"
+                className="my-2 px-3 py-2 bg-[#e39fa9] text-white rounded-[8px] text-[16px] w-[100px] ml-[20px] max-[500px]:ml-2"
                 onClick={handleCancelClick}
               >
                 Cancel

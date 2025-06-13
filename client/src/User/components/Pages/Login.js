@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import "../../styles/pages/login.css";
 import Modal from "react-modal";
 import { BsPatchCheckFill } from "react-icons/bs";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
@@ -13,8 +12,8 @@ export default function Login() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
-  const [showVerificationModal, setShowVerificationModal] = useState(false); // For modal
-  const [email, setEmail] = useState(""); // Store the user's email
+  const [showVerificationModal, setShowVerificationModal] = useState(false);
+  const [email, setEmail] = useState("");
   const [resendMessage, setResendMessage] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [verificationCode, setVerificationCode] = useState(
@@ -30,18 +29,14 @@ export default function Login() {
   const navigate = useNavigate();
   const [cookies, setCookie, removeCookie] = useCookies();
 
-  const inputRefs = useRef([]); // Array to store input references
+  const inputRefs = useRef([]);
 
   const handleInputChange = (e, index) => {
     const { value } = e.target;
     const newCode = [...verificationCode];
-
-    // Allow only valid hexadecimal characters (0-9, A-F)
     if (/^[0-9A-Fa-f]$/.test(value)) {
-      newCode[index] = value.toUpperCase(); // Store uppercase for consistency
+      newCode[index] = value.toUpperCase();
       setVerificationCode(newCode);
-
-      // Move to the next input if not the last input
       if (index < inputRefs.current.length - 1 && value) {
         inputRefs.current[index + 1].focus();
       }
@@ -50,14 +45,11 @@ export default function Login() {
 
   const handleKeyDown = (e, index) => {
     const newCode = [...verificationCode];
-
     if (e.key === "Backspace") {
       if (newCode[index]) {
-        // Clear the current input
         newCode[index] = "";
         setVerificationCode(newCode);
       } else if (index > 0) {
-        // Move to the previous input and clear that input
         inputRefs.current[index - 1].focus();
         newCode[index - 1] = "";
         setVerificationCode(newCode);
@@ -90,24 +82,18 @@ export default function Login() {
   const handleCodeSubmission = () => {
     setAuthMessage("");
     let userID = getCookie("userID");
-
     if (verificationCode.length !== 6) {
       setAuthMessage("Verification code must be 6 digits long.");
       return;
     }
-
     const expiryTimestamp = parseInt(getCookie("expiryTimestamp"), 10);
-
     if (!expiryTimestamp) {
       setAuthMessage("Verification code has expired. Please Login again.");
       return;
     }
-
     const joinedCode = verificationCode.join("");
-
     if (verifyToken === joinedCode.toUpperCase()) {
       setAuthMessage("Verification Successful!");
-
       if (rememberDevice) {
         const userTrustedDeviceArray = [...userTrustedDevice, userID];
         setCookie("userTrustedDevice", JSON.stringify(userTrustedDeviceArray), {
@@ -119,7 +105,6 @@ export default function Login() {
     } else {
       setAuthMessage("Invalid verification code. Please try again.");
     }
-
     setTimeout(() => {
       setAuthMessage("");
     }, 3000);
@@ -134,41 +119,33 @@ export default function Login() {
     setError("");
     setLoading(true);
     setSuccessMessage("");
-
     if (!username.trim() || !password.trim()) {
       setError("Please fill in all fields.");
-
       setLoading(false);
       return;
     }
-
     try {
-      // Perform login
       const response = await axios.post(`${API_URL}/auth/login`, {
         username,
         password,
       });
-
       if (response.data.user.role === "Patient") {
         setLoading(false);
         return alert(
           "Access to the patient portal is available through our app. Please download the app to log in and access your records."
         );
       }
-
       const userDetails = {
         name: response.data.user.fullName,
         role: response.data.user.role,
         username: response.data.user.username,
         profilePicture: response.data.user.profilePicture,
       };
-
       localStorage.setItem("userData", JSON.stringify(userDetails));
       const userEmail = response.data.user.email;
       document.cookie = `userID=${response.data.user._id}`;
       document.cookie = `role=${response.data.user.role}`;
       setLoginToken(response.data.token);
-
       if (userTrustedDevice.includes(response.data.user._id)) {
         await handleRedirectToApp();
         setTimeout(() => {
@@ -183,8 +160,6 @@ export default function Login() {
         }, 3000);
         return;
       }
-
-      // After successful login, show the verification modal
       setEmail(userEmail);
       setLoading(false);
       setSuccessMessage("Login successful! Please verify your account.");
@@ -198,12 +173,11 @@ export default function Login() {
       } else {
         setError("Failed to login. Please try again.");
       }
-      // Log the error
       console.error(
         "Login error:",
         err.response ? err.response.data : err.message
       );
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -211,11 +185,8 @@ export default function Login() {
     try {
       let userID = getCookie("userID");
       const response = await axios.put(`${API_URL}/verify?userId=${userID}`);
-
-      // Set expiry timestamp to 5 minutes from now
-      const expiryTime = Date.now() + 5 * 60 * 1000; // 5 minutes in milliseconds
-      setCookie("expiryTimestamp", expiryTime, { path: "/", maxAge: 5 * 60 }); // Setting cookie with maxAge
-
+      const expiryTime = Date.now() + 5 * 60 * 1000;
+      setCookie("expiryTimestamp", expiryTime, { path: "/", maxAge: 5 * 60 });
       resendMessage
         ? setSuccessMessage("Verification code resent successfully!")
         : setSuccessMessage("Verification code sent successfully!");
@@ -243,134 +214,156 @@ export default function Login() {
   }, []);
 
   return (
-    <div className="login-outer-container login-background">
+    <div className="relative min-h-screen flex flex-col justify-center items-center bg-[#7c459c] overflow-hidden">
+      {/* Background image and overlay */}
       <div
-        className="background-image"
+        className="absolute inset-0 w-full h-full bg-cover bg-center opacity-90 z-0"
         style={{ backgroundImage: `url(/img/login.jpg)` }}
       ></div>
-      <div className="login-overlay"></div>
-      <h2 className="login-welcome-message">Login!</h2>
-      <p className="login-sign-up-text">
-        Don't have an account? <Link to="/signup">Sign Up here!</Link>
-      </p>
+      <div className="absolute inset-0 bg-[#7c459cbc] z-0"></div>
 
-      {error && <p className="login-error-message">{error}</p>}
+      {/* Content */}
+      <div className="relative z-10 flex flex-col  w-full px-2 sm:px-0 lg:left-40">
+        <h2 className="font-bold text-white text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-2 sm:mb-4 mt-8 sm:mt-0 leading-tight drop-shadow-lg sm:text-left">
+          Login!
+        </h2>
+        <p className="text-[#042440] text-sm xs:text-base sm:text-lg mb-2 sm:mb-4  sm:text-left">
+          Don't have an account?
+          <Link
+            to="/signup"
+            className="ml-2 text-white hover:text-[#e39fa9] underline"
+          >
+            Sign Up here!
+          </Link>
+        </p>
+        {error && (
+          <p className="text-[#e39fa9] mb-2 sm:mb-4 font-semibold">{error}</p>
+        )}
+        {successMessage && (
+          <p className="text-[#e39fa9] mb-2 sm:mb-4 font-semibold">
+            {successMessage}
+          </p>
+        )}
 
-      {successMessage && (
-        <p className="login-success-message">{successMessage}</p>
-      )}
+        <div className="w-full max-w-[500px] bg-white/60 rounded-2xl shadow-lg p-3 xs:p-4 sm:p-8 flex flex-col items-center">
+          <form onSubmit={handleLogin} className="w-full">
+            <div className="relative mb-4 sm:mb-6">
+              <label htmlFor="username" className="">
+                Email:
+              </label>
+              <input
+                className="block w-full px-3 py-2 sm:px-4 sm:py-3 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9] peer"
+                type="text"
+                id="username"
+                placeholder=" "
+                value={username}
+                onChange={handleChange}
+                required
+              />
+            </div>
 
-      <div className="container-login">
-        <form onSubmit={handleLogin}>
-          <div className="LI-form-group">
-            <input
-              className="LI-form-input"
-              type="text"
-              id="username"
-              placeholder=" "
-              value={username}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="username" className="LI-form-label">
-              Username:
-            </label>
-          </div>
+            <div className="relative mb-4 sm:mb-6">
+              <label htmlFor="password" className="">
+                Password:
+              </label>
+              <input
+                className="block w-full px-3 py-2 sm:px-4 sm:py-3 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9] pr-10 peer"
+                type={showPassword ? "text" : "password"}
+                id="password"
+                placeholder=" "
+                value={password}
+                onChange={handleChange}
+                required
+              />
 
-          <div className="LI-form-group password-toggle-container">
-            <input
-              className="LI-form-input"
-              type={showPassword ? "text" : "password"} // Toggle between text and password
-              id="password"
-              placeholder=" "
-              value={password}
-              onChange={handleChange}
-              style={{ padding: "15px", width: "400px" }}
-              required
-            />
-            <label htmlFor="password" className="LI-form-label">
-              Password:
-            </label>
-            <span
-              className="password-toggle-icon"
-              onClick={togglePasswordVisibility}
+              <span
+                className="absolute right-3 sm:right-4 top-2/3 transform -translate-y-1/2 text-xl sm:text-2xl text-[#7c459c] cursor-pointer"
+                onClick={togglePasswordVisibility}
+                tabIndex={0}
+                role="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+              </span>
+            </div>
+
+            <div className="flex justify-end mb-3 sm:mb-4">
+              <Link
+                to="/forgot-password"
+                className="text-[#e39fa9] text-xs sm:text-sm hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-2 sm:py-3 bg-[#e39fa9] text-[#040400] rounded-md font-semibold text-base sm:text-lg hover:bg-[#7c459cbc] hover:text-white transition"
+              disabled={loading}
             >
-              {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
-            </span>
-          </div>
-
-          <div className="forgot-password">
-            <Link to="/forgot-password">Forgot Password?</Link>
-          </div>
-
-          <div className="LI-form-group">
-            <button type="submit" className="LI-button" disabled={loading}>
               {loading ? "Logging in..." : "LOGIN"}
             </button>
-          </div>
-        </form>
+          </form>
 
-        {/* Verification Modal */}
-
-        <Modal
-          isOpen={showVerificationModal}
-          onRequestClose={() => setShowVerificationModal(false)}
-          className="Authentication__Content"
-          overlayClassName="Authentication__Overlay"
-        >
-          <div className="Authentication__Icon">
-            <BsPatchCheckFill />
-          </div>
-          <h2 className="Authentication__Title">Authenticate Your Account</h2>
-          <p className="Authentication__Subtitle">
-            {authMessage ? (
-              authMessage
-            ) : (
-              <>
-                Please type the verification code sent to{" "}
-                <strong>{email && censorEmail(email)}</strong>.
-              </>
-            )}
-          </p>
-
-          <div className="Authentication__CodeWrapper">
-            {[...Array(6)].map((_, index) => (
-              <input
-                key={index}
-                type="text"
-                className="Authentication__CodeInput"
-                maxLength={1}
-                value={verificationCode[index] || ""}
-                onChange={(e) => handleInputChange(e, index)}
-                onKeyDown={(e) => handleKeyDown(e, index)}
-                ref={(input) => (inputRefs.current[index] = input)}
-              />
-            ))}
-          </div>
-
-          <div className="Authentication__RememberDevice">
-            <input
-              type="checkbox"
-              id="rememberDevice"
-              className="Authentication__Checkbox"
-              onChange={(e) => setRememberDevice(e.target.checked)}
-            />
-            <label
-              htmlFor="rememberDevice"
-              className="Authentication__CheckboxLabel"
-            >
-              Remember this Device
-            </label>
-          </div>
-
-          <button
-            className="Authentication__Button Authentication__SubmitButton"
-            onClick={handleCodeSubmission}
+          {/* Verification Modal */}
+          <Modal
+            isOpen={showVerificationModal}
+            onRequestClose={() => setShowVerificationModal(false)}
+            className="bg-white rounded-2xl p-3 xs:p-4 sm:p-8 max-w-xs sm:max-w-md w-[95vw] sm:w-full mx-auto shadow-lg flex flex-col items-center outline-none"
+            overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
           >
-            Submit
-          </button>
-        </Modal>
+            <div className="text-[#9a6cb4] text-4xl sm:text-6xl mb-2 sm:mb-4">
+              <BsPatchCheckFill />
+            </div>
+            <h2 className="text-lg sm:text-2xl font-bold text-[#333] mb-1 sm:mb-2 text-center">
+              Authenticate Your Account
+            </h2>
+            <p className="text-xs sm:text-base text-[#666] mb-3 sm:mb-6 text-center">
+              {authMessage ? (
+                authMessage
+              ) : (
+                <>
+                  Please type the verification code sent to{" "}
+                  <strong>{email && censorEmail(email)}</strong>.
+                </>
+              )}
+            </p>
+            <div className="flex justify-between gap-1 sm:gap-2 mb-3 sm:mb-6">
+              {[...Array(6)].map((_, index) => (
+                <input
+                  key={index}
+                  type="text"
+                  className="w-8 h-12 sm:w-10 sm:h-14 text-xl sm:text-2xl border-2 border-gray-200 rounded-lg text-center focus:outline-none focus:border-[#f5b63a] shadow"
+                  maxLength={1}
+                  value={verificationCode[index] || ""}
+                  onChange={(e) => handleInputChange(e, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  ref={(input) => (inputRefs.current[index] = input)}
+                />
+              ))}
+            </div>
+            <div className="flex items-center mb-3">
+              <input
+                type="checkbox"
+                id="rememberDevice"
+                className="mr-2"
+                onChange={(e) => setRememberDevice(e.target.checked)}
+              />
+              <label
+                htmlFor="rememberDevice"
+                className="text-xs sm:text-sm text-[#333]"
+              >
+                Remember this Device
+              </label>
+            </div>
+            <button
+              className="bg-[#9a6cb4] text-white px-6 sm:px-8 py-2 rounded-full font-bold text-base sm:text-lg hover:bg-[#e39fa9] transition"
+              onClick={handleCodeSubmission}
+            >
+              Submit
+            </button>
+          </Modal>
+        </div>
       </div>
     </div>
   );
