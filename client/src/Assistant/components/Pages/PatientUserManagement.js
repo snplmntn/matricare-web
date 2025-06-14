@@ -45,7 +45,7 @@ const PatientUserManagement = () => {
 
   const toggleSelectAll = () => {
     setSelectAll(!selectAll);
-    setSelectedUsers(selectAll ? [] : filteredUsers.map((user) => user.id));
+    setSelectedUsers(selectAll ? [] : filteredUsers.map((user) => user._id));
   };
 
   const handleUserSelection = (userId) => {

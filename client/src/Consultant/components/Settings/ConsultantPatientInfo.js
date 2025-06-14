@@ -477,9 +477,10 @@ const ConsultantPatientInfo = () => {
               >
                 Add Patient
               </button>
+              <br />
               <button
                 type="button"
-                className="my-2 px-3 py-2 bg-[#e39fa9] text-white rounded-[8px] text-[16px] w-[100px] ml-[20px] max-[500px]:ml-2"
+                className="my-2 px-3 py-2 bg-[#e39fa9] text-white rounded-[8px] text-[16px] w-[100px] ml-[97px] max-[500px]:ml-2"
                 onClick={handleCancelClick}
               >
                 Cancel

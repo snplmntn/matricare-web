@@ -127,7 +127,13 @@ function AppContent() {
             </Fragment>
           );
         case "Ob-gyne Specialist":
-          return <BellyTalk user={parsedUser} />;
+          return (
+            <Fragment>
+              <LibrarySidebar />
+              <Library />
+            </Fragment>
+          );
+
         default:
           return <Undefined />;
       }

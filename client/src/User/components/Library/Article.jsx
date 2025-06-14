@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import "../../styles/library/article.css";
 import { IoBookmark, IoArrowBack } from "react-icons/io5";
 import axios from "axios";
 import { getCookie } from "../../../utils/getCookie";
@@ -68,15 +67,11 @@ const Article = () => {
 
     async function fetchArticle() {
       try {
-        const response = await axios.get(
-          `${API_URL}/article?id=${bookId}`,
-
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/article?id=${bookId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setArticle(response.data.article);
         const approvedRelatedArticles = response.data.relatedArticles.filter(
           (relatedArticle) => relatedArticle.status === "Approved"
@@ -89,15 +84,11 @@ const Article = () => {
 
     async function fetchSavedArticle() {
       try {
-        const response = await axios.get(
-          `${API_URL}/user?userId=${userID}`,
-
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const response = await axios.get(`${API_URL}/user?userId=${userID}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setSavedArticles(response.data.other.savedArticle);
         setIsSaved(
           response.data.other.savedArticle
@@ -120,46 +111,56 @@ const Article = () => {
     ];
     setLastRead(updatedLastRead);
 
-    // Save the updated last read list to local storage
     localStorage.setItem("lastRead", JSON.stringify(updatedLastRead));
-
     navigate(`/book/${book._id}`);
   };
 
   return (
-    <div className="library-content-container">
-      <button onClick={handleBack} className="library-back-button">
-        <IoArrowBack />
+    <div className="flex min-h-screen bg-[#9a6cb4] flex-col lg:flex-row">
+      {/* Back Button */}
+      <button
+        onClick={handleBack}
+        className="absolute top-4 left-4 md:top-[30px] md:left-[270px] bg-none border-none text-2xl cursor-pointer flex items-center z-[1000] text-white md:text-black"
+      >
+        <IoArrowBack className="mr-1" />
       </button>
 
-      <div className="library-content-main-news">
-        <div className="library-content-news-title-actions">
-          <h1 className="library-content-news-title">
+      {/* Main Content */}
+      <div className="flex flex-col bg-white/90 ml-0 md:ml-[250px] rounded-t-[30px] md:rounded-[50px_0_0_50px] w-full lg:w-[60%] min-h-screen pt-16 md:pt-0">
+        {/* Title and Actions */}
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center mx-4 md:mx-[70px] mb-[30px] mt-5 md:mt-[20px] gap-4 lg:gap-0">
+          <h1 className="text-xl md:text-2xl font-bold w-full lg:w-[600px] my-1 pr-4 lg:pr-0">
             {article && article.fullTitle}
           </h1>
-          <div className="library-content-news-actions">
+          <div className="flex flex-col items-start lg:items-end gap-2.5 w-full lg:w-auto lg:mt-5 lg:mr-[70px]">
             <button
-              className="library-content-save-btn"
-              onClick={() =>
-                handleToggleSave({
-                  article,
-                })
-              }
+              className="bg-transparent border border-[#7c459c] p-[15px] rounded-[50px] cursor-pointer flex items-center gap-2 text-sm hover:bg-[#7c459c] hover:text-white transition-colors duration-200"
+              onClick={() => handleToggleSave({ article })}
             >
-              <IoBookmark />
+              <IoBookmark className="text-base" />
               {isSavedComponent ? "Saved" : "Save to Library"}
             </button>
           </div>
         </div>
-        <p className="library-content-news-details">
+
+        {/* Article Details */}
+        <p className="text-[#333] text-base mx-4 md:mx-[70px] -mt-[30px]">
           Medically Reviewed by: {article && article.reviewedBy}
         </p>
-        <p className="library-content-news-date">
+        <p className="text-[#888] text-sm mx-4 md:mx-[70px]">
           {article && formatDate(article.createdAt)}
         </p>
-        <div className="library-content-news-description">
+
+        {/* Article Content */}
+        <div className="mt-5 max-h-[900px] overflow-y-auto mx-4 md:mx-[70px] w-auto md:w-[900px] scrollbar-hide">
           {article && (
             <div
+              className="
+                [&_h2]:text-xl [&_h2]:font-bold [&_h2]:my-5 [&_h2]:mt-5 [&_h2]:mb-2.5 [&_h2]:text-[#7c459c]
+                [&_p]:text-base [&_p]:leading-relaxed [&_p]:mb-2.5
+                [&_ul]:list-disc [&_ul]:ml-5
+                [&_li]:mb-2
+              "
               dangerouslySetInnerHTML={{
                 __html: article.content && JSON.parse(article.content),
               }}
@@ -168,27 +169,37 @@ const Article = () => {
         </div>
       </div>
 
-      {/* Related News Section */}
-      <div className="library-content-related-news">
-        <div className="library-content-related-header">
-          <h2>Related Articles</h2>
+      {/* Related Articles Section */}
+      <div className="flex-1 bg-white/90 px-4 md:px-6 py-6 lg:py-0">
+        <div className="flex justify-between items-center mb-5 mt-0 lg:mt-10">
+          <h2 className="text-xl md:text-2xl font-bold text-[#7c459c]">
+            Related Articles
+          </h2>
         </div>
 
-        {relatedArticles.map((relatedArticle) => (
-          <div
-            key={relatedArticle._id}
-            className="library-content-news-card"
-            onClick={() => handleBookClick(relatedArticle)}
-          >
-            <img src={relatedArticle.picture} alt="Related news" />
-            <div className="library-content-news-card-content">
-              <div className="library-content-news-tag">
-                {relatedArticle.category}
+        <div className="space-y-5">
+          {relatedArticles.map((relatedArticle) => (
+            <div
+              key={relatedArticle._id}
+              className="block bg-white rounded-lg overflow-hidden w-full lg:w-[450px] h-[250px] cursor-pointer hover:shadow-lg transition-shadow duration-200"
+              onClick={() => handleBookClick(relatedArticle)}
+            >
+              <img
+                src={relatedArticle.picture}
+                alt="Related news"
+                className="w-full h-[150px] object-cover"
+              />
+              <div className="p-2.5">
+                <div className="inline-block bg-[#e39fa981] text-[#7c459c] py-1 px-2.5 rounded-[20px] text-xs -mb-2.5 ml-1 mt-2.5">
+                  {relatedArticle.category}
+                </div>
+                <h3 className="text-base font-bold mb-1 ml-1 truncate">
+                  {relatedArticle.title}
+                </h3>
               </div>
-              <h3>{relatedArticle.title}</h3>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );
