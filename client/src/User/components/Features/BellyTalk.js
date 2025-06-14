@@ -510,14 +510,14 @@ const BellyTalk = ({ user }) => {
 
   const renderDesktopHeader = () => (
     <>
-      {user.current?.role !== "Ob-gyne Specialist" && (
-        <button
-          onClick={handleBackButton}
-          className="bg-transparent border-none cursor-pointer ml-0 md:ml-[100px] mr-0 md:mr-[-150px] text-[#7c459c] hidden md:block"
-        >
-          <IoArrowBack size={30} />
-        </button>
-      )}
+      {/* {user.current?.role !== "Ob-gyne Specialist" && ( */}
+      <button
+        onClick={handleBackButton}
+        className="bg-transparent border-none cursor-pointer ml-0 md:ml-[100px] mr-0 md:mr-[-150px] text-[#7c459c] hidden md:block"
+      >
+        <IoArrowBack size={30} />
+      </button>
+      {/* )} */}
 
       <div className="text-3xl font-bold text-[#7c459c] ml-0 md:ml-[200px] hidden md:block">
         BellyTalk

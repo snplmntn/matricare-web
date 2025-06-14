@@ -620,22 +620,40 @@ const ManageBellyTalk = () => {
         </h2>
 
         <div className="grid grid-cols-3 gap-5 mb-10 max-[900px]:grid-cols-2">
-          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9DC3E2] hover:-translate-y-1 hover:shadow-lg">
+          <div
+            className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9DC3E2] hover:-translate-y-1 hover:shadow-lg"
+            onClick={() => handleCardClick("Health & Wellness")}
+          >
             Health & Wellness
           </div>
-          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#e39fa9] hover:-translate-y-1 hover:shadow-lg">
+          <div
+            className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#e39fa9] hover:-translate-y-1 hover:shadow-lg"
+            onClick={() => handleCardClick("Finance & Budgeting")}
+          >
             Finance & Budgeting
           </div>
-          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9a6cb4af] hover:-translate-y-1 hover:shadow-lg">
+          <div
+            className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9a6cb4af] hover:-translate-y-1 hover:shadow-lg"
+            onClick={() => handleCardClick("Parenting & Family")}
+          >
             Parenting & Family
           </div>
-          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#e39fa9] hover:-translate-y-1 hover:shadow-lg">
+          <div
+            className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#e39fa9] hover:-translate-y-1 hover:shadow-lg"
+            onClick={() => handleCardClick("Baby's Essentials")}
+          >
             Baby's Essentials
           </div>
-          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9a6cb4af] hover:-translate-y-1 hover:shadow-lg">
+          <div
+            className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9a6cb4af] hover:-translate-y-1 hover:shadow-lg"
+            onClick={() => handleCardClick("Exercise & Fitness")}
+          >
             Exercise & Fitness
           </div>
-          <div className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9DC3E2] hover:-translate-y-1 hover:shadow-lg">
+          <div
+            className="p-8 rounded-[15px] text-[#333] flex justify-center items-center text-center text-[20px] max-[900px]:text-[16px] max-[600px]:text-[12px] font-bold shadow-md transition-transform duration-300 cursor-pointer bg-[#9DC3E2] hover:-translate-y-1 hover:shadow-lg"
+            onClick={() => handleCardClick("Labor & Delivery")}
+          >
             Labor & Delivery
           </div>
         </div>
