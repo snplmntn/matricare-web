@@ -170,11 +170,13 @@ export default function Signup() {
         phoneNumber,
       };
       if (obGyneSpecialist) newUser.role = "Ob-gyne Specialist";
-      await axios.post(`${API_URL}/auth/signup`, newUser);
+      const res = await axios.post(`${API_URL}/auth/signup`, newUser);
       setSuccess("Registration successful! Redirecting to login...");
       setTimeout(() => {
         navigate("/login");
       }, 2000);
+      console.log(res.data);
+      return true;
     } catch (err) {
       if (err.response && err.response.status === 400) {
         setError(err.response.data.message);
@@ -183,6 +185,7 @@ export default function Signup() {
       }
       setVerifyToken("");
       setVerificationCode(new Array(6).fill(""));
+      return false;
     } finally {
       setLoading(false);
     }
@@ -194,12 +197,16 @@ export default function Signup() {
     setSuccess("");
     if (!validateForm()) return;
     setLoading(true);
+
+    const result = await submitUser();
+    if (result === false) return;
+    // Only send email for verification, do not submit user yet
     if (!verifyToken) {
       await sendEmail();
+      setLoading(false);
       return;
-    } else {
-      submitUser();
     }
+    // If already verified, allow user submission
   };
 
   const censorEmail = (email) => {
