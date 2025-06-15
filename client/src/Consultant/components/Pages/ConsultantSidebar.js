@@ -79,7 +79,7 @@ const ConsultantSidebar = () => {
           to="/consultant-landing"
           className="
             flex items-center justify-center text-white transition-colors duration-300
-            w-[80%] py-5 text-[30px] ml-[70px] mb-2 hover:text-[#7c459c]
+            w-[80%] py-5 text-[30px]  mb-2 hover:text-[#7c459c]
             max-[900px]:w-auto max-[900px]:ml-0 max-[900px]:mb-0 max-[900px]:py-0 max-[900px]:px-2 max-[900px]:text-[18px]
           "
           title="Home"
@@ -90,7 +90,7 @@ const ConsultantSidebar = () => {
           to="/consultant-appointment"
           className="
             flex items-center justify-center text-white transition-colors duration-300
-            w-[80%] py-5 text-[30px] ml-[70px] mb-2 hover:text-[#7c459c]
+            w-[80%] py-5 text-[30px] mb-2 hover:text-[#7c459c]
             max-[900px]:w-auto max-[900px]:ml-0 max-[900px]:mb-0 max-[900px]:py-0 max-[900px]:px-2 max-[900px]:text-[18px]
           "
           title="Appointment"
@@ -101,7 +101,7 @@ const ConsultantSidebar = () => {
           to="/belly-talk"
           className="
             flex items-center justify-center text-white transition-colors duration-300
-            w-[80%] py-5 text-[30px] ml-[70px] mb-2 hover:text-[#7c459c]
+            w-[80%] py-5 text-[30px]  mb-2 hover:text-[#7c459c]
             max-[900px]:w-auto max-[900px]:ml-0 max-[900px]:mb-0 max-[900px]:py-0 max-[900px]:px-2 max-[900px]:text-[18px]
           "
           title="BellyTalk"
@@ -112,7 +112,7 @@ const ConsultantSidebar = () => {
           to="/manageBellytalk"
           className="
             flex items-center justify-center text-white transition-colors duration-300
-            w-[80%] py-5 text-[30px] ml-[70px] mb-2 hover:text-[#7c459c]
+            w-[80%] py-5 text-[30px]  mb-2 hover:text-[#7c459c]
             max-[900px]:w-auto max-[900px]:ml-0 max-[900px]:mb-0 max-[900px]:py-0 max-[900px]:px-2 max-[900px]:text-[18px]
           "
           title="Manage BellyTalk"
@@ -123,7 +123,7 @@ const ConsultantSidebar = () => {
           to="/consultant-patientsinfo"
           className="
             flex items-center justify-center text-white transition-colors duration-300
-            w-[80%] py-5 text-[30px] ml-[70px] mb-2 hover:text-[#7c459c]
+            w-[80%] py-5 text-[30px]  mb-2 hover:text-[#7c459c]
             max-[900px]:w-auto max-[900px]:ml-0 max-[900px]:mb-0 max-[900px]:py-0 max-[900px]:px-2 max-[900px]:text-[18px]
           "
           title="Patient Records"
