@@ -10,8 +10,6 @@ const ConsultantPatientInfo = () => {
   const token = getCookie("token");
   const userID = getCookie("userID");
   const [filter, setFilter] = useState("all");
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState([]);
   const [view, setView] = useState("patients");
   const [patients, setPatients] = useState([]);
   const [newPatient, setNewPatient] = useState({
@@ -43,19 +41,6 @@ const ConsultantPatientInfo = () => {
       : view === "specialist"
       ? obGyneSpecialist
       : admins;
-
-  const toggleSelectAll = () => {
-    setSelectAll(!selectAll);
-    setSelectedUsers(selectAll ? [] : filteredUsers.map((user) => user.id));
-  };
-
-  const handleUserSelection = (userId) => {
-    if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
-    } else {
-      setSelectedUsers([...selectedUsers, userId]);
-    }
-  };
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -231,23 +216,11 @@ const ConsultantPatientInfo = () => {
         </div>
 
         <div className="flex justify-between mb-2 max-[600px]:flex-col max-[600px]:gap-2">
-          {view === "patients" && (
-            <div className="flex items-center ml-10 max-[600px]:ml-0">
-              <input
-                type="checkbox"
-                id="selectAll"
-                checked={selectAll}
-                onChange={toggleSelectAll}
-                className="mr-2"
-              />
-              <label htmlFor="selectAll" className="text-[16px] mt-1">
-                Select All Users
-              </label>
-              <span className="font-bold text-[#ccc] text-[14px] ml-2 mt-1">
-                ({patients.length} Users)
-              </span>
-            </div>
-          )}
+          <div className="flex items-center ml-10 max-[600px]:ml-0">
+            <span className="font-bold text-[#ccc] text-[14px] mt-1">
+              ({filteredUsers.length} Users)
+            </span>
+          </div>
           {view === "patients" && (
             <div className="flex items-center mt-[-30px] mr-10 max-[600px]:mr-0 max-[600px]:mt-0">
               <label htmlFor="filter" className="mr-2 mt-2">
@@ -270,17 +243,15 @@ const ConsultantPatientInfo = () => {
           <table className="w-[95%] border-separate mt-2 ml-10 rounded-[8px] border-spacing-y-[15px] max-[600px]:ml-0 max-[600px]:w-full">
             <thead className="sticky top-0 z-10">
               <tr>
-                {view === "patients" && (
-                  <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
-                    Select
-                  </th>
-                )}
                 <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
                   ID
                 </th>
-                <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
-                  Photo
-                </th>
+                {/* Photo column for Specialist and Admins only */}
+                {(view === "specialist" || view === "admins") && (
+                  <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
+                    Photo
+                  </th>
+                )}
                 {view === "patients" && (
                   <>
                     <th className="bg-[#9a6cb4] text-white px-4 py-3 text-left">
@@ -335,41 +306,23 @@ const ConsultantPatientInfo = () => {
                   onClick={() => handleRowClick(user._id)}
                   className="hover:bg-[#f4f4f4] cursor-pointer"
                 >
-                  {view === "patients" && (
-                    <td className="px-4 py-3 text-[#333] text-center bg-white shadow-md">
-                      <input
-                        type="checkbox"
-                        checked={selectedUsers.includes(user.id)}
-                        onChange={() => handleUserSelection(user.id)}
-                      />
-                    </td>
-                  )}
                   <td className="px-4 py-3 text-[#333] text-center bg-white shadow-md">
                     {user.seq}
                   </td>
-                  <td className="px-4 py-3 text-[#333] text-center bg-white shadow-md">
-                    {view === "patients" ? (
-                      <img
-                        src={
-                          user.userId && user.userId.profilePicture
-                            ? user.userId.profilePicture
-                            : "img/profilePicture.jpg"
-                        }
-                        className="w-[40px] h-[40px] rounded-[10px] object-cover"
-                        alt=""
-                      />
-                    ) : (
+                  {/* Photo for Specialist and Admins only */}
+                  {(view === "specialist" || view === "admins") && (
+                    <td className="px-4 py-3 text-[#333] bg-white shadow-md">
                       <img
                         src={
                           user.profilePicture
                             ? user.profilePicture
                             : "img/profilePicture.jpg"
                         }
-                        className="w-[40px] h-[40px] rounded-[10px] object-cover"
-                        alt=""
+                        alt="Profile"
+                        className="rounded-full w-[40px] h-[40px] object-cover"
                       />
-                    )}
-                  </td>
+                    </td>
+                  )}
                   {view === "patients" && (
                     <>
                       <td className="px-4 py-3 text-[#333] bg-white shadow-md">
