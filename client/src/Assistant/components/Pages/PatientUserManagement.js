@@ -9,8 +9,6 @@ const PatientUserManagement = () => {
   const token = getCookie("token");
   const userID = getCookie("userID");
   const [filter, setFilter] = useState("all");
-  const [selectAll, setSelectAll] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState([]);
   const [view, setView] = useState("patients");
   const [patients, setPatients] = useState([]);
   const [newPatient, setNewPatient] = useState({
@@ -42,19 +40,6 @@ const PatientUserManagement = () => {
       : view === "specialist"
       ? obGyneSpecialist
       : admins;
-
-  const toggleSelectAll = () => {
-    setSelectAll(!selectAll);
-    setSelectedUsers(selectAll ? [] : filteredUsers.map((user) => user._id));
-  };
-
-  const handleUserSelection = (userId) => {
-    if (selectedUsers.includes(userId)) {
-      setSelectedUsers(selectedUsers.filter((id) => id !== userId));
-    } else {
-      setSelectedUsers([...selectedUsers, userId]);
-    }
-  };
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
@@ -270,26 +255,13 @@ const PatientUserManagement = () => {
 
         {/* Filter Options */}
         <div className="flex flex-col lg:flex-row justify-between mb-2.5 gap-4 lg:gap-0">
-          {view === "patients" && (
-            <div className="flex items-center lg:ml-[180px] lg:-mt-[50px]">
-              <input
-                type="checkbox"
-                id="selectAll"
-                checked={selectAll}
-                onChange={toggleSelectAll}
-                className="mr-1"
-              />
-              <label
-                htmlFor="selectAll"
-                className="ml-1 text-sm lg:text-base lg:mt-1"
-              >
-                Select All Users
-              </label>
-              <span className="font-bold text-[#ccc] text-xs lg:text-sm ml-2.5 mt-1">
-                ({patients.length} Users)
-              </span>
-            </div>
-          )}
+          {/* Show user count for all views */}
+          <div className="flex items-center lg:ml-[180px] lg:-mt-[50px]">
+            <span className="font-bold text-[#ccc] text-xs lg:text-sm ml-2.5 mt-1">
+              ({filteredUsers.length} Users)
+            </span>
+          </div>
+
           {view === "patients" && (
             <div className="flex items-center lg:-mt-[50px] lg:mr-10">
               <label htmlFor="filter" className="mr-2 lg:mt-2">
@@ -318,30 +290,21 @@ const PatientUserManagement = () => {
                 className="bg-white p-4 rounded-lg shadow-md border"
               >
                 <div className="flex items-center mb-3">
-                  {view === "patients" && (
-                    <input
-                      type="checkbox"
-                      checked={selectedUsers.includes(user.id)}
-                      onChange={() => handleUserSelection(user.id)}
-                      className="mr-3"
+                  {/* Show photo only for Specialist and Admins in mobile view */}
+                  {(view === "specialist" || view === "admins") && (
+                    <img
+                      src={
+                        user.profilePicture
+                          ? user.profilePicture
+                          : "img/profilePicture.jpg"
+                      }
+                      alt="Profile"
+                      className="w-10 h-10 rounded-lg object-cover mr-3"
                     />
                   )}
-                  <img
-                    src={
-                      view === "patients"
-                        ? user.userId && user.userId.profilePicture
-                          ? user.userId.profilePicture
-                          : "img/profilePicture.jpg"
-                        : user.profilePicture
-                        ? user.profilePicture
-                        : "img/profilePicture.jpg"
-                    }
-                    alt="Profile"
-                    className="w-10 h-10 rounded-lg object-cover mr-3"
-                  />
                   <div className="flex-1">
                     <div className="font-semibold text-[#333]">
-                      {view === "patients" ? user.fullName : user.fullName}
+                      {user.fullName}
                     </div>
                     <div className="text-sm text-gray-500">ID: {user.seq}</div>
                   </div>
@@ -422,17 +385,15 @@ const PatientUserManagement = () => {
           <table className="hidden lg:table w-[95%] border-separate mt-2.5 ml-10 rounded-lg border-spacing-y-[15px] table-auto">
             <thead className="bg-white">
               <tr>
-                {view === "patients" && (
-                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
-                    Select
-                  </th>
-                )}
                 <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
                   ID
                 </th>
-                <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
-                  Photo
-                </th>
+                {/* Show Photo column only for Specialist and Admins */}
+                {(view === "specialist" || view === "admins") && (
+                  <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
+                    Photo
+                  </th>
+                )}
                 {view === "patients" && (
                   <>
                     <th className="bg-[#9a6cb4] font-bold text-white px-4 py-3 text-left text-center">
@@ -489,33 +450,23 @@ const PatientUserManagement = () => {
             <tbody>
               {filteredUsers.map((user, index) => (
                 <tr key={user.id}>
-                  {view === "patients" && (
-                    <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md break-words text-center">
-                      <input
-                        type="checkbox"
-                        checked={selectedUsers.includes(user.id)}
-                        onChange={() => handleUserSelection(user.id)}
-                      />
-                    </td>
-                  )}
                   <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md break-words text-center">
                     {user.seq}
                   </td>
-                  <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md break-words text-center">
-                    <img
-                      src={
-                        view === "patients"
-                          ? user.userId && user.userId.profilePicture
-                            ? user.userId.profilePicture
+                  {/* Show Photo only for Specialist and Admins */}
+                  {(view === "specialist" || view === "admins") && (
+                    <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md break-words text-center">
+                      <img
+                        src={
+                          user.profilePicture
+                            ? user.profilePicture
                             : "img/profilePicture.jpg"
-                          : user.profilePicture
-                          ? user.profilePicture
-                          : "img/profilePicture.jpg"
-                      }
-                      alt="Profile"
-                      className="w-10 h-10 rounded-lg object-cover"
-                    />
-                  </td>
+                        }
+                        alt="Profile"
+                        className="w-10 h-10 rounded-lg object-cover"
+                      />
+                    </td>
+                  )}
                   {view === "patients" && (
                     <>
                       <td className="px-4 py-3 text-[#333] text-left bg-white shadow-md break-words text-center">
