@@ -75,40 +75,6 @@ const BAD_WORDS = [
   "bwakanangina",
 ];
 
-const FILTER_OPTIONS = [
-  { id: "all", label: "All", filter: "All" },
-  {
-    id: "health-wellness",
-    label: "Health & Wellness",
-    filter: "Health & Wellness",
-  },
-  {
-    id: "finance-budgeting",
-    label: "Finance & Budgeting",
-    filter: "Finance & Budgeting",
-  },
-  {
-    id: "parenting-family",
-    label: "Parenting & Family",
-    filter: "Parenting & Family",
-  },
-  {
-    id: "baby-essentials",
-    label: "Baby's Essentials",
-    filter: "Baby's Essentials",
-  },
-  {
-    id: "exercise-fitness",
-    label: "Exercise & Fitness",
-    filter: "Exercise & Fitness",
-  },
-  {
-    id: "labor-delivery",
-    label: "Labor & Delivery",
-    filter: "Labor & Delivery",
-  },
-];
-
 const BellyTalk = ({ user }) => {
   // Hooks
   const [cookies, setCookie, removeCookie] = useCookies();
@@ -142,6 +108,42 @@ const BellyTalk = ({ user }) => {
     isFilterOpen: false,
     step: 1,
   });
+
+  // Dynamic filter options based on post categories
+  const filterOptions = useMemo(() => {
+    if (!state.allPost || state.allPost.length === 0) {
+      return [{ id: "all", label: "All", filter: "All" }];
+    }
+
+    // Extract unique categories from posts
+    const uniqueCategories = new Set();
+
+    state.allPost.forEach((post) => {
+      if (post.category) {
+        if (Array.isArray(post.category)) {
+          post.category.forEach((cat) => uniqueCategories.add(cat));
+        } else {
+          uniqueCategories.add(post.category);
+        }
+      }
+    });
+
+    // Convert to filter options format
+    const dynamicFilters = Array.from(uniqueCategories)
+      .filter((category) => category && category.trim() !== "") // Remove empty categories
+      .sort() // Sort alphabetically
+      .map((category) => ({
+        id: category
+          .toLowerCase()
+          .replace(/\s+/g, "-")
+          .replace(/[^a-z0-9-]/g, ""),
+        label: category,
+        filter: category,
+      }));
+
+    // Always include "All" as the first option
+    return [{ id: "all", label: "All", filter: "All" }, ...dynamicFilters];
+  }, [state.allPost]);
 
   // Utility functions
   const containsBadWord = useCallback((text) => {
@@ -372,7 +374,13 @@ const BellyTalk = ({ user }) => {
         !state.activeFilters.length ||
         state.activeFilters.includes("All") ||
         (post.category &&
-          state.activeFilters.some((filter) => post.category.includes(filter)));
+          state.activeFilters.some((filter) => {
+            if (Array.isArray(post.category)) {
+              return post.category.includes(filter);
+            } else {
+              return post.category === filter;
+            }
+          }));
 
       return matchesSearch && matchesCategory;
     });
@@ -579,7 +587,7 @@ const BellyTalk = ({ user }) => {
   );
 
   const renderFilterOptions = (isMobile = false) =>
-    FILTER_OPTIONS.map(({ id, label, filter }) => (
+    filterOptions.map(({ id, label, filter }) => (
       <label
         key={id}
         className={
@@ -770,8 +778,15 @@ const BellyTalk = ({ user }) => {
           {/* Desktop Filter Section */}
           <div className="hidden md:block absolute w-[420px] left-[1100px] top-0">
             <h3>Filters</h3>
-            <div className="bg-white h-[400px] p-[10px] rounded-[5px] shadow-lg">
-              {renderFilterOptions()}
+            <div className="bg-white h-[400px] p-[10px] rounded-[5px] shadow-lg overflow-y-auto">
+              {filterOptions.length > 1 ? (
+                renderFilterOptions()
+              ) : (
+                <p className="text-gray-500 text-sm p-4">
+                  No categories available yet. Filters will appear as posts are
+                  added.
+                </p>
+              )}
             </div>
           </div>
         </div>
