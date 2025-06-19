@@ -267,6 +267,11 @@ const ManageBellyTalk = () => {
   };
 
   const handleAddToLibrary = async () => {
+    const confirmAdd = window.confirm(
+      "Are you sure you want to add this report to the library?"
+    );
+    if (!confirmAdd) return;
+
     if (reportData.trim() === "") return alert("No available report");
     if (!imageToUpload) return alert("Please select a cover image");
     const bookCover = await uploadBookCover();
