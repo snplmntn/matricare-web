@@ -46,6 +46,7 @@ const article_post = catchAsync(async (req, res, next) => {
     const newNotification = await Notification.create({
       senderName: `MatriCare`,
       message: `New Article has been uploaded - ${newArticle.title}. Check It Out!`,
+      category: "Article",
       recipientUserId: recipientUserIds,
     });
 
@@ -84,6 +85,7 @@ const article_put = catchAsync(async (req, res, next) => {
       senderName: `MatriCare`,
       message: `New Article has been uploaded - ${updatedArticle.title}. Check It Out!`,
       recipientUserId: recipientUserIds,
+      category: "Article",
     });
 
     await newNotification.save();

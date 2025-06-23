@@ -62,6 +62,7 @@ const appointment_post = catchAsync(async (req, res, next) => {
     message: `You have a new appointment with ${
       req.body.patientName
     } on ${formatAppointmentDate(req.body.date)}`,
+    category: "Appointment",
     recipientUserId: recipientUserIds,
   });
 
@@ -100,6 +101,7 @@ const appointment_put = catchAsync(async (req, res, next) => {
         updatedAppointment.date
       )} has been confirmed!`,
       recipientUserId: updatedAppointment.userId,
+      category: "Appointment",
     });
 
     await newNotification.save();
