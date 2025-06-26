@@ -1,8 +1,96 @@
 const PostComment = require("../../models/Content/PostComment");
 const Post = require("../../models/Content/Post");
 const PostAnalytics = require("../../models/Content/PostAnalytics");
+const Article = require("../../models/Content/Article");
 const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
+const axios = require("axios");
+
+// Update articles based on engagement (runs asynchronously)
+const updateArticlesForEngagement = async (postCategories, authHeader) => {
+  try {
+    await Promise.all(
+      postCategories.map(async (e) => {
+        const postsInCategory = await Post.find({ category: e });
+
+        let engagement = 0;
+        let postContents = [];
+        let postComments = [];
+        for (const post of postsInCategory) {
+          const comments = await PostComment.find({
+            postId: post._id,
+          }).populate("userId");
+          const verifiedComments = comments.filter(
+            (c) => c.userId && c.userId.verified
+          );
+          engagement += verifiedComments.length;
+          postContents.push(post.content);
+          postComments.push(verifiedComments.map((c) => c.content));
+        }
+
+        // Regenerate summary using OpenAI API
+        let summary = "";
+        let title = "";
+        try {
+          const toSummarize = {
+            category: e,
+            posts: postsInCategory.map((post, idx) => ({
+              content: postContents[idx],
+              comments: postComments[idx],
+            })),
+          };
+
+          const response = await axios.post(
+            `${process.env.OPEN_API_LINK}/article`,
+            toSummarize,
+            {
+              headers: {
+                Authorization: authHeader,
+                "Content-Type": "application/json ",
+              },
+            }
+          );
+
+          summary = response.data.summary;
+          title = summary.split("\n")[0].replace(/^#+\s*/, "");
+          summary = summary.split("\n").slice(1).join("\n");
+
+          let article = await Article.findOne({
+            category: e,
+            author: "Dra. Donna Jill A. Tungol",
+          });
+          if (article) {
+            // Convert markdown to HTML like in ManageBellyTalk
+            const convertMarkdownToHTML = async (markdown) => {
+              const { remark } = await import("remark");
+              const { default: remarkHtml } = await import("remark-html");
+              const html = await remark().use(remarkHtml).process(markdown);
+              return html.toString();
+            };
+
+            const convertedContent = await convertMarkdownToHTML(summary);
+            const finalContent = convertedContent
+              .split("\n")
+              .slice(1)
+              .join("\n");
+
+            article.engagement = engagement;
+            article.title = title;
+            article.fullTitle = title;
+            article.content = JSON.stringify(finalContent);
+            article.author = "Dra. Donna Jill A. Tungol";
+            article.status = "Approved";
+            await article.save();
+          }
+        } catch (err) {
+          return;
+        }
+      })
+    );
+  } catch (error) {
+    // Silent error handling
+  }
+};
 
 // Create Comment
 const comment_post = catchAsync(async (req, res, next) => {
@@ -73,6 +161,14 @@ const comment_post = catchAsync(async (req, res, next) => {
         }
       })
     );
+
+    // Run article updates asynchronously (don't wait for completion)
+    setImmediate(() => {
+      updateArticlesForEngagement(
+        commentPopulated.postId.category,
+        req.headers.authorization
+      );
+    });
   }
 
   return res.status(200).json({

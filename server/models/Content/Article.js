@@ -43,6 +43,10 @@ const ArticleSchema = new mongoose.Schema(
     picture: {
       type: String,
     },
+    engagement: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

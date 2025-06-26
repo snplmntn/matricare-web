@@ -101,11 +101,12 @@ const Library = () => {
 
   const filterOptions = [
     "All",
-    "First Time Moms",
-    "Health",
-    "Labor",
-    "Finance",
-    "Fashion",
+    "Health & Wellness",
+    "Finance & Budgeting",
+    "Parenting & Family",
+    "Baby’s Essentials",
+    "Exercise & Fitness",
+    "Labor & Delivery",
   ];
 
   return (
