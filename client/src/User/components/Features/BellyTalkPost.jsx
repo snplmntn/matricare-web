@@ -286,7 +286,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         );
         const fetchedComments = response.data.comments.map((comment) => ({
           ...comment,
-          isVerified: comment?.userId?.isVerified || false,
+          isVerified: comment?.userId?.verified || false,
         }));
 
         setComments(fetchedComments);

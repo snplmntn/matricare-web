@@ -285,7 +285,7 @@ const ManageBellyTalk = () => {
     const newBook = {
       userId: userID,
       reviewedBy: user.name,
-      author: "System Generated",
+      author: "Dra. Donna Jill A. Tungol",
       title: reportTitle,
       fullTitle: reportTitle,
       content: JSON.stringify(reportContent),
@@ -363,7 +363,7 @@ const ManageBellyTalk = () => {
           );
 
           summary = response.data.summary;
-          const title = summary.split("\n")[0];
+          let title = summary.split("\n")[0].replace(/^#+\s*/, "");
           summary = summary.split("\n").slice(1).join("\n");
 
           const generatedArticleToSave = {
