@@ -286,7 +286,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         );
         const fetchedComments = response.data.comments.map((comment) => ({
           ...comment,
-          isVerified: comment.userId ? comment.userId.isVerified : false, // Add verification status here
+          isVerified: comment?.userId?.isVerified || false,
         }));
 
         setComments(fetchedComments);
@@ -512,11 +512,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
               value={commentText}
               onChange={(e) => setCommentText(e.target.value)}
               className="w-full md:w-[60%] p-2 border-none bg-transparent text-xs sm:text-sm absolute -mt-10 z-10"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleKeyPress();
-                }
-              }}
+              onKeyPress={handleKeyPress} // Fix: pass event directly
             />
           </div>
         )}
