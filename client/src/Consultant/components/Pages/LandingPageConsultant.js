@@ -261,7 +261,7 @@ const LandingPageConsultant = ({}) => {
               notification.map((notif, index) => (
                 <div
                   key={index}
-                  className="bg-transparent p-2 border border-[#9a6cb4] rounded-[5px] mb-2 text-[#042440] ml-[-100px] max-[600px]:ml-0 max-[600px]:text-[13px]"
+                  className="bg-transparent p-2 border border-[#9a6cb4] rounded-[5px] mb-2 text-[#042440] max-[600px]:ml-0 max-[600px]:text-[13px]"
                 >
                   {notif.message}
                 </div>
