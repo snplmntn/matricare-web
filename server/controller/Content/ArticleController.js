@@ -41,6 +41,13 @@ const article_post = catchAsync(async (req, res, next) => {
   await newArticle.save();
 
   if (newArticle.status === "Approved") {
+    // Reset analytics for this category
+    if (newArticle.category) {
+      await require("../../models/Content/PostAnalytics").findOneAndUpdate(
+        { category: newArticle.category },
+        { $set: { posts: [], comments: [] } }
+      );
+    }
     const users = await User.find({}, "_id");
     const recipientUserIds = users.map((user) => user._id);
     const newNotification = await Notification.create({
@@ -68,6 +75,7 @@ const article_put = catchAsync(async (req, res, next) => {
   if (req.body.content && article.status === "Revision")
     req.body.status = "Draft";
 
+  const prevStatus = article.status;
   const updatedArticle = await Article.findByIdAndUpdate(
     req.query.id,
     { $set: req.body },
@@ -78,7 +86,14 @@ const article_put = catchAsync(async (req, res, next) => {
     return next(new AppError("Article not found", 404));
   }
 
-  if (updatedArticle.status === "Approved") {
+  if (updatedArticle.status === "Approved" && prevStatus !== "Approved") {
+    // Reset analytics for this category
+    if (updatedArticle.category) {
+      await require("../../models/Content/PostAnalytics").findOneAndUpdate(
+        { category: updatedArticle.category },
+        { $set: { posts: [], comments: [] } }
+      );
+    }
     const users = await User.find({}, "_id");
     const recipientUserIds = users.map((user) => user._id);
     const newNotification = await Notification.create({
