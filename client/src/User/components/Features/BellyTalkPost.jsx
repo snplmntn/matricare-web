@@ -538,12 +538,16 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
                   className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2"
                 />
                 <div>
-                  <h4 className="inline text-xs sm:text-base font-semibold m-0">
-                    {comment.fullName}
+                  <div className="flex items-center">
+                    <h4 className="text-xs sm:text-base font-semibold m-0">
+                      {comment.fullName}
+                    </h4>
                     {comment.userId && comment.userId.verified && (
-                      <MdVerified className="ml-1 text-[#6b95e5]" />
+                      <span>
+                        <MdVerified className="ml-1 text-[#6b95e5]" />
+                      </span>
                     )}
-                  </h4>
+                  </div>
                   <p className="mt-1 text-xs sm:text-sm">{comment.content}</p>
                 </div>
               </div>
