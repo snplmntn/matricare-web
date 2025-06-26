@@ -6,7 +6,35 @@ const AppError = require("../../Utilities/appError");
 const catchAsync = require("../../Utilities/catchAsync");
 const axios = require("axios");
 
-// Update articles based on engagement (runs asynchronously)
+const isCommentRelatedToPost = async (
+  postContent,
+  commentContent,
+  authHeader
+) => {
+  try {
+    const relevanceCheck = {
+      postContent: postContent,
+      commentContent: commentContent,
+    };
+
+    const response = await axios.post(
+      `${process.env.OPEN_API_LINK}/relevance-check`,
+      relevanceCheck,
+      {
+        headers: {
+          Authorization: authHeader,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const result = response.data;
+    return result.isRelevant === true;
+  } catch (error) {
+    return true;
+  }
+};
+
 const updateArticlesForEngagement = async (postCategories, authHeader) => {
   try {
     await Promise.all(
@@ -23,12 +51,12 @@ const updateArticlesForEngagement = async (postCategories, authHeader) => {
           const verifiedComments = comments.filter(
             (c) => c.userId && c.userId.verified
           );
+
           engagement += verifiedComments.length;
           postContents.push(post.content);
           postComments.push(verifiedComments.map((c) => c.content));
         }
 
-        // Regenerate summary using OpenAI API
         let summary = "";
         let title = "";
         try {
@@ -60,7 +88,6 @@ const updateArticlesForEngagement = async (postCategories, authHeader) => {
             author: "Dra. Donna Jill A. Tungol",
           });
           if (article) {
-            // Convert markdown to HTML like in ManageBellyTalk
             const convertMarkdownToHTML = async (markdown) => {
               const { remark } = await import("remark");
               const { default: remarkHtml } = await import("remark-html");
@@ -87,12 +114,9 @@ const updateArticlesForEngagement = async (postCategories, authHeader) => {
         }
       })
     );
-  } catch (error) {
-    // Silent error handling
-  }
+  } catch (error) {}
 };
 
-// Create Comment
 const comment_post = catchAsync(async (req, res, next) => {
   const { profilePicture, userId, fullName, postId, content } = req.body;
 
@@ -123,52 +147,58 @@ const comment_post = catchAsync(async (req, res, next) => {
     .populate("userId")
     .populate("postId");
 
-  // if verified add to post analytics
   if (commentPopulated.userId.verified) {
-    commentPopulated.postId.category.map(
-      catchAsync(async (e) => {
-        const category = await PostAnalytics.findOne({ category: e });
-
-        if (category) {
-          if (category.posts.includes(commentPopulated.postId._id)) {
-            await PostAnalytics.findByIdAndUpdate(
-              category._id,
-              {
-                $push: {
-                  comments: comment._id,
-                },
-              },
-              { new: true }
-            );
-          } else {
-            await PostAnalytics.findByIdAndUpdate(
-              category._id,
-              {
-                $push: {
-                  posts: commentPopulated.postId._id,
-                  comments: comment._id,
-                },
-              },
-              { new: true }
-            );
-          }
-        } else {
-          await PostAnalytics.create({
-            category: e,
-            posts: commentPopulated.postId._id,
-            comments: commentPopulated.postId.comments,
-          });
-        }
-      })
+    const isRelevant = await isCommentRelatedToPost(
+      commentPopulated.postId.content,
+      commentPopulated.content,
+      req.headers.authorization
     );
 
-    // Run article updates asynchronously (don't wait for completion)
-    setImmediate(() => {
-      updateArticlesForEngagement(
-        commentPopulated.postId.category,
-        req.headers.authorization
+    if (isRelevant) {
+      commentPopulated.postId.category.map(
+        catchAsync(async (e) => {
+          const category = await PostAnalytics.findOne({ category: e });
+
+          if (category) {
+            if (category.posts.includes(commentPopulated.postId._id)) {
+              await PostAnalytics.findByIdAndUpdate(
+                category._id,
+                {
+                  $push: {
+                    comments: comment._id,
+                  },
+                },
+                { new: true }
+              );
+            } else {
+              await PostAnalytics.findByIdAndUpdate(
+                category._id,
+                {
+                  $push: {
+                    posts: commentPopulated.postId._id,
+                    comments: comment._id,
+                  },
+                },
+                { new: true }
+              );
+            }
+          } else {
+            await PostAnalytics.create({
+              category: e,
+              posts: commentPopulated.postId._id,
+              comments: commentPopulated.postId.comments,
+            });
+          }
+        })
       );
-    });
+
+      setImmediate(() => {
+        updateArticlesForEngagement(
+          commentPopulated.postId.category,
+          req.headers.authorization
+        );
+      });
+    }
   }
 
   return res.status(200).json({
@@ -177,7 +207,6 @@ const comment_post = catchAsync(async (req, res, next) => {
   });
 });
 
-// Get Comments by PostId
 const comment_get = catchAsync(async (req, res, next) => {
   const { postId } = req.query;
 
@@ -211,7 +240,6 @@ const comment_get = catchAsync(async (req, res, next) => {
   });
 });
 
-// Delete Comment
 const comment_delete = catchAsync(async (req, res, next) => {
   const { id } = req.query;
 
