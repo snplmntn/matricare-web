@@ -135,69 +135,6 @@ const LandingPageConsultant = ({}) => {
           </div>
         </section>
 
-        {/* Weekly Reports */}
-        <section
-          className="w-[950px] flex justify-between mb-5 ml-[80px]
-          max-[1100px]:w-full max-[1100px]:ml-0 max-[600px]:flex-col max-[600px]:gap-3"
-        >
-          <div
-            className="bg-[#9a6cb4] text-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
-            max-[600px]:w-full max-[600px]:h-[100px]"
-          >
-            <div className="text-[24px] mb-2 mt-[30px] max-[600px]:mt-2">
-              <IoPeople />
-            </div>
-            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
-              Total Patients
-            </div>
-            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
-              {totalPatients}
-            </div>
-          </div>
-          <div
-            className="bg-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
-            max-[600px]:w-full max-[600px]:h-[100px]"
-          >
-            <div className="text-[24px] mb-2 mt-[30px] text-[#7c459c] max-[600px]:mt-2">
-              <IoPeople />
-            </div>
-            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
-              New Patients
-            </div>
-            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
-              {newPatients}
-            </div>
-          </div>
-          <div
-            className="bg-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
-            max-[600px]:w-full max-[600px]:h-[100px]"
-          >
-            <div className="text-[24px] mb-2 mt-[30px] text-[#e39fa9] max-[600px]:mt-2">
-              <IoCalendar />
-            </div>
-            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
-              Appointments
-            </div>
-            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
-              {appointmentNum}
-            </div>
-          </div>
-          <div
-            className="bg-white p-5 rounded-[10px] text-center w-[18%] min-h-[150px] flex flex-col items-center
-            max-[600px]:w-full max-[600px]:h-[100px]"
-          >
-            <div className="text-[24px] mb-2 mt-[30px] text-[#9a6cb4] max-[600px]:mt-2">
-              <IoMail />
-            </div>
-            <div className="text-[16px] mb-1 max-[600px]:text-[14px]">
-              Unread Notifications
-            </div>
-            <div className="text-[24px] font-bold max-[600px]:text-[18px]">
-              {unreadNotification}
-            </div>
-          </div>
-        </section>
-
         {/* Patients Table */}
         <section
           className="bg-transparent p-5 rounded-[10px] w-[950px] ml-[40px] -mt-5
