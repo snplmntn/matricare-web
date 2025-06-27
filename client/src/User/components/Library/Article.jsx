@@ -58,6 +58,8 @@ const Article = () => {
       year: "numeric",
       month: "numeric",
       day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -148,7 +150,7 @@ const Article = () => {
           Medically Reviewed by: {article && article.reviewedBy}
         </p>
         <p className="text-[#888] text-sm mx-4 md:mx-[70px]">
-          {article && formatDate(article.createdAt)}
+          {article && `Updated: ${formatDate(article.updatedAt)}`}
         </p>
 
         {/* Article Content */}
