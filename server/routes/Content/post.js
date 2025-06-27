@@ -3,6 +3,7 @@ const router = express.Router();
 const postController = require("../../controller/Content/PostController");
 const likeController = require("../../controller/Content/PostLikeController");
 const commentController = require("../../controller/Content/PostCommentController");
+const aiResponseController = require("../../controller/Content/AIResponseController");
 
 // =============== Post ==================
 
@@ -43,5 +44,16 @@ router.get("/comment", commentController.comment_get);
 
 // Delete Comment
 router.delete("/comment", commentController.comment_delete);
+
+// ============ AI Response ===============
+
+// Generate AI Response
+router.post("/ai-response", aiResponseController.ai_response_generate);
+
+// Get AI Response
+router.get("/ai-response", aiResponseController.ai_response_get);
+
+// Delete AI Response
+router.delete("/ai-response", aiResponseController.ai_response_delete);
 
 module.exports = router;
