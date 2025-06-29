@@ -116,6 +116,10 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    removeCookie("token", { path: "/" });
+    removeCookie("role", { path: "/" });
+    removeCookie("userID", { path: "/" });
+    removeCookie("verifyToken", { path: "/" });
     setError("");
     setLoading(true);
     setSuccessMessage("");
