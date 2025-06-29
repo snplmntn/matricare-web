@@ -33,6 +33,10 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [aiResponse, setAiResponse] = useState(null);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [showFullAIResponse, setShowFullAIResponse] = useState(false);
+  const [aiReplies, setAiReplies] = useState([]);
+  const [aiReplyText, setAiReplyText] = useState("");
+  const [showAiReplyInput, setShowAiReplyInput] = useState(false);
+  const [isPostingAiReply, setIsPostingAiReply] = useState(false);
 
   const handleItemClick = () => {
     setIsMenuOpen(false);
@@ -380,6 +384,10 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
         }
       );
       setAiResponse(response.data.aiResponse);
+      // Fetch replies for the new AI response
+      if (response.data.aiResponse && response.data.aiResponse._id) {
+        fetchAiReplies(response.data.aiResponse._id);
+      }
     } catch (error) {
       console.error("Error generating AI response:", error);
       // Fallback to direct AI API call if server fails
@@ -388,13 +396,14 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
           const directResponse = await axios.post(`${OPENAI_URL}/ask`, {
             question: post.content,
           });
-          setAiResponse({
+          const fallbackResponse = {
             response:
               directResponse.data.answer ||
               directResponse.data.response ||
               "I'm here to help! Could you provide more details?",
             createdAt: new Date().toISOString(),
-          });
+          };
+          setAiResponse(fallbackResponse);
         } catch (directError) {
           console.error("Direct AI API also failed:", directError);
         }
@@ -417,6 +426,8 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       );
       if (response.data.aiResponse) {
         setAiResponse(response.data.aiResponse);
+        // Fetch AI replies when AI response is loaded
+        fetchAiReplies(response.data.aiResponse._id);
       } else {
         // If no existing AI response, generate one automatically
         handleGenerateAIResponse();
@@ -428,9 +439,95 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
     }
   };
 
+  // Fetch AI response replies
+  const fetchAiReplies = async (aiResponseId) => {
+    if (!aiResponseId) return;
+
+    try {
+      const response = await axios.get(
+        `${API_URL}/post/ai-response/reply?aiResponseId=${aiResponseId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setAiReplies(response.data.replies || []);
+    } catch (error) {
+      console.error("Error fetching AI replies:", error);
+      setAiReplies([]);
+    }
+  };
+
+  // Handle AI reply submission
+  const handleAiReplySubmit = async () => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    if (aiReplyText.trim() === "") {
+      alert("Reply cannot be empty.");
+      return;
+    }
+
+    if (containsBadWord(aiReplyText)) {
+      alert(
+        "Reply contains bad words. Please edit your reply to remove bad words."
+      );
+      return;
+    }
+
+    if (!aiResponse || !aiResponse._id) {
+      alert("AI response not found.");
+      return;
+    }
+
+    setIsPostingAiReply(true);
+
+    try {
+      const replyData = {
+        aiResponseId: aiResponse._id,
+        userId: userID,
+        fullName: user.current.name,
+        content: aiReplyText.trim(),
+      };
+
+      const response = await axios.post(
+        `${API_URL}/post/ai-response/reply`,
+        replyData,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      // Add the new reply to the beginning of the array
+      setAiReplies([response.data.reply, ...aiReplies]);
+      setAiReplyText("");
+      setShowAiReplyInput(false);
+    } catch (error) {
+      console.error("Error posting AI reply:", error);
+      alert("Failed to post reply. Please try again.");
+    } finally {
+      setIsPostingAiReply(false);
+    }
+  };
+
+  // Handle key press for AI reply input
+  const handleAiReplyKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleAiReplySubmit();
+    }
+  };
+
   // Fetch AI response on mount
   useEffect(() => {
-    fetchAIResponse();
+    if (token) {
+      fetchAIResponse();
+    }
   }, []);
 
   return (
@@ -629,6 +726,68 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
                   ⚠️ This is an AI-generated response. Please consult with a
                   healthcare professional for medical advice.
                 </p>
+
+                {/* AI Response Actions */}
+                <div className="flex items-center gap-4 mt-3">
+                  <button
+                    onClick={() => setShowAiReplyInput(!showAiReplyInput)}
+                    className="text-blue-600 hover:text-blue-800 text-xs font-medium flex items-center gap-1"
+                    disabled={!token}
+                  >
+                    <IoChatbubbleSharp className="text-sm" />
+                    Reply to AI
+                  </button>
+                </div>
+
+                {/* AI Reply Input */}
+                {showAiReplyInput && token && (
+                  <div className="relative mt-3">
+                    <input
+                      type="text"
+                      placeholder="Reply to AI response..."
+                      value={aiReplyText}
+                      onChange={(e) => setAiReplyText(e.target.value)}
+                      className="w-full md:w-[60%] p-2 border-none bg-transparent text-xs sm:text-sm"
+                      onKeyPress={handleAiReplyKeyPress}
+                      maxLength="1000"
+                      disabled={isPostingAiReply}
+                    />
+                  </div>
+                )}
+
+                {/* AI Replies */}
+                {aiReplies.length > 0 && (
+                  <div className="mt-4">
+                    {aiReplies.map((reply) => (
+                      <div key={reply._id} className="mb-4">
+                        <div className="flex items-start">
+                          <img
+                            src={
+                              reply.userId && reply.userId.profilePicture
+                                ? reply.userId.profilePicture
+                                : "img/profilePicture.jpg"
+                            }
+                            alt="User Avatar"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2"
+                          />
+                          <div>
+                            <div className="flex items-center">
+                              <h4 className="text-xs sm:text-base font-semibold m-0">
+                                {reply.fullName}
+                              </h4>
+                              {reply.userId && reply.userId.verified && (
+                                <MdVerified className="ml-1 text-[#6b95e5]" />
+                              )}
+                            </div>
+                            <p className="mt-1 text-xs sm:text-sm">
+                              {reply.content}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
