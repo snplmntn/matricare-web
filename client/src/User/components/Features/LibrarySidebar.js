@@ -6,6 +6,7 @@ import {
   faBookmark,
   faBars,
   faTimes,
+  faMessage,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { CookiesProvider, useCookies } from "react-cookie";
@@ -133,6 +134,16 @@ const LibrarySidebar = () => {
                 Saved Articles
               </Link>
             </li>
+            <li>
+              <Link
+                to="/belly-talk"
+                onClick={closeMobileMenu}
+                className="flex items-center text-white py-4 px-6 rounded-[25px] hover:bg-[#e39fa9] transition-all duration-300"
+              >
+                <FontAwesomeIcon icon={faMessage} className="mr-4 text-white" />
+                BellyTalk
+              </Link>
+            </li>
           </ul>
 
           {/* Mobile Logout */}
@@ -202,12 +213,24 @@ const LibrarySidebar = () => {
                 Saved Articles
               </Link>
             </li>
+            <li className="inline-flex items-center bg-none border-none text-inherit cursor-pointer py-[15px] px-[30px] text-[16px] ml-[-20px] rounded-[25px] mb-[15px] text-[#042440] transition-all duration-300">
+              <Link
+                to="/belly-talk"
+                className="flex items-center text-white ml-2.5 no-underline hover:bg-[#e39fa9] hover:text-white hover:py-[15px] hover:px-[25px] hover:ml-[-10px] hover:rounded-[25px] transition-all duration-300"
+              >
+                <FontAwesomeIcon
+                  icon={faMessage}
+                  className="mr-2.5 text-white"
+                />
+                BellyTalk
+              </Link>
+            </li>
           </ul>
         </div>
 
         {/* Logout Section */}
         <div className="mt-auto" onClick={handleLogout}>
-          <span className="inline-flex items-center bg-none border-none text-inherit cursor-pointer py-[15px] px-[30px] text-[18px] ml-[-7px] rounded-[25px] mt-[180px] text-white transition-all duration-300 hover:bg-[#e39fa9] hover:text-white hover:py-[15px] hover:px-[25px] hover:ml-[10px] hover:rounded-[25px]">
+          <span className="inline-flex items-center bg-none border-none text-inherit cursor-pointer py-[15px] px-[30px] text-[18px] ml-[-7px] rounded-[25px] mt-[40px] text-white transition-all duration-300 hover:bg-[#e39fa9] hover:text-white hover:py-[15px] hover:px-[25px] hover:ml-[10px] hover:rounded-[25px]">
             <FontAwesomeIcon
               icon={faSignOutAlt}
               className="mr-2.5 text-white"
