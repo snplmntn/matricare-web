@@ -229,7 +229,7 @@ export default function Login() {
       {/* Content */}
       <div className="relative z-10 flex flex-col  w-full px-2 sm:px-0 lg:left-40">
         <h2 className="font-bold text-white text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-2 sm:mb-4 mt-8 sm:mt-0 leading-tight drop-shadow-lg sm:text-left">
-          Login!
+          Welcome Back!
         </h2>
         <p className="text-[#042440] text-sm xs:text-base sm:text-lg mb-2 sm:mb-4  sm:text-left">
           Don't have an account?
@@ -253,7 +253,7 @@ export default function Login() {
           <form onSubmit={handleLogin} className="w-full">
             <div className="relative mb-4 sm:mb-6">
               <label htmlFor="username" className="">
-                Email:
+                Username:
               </label>
               <input
                 className="block w-full px-3 py-2 sm:px-4 sm:py-3 text-base text-[#042440] bg-white border border-transparent rounded-md focus:outline-none focus:ring-2 focus:ring-[#e39fa9] peer"
