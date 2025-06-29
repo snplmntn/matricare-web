@@ -10,6 +10,7 @@ import { MdVerified } from "react-icons/md";
 import { getCookie } from "../../../utils/getCookie";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
 
 const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const token = getCookie("token");
@@ -27,7 +28,15 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
   const [commentsCount, setCommentsCount] = useState(0);
   const [likesCount, setLikesCount] = useState(0);
   const API_URL = process.env.REACT_APP_API_URL;
+  const OPENAI_URL = process.env.REACT_APP_OPENAI_URL;
   const [openReply, setOpenReply] = useState(false);
+  const [aiResponse, setAiResponse] = useState(null);
+  const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [showFullAIResponse, setShowFullAIResponse] = useState(false);
+  const [aiReplies, setAiReplies] = useState([]);
+  const [aiReplyText, setAiReplyText] = useState("");
+  const [showAiReplyInput, setShowAiReplyInput] = useState(false);
+  const [isPostingAiReply, setIsPostingAiReply] = useState(false);
 
   const handleItemClick = () => {
     setIsMenuOpen(false);
@@ -313,6 +322,7 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
 
     fetchComments();
     fetchSavedPost();
+    fetchAIResponse();
   }, []);
 
   const toggleMenu = () => {
@@ -357,6 +367,168 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
       console.error(error);
     }
   };
+
+  // Generate AI Response automatically
+  const handleGenerateAIResponse = async () => {
+    if (isLoadingAI) return;
+
+    setIsLoadingAI(true);
+    try {
+      const response = await axios.post(
+        `${API_URL}/post/ai-response`,
+        { postId: post._id },
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setAiResponse(response.data.aiResponse);
+      // Fetch replies for the new AI response
+      if (response.data.aiResponse && response.data.aiResponse._id) {
+        fetchAiReplies(response.data.aiResponse._id);
+      }
+    } catch (error) {
+      console.error("Error generating AI response:", error);
+      // Fallback to direct AI API call if server fails
+      if (OPENAI_URL) {
+        try {
+          const directResponse = await axios.post(`${OPENAI_URL}/ask`, {
+            question: post.content,
+          });
+          const fallbackResponse = {
+            response:
+              directResponse.data.answer ||
+              directResponse.data.response ||
+              "I'm here to help! Could you provide more details?",
+            createdAt: new Date().toISOString(),
+          };
+          setAiResponse(fallbackResponse);
+        } catch (directError) {
+          console.error("Direct AI API also failed:", directError);
+        }
+      }
+    } finally {
+      setIsLoadingAI(false);
+    }
+  };
+
+  // Fetch existing AI response or generate new one automatically
+  const fetchAIResponse = async () => {
+    try {
+      const response = await axios.get(
+        `${API_URL}/post/ai-response?postId=${post._id}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      if (response.data.aiResponse) {
+        setAiResponse(response.data.aiResponse);
+        // Fetch AI replies when AI response is loaded
+        fetchAiReplies(response.data.aiResponse._id);
+      } else {
+        // If no existing AI response, generate one automatically
+        handleGenerateAIResponse();
+      }
+    } catch (error) {
+      // AI response doesn't exist yet, generate one automatically
+      console.log("No existing AI response found, generating new one...");
+      handleGenerateAIResponse();
+    }
+  };
+
+  // Fetch AI response replies
+  const fetchAiReplies = async (aiResponseId) => {
+    if (!aiResponseId) return;
+
+    try {
+      const response = await axios.get(
+        `${API_URL}/post/ai-response/reply?aiResponseId=${aiResponseId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setAiReplies(response.data.replies || []);
+    } catch (error) {
+      console.error("Error fetching AI replies:", error);
+      setAiReplies([]);
+    }
+  };
+
+  // Handle AI reply submission
+  const handleAiReplySubmit = async () => {
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
+    if (aiReplyText.trim() === "") {
+      alert("Reply cannot be empty.");
+      return;
+    }
+
+    if (containsBadWord(aiReplyText)) {
+      alert(
+        "Reply contains bad words. Please edit your reply to remove bad words."
+      );
+      return;
+    }
+
+    if (!aiResponse || !aiResponse._id) {
+      alert("AI response not found.");
+      return;
+    }
+
+    setIsPostingAiReply(true);
+
+    try {
+      const replyData = {
+        aiResponseId: aiResponse._id,
+        userId: userID,
+        fullName: user.current.name,
+        content: aiReplyText.trim(),
+      };
+
+      const response = await axios.post(
+        `${API_URL}/post/ai-response/reply`,
+        replyData,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      // Add the new reply to the beginning of the array
+      setAiReplies([response.data.reply, ...aiReplies]);
+      setAiReplyText("");
+      setShowAiReplyInput(false);
+    } catch (error) {
+      console.error("Error posting AI reply:", error);
+      alert("Failed to post reply. Please try again.");
+    } finally {
+      setIsPostingAiReply(false);
+    }
+  };
+
+  // Handle key press for AI reply input
+  const handleAiReplyKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      handleAiReplySubmit();
+    }
+  };
+
+  // Fetch AI response on mount
+  useEffect(() => {
+    if (token) {
+      fetchAIResponse();
+    }
+  }, []);
 
   return (
     <div className="relative mt-5 p-3 sm:p-5 rounded-lg shadow-[0_10px_20px_rgba(0,0,0,0.1)] bg-white flex flex-col md:flex-row items-start">
@@ -514,6 +686,153 @@ const BellyTalkPost = ({ post, user, onDeletePost }) => {
               className="w-full md:w-[60%] p-2 border-none bg-transparent text-xs sm:text-sm absolute -mt-10 z-10"
               onKeyPress={handleKeyPress} // Fix: pass event directly
             />
+          </div>
+        )}
+
+        {/* AI Response */}
+        {aiResponse && (
+          <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-blue-400">
+            <div className="flex items-start">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center mr-3 flex-shrink-0">
+                <span className="text-white text-sm font-bold">🤖</span>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center mb-2">
+                  <h4 className="text-sm sm:text-base font-semibold text-blue-700 m-0">
+                    MatriCare AI Assistant
+                  </h4>
+                  <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
+                    AI Generated
+                  </span>
+                </div>
+                <div className="text-xs sm:text-sm text-gray-700 leading-relaxed prose prose-sm max-w-none">
+                  <ReactMarkdown>
+                    {showFullAIResponse
+                      ? aiResponse.response
+                      : aiResponse.response.length > 300
+                      ? aiResponse.response.substring(0, 300) + "..."
+                      : aiResponse.response}
+                  </ReactMarkdown>
+                </div>
+                {aiResponse.response.length > 300 && (
+                  <button
+                    onClick={() => setShowFullAIResponse(!showFullAIResponse)}
+                    className="mt-2 text-blue-600 hover:text-blue-800 text-xs font-medium underline focus:outline-none"
+                  >
+                    {showFullAIResponse ? "See less" : "See more"}
+                  </button>
+                )}
+                <p className="text-xs text-gray-500 mt-2">
+                  ⚠️ This is an AI-generated response. Please consult with a
+                  healthcare professional for medical advice.
+                </p>
+
+                {/* AI Response Actions */}
+                <div className="flex items-center gap-4 mt-3">
+                  <button
+                    onClick={() => setShowAiReplyInput(!showAiReplyInput)}
+                    className="text-blue-600 hover:text-blue-800 text-xs font-medium flex items-center gap-1"
+                    disabled={!token}
+                  >
+                    <IoChatbubbleSharp className="text-sm" />
+                    Reply to AI
+                  </button>
+                </div>
+
+                {/* AI Reply Input */}
+                {showAiReplyInput && token && (
+                  <div className="relative mt-3">
+                    <input
+                      type="text"
+                      placeholder="Reply to AI response..."
+                      value={aiReplyText}
+                      onChange={(e) => setAiReplyText(e.target.value)}
+                      className="w-full md:w-[60%] p-2 border-none bg-transparent text-xs sm:text-sm"
+                      onKeyPress={handleAiReplyKeyPress}
+                      maxLength="1000"
+                      disabled={isPostingAiReply}
+                    />
+                  </div>
+                )}
+
+                {/* AI Replies */}
+                {aiReplies.length > 0 && (
+                  <div className="mt-4">
+                    {aiReplies.map((reply) => (
+                      <div key={reply._id} className="mb-4">
+                        <div className="flex items-start">
+                          <img
+                            src={
+                              reply.userId && reply.userId.profilePicture
+                                ? reply.userId.profilePicture
+                                : "img/profilePicture.jpg"
+                            }
+                            alt="User Avatar"
+                            className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2"
+                          />
+                          <div>
+                            <div className="flex items-center">
+                              <h4 className="text-xs sm:text-base font-semibold m-0">
+                                {reply.fullName}
+                              </h4>
+                              {reply.userId && reply.userId.verified && (
+                                <MdVerified className="ml-1 text-[#6b95e5]" />
+                              )}
+                            </div>
+                            <p className="mt-1 text-xs sm:text-sm">
+                              {reply.content}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Loading AI Response */}
+        {isLoadingAI && (
+          <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border-l-4 border-blue-400">
+            <div className="flex items-start">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center mr-3 flex-shrink-0">
+                <svg
+                  className="animate-spin h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8v8H4zm16 0a8 8 0 01-8 8v-8h8z"
+                  ></path>
+                </svg>
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center mb-2">
+                  <h4 className="text-sm sm:text-base font-semibold text-blue-700 m-0">
+                    MatriCare AI Assistant
+                  </h4>
+                  <span className="ml-2 px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-full">
+                    AI Generating...
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+                  Analyzing your post and generating a helpful response...
+                </p>
+              </div>
+            </div>
           </div>
         )}
         {/* Comments */}
